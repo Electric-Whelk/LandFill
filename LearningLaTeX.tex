@@ -1,14 +1,75 @@
 \documentclass{article}
 \usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{listings}
 
-\title{fuck fuck fuck fuuuuck fuckfuckfuck}
-\author{your mum}
-\date{October 1993}
+\title{Learning To Use LaTeX}
+\author{Leah}
+\date{May 2025}
 
 \begin{document}
 
 \maketitle
 
 \section{Introduction}
+
+So, let's learn how to write code.
+
+\begin{verbatim}
+You can write inside the \texttt{verbatim} environment 
+and it's printed literally in a block like this. I don't know where the \texttt comes in here, but since I've included, let's highlight that doing this ignores LaTeX commands.
+\end{verbatim}
+
+You can also use some syntax you'll see in the raw version of this to write inline code \verb|like this|. Also at around this stage in your writeup you noticed some weird indentations but I think that's just because LaTeX automatically indents the first line of each paragraph. 
+
+Note at the top you've done a lil \verb|\usepackage{listings}|, which is a bit like verbatim but keeps line breaks and whitespaces. Useful for copying in a big block of code like in the python example below:
+
+\begin{lstlisting}
+import numpy as np
+    
+def incmatrix(genl1,genl2):
+    m = len(genl1)
+    n = len(genl2)
+    M = None #to become the incidence matrix
+    VT = np.zeros((n*m,1), int)  #dummy variable
+    
+    #compute the bitwise xor matrix
+    M1 = bitxormatrix(genl1)
+    M2 = np.triu(bitxormatrix(genl2),1) 
+
+    for i in range(m-1):
+        for j in range(i+1, m):
+            [r,c] = np.where(M2 == M1[i,j])
+            for k in range(len(r)):
+                VT[(i)*n + r[k]] = 1;
+                VT[(i)*n + c[k]] = 1;
+                VT[(j)*n + r[k]] = 1;
+                VT[(j)*n + c[k]] = 1;
+                
+                if M is None:
+                    M = np.copy(VT)
+                else:
+                    M = np.concatenate((M, VT), 1)
+                
+                VT = np.zeros((n*m,1), int)
+    
+    return M
+\end{lstlisting}
+
+Something else pretty funky is that you can pull code from a file like below, which pulls from the main file in python (i've also tried adding a caption):
+
+\lstinputlisting[language=Python, caption=Main Example]{PythonCode/main.py}
+
+You can also make it pull from some specific lines, as follows:
+
+\lstinputlisting[language=Python, firstline=2, lastline=6]{PythonCode/main.py}
+
+Of course, the tricky thing about this is that it's live; all of this will change as you edit main, and as you shut lines about. We could try this:
+
+\lstinputlisting[language=Python]{PythonCode/main.py}
+
+
+ 
+
 
 \end{document}
