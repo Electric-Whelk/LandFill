@@ -1,3 +1,7 @@
+import scrython
+
+
+
 def decorator(func):
     def wrapper(self):
         top = "wrapping...\n"
@@ -52,4 +56,20 @@ playlist = [
     Band("Fugazi", "Post-Hardcore", "Red Medicine", ["Ian MacKaye", "Guy Picciotto", "Joe Lally", "Brendan Canty"])
        ]
 
-print(playlist[0].name)
+#set = Set.find('dsk')
+#print(set.name)
+
+#prices': {'usd': '0.07', 'usd_foil': '0.64', 'usd_etched':
+result = scrython.cards.Search(q='tasigur')
+print(str(result.total_cards()) + " cards:")
+for card in result.data():
+    print("card: " + card['name'])
+    print("cmc: " + card['mana_cost'])
+    print("price: " + card['prices']['usd'])
+    print("object: " + str(card))
+
+"""'Black Lotus'
+>> > card.id()
+'bd8fa327-dd41-4737-8f19-2cf5eb1f7cdd'
+>> > card.oracle_text()
+'{T}, Sacrifice Black Lotus: Add three mana of any one color to your mana pool.'"""
