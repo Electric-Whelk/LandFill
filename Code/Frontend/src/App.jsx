@@ -10,7 +10,7 @@ function App() {
   const submitCards = async (e) => {
     e.preventDefault()
 
-    const url = "http://127.0.0.1:5000/general_test"
+    const url = "http://127.0.0.1:5000/test_input"
     const options = {
       method: "POST",
       headers: {
@@ -19,26 +19,31 @@ function App() {
       body: JSON.stringify({nonLands})
     }
 
-    response = await fetch(url, options)
-    console.log(response.json().message)
+    const response = await fetch(url, options)
+    const info = await response.json()
+    console.log(info.message)
+    let result = document.getElementById("output")
+    result.innerText = info.message
 
+    
 }
 
   return (
     <>
     <form onSubmit={submitCards}>
-      <div>
-        <label htmlFor="nonLands">nonLands</label>
-        <input
-          type="text"
-          id="nonLands"
-          value={nonLands}
-          onChange={(e) => setNonLands(e.target.value)}
-        />
-      </div>
-      <button type="submit">Submit</button>
+      <textarea
+        cols="40"
+        rows="5"
+        id="nonLands"
+        value={nonLands}
+        onChange={(e) => setNonLands(e.target.value)}>     
 
+        </textarea>
+      <div>
+      <button type="submit">Submit</button>
+      </div>
     </form>
+         <p id="output"></p>
     </>
   )
 }
