@@ -1,0 +1,2 @@
+to run Backend server: cd Backend -> python3 main.py
+to run Frontend server: cd Frontend -> npm run dev
