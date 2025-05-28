@@ -9,7 +9,7 @@ def test_input():
     print(non_lands)
     session = Session(request.json)
 
-    return jsonify({"message": f"We got your message: {session.non_lands}"})
+    return jsonify({"message": f"\"{session.non_lands}\""})
 
 if __name__ == "__main__":
     app.run(debug=True)
