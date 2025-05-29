@@ -2,8 +2,8 @@ from unittest.mock import PropertyMock
 
 import scrython
 
-class Session:
-    def __init__(self, input):
+class Sesh:
+    def __init__(self):
         #factors that are determined once at the start and are not changed as the program iterates
         self._non_lands = input.get("nonLands")
         self._format = input.get("Format")
