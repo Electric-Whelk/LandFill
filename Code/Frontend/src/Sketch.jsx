@@ -1,17 +1,36 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './sketch.css'
+import FormatList from "./FormatList"
 
 
 const Sketch = () => {
+    const [allFormats, setAllFormats] = useState([]);
+    const [nonLands, setNonLands] = useState("")
+    const [format, setFormat] = useState({})
+    const [quantity, setQuantity] = useState(0)
 
-  const [nonLands, setNonLands] = useState("")
+    useEffect(() => {
+    fetchFormats()
+    }, []);
+
+    const fetchFormats = async() => {
+        const response = await fetch("http://127.0.0.1:5000/fetch_formats")
+        const data = await response.json()
+        setFormat(data.formats[0].name)
+        setAllFormats(data.formats)
+    }
+
+
 
   const monteCarlo = async (e) => {
     e.preventDefault()
 
+    console.log("MonteCarlo submits: " + JSON.stringify({nonLands}))
+
     const url = "http://127.0.0.1:5000/test_input"
     const options = {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json"
       },
@@ -23,9 +42,29 @@ const Sketch = () => {
     console.log(info.message)
     let result = document.getElementById("lands")
     result.innerText = info.message
-
-    
   }
+
+  const lock = async (e) => {
+    e.preventDefault()
+    const url = "http://127.0.0.1:5000/set_session"
+
+    console.log("Trying to submit: " + JSON.stringify({nonLands, format, quantity}))
+
+    const options = {
+        method: "POST",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({nonLands, format, quantity})
+    }
+    const response = await fetch(url, options)
+    const info = await response.json()
+    console.log("Returned from lock: " + info.message)
+
+  }
+
+
 
   return (
      <div class="container">
@@ -37,16 +76,16 @@ const Sketch = () => {
             </textarea>
             <div>
             <label for="formats">Format:</label>
-            <select name="formats" id="formats">
-            <option value="standard">Standard</option>
-            <option value="modern">Modern</option>
-            <option value="legacy">Legacy</option>
-            <option value="EDH">EDH</option>
+            <select name="formats" id="formats" onChange={(e) => setFormat(e.target.value)}>
+            <FormatList formats={allFormats}/>
             </select> 
             </div>
             <div>
             <label for="quantity">Lands to fill:</label>
-            <input type="number" id="quantity" name="quantity"/> 
+            <input type="number" id="quantity" name="quantity" onChange={(e) => setQuantity(e.target.value)}/> 
+            </div>
+            <div>
+            <button onClick={lock}type="button">Lock</button>
             </div>
         </div>
 
