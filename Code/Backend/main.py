@@ -5,8 +5,6 @@ from PlayerInput import PlayerInput
 from Formats import Format
 
 
-
-
 @app.route("/test_input", methods=["POST"])
 def test_input():
     #non_lands = request.json.get("nonLands")
@@ -18,6 +16,9 @@ def fetch_formats():
     formats = Format.query.all()
     json_formats = list(map(lambda x: x.to_json(), formats))
     return jsonify({"formats": json_formats})
+
+@app.route("/fetch_cycles", methods=["GET"])
+
 
 @app.route("/set_session", methods=["POST"])
 def set_session():

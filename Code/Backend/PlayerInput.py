@@ -1,6 +1,4 @@
-from unittest.mock import PropertyMock
-
-from CardLibrary import CardLibrary
+from Scrythonning.CardLibrary import CardLibrary
 
 class PlayerInput:
     def __init__(self, non_lands, format, quantity):

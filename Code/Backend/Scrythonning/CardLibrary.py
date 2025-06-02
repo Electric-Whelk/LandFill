@@ -24,6 +24,7 @@ class CardLibrary:
         for card in result.data():
             sp = card['name'].split(" // ")
             if search_term in sp:
+                print(card["prices"])
                 return card
         raise CustomExceptions.CardNotFound(search_term)
 

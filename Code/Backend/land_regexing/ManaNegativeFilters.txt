@@ -1,0 +1,28 @@
+HomeLands:
+An-Havva Township | [] | {T}: Add {C}. {1}, {T}: Add {G}. {2}, {T}: Add {R} or {W}.
+Aysen Abbey | [] | {T}: Add {C}. {1}, {T}: Add {W}. {2}, {T}: Add {G} or {U}.
+Castle Sengir | [] | {T}: Add {C}. {1}, {T}: Add {B}. {2}, {T}: Add {U} or {R}.
+Koskun Keep | [] | {T}: Add {C}. {1}, {T}: Add {R}. {2}, {T}: Add {B} or {G}.
+Wizards' School | [] | {T}: Add {C}. {1}, {T}: Add {U}. {2}, {T}: Add {W} or {B}.
+
+GROUPING Self-Negating:
+Crypt of the Eternals | [] | When this land enters, you gain 1 life. {T}: Add {C}. {1}, {T}: Add {U}, {B}, or {R}.
+Conduit Pylons | ['Desert'] | When this land enters, surveil 1. (Look at the top card of your library. You may put it into your graveyard.) {T}: Add {C}. {1}, {T}: Add one mana of any color.
+Crystal Grotto | [] | When this land enters, scry 1. {T}: Add {C}. {1}, {T}: Add one mana of any color.
+Guildmages' Forum | [] | {T}: Add {C}. {1}, {T}: Add one mana of any color. If that mana is spent on a multicolored creature spell, that creature enters with an additional +1/+1 counter on it.
+Hall of Oracles | [] | {T}: Add {C}. {1}, {T}: Add one mana of any color. {T}: Put a +1/+1 counter on target creature. Activate only as a sorcery and only if you've cast an instant or sorcery spell this turn.
+Opal Palace | [] | {T}: Add {C}. {1}, {T}: Add one mana of any color in your commander's color identity. If you spend this mana to cast your commander, it enters with a number of additional +1/+1 counters on it equal to the number of times it's been cast from the command zone this game.
+Painted Bluffs | ['Desert'] | {T}: Add {C}. {1}, {T}: Add one mana of any color.
+Planar Nexus | [] | This land is every nonbasic land type. (Nonbasic land types include Cave, Desert, Gate, Lair, Locus, Mine, Power-Plant, Sphere, Tower, and Urza's.) {T}: Add {C}. {1}, {T}: Add one mana of any color.
+The Mycosynth Gardens | ['Sphere'] | {T}: Add {C}. {1}, {T}: Add one mana of any color. {X}, {T}: This land becomes a copy of target nontoken artifact you control with mana value X.
+
+Misc:
+School of the Unseen | [] | {T}: Add {C}. {2}, {T}: Add one mana of any color.
+Crystal Quarry | [] | {T}: Add {C}. {5}, {T}: Add {W}{U}{B}{R}{G}.
+Abstergo Entertainment | [] | {T}: Add {C}. {1}, {T}: Add one mana of any color. {3}, {T}, Exile Abstergo Entertainment: Return up to one target historic card from your graveyard to your hand, then exile all graveyards. (Artifacts, legendaries, and Sagas are historic.)
+Capital City | ['Town'] | {T}: Add {C}. {1}, {T}: Add one mana of any color. Cycling {2} ({2}, Discard this card: Draw a card.)
+Captivating Cave | ['Cave'] | {T}: Add {C}. {1}, {T}: Add one mana of any color. {4}, {T}, Sacrifice this land: Put two +1/+1 counters on target creature. Activate only as a sorcery.
+Cave of Temptation | [] | {T}: Add {C}. {1}, {T}: Add one mana of any color. {4}, {T}, Sacrifice this land: Put two +1/+1 counters on target creature. Activate only as a sorcery.
+Hall of Tagsin | [] | {T}: Add {C}. {1}, {T}: Add one mana of any color. {4}, {T}: Create a tapped Powerstone token. (It's an artifact with "{T}: Add {C}. This mana can't be spent to cast a nonartifact spell.")
+Talon Gates of Madara | ['Gate'] | When this land enters, up to one target creature phases out. {T}: Add {C}. {1}, {T}: Add one mana of any color. {4}: Put this card from your hand onto the battlefield.
+Cascading Cataracts | [] | Indestructible {T}: Add {C}. {5}, {T}: Add five mana in any combination of colors.

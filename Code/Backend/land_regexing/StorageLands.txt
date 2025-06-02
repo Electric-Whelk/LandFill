@@ -1,0 +1,24 @@
+
+Dual Storage Lands:
+Calciform Pools | [] | {T}: Add {C}. {1}, {T}: Put a storage counter on this land. {1}, Remove X storage counters from this land: Add X mana in any combination of {W} and/or {U}.
+Dreadship Reef | [] | {T}: Add {C}. {1}, {T}: Put a storage counter on this land. {1}, Remove X storage counters from this land: Add X mana in any combination of {U} and/or {B}.
+Fungal Reaches | [] | {T}: Add {C}. {1}, {T}: Put a storage counter on this land. {1}, Remove X storage counters from this land: Add X mana in any combination of {R} and/or {G}.
+Molten Slagheap | [] | {T}: Add {C}. {1}, {T}: Put a storage counter on this land. {1}, Remove X storage counters from this land: Add X mana in any combination of {B} and/or {R}.
+Saltcrusted Steppe | [] | {T}: Add {C}. {1}, {T}: Put a storage counter on this land. {1}, Remove X storage counters from this land: Add X mana in any combination of {G} and/or {W}.
+
+Do-not-untap storage lands:
+Bottomless Vault | [] | This land enters tapped. You may choose not to untap this land during your untap step. At the beginning of your upkeep, if this land is tapped, put a storage counter on it. {T}, Remove any number of storage counters from this land: Add {B} for each storage counter removed this way.
+Dwarven Hold | [] | This land enters tapped. You may choose not to untap this land during your untap step. At the beginning of your upkeep, if this land is tapped, put a storage counter on it. {T}, Remove any number of storage counters from this land: Add {R} for each storage counter removed this way.
+Hollow Trees | [] | This land enters tapped. You may choose not to untap this land during your untap step. At the beginning of your upkeep, if this land is tapped, put a storage counter on it. {T}, Remove any number of storage counters from this land: Add {G} for each storage counter removed this way.
+Icatian Store | [] | This land enters tapped. You may choose not to untap this land during your untap step. At the beginning of your upkeep, if this land is tapped, put a storage counter on it. {T}, Remove any number of storage counters from this land: Add {W} for each storage counter removed this way.
+Sand Silos | [] | This land enters tapped. You may choose not to untap this land during your untap step. At the beginning of your upkeep, if this land is tapped, put a storage counter on it. {T}, Remove any number of storage counters from this land: Add {U} for each storage counter removed this way.
+
+Monocolor storage lands:
+Fountain of Cho | [] | This land enters tapped. {T}: Put a storage counter on this land. {T}, Remove any number of storage counters from this land: Add {W} for each storage counter removed this way.
+Mercadian Bazaar | [] | This land enters tapped. {T}: Put a storage counter on this land. {T}, Remove any number of storage counters from this land: Add {R} for each storage counter removed this way.
+Rushwood Grove | [] | This land enters tapped. {T}: Put a storage counter on this land. {T}, Remove any number of storage counters from this land: Add {G} for each storage counter removed this way.
+Saprazzan Cove | [] | This land enters tapped. {T}: Put a storage counter on this land. {T}, Remove any number of storage counters from this land: Add {U} for each storage counter removed this way.
+Subterranean Hangar | [] | This land enters tapped. {T}: Put a storage counter on this land. {T}, Remove any number of storage counters from this land: Add {B} for each storage counter removed this way.
+
+Misc:
+Mage-Ring Network | [] | {T}: Add {C}. {1}, {T}: Put a storage counter on this land. {T}, Remove any number of storage counters from this land: Add {C} for each storage counter removed this way.
