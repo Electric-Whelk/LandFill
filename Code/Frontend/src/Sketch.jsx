@@ -16,6 +16,7 @@ const Sketch = () => {
     const fetchFormats = async() => {
         const response = await fetch("http://127.0.0.1:5000/fetch_formats")
         const data = await response.json()
+        console.log("Formats: " + data.formats)
         setFormat(data.formats[0].name)
         setAllFormats(data.formats)
     }

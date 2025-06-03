@@ -3,4 +3,4 @@ class SpellFace:
 
 
 
-        #Spell Face: Name, W, U, B, R, G, C, G, Typeline, Text, Card
+        #Spell Face: Name, W, U, B, R, G, C, G, Typeline, Text, SCCard

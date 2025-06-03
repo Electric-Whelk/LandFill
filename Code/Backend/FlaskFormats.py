@@ -1,11 +1,11 @@
-from Config import db
+from Config import flask_db
 
-class Format(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), unique=True, nullable=False)
-    max = db.Column(db.Integer, unique=False, nullable=False)
-    singleton = db.Column(db.Boolean, unique=False, nullable=False)
-    hard_max = db.Column(db.Boolean, unique=False, nullable=False)
+class Format(flask_db.Model):
+    id = flask_db.Column(flask_db.Integer, primary_key=True)
+    name = flask_db.Column(flask_db.String(80), unique=True, nullable=False)
+    max = flask_db.Column(flask_db.Integer, unique=False, nullable=False)
+    singleton = flask_db.Column(flask_db.Boolean, unique=False, nullable=False)
+    hard_max = flask_db.Column(flask_db.Boolean, unique=False, nullable=False)
 
     def to_json(self):
         return {
@@ -23,12 +23,12 @@ class Format(db.Model):
     edh = Format(name="EDH", max=100, singleton=True, hard_max=True)
 
     try:
-        db.session.add(standard)
-        db.session.add(modern)
-        db.session.add(legacy)
-        db.session.add(edh)
+        flask_db.session.add(standard)
+        flask_db.session.add(modern)
+        flask_db.session.add(legacy)
+        flask_db.session.add(edh)
 
-        db.session.commit()
+        flask_db.session.commit()
     except Exception as e:
         print("OOPS: " + str(e))
 """
