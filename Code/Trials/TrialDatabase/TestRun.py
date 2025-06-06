@@ -1,5 +1,7 @@
 import scrython
 from Cards.Card import Card
+from Cards.Face import Face
+from Cards.LandFace import LandFace
 from Cards.SpellFace import SpellFace
 from Cards.TestCards import test_cards
 from Configure_DB import Base
@@ -55,6 +57,11 @@ with session as sesh:
     control_panel(sesh, allcards,
                   destroy=False,
                   mass_insert=False,
-                  scalars_statement = select(SpellFace).join(SpellFace._card).where(Card._id == 4))
+                  scalars_statement = select(Face._card).where(Face._name == 'Bala Ged Sanctuary')
+                  )
+
+
+
+    #scalars_statement = select(Face).join(Face._card).where(Card._id == 4)
     sesh.commit()
 
