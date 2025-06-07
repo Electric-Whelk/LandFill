@@ -94,7 +94,7 @@ Tundra | ['Plains', 'Island'] | ({T}: Add {W} or {U}.)
 Underground Sea | ['Island', 'Swamp'] | ({T}: Add {U} or {B}.)
 Volcanic Island | ['Island', 'Mountain'] | ({T}: Add {U} or {R}.)
 
-Activate Restriction Duals:
+Verge Duals:
 Blazemire Verge | [] | {T}: Add {B}. {T}: Add {R}. Activate only if you control a Swamp or a Mountain.
 Bleachbone Verge | [] | {T}: Add {B}. {T}: Add {W}. Activate only if you control a Plains or a Swamp.
 Floodfarm Verge | [] | {T}: Add {W}. {T}: Add {U}. Activate only if you control a Plains or an Island.

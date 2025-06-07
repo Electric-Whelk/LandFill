@@ -17,15 +17,20 @@ class Face(Base):
     _card_id: Mapped[int] = mapped_column(ForeignKey('cards._id'), nullable=False)
     _name: Mapped[str] = mapped_column(nullable=False)
     _typeline: Mapped[str] = mapped_column(nullable=False)
-    _text: Mapped[str] = mapped_column(nullable=False)
-    _type: Mapped[str] = mapped_column(nullable=False)
+    _text: Mapped[str] = mapped_column(nullable=True)
+    _w: Mapped[int] = mapped_column(nullable=True)
+    _u: Mapped[int] = mapped_column(nullable=True)
+    _b: Mapped[int] = mapped_column(nullable=True)
+    _r: Mapped[int] = mapped_column(nullable=True)
+    _g: Mapped[int] = mapped_column(nullable=True)
+    _c: Mapped[int] = mapped_column(nullable=True)
+    _gen: Mapped[int] = mapped_column(nullable=True)
+    _x: Mapped[int] = mapped_column(nullable=True)
+    _playable: Mapped[bool] = mapped_column(nullable=True)
+    _land: Mapped[bool] = mapped_column(nullable=False)
 
     _card: Mapped["Card"] = relationship(back_populates="_faces")
 
-    __mapper_args__ = {
-        "polymorphic_on": _type,
-        "polymorphic_identity": "base_face",
-    }
 
     #override methods
     def __repr__(self):
@@ -66,8 +71,75 @@ class Face(Base):
         self._text = value
 
     @property
-    def type(self):
-        return self._type
+    def white(self) -> int:
+        return self._w
+    @white.setter
+    def white(self, value:int):
+        self._w = value
+
+    @property
+    def black(self) -> int:
+        return self._b
+    @black.setter
+    def black(self, value:int):
+        self._b = value
+
+    @property
+    def red(self) -> int:
+        return self._r
+    @red.setter
+    def red(self, value:int):
+        self._r = value
+
+    @property
+    def green(self) -> int:
+        return self._g
+    @green.setter
+    def green(self, value:int):
+        self._g = value
+
+    @property
+    def blue(self) -> int:
+        return self._u
+    @blue.setter
+    def blue(self, value:int):
+        self._u = value
+
+    @property
+    def colorless(self) -> int:
+        return self._c
+    @colorless.setter
+    def colorless(self, value:int):
+        self._c = value
+
+    @property
+    def x_in_cost(self) -> int:
+        return self._x
+    @x_in_cost.setter
+    def x_in_cost(self, value:int):
+        self._x = value
+
+    @property
+    def generic(self):
+        return self._gen
+    @generic.setter
+    def generic(self, value:int):
+        self._gen = value
+
+    @property
+    def playable(self) -> bool:
+        return self._playable
+    @playable.setter
+    def playable(self, value:bool):
+        self._playable = value
+
+    @property
+    def land(self) -> bool:
+        return self._land
+    @land.setter
+    def land(self, value:bool):
+        self._land = value
+
 
 
     #cached properties
@@ -104,14 +176,39 @@ class Face(Base):
     def supertypes(self) -> List[str]:
         return self.parsed_types["supertypes"]
 
+    #methods used in construction
+    def parse_mana_cost(self, cost):
+        self.generic = 0
+        cost = list(cost)
+        dict = {'W': 0, 'U': 0, 'B': 0, 'R': 0, 'G': 0, 'C': 0, 'X': 0}
+        i = 0
+        j = 1
+        while i < len(cost):
+            if cost[i] == "{":
+                pip = cost[j]
+                if str.isdigit(pip):
+                    self.generic = int(pip)
+                else:
+                    dict[pip] += 1
+            i += 1
+            j += 1
 
-
+        self.white = dict['W']
+        self.blue = dict['U']
+        self.black = dict['B']
+        self.red = dict['R']
+        self.green = dict['G']
+        self.colorless = dict['C']
+        self.x_in_cost = dict['X']
 
 
     def parse_face_object(self, obj):
         self._name = obj['name']
         self._text = obj['oracle_text']
         self._typeline = obj['type_line']
+        self._land = 'Land' in self.cardtypes
+
+        self.parse_mana_cost(obj['mana_cost'])
 
 
 
