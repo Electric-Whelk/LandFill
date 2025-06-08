@@ -18,15 +18,16 @@ class Face(Base):
     _name: Mapped[str] = mapped_column(nullable=False)
     _typeline: Mapped[str] = mapped_column(nullable=False)
     _text: Mapped[str] = mapped_column(nullable=True)
-    _w: Mapped[int] = mapped_column(nullable=True)
-    _u: Mapped[int] = mapped_column(nullable=True)
-    _b: Mapped[int] = mapped_column(nullable=True)
-    _r: Mapped[int] = mapped_column(nullable=True)
-    _g: Mapped[int] = mapped_column(nullable=True)
-    _c: Mapped[int] = mapped_column(nullable=True)
-    _gen: Mapped[int] = mapped_column(nullable=True)
-    _x: Mapped[int] = mapped_column(nullable=True)
-    _playable: Mapped[bool] = mapped_column(nullable=True)
+    _w: Mapped[int] = mapped_column(nullable=False)
+    _u: Mapped[int] = mapped_column(nullable=False)
+    _b: Mapped[int] = mapped_column(nullable=False)
+    _r: Mapped[int] = mapped_column(nullable=False)
+    _g: Mapped[int] = mapped_column(nullable=False)
+    _c: Mapped[int] = mapped_column(nullable=False)
+    _gen: Mapped[int] = mapped_column(nullable=False)
+    _x: Mapped[int] = mapped_column(nullable=False)
+    _s: Mapped[int] = mapped_column(nullable=False)
+    _playable: Mapped[bool] = mapped_column(nullable=False)
     _land: Mapped[bool] = mapped_column(nullable=False)
 
     _card: Mapped["Card"] = relationship(back_populates="_faces")
@@ -120,6 +121,13 @@ class Face(Base):
         self._x = value
 
     @property
+    def snow(self) -> int:
+        return self._s
+    @snow.setter
+    def snow(self, value:int):
+        self._s = value
+
+    @property
     def generic(self):
         return self._gen
     @generic.setter
@@ -180,7 +188,7 @@ class Face(Base):
     def parse_mana_cost(self, cost):
         self.generic = 0
         cost = list(cost)
-        dict = {'W': 0, 'U': 0, 'B': 0, 'R': 0, 'G': 0, 'C': 0, 'X': 0}
+        dict = {'W': 0, 'U': 0, 'B': 0, 'R': 0, 'G': 0, 'C': 0, 'X': 0, 'S': 0, 'Y': 0, 'Z':0}
         i = 0
         j = 1
         while i < len(cost):
@@ -200,6 +208,7 @@ class Face(Base):
         self.green = dict['G']
         self.colorless = dict['C']
         self.x_in_cost = dict['X']
+        self.snow = dict['S']
 
 
     def parse_face_object(self, obj):
@@ -209,33 +218,3 @@ class Face(Base):
         self._land = 'Land' in self.cardtypes
 
         self.parse_mana_cost(obj['mana_cost'])
-
-
-
-
-    """
-    FOR POSTERITY - this was the mixin class approach
-    @declared_attr
-    def _id(cls) -> Mapped[int]:
-        return mapped_column(primary_key=True)
-
-    @declared_attr
-    def _card_id(cls) -> Mapped[int]:
-        return mapped_column(ForeignKey('cards._id'), nullable=False)
-
-    @declared_attr
-    def _name(cls) -> Mapped[str]:
-        return mapped_column(nullable=False)
-
-    @declared_attr
-    def _typeline(cls) -> Mapped[str]:
-        return mapped_column(nullable=False)
-
-    @declared_attr
-    def _text(cls) -> Mapped[str]:
-        return mapped_column(nullable=False)
-
-    @declared_attr
-    def _card(cls) -> Mapped["Card"]:
-        return relationship("Card",back_populates="_faces")
-    """

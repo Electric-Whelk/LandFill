@@ -3,7 +3,7 @@ from Cards.Card import Card
 from Cards.Face import Face
 #from Cards.LandFace import LandFace
 #from Cards.SpellFace import SpellFace
-from Cards.TestCards import test_cards
+from Scrythonning.TestCards import test_cards
 from Configure_DB import Base
 from Configure_DB import engine
 from Configure_DB import session
@@ -30,15 +30,12 @@ def clear_table(session, cls):
         session.delete(object)
 
 
-def control_panel(session,
+def control_panel(session, cards,
           destroy:bool=False,
           mass_insert:bool=False,
-          scalars_statement=None):
+          scalars_statement=None,
+          include_cycles:bool=False,):
     if destroy:
-        amid("destroying")
-        #clear_table(session, Card)
-        #clear_table(session, Face)
-        #'"""
         cards = session.query(Card).all()
         faces = session.query(Face).all()
         for card in cards:
@@ -46,11 +43,9 @@ def control_panel(session,
         for face in faces:
             session.delete(face)
             #"""
-
         sesh.commit()
     if mass_insert:
-        amid("creating")
-        pull_TestCards(session)
+        pull_cards(session, cards, cycles=include_cycles)
         sesh.commit()
     if scalars_statement is not None:
         result = sesh.scalars(scalars_statement)
@@ -59,22 +54,22 @@ def control_panel(session,
             print(r)
         print("/Results")
 
-def pull_TestCards(session):
+def pull_cards(session, input_cards, cycles=False):
     allcards = []
     count = 0
 
-    amid("beginning")
 
-    for obj in test_cards:
+    for obj in input_cards:
         count += 1
         try:
             c = Card()
             session.add(c)
             c.parse_scrython_object(obj)
-            c.determine_cycle_from_session(session)
+            if cycles:
+                c.determine_cycle_from_session(session)
             allcards.append(c)
         except Exception as e:
-            print("Error for card " + str(count) + ": " + str(e))
+            print("Error for card " + obj["name"] + ": " + str(e))
         session.add_all(allcards)
 
 def rebuild_cycles(session):
@@ -87,10 +82,11 @@ def rebuild_cycles(session):
 with session as sesh:
     Base.metadata.create_all(bind=engine)
 
-    control_panel(sesh,
+    control_panel(sesh, test_cards,
                   destroy=False,
                   mass_insert=True,
-                  scalars_statement = None)
+                  scalars_statement = None,
+                  include_cycles=True)
 
     #rebuild_cycles(sesh)
 
