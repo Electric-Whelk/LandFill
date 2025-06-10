@@ -148,8 +148,6 @@ class Face(Base):
     def land(self, value:bool):
         self._land = value
 
-
-
     #cached properties
     @cached_property
     def parsed_types(self) -> Dict[str, List[str]]:
@@ -218,3 +216,11 @@ class Face(Base):
         self._land = 'Land' in self.cardtypes
 
         self.parse_mana_cost(obj['mana_cost'])
+
+    #general functions (alphabetized)
+    def to_json(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "text": self.text
+        }

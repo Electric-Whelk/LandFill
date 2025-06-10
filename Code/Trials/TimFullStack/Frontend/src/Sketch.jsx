@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import './sketch.css'
 import FormatList from "./FormatList"
+import CyclePanel from "./CyclePanel"
 
 
 const Sketch = () => {
@@ -8,9 +9,13 @@ const Sketch = () => {
     const [nonLands, setNonLands] = useState("")
     const [format, setFormat] = useState({})
     const [quantity, setQuantity] = useState(0)
+    const [allCycles, setAllCycles] = useState([])
+    const [currency, setCurrency] = useState()
 
     useEffect(() => {
     fetchFormats()
+    fetchCycles()
+    setCurrency("GBP")
     }, []);
 
     const fetchFormats = async() => {
@@ -21,12 +26,20 @@ const Sketch = () => {
         setAllFormats(data.formats)
     }
 
+    const fetchCycles = async() => {
+        const response = await fetch("http://127.0.0.1:5000/fetch_cycles")
+        const data = await response.json()
+        console.log("Cycles: " + data.cycles)
+        setAllCycles(data.cycles)
+    }
+
 
 
   const monteCarlo = async (e) => {
     e.preventDefault()
 
     console.log("MonteCarlo submits: " + JSON.stringify({nonLands}))
+    console.log("currency: " + currency)
 
     const url = "http://127.0.0.1:5000/test_input"
     const options = {
@@ -77,7 +90,7 @@ const Sketch = () => {
             </textarea>
             <div>
             <label for="formats">Format:</label>
-            <select name="formats" id="formats" onChange={(e) => setFormat(e.target.value)}>
+            <select name="formats" id="formats" onChange={(e) => setFormat(e.target.content)}>
             <FormatList formats={allFormats}/>
             </select> 
             </div>
@@ -86,7 +99,7 @@ const Sketch = () => {
             <input type="number" id="quantity" name="quantity" onChange={(e) => setQuantity(e.target.value)}/> 
             </div>
             <div>
-            <button onClick={lock}type="button">Lock</button>
+            <button onClick={lock}type="button">Confirm Decklist</button>
             </div>
         </div>
 
@@ -107,6 +120,15 @@ const Sketch = () => {
             </div>
 
             <div>
+            <label for="currency">Currency</label>
+            <select name="currency" id="currency" onChange={(e) => setCurrency(e.target.value)}>
+                <option>GBP</option>
+                <option>USD</option>
+                <option>EU</option>
+            </select>
+            </div>
+
+            <div>
             <label for="painThresh">Pain Threshold</label>
             <input type="number" id="painThresh" name="painThresh"/>
             </div>
@@ -120,8 +142,7 @@ const Sketch = () => {
             <h2>Metrics:</h2>
             </div>
 
-        </div>
-        
+        </div>        
         <div id="output">
             <textarea id="lands"
                 cols="40"
@@ -140,41 +161,9 @@ const Sketch = () => {
                 <label for="includeNonLands"> Include nonlands</label>
             </div>
         </div>
-
+        
         <div class="landOptions">
-            <div>
-                <div class="cycleName">
-                    <input type="checkbox" id="Shocks" name="Shocks"/>
-                    <label for="Shocks"> ShockLands</label>
-                </div>
-                <div class="cycle">
-                    <input type="checkbox" id="Steam Vents" name="Steam Vents"/>
-                    <label for="Steam Vents">Steam Vents</label><br />
-                    
-                    <input type="checkbox" id="Sacred Foundry" name="Sacred Foundry"/>
-                    <label for="Sacred Foundry">Sacred Foundry</label><br />
-
-                    <input type="checkbox" id="shockEtc" name="shockEtc"/>
-                    <label for="shockEtc">etc...</label><br />
-                </div>
-            </div>
-
-            <div>
-                <div class="cycleName">
-                    <input type="checkbox" id="Fetches" name="Fetches"/>
-                    <label for="Fetches"> Fetch Lands</label>
-                </div>
-                <div class="cycle">
-                    <input type="checkbox" id="Scalding Tarn" name="Scalding Tarn"/>
-                    <label for="Scalding Tarn">Scalding Tarn</label><br />
-                    
-                    <input type="checkbox" id="Arid Mesa" name="Arid Mesa"/>
-                    <label for="Arid Mesa">Arid Mesa</label><br />
-
-                    <input type="checkbox" id="fetchEtc" name="fetchEtc"/>
-                    <label for="fetchEtc">etc...</label><br />
-                </div>
-            </div>
+            <CyclePanel cycles={allCycles}/>
         </div>
 
     </div>

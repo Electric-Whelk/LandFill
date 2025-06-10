@@ -49,7 +49,7 @@ def mass_lookup(search_term, session):
 
 #cmc=2 and game:paper
 
-with session as session:
-    Base.metadata.create_all(bind=engine)
-    search_term = ("cmc>5 and game:paper")
-    mass_lookup(search_term, session)
+#with session as session:
+    #Base.metadata.create_all(bind=engine)
+    #search_term = ("cmc>5 and game:paper")
+    #mass_lookup(search_term, session)

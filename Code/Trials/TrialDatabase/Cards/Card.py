@@ -5,14 +5,13 @@ from Cards.Face import Face
 #from Cards.SpellFace import SpellFace
 #from Cards.LandFace import LandFace
 from Configure_DB import Base
-from Other_Tables.Cycles import Cycle
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 from typing import List
 
-from Other_Tables.Cycles import Cycle
+#from Other_Tables.Cycles import Cycle
 
 
 class Card(Base):
@@ -56,7 +55,7 @@ class Card(Base):
 
 
     _faces: Mapped[List["Face"]] = relationship(back_populates="_card")
-    _cycle: Mapped["Cycle"] = relationship(back_populates="_card")
+    _cycle: Mapped["Cycle"] = relationship(back_populates="_cards")
 
     def __repr__(self):
         return '<Card %r>' % self._name
@@ -173,26 +172,24 @@ class Card(Base):
             self.produced = "".join(produced)
         except Exception:
             self.produced = "none"
-
-    def determine_cycle_from_session(self, session):
-        all_cycles = session.query(Cycle).all()
-        for cycle in all_cycles:
-            if self.cycle is not None:
-                break
-            regex = cycle.regex
-            for face in self.faces:
-                test_face = face.text.replace("\n", " ")
-                l_test_face = len(test_face)
-                matched = re.search(regex, test_face)
-                if matched is not None:
-                    span = matched.span()
-                    if span[0] == 0 and span[1] == l_test_face:
-                        print("")
-                        print(self.name)
-                        print("")
-                        self.cycle_id = cycle.id
-
-
+    """
+        def determine_cycle_from_session(self, session):
+            all_cycles = session.query(Cycle).all()
+            for cycle in all_cycles:
+                if self.cycle is not None:
+                    break
+                regex = cycle.regex
+                for face in self.faces:
+                    test_face = face.text.replace("\n", " ")
+                    l_test_face = len(test_face)
+                    matched = re.search(regex, test_face)
+                    if matched is not None:
+                        span = matched.span()
+                        if span[0] == 0 and span[1] == l_test_face:
+                            print("Adding " + self.name + " to cycle " + cycle.name)
+                            self.cycle_id = cycle.id
+    
+    """
     def determine_face_playability(self):
         if self.layout == 'transform' or self.layout == 'flip':
             self.faces[0].playable = True
@@ -281,5 +278,16 @@ class Card(Base):
         self.determine_legalities(sco['legalities'])
 
 
+    #general use functions (alphabetized)
+    def to_json(self):
+        json_faces = [x.to_json() for x in self.faces]
+        return {
+            "id": self.id,
+            "name": self.name,
+            "cmc": self.cmc,
+            "usd": self.usd,
+            "eur": self.eur,
+            "faces": json_faces,
+        }
 
 

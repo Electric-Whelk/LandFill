@@ -6,9 +6,12 @@ from FlaskFormats import FlaskFormat
 
 import sys
 sys.path.insert(1, '../../TrialDatabase/')
+
 from Format import Format
 from Configure_DB import engine
 from Configure_DB import session as dbsesh
+from Other_Tables.Cycles import Cycle
+
 
 
 @app.route("/test_input", methods=["POST"])
@@ -26,14 +29,18 @@ def fetch_formats_flask():
 
 @app.route("/fetch_formats_pure_sql", methods=["GET"])
 def fetch_formats_pure_sql():
+    print("fetching formats")
     formats = dbsesh.query(Format).all()
     json_formats = list(map(lambda x: x.to_json(), formats))
     return jsonify({"formats": json_formats})
 
 
-
-
 @app.route("/fetch_cycles", methods=["GET"])
+def fetch_cycles():
+    print("Fetching Cycles")
+    cycles = dbsesh.query(Cycle).all()
+    json_formats = list(map(lambda x: x.lands_to_json(), cycles))
+    return jsonify({"cycles": json_formats})
 
 
 @app.route("/set_session", methods=["POST"])
