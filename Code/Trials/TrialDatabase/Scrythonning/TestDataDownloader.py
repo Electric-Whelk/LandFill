@@ -21,7 +21,7 @@ def format_test_data(term, description):
     print("Added " + item["name"] + "...")
     count += 1
 
-"""
+
 format_test_data("Mikaeus the Unhallowed", "purespell")
 format_test_data("Tasigur, the Golden Fang", "not a shock land")
 format_test_data("Blood Crypt", "shock land")
@@ -60,8 +60,6 @@ format_test_data("Riverpyre Verge", "Verge dual 2")
 format_test_data("Silent Clearing", "PainDraw 1")
 format_test_data("Waterlogged Grove", "PainDraw 2")
 format_test_data("Lovestruck Beast", "Adventure" )
-"""
-
 format_test_data("little girl", "manually adding")
 
 with open("Scrythonning/TestCards.py", "a") as test_cards:

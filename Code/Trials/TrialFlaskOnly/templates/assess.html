@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Assess</title>
+</head>
+<body>
+{%if marks>50 %}
+<h1>Congratulations {{ name }}, you pass!</h1>
+{% else %}
+<h1>I'm sorry, {{ name }}, you'll need to resit</h1>
+{% endif %}
+</body>
+</html>
