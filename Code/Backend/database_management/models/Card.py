@@ -1,4 +1,7 @@
 from database_management.models.Face import Face
+from database_management.models.Format import Format
+from database_management.models.Game import Game
+from database_management.models.Intermediates import Banned, Restricted, Legal, GameCards
 from Extensions import db
 from typing import List
 
@@ -7,7 +10,7 @@ from typing import List
 class Card(db.Model):
     __tablename__ = 'cards'
     _id = db.Column(db.Integer, primary_key=True)
-    _name = db.Column(db.String, nullable=False)
+    _name = db.Column(db.String, nullable=False, unique=True)
     _cmc = db.Column(db.String, nullable=False)
     _usd = db.Column(db.String, nullable=False)
     _eur = db.Column(db.String, nullable=False)
@@ -18,9 +21,22 @@ class Card(db.Model):
     _game_changer = db.Column(db.Boolean, nullable=False)
     _silver_bordered = db.Column(db.Boolean, nullable=False)
     _cycle_id = db.Column(db.Integer, db.ForeignKey('cycles._id'), nullable=True)
+    _last_printing = db.Column(db.String, nullable=False)
 
     _faces = db.relationship('Face', back_populates='_card')
     _cycle = db.relationship('Cycle', back_populates='_cards')
+
+    _banned = db.relationship('Format', secondary=Banned.__table__, back_populates='_banned')
+    _restricted = db.relationship('Format', secondary=Restricted.__table__, back_populates='_restricted')
+    _legal = db.relationship('Format', secondary=Legal.__table__, back_populates='_legal')
+
+    _games = db.relationship('Game', secondary=GameCards.__table__, back_populates='_cards')
+
+    def __init__(self):
+        self._banned = []
+        self._restricted = []
+        self._legal = []
+        self._games = []
     
     #getters and setters
     @property
@@ -103,6 +119,51 @@ class Card(db.Model):
     @silver_bordered.setter
     def silver_bordered(self, value:bool):
         self._silver_bordered = value
+
+    @property
+    def banned(self) -> List["Format"]:
+        return self._banned
+    @banned.setter
+    def banned(self, value:List["Format"]):
+        self._banned = value
+
+    @property
+    def restricted(self) -> List["Format"]:
+        return self._restricted
+    @restricted.setter
+    def restricted(self, value:List["Format"]):
+        self._restricted = value
+
+    @property
+    def legal(self) -> List["Format"]:
+        return self._legal
+    @legal.setter
+    def legal(self, value:List["Format"]):
+        self._legal = value
+
+    @property
+    def games(self) -> List["Game"]:
+        return self._games
+    @games.setter
+    def games(self, value:List["Game"]):
+        self._games = value
+
+    @property
+    def last_printing(self) -> str:
+        return self._last_printing
+    @last_printing.setter
+    def last_printing(self, value:str):
+        self._last_printing = value
+
+    @property
+    def cycle_id(self) -> int:
+        return self._cycle_id
+    @cycle_id.setter
+    def cycle_id(self, value:int):
+        self._cycle_id = value
+
+
+
     
     #parsing functions
     def check_for_produced(self, sco):
@@ -125,7 +186,24 @@ class Card(db.Model):
         else:
             for face in self.faces:
                 face.playable = True
-    
+
+    def determine_games_from_object(self, sco):
+        games_list = sco['games']
+        games_table = db.session.query(Game).all()
+        for game in games_table:
+            if game.scryfall_name in games_list:
+                self.games.append(game)
+
+
+    def determine_legality_from_object(self, sco):
+        formats = db.session.query(Format).all()
+        for format in formats:
+            try:
+                status = sco['legalities'][format.scryfall_name]
+            except KeyError:
+                status = format.display_name
+            self.set_format_association(format, status)
+
     def handle_nullable(self, object, value_if_null):
         try:
             if object is not None:
@@ -144,7 +222,7 @@ class Card(db.Model):
         except KeyError:
             output.append(self.parse_face(sco))
         return output
-    
+
     def parse_face(self, sco):
         face = Face()
         face.parse_face_object(sco)
@@ -159,6 +237,7 @@ class Card(db.Model):
         self.layout = sco['layout']
         self.game_changer = sco['game_changer']
         self.silver_bordered = sco['set_type'] == 'funny'
+        self.last_printing = sco['set_name']
         self.cycle_id = 0
         self.check_for_produced(sco)
 
@@ -166,4 +245,18 @@ class Card(db.Model):
         self.determine_face_playability()
 
         self.overall_land = self.check_if_land()
+
+    def set_format_association(self, format, status):
+        match status:
+            case 'not_legal':
+                self.banned.append(format)
+            case 'legal':
+                self.legal.append(format)
+            case 'restricted':
+                self.restricted.append(format)
+            case 'Limited':
+                self.legal.append(format)
+            case _:
+                raise Exception(f"{status} not understood by format association function")
+
 

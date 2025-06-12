@@ -11,6 +11,10 @@ def create_app():
     from database_management.models.Card import Card
     from database_management.models.Face import Face
     from database_management.models.Cycle import Cycle
+    from database_management.models.Format import Format
+    from database_management.models.Intermediates import (Banned, Restricted, Legal,
+    GameCards, GameFormats)
+
 
     with app.app_context():
         db.create_all()
