@@ -1,4 +1,5 @@
 from AppFactory import create_app
+#from database_management.fillscripts.AllCards import all_cards
 from database_management.fillscripts.CycleList import all_cycles
 from database_management.fillscripts.FormatList import all_formats
 from database_management.fillscripts.GamesList import all_games
@@ -10,10 +11,10 @@ from sqlalchemy import MetaData, text
 app = create_app()
 
 with app.app_context():
-    #engine = db.engine
-    #metadata = MetaData()
-    #metadata.reflect(bind=engine)
-    man = DBManager(db, app)
+    engine = db.engine
+    metadata = MetaData()
+    metadata.reflect(bind=engine)
+    man = DBManager(db, app, engine, metadata)
 
 
     man.manage_cycles(
@@ -41,9 +42,10 @@ with app.app_context():
         drop = False,
         clear = False,
         mass_insert = False,
-        source = 5,
-        parse_legality = False,
-        list_unknown_legalities = False
+        source = 0,
+        parse_legality = True,
+        list_unknown_legalities = True,
+        fix = False
     )
 
     man.get_card_information(
@@ -51,6 +53,7 @@ with app.app_context():
         source=test_cards
     )
 
-    print(man.count_rows("cards", condition="_layout='multiple'"))
+
+
 
 

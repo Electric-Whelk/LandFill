@@ -67,6 +67,9 @@ format_test_data("Chalice of the Void", "restricted in vintage")
 format_test_data("little girl", "manually adding")
 format_test_data("B.F.M. (Big Furry Monster)", "unset duplication nonsense")
 format_test_data("Scavenger Hunt", "even more unset duplication nonsense")
+format_test_data("Runescale Stormbrood", "Omen")
+
+
 
 
 

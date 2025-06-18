@@ -1,41 +1,55 @@
 import unittest
+import random
 
 from AppFactory import create_app
 from database_management.DBManager import DBManager
 from Extensions import db
+from sqlalchemy import MetaData
 
 class UnitTestDB(unittest.TestCase):
 
     def __init__(self, methodName='runTest'):
         super().__init__(methodName)
 
-        self.dbm = DBManager(db, create_app())
+        self.app = create_app()
 
-
-    def test_count(self):
-        not_funny = self.dbm.count_rows("cards",
-                                        condition = "_silver_bordered = 0",
-                                        context = True)
-
-        crd = {"not_funny": "_silver_bordered = 0",
-                      "adventure": "_layout = 'adventure'"
-               }
-
-        for key in crd:
-            value = crd[key]
-            crd[key] = self.dbm.count_rows("cards",
-                                           condition = value,
-                                           context = True)
+        with self.app.app_context():
+            engine = db.engine
+            metadata = MetaData()
+            metadata.reflect(bind=engine)
+            self.dbm = DBManager(db, self.app, engine, metadata)
 
 
 
-        self.assertEqual(crd["not_funny"], 29266)
-        self.assertEqual(crd["adventure"], 122)
 
-    def cmc_gradient(self):
-        #corresponds respectively to the number of printed cards of cmc 0, 1, 2, 3, 4, 5 and greater
-        #used in assert testing for a mass download
-        #will also need to be incorporated into any scheduled update routine, but for now can just
-        #be declared.
-        return [1299, 2932, 6198, 7104, 5620, 3549, 3165]
+    def test_multiple_faces(self):
+        with self.app.app_context():
+
+            i = 1
+            while i <= 500:
+                #max = 29822
+
+                #id = 26042
+                id = random.randrange(1, 29823)
+                i += 1
+                card = self.dbm.key_lookup(id, "cards", "id")
+                faces = self.dbm.key_lookup(card.id, "faces", "card_id",
+                                            expect_single=False)
+
+                print(f"Testing {card.name}...")
+
+                listfaces = list(faces)
+                facecount = len(listfaces)
+                silver = card.silver_bordered
+
+                #non-unset cards should always have 2 or fewer faces
+                if not silver:
+                    self.assertLessEqual(facecount, 2, f"improper facecount for {card.name}")
+
+                #two faces never have the same text
+                if facecount == 2:
+                    self.assertNotEqual(listfaces[0], listfaces[1], f"unequal faces for {card.name}")
+
+
+
 

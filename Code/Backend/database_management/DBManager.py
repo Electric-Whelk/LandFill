@@ -14,20 +14,17 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy import (MetaData, Table, text)
 
 class DBManager:
-    def __init__(self, db, app):
+    def __init__(self, db, app, engine, metadata):
         self._db = db
-        self._app = app
-
-        """        
         self._app = app
         self._engine = engine
         self._metadata = metadata
 
-        """
         self._model_map = {
             "cards": Card,
+            "faces": Face,
             "formats": Format,
-            "cycles": Cycle
+            "cycles": Cycle,
         }
 
 
@@ -40,20 +37,20 @@ class DBManager:
     @property
     def app(self):
         return self._app
-    """
+
     @property
     def engine(self):
         return self._engine
 
     @property
     def metadata(self):
-        return self._metadata"""
+        return self._metadata
 
     @property
     def model_map(self):
         return self._model_map
 
-    #useful functions
+    #SETUP FUNCTIONS
 
     def add_entry(self, entry):
         try:
@@ -68,20 +65,14 @@ class DBManager:
         self.cards_from_list(list, parse_legality=True, list_unknown_legalities=True)
 
     def card_in_table(self, name):
-        command = f"SELECT COUNT(*) FROM cards WHERE _name = \"{name}\""
+        """        command = f"SELECT COUNT(*) FROM cards WHERE _name = \"{name}\""
         result = self.db.session.execute(text(command))
         tally = result.fetchone()[0]
         if tally != 0:
             return True
         else:
-            return False
-
-    def db_execute(self, statement, context=False):
-        if context:
-            with self.app.app_context():
-                return self.db.session.execute(statement)
-        else:
-            return self.db.session.execute(statement)
+            return False"""
+        return self.db.session.query(Card).filter(Card._name == name).count() > 0
 
     def cards_from_list(self, list, parse_legality=False, list_unknown_legalities=False):
         for sco in list:
@@ -126,6 +117,8 @@ class DBManager:
 
     def clear(self, table_name):
         table = self.fetch_table(table_name)
+        if table is None:
+            raise Exception(f"Table '{table_name}' does not exist")
         items = table.query
         items.delete(synchronize_session=False)
         self.db.session.commit()
@@ -158,6 +151,16 @@ class DBManager:
         card.layout = layout
         self.db.session.commit()
 
+    def fix_card_multiples(self):
+        pass
+
+    def fix_cards(self):
+        self.fix_card_multiples()
+        self.fix_omens()
+
+    def fix_omens(self):
+        statement = select(Card).join(Card.faces).where(Face.type)
+
     def get_card_information(self,
                              run = False,
                              source = None,
@@ -183,7 +186,7 @@ class DBManager:
                 self.lookup(search_term)
                 time.sleep(1)
                 print(f"Downloaded cards where cmc{comp}{cmc}...")
-                quant = self.count_rows("cards", f"cmc{comp}{cmc}")
+                quant = self.count_rows("cards", f"_cmc{comp}{cmc}")
                 print(f"Table contains {quant} cards of that description")
                 i += 1
             except Exception as e:
@@ -191,15 +194,37 @@ class DBManager:
                 break
         self.add_single_card("Little Girl")
 
+    def download_to_file(self):
+        more = True
+        page = 1
+        with open("database_management/fillscripts/AllCards.py", "w") as all_cards:
+            all_cards.seek(0)
+            all_cards.truncate()
+            all_cards.write("all_cards = [")
+        while more:
+            output = []
+            #(game:paper)
+            result = scrython.cards.Search(q="(game:paper)", page=page)
+            for card in result.data():
+                output.append(card)
+            print("Batch downloaded for page " + str(page))
+            for item in output:
+                with open("database_management/fillscripts/AllCards.py", "a") as all_cards:
+                    all_cards.write("\n")
+                    all_cards.write(str(item) + ",")
+            print("Added to file for page " + str(page))
+            more = result.has_more()
+            page += 1
+            time.sleep(0.2)
+            print("")
+        with open("database_management/fillscripts/AllCards.py", "a") as all_cards:
+            all_cards.write("]")
 
     def drop_from_string(self, string):
         table = self.fetch_table(string)
         self.db.session.delete(table)
         self.db.session.commit()
         pass
-
-    def fetch_table(self, string):
-        return self.model_map.get(string)
 
     def list_unknown(self, sco):
         formats = self.db.session.query(Format).all()
@@ -222,7 +247,8 @@ class DBManager:
                      mass_insert=False,
                      source=None,
                      parse_legality=False,
-                     list_unknown_legalities=False):
+                     list_unknown_legalities=False,
+                     fix = False):
         if drop:
             Card.__table__.drop(self._engine)
             Face.__table__.drop(self._engine)
@@ -237,6 +263,8 @@ class DBManager:
                 self.cards_from_list(source, parse_legality, list_unknown_legalities)
             else:
                 self.download(source)
+        if fix:
+            self.fix_cards()
 
     def manage_cycles(self,
                        drop=False,
@@ -304,6 +332,7 @@ class DBManager:
             time.sleep(0.5)
 
     def run_join(self, t):
+        pass
 
     def where_statement(self, command, condition = None):
         if condition is None:
@@ -313,6 +342,50 @@ class DBManager:
         else:
             new_command = command + " WHERE " + condition
             return new_command
+
+
+    #STATEMENT GRAMMAR FUNCTIONS
+    def fetch_attribute(self, key, table):
+        match key:
+            case "card_id":
+                return table._card_id
+            case "id":
+                return table._id
+            case _:
+                raise Exception(f"no match for proposed attribute {key}")
+
+
+    #ACCESS FUNCTIONS
+
+    def db_execute(self, statement, context=False):
+        if context:
+            with self.app.app_context():
+                return self.db.session.execute(statement)
+        else:
+            return self.db.session.execute(statement)
+
+    def db_scalars(self, statement, context=False):
+        if context:
+            with self.app.app_context():
+                return self.db.session.scalars(statement)
+        else:
+            return self.db.session.scalars(statement)
+
+
+
+    def fetch_table(self, string):
+        return self.model_map.get(string)
+
+    def key_lookup(self, term, tablename, key, expect_single=True, context=False):
+        table = self.fetch_table(tablename)
+        attribute = self.fetch_attribute(key, table)
+        statement = select(table).where(attribute == term)
+        result = self.db_scalars(statement, context)
+        if expect_single:
+            return result.one()
+        else:
+            return result
+
 
 
 
