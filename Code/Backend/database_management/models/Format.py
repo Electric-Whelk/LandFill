@@ -14,11 +14,23 @@ class Format(db.Model):
     _mtg_online = db.Column(db.Boolean, nullable=False)
     _paper = db.Column(db.Boolean, nullable=False)
 
-    _banned = db.relationship('Card', secondary=Banned.__table__, back_populates='_banned')
-    _restricted = db.relationship('Card', secondary=Restricted.__table__, back_populates='_restricted')
-    _legal = db.relationship('Card', secondary=Legal.__table__, back_populates='_legal')
+    _banned = db.relationship('Card',
+                              secondary=Banned.__table__,
+                              back_populates='_banned',
+                              passive_deletes=True)
+    _restricted = db.relationship('Card',
+                                  secondary=Restricted.__table__,
+                                  back_populates='_restricted',
+                                  passive_deletes=True)
+    _legal = db.relationship('Card',
+                             secondary=Legal.__table__,
+                             back_populates='_legal',
+                             passive_deletes=True)
 
-    _games = db.relationship('Game', secondary=GameFormats.__table__, back_populates='_formats')
+    _games = db.relationship('Game',
+                             secondary=GameFormats.__table__,
+                             back_populates='_formats',
+                             passive_deletes=True)
 
     #setters and getters
     @property

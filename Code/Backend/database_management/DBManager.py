@@ -2,23 +2,32 @@ import time
 import scrython
 
 from database_management.models.Card import Card
+from database_management.models.Cycle import Cycle
 from database_management.models.Face import Face
 from database_management.models.Format import Format
+from database_management.models.Game import Game
+from database_management.models.Intermediates import *
+from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 
 
-from sqlalchemy import (MetaData, Table, Text)
+from sqlalchemy import (MetaData, Table, text)
 
 class DBManager:
-    def __init__(self, db, app, engine, metadata):
+    def __init__(self, db, app):
         self._db = db
+        self._app = app
+
+        """        
         self._app = app
         self._engine = engine
         self._metadata = metadata
 
+        """
         self._model_map = {
             "cards": Card,
-            "formats": Format
+            "formats": Format,
+            "cycles": Cycle
         }
 
 
@@ -31,14 +40,14 @@ class DBManager:
     @property
     def app(self):
         return self._app
-
+    """
     @property
     def engine(self):
         return self._engine
 
     @property
     def metadata(self):
-        return self._metadata
+        return self._metadata"""
 
     @property
     def model_map(self):
@@ -58,37 +67,110 @@ class DBManager:
         list = [item]
         self.cards_from_list(list, parse_legality=True, list_unknown_legalities=True)
 
+    def card_in_table(self, name):
+        command = f"SELECT COUNT(*) FROM cards WHERE _name = \"{name}\""
+        result = self.db.session.execute(text(command))
+        tally = result.fetchone()[0]
+        if tally != 0:
+            return True
+        else:
+            return False
+
+    def db_execute(self, statement, context=False):
+        if context:
+            with self.app.app_context():
+                return self.db.session.execute(statement)
+        else:
+            return self.db.session.execute(statement)
 
     def cards_from_list(self, list, parse_legality=False, list_unknown_legalities=False):
         for sco in list:
-            new_card = Card()
-            self.db.session.add(new_card)
-            new_card.parse_scrython_object(sco)
-            new_card.determine_games_from_object(sco)
-            if parse_legality:
-                new_card.determine_legality_from_object(sco)
-                if list_unknown_legalities:
-                    self.list_unknown(new_card)
-            self.add_entry(new_card)
+            if not self.check_edge_case(sco):
+                new_card = Card()
+                new_card.parse_scrython_object(sco)
+                self.db.session.add(new_card)
+                self.db.session.flush()
+                new_card.determine_games_from_object(sco)
+                if parse_legality:
+                    new_card.determine_legality_from_object(sco)
+                    if list_unknown_legalities:
+                        self.list_unknown(sco)
+                self.add_entry(new_card)
 
-    def cmc_gradient(self):
-        #corresponds respectively to the number of printed cards of cmc 0, 1, 2, 3, 4, 5 and greater
-        #used in assert testing for a mass download
-        #will also need to be incorporated into any scheduled update routine, but for now can just
-        #be declared.
-        return [1299, 2932, 6198, 7104, 5620, 3549, 3165]
+    def card_from_table(self, name):
+        command = select(Card).where(Card._name.in_([name]))
+        result = self.db.session.scalars(command)
+        return result.first()
+
+
+    def check_edge_case(self, sco):
+        edge_case = True
+        unset_multiples = ["Ineffable Blessing",
+                           "Knight of the Kitchen Sink",
+                           "Sly Spy",
+                           "Very Cryptic Command",
+                           "Everythingamajig",
+                           "Garbage Elemental"]
+        if sco['name'] == 'B.F.M. (Big Furry Monster)' and self.card_in_table(sco['name']):
+            self.edge_case_nonunique(sco, "bfm")
+        elif sco['type_line'] == 'Artifact — Attraction' and self.card_in_table(sco['name']):
+            self.edge_case_nonunique(sco, "multiple")
+        elif sco['name'] in unset_multiples and self.card_in_table(sco['name']):
+            self.edge_case_nonunique(sco, "multiple")
+        elif sco['name'] == 'Little Girl':
+            self.edge_case_little_girl(sco)
+        else:
+            edge_case = False
+        return edge_case
+
 
     def clear(self, table_name):
         table = self.fetch_table(table_name)
-        items = table.query.all()
-        for item in items:
-            self.db.session.delete(item)
+        items = table.query
+        items.delete(synchronize_session=False)
         self.db.session.commit()
 
-    def download(self):
-        grads = self.cmc_gradient()
-        i = 0
-        expected = 0
+    def count_rows(self, table_name, condition = None, context = False):
+        command = self.where_statement("SELECT COUNT(*) FROM " + table_name, condition)
+        result = self.db_execute(text(command), context)
+        output = result.fetchone()[0]
+        if not isinstance(output, int):
+            raise Exception(f"Received {output} from {table_name} when counting rows")
+        else:
+            return output
+
+    def edge_case_little_girl(self, sco):
+        sco["cmc"] = 1
+        lg = Card()
+        lg.parse_scrython_object(sco)
+
+        self.db.session.add(lg)
+        self.db.session.flush()
+        lg.determine_games_from_object(sco)
+        lg.determine_legality_from_object(sco)
+        self.list_unknown(sco)
+        self.add_entry(lg)
+
+
+    def edge_case_nonunique(self, sco, layout):
+        card = self.card_from_table(sco['name'])
+        card.add_face_manually(sco)
+        card.layout = layout
+        self.db.session.commit()
+
+    def get_card_information(self,
+                             run = False,
+                             source = None,
+                             subsect = "legalities"):
+        if run:
+            sample = source[0][subsect]
+            for item in sample:
+                print (item)
+
+
+
+    def download(self, start):
+        i = start
         while i <= 6:
             if i <= 5:
                 cmc = str(i)
@@ -97,14 +179,12 @@ class DBManager:
                 cmc = "5"
                 comp = ">"
             try:
-                expected += grads[i]
                 search_term = (f"cmc{comp}{cmc} and game=paper")
+                self.lookup(search_term)
                 time.sleep(1)
-                count = self.db.session.execute(Text("SELECT COUNT(_id) FROM cards"))
-                if count != expected:
-                    raise Exception(f"Expected {expected} but got {count}")
-                else:
-                    print(f"Downloaded cards where cmc{comp}{cmc}...")
+                print(f"Downloaded cards where cmc{comp}{cmc}...")
+                quant = self.count_rows("cards", f"cmc{comp}{cmc}")
+                print(f"Table contains {quant} cards of that description")
                 i += 1
             except Exception as e:
                 print(f"Error where cmc{comp}{cmc}: {e}")
@@ -146,14 +226,32 @@ class DBManager:
         if drop:
             Card.__table__.drop(self._engine)
             Face.__table__.drop(self._engine)
+            Banned.__table__.drop(self._engine)
+            Restricted.__table__.drop(self._engine)
+            Legal.__table__.drop(self._engine)
+            GameCards.__table__.drop(self._engine)
         if clear:
             self.clear("cards")
         if mass_insert:
-            if source is not None:
+            if not isinstance(source, int):
                 self.cards_from_list(source, parse_legality, list_unknown_legalities)
             else:
-                self.download()
+                self.download(source)
 
+    def manage_cycles(self,
+                       drop=False,
+                       clear=False,
+                       mass_insert=False,
+                       source=None):
+        if drop:
+            Cycle.__table__.drop(self._engine)
+        if clear:
+            self.clear("cycles")
+        if mass_insert:
+            if source is not None:
+                self.objects_from_list(source)
+            else:
+                raise Exception("source is required")
 
     def manage_formats(self,
                        drop=False,
@@ -162,6 +260,7 @@ class DBManager:
                        source=None):
         if drop:
             Format.__table__.drop(self._engine)
+            GameFormats.__table__.drop(self._engine)
         if clear:
             self.clear("formats")
         if mass_insert:
@@ -176,7 +275,7 @@ class DBManager:
                      mass_insert=False,
                      source=None):
         if drop:
-            Format.__games__.drop(self._engine)
+            Game.__table__.drop(self._engine)
         if clear:
             self.clear("games")
         if mass_insert:
@@ -203,6 +302,17 @@ class DBManager:
             more = result.has_more()
             page += 1
             time.sleep(0.5)
+
+    def run_join(self, t):
+
+    def where_statement(self, command, condition = None):
+        if condition is None:
+            return command
+        if not isinstance(condition, str):
+            raise Exception(f"where_statement: condition for command {command} must be str")
+        else:
+            new_command = command + " WHERE " + condition
+            return new_command
 
 
 

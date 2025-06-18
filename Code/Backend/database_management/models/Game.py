@@ -8,8 +8,14 @@ class Game(db.Model):
     _display_name = db.Column(db.String, nullable=False, unique=True)
     _scryfall_name = db.Column(db.String, nullable=False)
 
-    _cards = db.relationship('Card', secondary=GameCards.__table__, back_populates='_games')
-    _formats = db.relationship('Format',secondary=GameFormats.__table__, back_populates='_games')
+    _cards = db.relationship('Card',
+                             secondary=GameCards.__table__,
+                             back_populates='_games',
+                             passive_deletes=True)
+    _formats = db.relationship('Format',
+                               secondary=GameFormats.__table__,
+                               back_populates='_games',
+                               passive_deletes=True)
 
     @property
     def scryfall_name(self) -> str:

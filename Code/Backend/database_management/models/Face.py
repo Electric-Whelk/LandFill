@@ -5,8 +5,8 @@ from typing import List, Dict
 class Face(db.Model):
     __tablename__ = 'faces'
     _id = db.Column(db.Integer, primary_key=True)
-    _card_id = db.Column(db.Integer, db.ForeignKey('cards._id'))
-    _name = db.Column(db.String, nullable=False, unique=True)
+    _card_id = db.Column(db.Integer, db.ForeignKey('cards._id', ondelete='CASCADE'), nullable=False)
+    _name = db.Column(db.String, nullable=False)
     _typeline = db.Column(db.String, nullable=False)
     _text = db.Column(db.String, nullable=True)
     _playable = db.Column(db.Boolean, nullable=False)

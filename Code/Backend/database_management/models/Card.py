@@ -11,7 +11,7 @@ class Card(db.Model):
     __tablename__ = 'cards'
     _id = db.Column(db.Integer, primary_key=True)
     _name = db.Column(db.String, nullable=False, unique=True)
-    _cmc = db.Column(db.String, nullable=False)
+    _cmc = db.Column(db.Integer, nullable=False)
     _usd = db.Column(db.String, nullable=False)
     _eur = db.Column(db.String, nullable=False)
     _color_identity = db.Column(db.String, nullable=False)
@@ -20,17 +20,32 @@ class Card(db.Model):
     _layout = db.Column(db.String, nullable=False)
     _game_changer = db.Column(db.Boolean, nullable=False)
     _silver_bordered = db.Column(db.Boolean, nullable=False)
-    _cycle_id = db.Column(db.Integer, db.ForeignKey('cycles._id'), nullable=True)
+    _cycle_id = db.Column(db.Integer, db.ForeignKey('cycles._id'), nullable=False)
     _last_printing = db.Column(db.String, nullable=False)
 
-    _faces = db.relationship('Face', back_populates='_card')
     _cycle = db.relationship('Cycle', back_populates='_cards')
 
-    _banned = db.relationship('Format', secondary=Banned.__table__, back_populates='_banned')
-    _restricted = db.relationship('Format', secondary=Restricted.__table__, back_populates='_restricted')
-    _legal = db.relationship('Format', secondary=Legal.__table__, back_populates='_legal')
+    _faces = db.relationship('Face',
+                             back_populates='_card',
+                             passive_deletes=True)
 
-    _games = db.relationship('Game', secondary=GameCards.__table__, back_populates='_cards')
+    _banned = db.relationship('Format',
+                              secondary=Banned.__table__,
+                              back_populates='_banned',
+                              passive_deletes=True)
+    _restricted = db.relationship('Format',
+                                  secondary=Restricted.__table__,
+                                  back_populates='_restricted',
+                                  passive_deletes=True)
+    _legal = db.relationship('Format',
+                             secondary=Legal.__table__,
+                             back_populates='_legal',
+                             passive_deletes=True)
+
+    _games = db.relationship('Game',
+                             secondary=GameCards.__table__,
+                             back_populates='_cards',
+                             passive_deletes=True)
 
     def __init__(self):
         self._banned = []
@@ -164,8 +179,12 @@ class Card(db.Model):
 
 
 
-    
     #parsing functions
+    def add_face_manually(self, sco):
+        self.faces.append(self.parse_face(sco))
+        self.determine_face_playability()
+        self.overall_land = self.check_if_land()
+
     def check_for_produced(self, sco):
         try:
             produced = sco["produced_mana"]
@@ -204,14 +223,14 @@ class Card(db.Model):
                 status = format.display_name
             self.set_format_association(format, status)
 
-    def handle_nullable(self, object, value_if_null):
+    def handle_price(self, object):
         try:
             if object is not None:
-                return object
+                return int(float(object) * 100)
             else:
-                return value_if_null
+                return -1
         except KeyError:
-            return value_if_null
+            return -1
         
     def list_faces(self, sco):
         output = []
@@ -232,13 +251,15 @@ class Card(db.Model):
         self.name = sco['name']
         self.color_identity = ''.join(sco['color_identity'])
         self.cmc = sco['cmc']
-        self.usd = self.handle_nullable(sco['prices']['usd'], -1)
-        self.eur = self.handle_nullable(sco['prices']['eur'], -1)
+
+
+        self.usd = self.handle_price(sco['prices']['usd'])
+        self.eur = self.handle_price(sco['prices']['eur'])
         self.layout = sco['layout']
         self.game_changer = sco['game_changer']
         self.silver_bordered = sco['set_type'] == 'funny'
         self.last_printing = sco['set_name']
-        self.cycle_id = 0
+        self.cycle_id = 1
         self.check_for_produced(sco)
 
         self.faces = self.list_faces(sco)
@@ -249,6 +270,8 @@ class Card(db.Model):
     def set_format_association(self, format, status):
         match status:
             case 'not_legal':
+                self.banned.append(format)
+            case 'banned':
                 self.banned.append(format)
             case 'legal':
                 self.legal.append(format)

@@ -11,14 +11,15 @@ with open("database_management/fillscripts/TestCards.py", "w") as test_cards:
 def format_test_data(term, description):
     time.sleep(0.1)
     global count
-    item = scrython.cards.Search(q=term).data()[0]
-    comment = "#" + str(count) + ": " + item["name"] + " - " + description
-    with open("database_management/fillscripts/TestCards.py", "a") as test_cards:
-        test_cards.write("\n")
-        test_cards.write(comment)
-        test_cards.write("\n")
-        test_cards.write(str(item) + ",")
-    print("Added " + item["name"] + "...")
+    data = scrython.cards.Search(q=term).data()
+    for item in data:
+        comment = "#" + str(count) + ": " + item["name"] + " - " + description
+        with open("database_management/fillscripts/TestCards.py", "a") as test_cards:
+            test_cards.write("\n")
+            test_cards.write(comment)
+            test_cards.write("\n")
+            test_cards.write(str(item) + ",")
+        print("Added " + item["name"] + "...")
     count += 1
 
 
@@ -60,9 +61,13 @@ format_test_data("Riverpyre Verge", "Verge dual 2")
 format_test_data("Silent Clearing", "PainDraw 1")
 format_test_data("Waterlogged Grove", "PainDraw 2")
 format_test_data("Lovestruck Beast", "Adventure" )
-format_test_data("little girl", "manually adding")
 format_test_data("Betor, Kin to All", "standard legal")
 format_test_data("Chalice of the Void", "restricted in vintage")
+
+format_test_data("little girl", "manually adding")
+format_test_data("B.F.M. (Big Furry Monster)", "unset duplication nonsense")
+format_test_data("Scavenger Hunt", "even more unset duplication nonsense")
+
 
 
 with open("database_management/fillscripts/TestCards.py", "a") as test_cards:
