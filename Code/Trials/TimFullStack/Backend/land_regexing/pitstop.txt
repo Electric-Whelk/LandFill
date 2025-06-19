@@ -1,0 +1,107 @@
+fast lands:
+This land enters tapped unless you control two or fewer other lands\. \{T\}\: Add \{B\} or \{R\}\.
+
+Slow lands:
+This land enters tapped unless you control two or more other lands\. \{T\}\: Add \{B\} or \{G\}\.
+
+Pain lands:
+\{T\}\: Add \{C\}\. \{T\}\: Add \{W\} or \{U\}\. This land deals 1 damage to you\.
+
+Unlucky lands:
+This land enters tapped unless a player has 13 or less life\. \{T\}\: Add \{W\} or \{U\}\.
+
+Exert lands:
+\{T\}\: Add \{C\}\. \{T\}\: Add \{B\} or \{R\}\. This land doesn\'t untap during your next untap step\.
+
+Informal exert lands:
+This land doesn\'t untap during your untap step if it has a depletion counter on it\. At the beginning of your upkeep\, remove a depletion counter from this land\. \{T\}\: Add \{G\} or \{W\}\. Put a depletion counter on this land\.
+
+Fetch lands:
+\{T\}\, Pay 1 life\, Sacrifice this land\: Search your library for a Mountain or Plains card\, put it onto the battlefield\, then shuffle\.
+
+Vanilla taps (typed, type snow, true vanilla)
+\(\{T\}\: Add \{R\} or \{W\}\.\) This land enters tapped\.
+
+Triomes:
+\(\{T\}\: Add \{W\}\, \{B\}\, or \{G\}\.\) This land enters tapped\. Cycling \{3\} \(\{3\}\, Discard this card\: Draw a card\.\)
+
+Surveil:
+\(\{T\}\: Add \{R\} or \{G\}\.\) This land enters tapped\. When this land enters\, surveil 1\. \(Look at the top card of your library\. You may put it into your graveyard\.\)
+
+Cycling:
+Add \{B\} or \{R\}\.\) This land enters tapped\. Cycling \{2\} \(\{2\}\, Discard this card\: Draw a card\.\)
+
+Locales:
+When this land enters\, sacrifice it\. When you do\, search your library for a basic Forest\, Plains\, or Island card\, put it onto the battlefield tapped\, then shuffle and you gain 1 life\.
+
+Landscapes:
+\{T\}\: Add \{C\}\. \{T\}\, Sacrifice this land\: Search your library for a basic Forest\, Island\, or Mountain card\, put it onto the battlefield tapped\, then shuffle\. Cycling \{G\}\{U\}\{R\} \(\{G\}\{U\}\{R\}\, Discard this card\: Draw a card\.\)
+
+Panoramas:
+\{T\}\: Add \{C\}\. \{1\}\, \{T\}\, Sacrifice this land\: Search your library for a basic Forest\, Plains\, or Island card\, put it onto the battlefield tapped\, then shuffle\.
+
+Mirage Fetches:
+This land enters tapped\. \{T\}\, Sacrifice this land\: Search your library for an Island or Swamp card\, put it onto the battlefield\, then shuffle\.
+
+Time Spiral Storage:
+\{T\}\: Add \{C\}\. \{1\}\, \{T\}\: Put a storage counter on this land\. \{1\}\, Remove X storage counters from this land\: Add X mana in any combination of \{W\} and\/or \{U\}\.
+
+Fallen Empires Storage:
+This land enters tapped\. You may choose not to untap this land during your untap step\. At the beginning of your upkeep\, if this land is tapped\, put a storage counter on it\. \{T\}\, Remove any number of storage counters from this land\: Add \{B\} for each storage counter removed this way\.
+
+Masque Storage:
+This land enters tapped\. \{T\}\: Put a storage counter on this land\. \{T\}\, Remove any number of storage counters from this land\: Add \{W\} for each storage counter removed this way\.
+
+Basic (snow as well)
+\(\{T\}\: Add \{G\}\.\)
+
+Dual faced lands:
+\{T\}\: Add \{U\}\.
+
+Thriving gates:
+This land enters tapped\. As this land enters\, choose a color other than black\. \{T\}\: Add \{B\} or one mana of the chosen color\.
+
+Thriving lands:
+This land enters tapped\. As it enters\, choose a color other than red\. \{T\}\: Add \{R\} or one mana of the chosen color\.
+
+Bounce lands:
+This land enters tapped\. When this land enters\, return a land you control to its owner\'s hand\. \{T\}\: Add \{W\}\{U\}\.
+
+Visions bounces:
+This land enters tapped\. When this land enters\, sacrifice it unless you return an untapped Mountain you control to its owner\'s hand\. \{T\}\: Add \{C\}\{R\}\.
+
+Invasion sac lands:
+This land enters tapped\. \{T\}\: Add \{W\}\. \{T\}\, Sacrifice this land\: Add one mana of any color\.
+
+Vivid lands:
+This land enters tapped with two charge counters on it\. \{T\}\: Add \{R\}\. \{T\}\, Remove a charge counter from this land\: Add one mana of any color\.
+
+Gain lands:
+This land enters tapped\. When this land enters\, you gain 1 life\. \{T\}\: Add \{B\} or \{R\}\.
+
+Tri color tap lands:
+This land enters tapped\. \{T\}\: Add \{W\}\, \{U\}\, or \{B\}\.
+
+lairs:
+When this land enters\, sacrifice it unless you return a non\-Lair land you control to its owner\'s hand\. \{T\}\: Add \{U\}\, \{B\}\, or \{R\}\.
+
+Masque depletion lands:
+This land enters tapped with two depletion counters on it\. \{T\}\, Remove a depletion counter from this land\: Add \{G\}\{G\}\. If there are no depletion counters on this land\, sacrifice it\.
+
+Homelands:
+\{T\}\: Add \{C\}\. \{1\}\, \{T\}\: Add \{G\}\. \{2\}\, \{T\}\: Add \{R\} or \{W\}\.
+
+Junction deserts:
+This land enters tapped\. When this land enters\, it deals 1 damage to target opponent\. \{T\}\: Add \{R\} or \{W\}\.
+
+Guildgates (and they're gates!)
+This land enters tapped\. \{T\}\: Add \{W\} or \{U\}\.
+
+Towns (and they're towns!)
+This land enters tapped\. \{T\}\: Add \{U\} or \{R\}\.
+
+Artifact lands (and they're artifacts!)
+\{T\}\: Add \{W\}\.
+
+Pain taplands:
+This land enters tapped\. \{T\}\: Add \{C\}\. \{T\}\: Add \{U\} or \{R\}\. This land deals 1 damage to you\.

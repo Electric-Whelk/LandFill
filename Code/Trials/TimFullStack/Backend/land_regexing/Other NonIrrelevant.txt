@@ -17,7 +17,7 @@ Dromar's Cavern | ['Lair'] | When this land enters, sacrifice it unless you retu
 Rith's Grove | ['Lair'] | When this land enters, sacrifice it unless you return a non-Lair land you control to its owner's hand. {T}: Add {R}, {G}, or {W}.
 Treva's Ruins | ['Lair'] | When this land enters, sacrifice it unless you return a non-Lair land you control to its owner's hand. {T}: Add {G}, {W}, or {U}
 
-Monocolor Choice Lands:
+GROUPING Monocolor Choice Lands:
 Crossroads Village | ['Town'] | This land enters tapped. As it enters, choose a color. {T}: Add one mana of the chosen color.
 Edgewall Inn | [] | This land enters tapped. As this land enters, choose a color. {T}: Add one mana of the chosen color. {3}, {T}, Sacrifice this land: Return target card that has an Adventure from your graveyard to your hand.
 Mirage Mesa | ['Desert'] | This land enters tapped. As it enters, choose a color. {T}: Add one mana of the chosen color.
@@ -31,7 +31,7 @@ Sandstone Needle | [] | This land enters tapped with two depletion counters on i
 Saprazzan Skerry | [] | This land enters tapped with two depletion counters on it. {T}, Remove a depletion counter from this land: Add {U}{U}. If there are no depletion counters on this land, sacrifice it.
 Remote Farm | [] | This land enters tapped with two depletion counters on it. {T}, Remove a depletion counter from this land: Add {W}{W}. If there are no depletion counters on this land, sacrifice it.
 
-Urza's lands:
+GROUPING Urza's lands:
 Urza's Mine | ["Urza's", 'Mine'] | {T}: Add {C}. If you control an Urza's Power-Plant and an Urza's Tower, add {C}{C} instead.
 Urza's Power Plant | ["Urza's", 'Power-Plant'] | {T}: Add {C}. If you control an Urza's Mine and an Urza's Tower, add {C}{C} instead.
 Urza's Tower | ["Urza's", 'Tower'] | {T}: Add {C}. If you control an Urza's Mine and an Urza's Power-Plant, add {C}{C}{C} instead.
