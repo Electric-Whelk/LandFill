@@ -1,13 +1,14 @@
 CREATE TABLE cycles (
 _id INTEGER NOT NULL PRIMARY KEY
-_name TEXT NOT NULL UNIQUE
-_regex TEXT NOT NULL
-_official BOOLEAN NOT NULL
-_category TEXT NOT NULL
+,_name TEXT NOT NULL UNIQUE
+,_regex TEXT NOT NULL
+,_official BOOLEAN NOT NULL
+,_category TEXT NOT NULL
+,_synergy TEXT NOT NULL
 );
 
-INSERT INTO cycles(_id, _name, _regex, _official, _category)
-VALUES(1, "misc", "NA", False, "undefined")
+INSERT INTO cycles(_id, _name, _regex, _official, _category, _synergy)
+VALUES(1, "misc", "NA", False, "undefined", "None")
 ;
 
 emerging questions:

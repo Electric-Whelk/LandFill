@@ -264,13 +264,14 @@ class DBManager:
             else:
                 self.download(source)
         if fix:
-            self.sort_cycles()
+            self.set_cycles()
 
     def manage_cycles(self,
                        drop=False,
                        clear=False,
                        mass_insert=False,
-                       source=None):
+                       source=None,
+                       reset_cards=False):
         if drop:
             Cycle.__table__.drop(self._engine)
         if clear:
@@ -280,6 +281,8 @@ class DBManager:
                 self.objects_from_list(source)
             else:
                 raise Exception("source is required")
+        if reset_cards:
+            self.set_cycles(reset=True)
 
     def manage_formats(self,
                        drop=False,
@@ -334,11 +337,15 @@ class DBManager:
     def run_join(self, t):
         pass
 
-    def sort_cycles(self):
+    def set_cycles(self, reset=False):
         statement = select(Card)
         results = self.db_scalars(statement)
-        for card in results:
-            card.determine_cycle()
+        if reset:
+            for card in results:
+                card.reset_cycle()
+        else:
+            for card in results:
+                card.determine_cycle()
         self.db.session.commit()
 
     def where_statement(self, command, condition = None):

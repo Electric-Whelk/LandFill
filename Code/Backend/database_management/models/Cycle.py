@@ -6,6 +6,8 @@ class Cycle(db.Model):
     _id = db.Column(db.Integer, primary_key=True)
     _name = db.Column(db.String, nullable=False, unique=True)
     _regex = db.Column(db.String, nullable=False)
+    _official = db.Column(db.Boolean, nullable=False)
+    _category = db.Column(db.String, nullable=False)
 
     _cards = db.relationship('Card', back_populates='_cycle')
 

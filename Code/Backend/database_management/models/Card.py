@@ -207,14 +207,9 @@ class Card(db.Model):
         return True
 
     def determine_cycle(self):
-        statement = select(Cycle).where(Cycle._id == 1)
-        result = db.session.scalars(statement).one()
-        self.cycle = result
+        pass
 
 
-
-
-            
     def determine_face_playability(self):
         if self.layout == 'transform' or self.layout == 'flip':
             self.faces[0].playable = True
@@ -283,6 +278,11 @@ class Card(db.Model):
         self.determine_face_playability()
 
         self.overall_land = self.check_if_land()
+
+    def reset_cycle(self):
+        statement = select(Cycle).where(Cycle._id == 1)
+        result = db.session.scalars(statement).one()
+        self.cycle = result
 
     def set_format_association(self, format, status):
         match status:

@@ -14,6 +14,7 @@ class Cycle(Base):
     _name: Mapped[str] = mapped_column(unique=True, nullable=False)
     _regex: Mapped[str] = mapped_column(unique=True, nullable=True)
 
+
     _cards: Mapped[List["Card"]] = relationship(back_populates="_cycle")
 
     def __repr__(self):
