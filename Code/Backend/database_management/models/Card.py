@@ -1,11 +1,14 @@
+import re
+
 from database_management.models.Cycle import Cycle
 from database_management.models.Face import Face
 from database_management.models.Format import Format
 from database_management.models.Game import Game
 from database_management.models.Intermediates import Banned, Restricted, Legal, GameCards
 from Extensions import db
+from functools import cached_property
 from sqlalchemy import select
-from typing import List
+from typing import Dict, List
 
 #(.*): Mapped\[(.*)\] = mapped_column\((.*)\)
 
@@ -186,6 +189,35 @@ class Card(db.Model):
     def cycle(self, value:Cycle):
         self._cycle = value
 
+    #cached properties
+    @cached_property
+    def parsed_types(self) -> Dict[str, List[str]]:
+        supertypes = []
+        types = []
+        subtypes = []
+
+        for face in self.faces:
+            supertypes.extend(face.supertypes)
+            types.extend(face.cardtypes)
+            subtypes.extend(face.subtypes)
+
+        return {"supertypes": supertypes, "cardtypes": types, "subtypes": subtypes}
+
+    #setter and getter functions that work with cached properties
+    @property
+    def cardtypes(self) -> List[str]:
+        return self.parsed_types["cardtypes"]
+
+    @property
+    def subtypes(self) -> List[str]:
+        return self.parsed_types["subtypes"]
+
+    @property
+    def supertypes(self) -> List[str]:
+        return self.parsed_types["supertypes"]
+
+
+
 
     #parsing functions
     def add_face_manually(self, sco):
@@ -207,7 +239,63 @@ class Card(db.Model):
         return True
 
     def determine_cycle(self):
-        pass
+        self.reset_cycle()
+        land = True
+        for face in self.faces:
+            if "Land" not in face.cardtypes:
+                land = False
+        if land:
+            if len(self.faces) == 2:
+                self.determine_cycle_regex("Dual-Faced")
+            elif "Snow" in self.supertypes:
+                self.determine_cycle_regex("Snow")
+            elif "Gate" in self.cardtypes:
+                self.determine_cycle_regex("Gate")
+            elif "Desert" in self.cardtypes:
+                self.determine_cycle_regex("Desert")
+            elif "Town" in self.cardtypes:
+                self.determine_cycle_regex("Town")
+            elif "Artifact" in self.cardtypes:
+                self.determine_cycle_regex("Artifact")
+            else:
+                self.determine_cycle_regex("None")
+
+
+
+
+    def determine_cycle_regex(self, syn):
+        statement = select(Cycle).where(Cycle._synergy == syn and Cycle._name != "misc")
+        result = db.session.scalars(statement)
+        for c in result:
+            regex = c.regex
+            for face in self.faces:
+                test_face = face.text.replace("\n", " ")
+                l_test_face = len(test_face)
+                matched = re.search(regex, test_face)
+                if matched is not None:
+                    span = matched.span()
+                    if span[0] == 0 and span[1] == l_test_face:
+                        print("Adding " + self.name + " to cycle " + c.name)
+                        self.cycle = c
+
+
+    """    def determine_cycle_from_session(self, session):
+            all_cycles = session.query(Cycle).all()
+            for cycle in all_cycles:
+                if self.cycle is not None:
+                    break
+                regex = cycle.regex
+                for face in self.faces:
+                    test_face = face.text.replace("\n", " ")
+                    l_test_face = len(test_face)
+                    matched = re.search(regex, test_face)
+                    if matched is not None:
+                        span = matched.span()
+                        if span[0] == 0 and span[1] == l_test_face:
+                            print("Adding " + self.name + " to cycle " + cycle.name)
+                            self.cycle_id = cycle.id
+    """
+
 
 
     def determine_face_playability(self):

@@ -1,3 +1,6 @@
+These tricky ones:
+This land enters tapped\. \{T\}\: Add \{U\}\. \{T\}\, Sacrifice this land\: Add \{W\}\{B\}\.
+
 fast lands:
 This land enters tapped unless you control two or fewer other lands\. \{T\}\: Add \{[WUBRG]} or \{[WUBRG]}\.
 
