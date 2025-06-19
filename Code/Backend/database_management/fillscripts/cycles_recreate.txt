@@ -5,11 +5,11 @@ _id INTEGER NOT NULL PRIMARY KEY
 ,_official BOOLEAN NOT NULL
 ,_category TEXT NOT NULL
 ,_synergy TEXT NOT NULL
+,_typed BOOLEAN NOT NULL
 );
 
-INSERT INTO cycles(_id, _name, _regex, _official, _category, _synergy)
-VALUES(1, "misc", "NA", False, "undefined", "None")
-;
+INSERT INTO cycles(_id, _name, _regex, _official, _category, _synergy, _typed)
+VALUES(1, "misc", "NA", False, "undefined", "None", False);
 
 emerging questions:
 format the _regex stuff

@@ -8,6 +8,8 @@ class Cycle(db.Model):
     _regex = db.Column(db.String, nullable=False)
     _official = db.Column(db.Boolean, nullable=False)
     _category = db.Column(db.String, nullable=False)
+    _synergy = db.Column(db.String, nullable=False)
+    _typed = db.Column(db.Boolean, nullable=False)
 
     _cards = db.relationship('Card', back_populates='_cycle')
 
