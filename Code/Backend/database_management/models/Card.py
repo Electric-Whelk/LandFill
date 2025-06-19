@@ -1,8 +1,10 @@
+from database_management.models.Cycle import Cycle
 from database_management.models.Face import Face
 from database_management.models.Format import Format
 from database_management.models.Game import Game
 from database_management.models.Intermediates import Banned, Restricted, Legal, GameCards
 from Extensions import db
+from sqlalchemy import select
 from typing import List
 
 #(.*): Mapped\[(.*)\] = mapped_column\((.*)\)
@@ -177,6 +179,12 @@ class Card(db.Model):
     def cycle_id(self, value:int):
         self._cycle_id = value
 
+    @property
+    def cycle(self) -> Cycle:
+        return self._cycle
+    @cycle.setter
+    def cycle(self, value:Cycle):
+        self._cycle = value
 
 
     #parsing functions
@@ -197,6 +205,15 @@ class Card(db.Model):
             if face.playable and not face.land:
                 return False
         return True
+
+    def determine_cycle(self):
+        statement = select(Cycle).where(Cycle._id == 1)
+        result = db.session.scalars(statement).one()
+        self.cycle = result
+
+
+
+
             
     def determine_face_playability(self):
         if self.layout == 'transform' or self.layout == 'flip':

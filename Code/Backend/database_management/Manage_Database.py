@@ -22,6 +22,7 @@ with app.app_context():
                         clear=False,
                         mass_insert=False,
                         source=all_cycles,
+
     )
 
     man.manage_games(
@@ -43,9 +44,9 @@ with app.app_context():
         clear = False,
         mass_insert = False,
         source = 0,
-        parse_legality = True,
-        list_unknown_legalities = True,
-        fix = False
+        parse_legality = False,
+        list_unknown_legalities = False,
+        fix = True
     )
 
     man.get_card_information(

@@ -264,7 +264,7 @@ class DBManager:
             else:
                 self.download(source)
         if fix:
-            self.fix_cards()
+            self.sort_cycles()
 
     def manage_cycles(self,
                        drop=False,
@@ -333,6 +333,13 @@ class DBManager:
 
     def run_join(self, t):
         pass
+
+    def sort_cycles(self):
+        statement = select(Card)
+        results = self.db_scalars(statement)
+        for card in results:
+            card.determine_cycle()
+        self.db.session.commit()
 
     def where_statement(self, command, condition = None):
         if condition is None:
