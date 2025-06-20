@@ -254,11 +254,19 @@ class Card(db.Model):
 
     def determine_cycle(self):
         self.reset_cycle()
-        land = True
+        check_synergy = True
         for face in self.faces:
             if "Land" not in face.cardtypes:
-                land = False
-        if land:
+                check_synergy = False
+
+        edge_cases = ["Wastes",
+                      "Snow-Covered Wastes",
+                      "Coastal Tower"]
+        if check_synergy and self.name in edge_cases:
+            self.determine_cycle_edge_case()
+            check_synergy = False
+
+        if check_synergy:
             if len(self.faces) == 2:
                 cycle_synergy = "Dual-Faced"
             elif "Snow" in self.supertypes:
@@ -301,22 +309,18 @@ class Card(db.Model):
                         self.cycle = c
 
 
-    """    def determine_cycle_from_session(self, session):
-            all_cycles = session.query(Cycle).all()
-            for cycle in all_cycles:
-                if self.cycle is not None:
-                    break
-                regex = cycle.regex
-                for face in self.faces:
-                    test_face = face.text.replace("\n", " ")
-                    l_test_face = len(test_face)
-                    matched = re.search(regex, test_face)
-                    if matched is not None:
-                        span = matched.span()
-                        if span[0] == 0 and span[1] == l_test_face:
-                            print("Adding " + self.name + " to cycle " + cycle.name)
-                            self.cycle_id = cycle.id
-    """
+    def determine_cycle_edge_case(self):
+        match self.name:
+            case "Wastes":
+                self.cycle = db.session.query(Cycle).filter(Cycle._name == "Basic Lands").first()
+            case "Snow-Covered Wastes":
+                self.cycle = db.session.query(Cycle).filter(Cycle._name == "Snow Basic Lands").first()
+            case "Coastal Tower":
+                self.cycle = db.session.query(Cycle).filter(Cycle._name == "Vanilla Dual Lands").first()
+
+
+
+
 
 
 

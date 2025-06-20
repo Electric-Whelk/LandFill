@@ -47,7 +47,8 @@ with app.app_context():
         source = 0,
         parse_legality = False,
         list_unknown_legalities = False,
-        fix = True
+        set_lands = True,
+        only_lands = True
     )
 
     man.get_card_information(

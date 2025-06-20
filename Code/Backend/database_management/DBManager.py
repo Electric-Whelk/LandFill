@@ -249,7 +249,8 @@ class DBManager:
                      source=None,
                      parse_legality=False,
                      list_unknown_legalities=False,
-                     fix = False):
+                     set_lands = False,
+                     only_lands = True):
         if drop:
             Card.__table__.drop(self._engine)
             Face.__table__.drop(self._engine)
@@ -264,8 +265,8 @@ class DBManager:
                 self.cards_from_list(source, parse_legality, list_unknown_legalities)
             else:
                 self.download(source)
-        if fix:
-            self.set_cycles()
+        if set_lands:
+            self.set_cycles(lands=only_lands)
 
     def manage_cycles(self,
                        drop=False,
@@ -283,7 +284,7 @@ class DBManager:
             else:
                 raise Exception("source is required")
         if reset_cards:
-            self.set_cycles(reset=True)
+            self.set_cycles(reset=True, lands=False)
 
     def manage_formats(self,
                        drop=False,
@@ -338,9 +339,12 @@ class DBManager:
     def run_join(self, t):
         pass
 
-    def set_cycles(self, reset=False):
+    def set_cycles(self, reset=False, lands=True):
         statement = select(Card)
-        results = self.db.session.query(Card).all()
+        if lands:
+            results = self.db.session.query(Card).filter(Card._overall_land).all()
+        else:
+            results = self.db.session.query(Card).all()
         #results = self.db_scalars(statement)
         if reset:
             for card in results:

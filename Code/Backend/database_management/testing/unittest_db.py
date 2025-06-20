@@ -119,6 +119,7 @@ class UnitTestDB(unittest.TestCase):
             "Artifact Taplands": 10,
             "Snow Dual Lands": 5
         }
+
         with self.app.app_context():
 
             cycles = self.dbm.all_entries("cycles", context=False)
