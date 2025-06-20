@@ -20,6 +20,14 @@ class UnitTestDB(unittest.TestCase):
             self.dbm = DBManager(db, self.app, engine, metadata)
 
 
+    def test_examine(self):
+        with self.app.app_context():
+            card = self.dbm.key_lookup("Coastal Tower", "cards", "name",
+                                       context=False)
+            faces = self.dbm.key_lookup(card.id, "faces", "card_id",
+                                        expect_single=False, context=False)
+
+            print(card.parsed_types)
 
 
     def test_multiple_faces(self):
@@ -53,7 +61,6 @@ class UnitTestDB(unittest.TestCase):
 
     def test_cycles(self):
         expected = {
-            #sure
             "Shock Lands": 10,
             "Check Lands": 10,
             "Reveal Lands": 10,
@@ -64,7 +71,7 @@ class UnitTestDB(unittest.TestCase):
             "Verge Lands": 10,
             "OG Filter Lands": 10,
             "Tainted Lands": 4,
-            "Tango Lands": 5,
+            "Battle Lands": 5,
             "Fast Lands": 10,
             "Slow Lands": 10,
             "Pain Lands": 10,
@@ -72,12 +79,12 @@ class UnitTestDB(unittest.TestCase):
             "Exert Lands": 10,
             "Exert Depletion Lands": 5,
             "Fetch Lands": 10,
-            "Snow Dual Lands": 10,
+            "Typed Snow Dual Lands": 10,
             "Typed Dual Lands": 10,
             "Vanilla Dual Lands": 15,
             "Triomes": 10,
             "Surveil Lands": 10,
-            "Cycling Lands": 5,
+            "Bicycle Lands": 5,
 
             "Locales": 5,
             "Landscapes": 10,
@@ -95,21 +102,22 @@ class UnitTestDB(unittest.TestCase):
             "Thriving Lands": 5,
             "Bounce Lands": 10,
             "Visions Bounce Lands": 5,
-            "Invasion Sac Lands": 5,
+            "Odyssey Sac Lands": 5,
             "Vivid Lands": 5,
             "Gain Lands": 15,
             "Tri-Color Taplands": 10,
             "Lairs": 5,
             "Masque Depletion Lands": 5,
             "Home Lands": 5,
-            "Junction Deserts": 10,
+            "Ping Deserts": 10,
             "Guildgates": 10,
             "Towns": 10,
             "Artifact Lands": 5,
             "Tapped Pain Lands": 5,
             "Monocolor Sac Lands": 5,
-            "Tricolor Sac Lands": 5
-
+            "Tricolor Sac Lands": 5,
+            "Artifact Taplands": 10,
+            "Snow Dual Lands": 5
         }
         with self.app.app_context():
 

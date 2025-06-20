@@ -367,11 +367,14 @@ class DBManager:
                 return table._card_id
             case "id":
                 return table._id
+            case "name":
+                return table._name
             case _:
-                raise Exception(f"no match for proposed attribute {key}")
+                raise Exception(f"[ERROR] no match for proposed attribute {key}")
 
     def isolate(self, results, expect_single):
         if expect_single:
+            output = results.first()
             return results.first()
         else:
             return results.all()
@@ -408,6 +411,7 @@ class DBManager:
         return self.model_map.get(string)
 
     def key_lookup(self, term, tablename, key, expect_single=True, context=False):
+        x = 3
         table = self.fetch_table(tablename)
         attribute = self.fetch_attribute(key, table)
 
@@ -416,7 +420,7 @@ class DBManager:
                 result = self.db.session.query(table).filter(attribute == term)
                 return self.isolate(result, expect_single)
         else:
-            result = self.db.session.query(attribute).filter(attribute == term)
+            result = self.db.session.query(table).filter(attribute == term)
             return self.isolate(result, expect_single)
 
 

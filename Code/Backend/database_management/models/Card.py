@@ -205,7 +205,7 @@ class Card(db.Model):
 
     @property
     def typed(self) -> bool:
-        if "Land" not in self.subtypes:
+        if "Land" not in self.cardtypes:
             return False
         land_types = ["Plains",
                       "Island",
@@ -260,33 +260,30 @@ class Card(db.Model):
                 land = False
         if land:
             if len(self.faces) == 2:
-                self.determine_cycle_regex(syn="Dual-Faced")
+                cycle_synergy = "Dual-Faced"
             elif "Snow" in self.supertypes:
-                self.determine_cycle_regex(syn="Snow")
-            elif "Gate" in self.cardtypes:
-                self.determine_cycle_regex(syn="Gate")
-            elif "Desert" in self.cardtypes:
-                self.determine_cycle_regex(syn="Desert")
-            elif "Town" in self.cardtypes:
-                self.determine_cycle_regex(syn="Town")
+                cycle_synergy = "Snow"
             elif "Artifact" in self.cardtypes:
-                self.determine_cycle_regex(syn="Artifact")
-            elif self.typed:
-                self.determine_cycle_regex(typed=True)
+                cycle_synergy = "Artifact"
+            elif "Gate" in self.subtypes:
+                cycle_synergy = "Gate"
+            elif "Desert" in self.subtypes:
+                cycle_synergy = "Desert"
+            elif "Town" in self.subtypes:
+                cycle_synergy = "Town"
             else:
-                self.determine_cycle_regex()
+                cycle_synergy = "None"
+
+
+            self.determine_cycle_regex(syn=cycle_synergy, typed=self.typed)
 
 
 
 
     def determine_cycle_regex(self, syn=None, typed=None):
         result = db.session.query(Cycle)
-        if syn is not None:
-            result = result.filter(Cycle._synergy == syn).all()
-        else:
-            result = result.filter(Cycle._synergy == "None")
-        if typed is not None:
-            result = result.filter(Cycle._typed == typed).all()
+        result = result.filter(Cycle._synergy == syn)
+        result = result.filter(Cycle._typed == typed).all()
 
 
         #statement = select(Cycle).where(Cycle._synergy == syn and Cycle._name != "misc")

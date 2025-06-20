@@ -20,9 +20,9 @@ with app.app_context():
     man.manage_cycles(
                         drop=False,
                         clear=False,
-                        mass_insert=False,
+                        mass_insert=True,
                         source=all_cycles,
-                        reset_cards=True
+                        reset_cards=False
 
     )
 
@@ -47,7 +47,7 @@ with app.app_context():
         source = 0,
         parse_legality = False,
         list_unknown_legalities = False,
-        fix = False
+        fix = True
     )
 
     man.get_card_information(
