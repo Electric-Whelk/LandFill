@@ -32,7 +32,7 @@ Surveil:
 \(\{T\}\: Add \{[WUBRG]} or \{[WUBRG]}\.\) This land enters tapped\. When this land enters\, surveil 1\. \(Look at the top card of your library\. You may put it into your graveyard\.\)
 
 Cycling:
-Add \{[WUBRG]} or \{[WUBRG]}\.\) This land enters tapped\. Cycling \{2\} \(\{2\}\, Discard this card\: Draw an? card\.\)
+\(\{T\}\: Add \{[WUBRG]} or \{[WUBRG]}\.\) This land enters tapped\. Cycling \{2\} \(\{2\}\, Discard this card\: Draw a card\.\)
 
 Locales:
 When this land enters\, sacrifice it\. When you do\, search your library for an? basic [A-Z][a-z]*\, [A-Z][a-z]*\, or [A-Z][a-z]* card\, put it onto the battlefield tapped\, then shuffle and you gain 1 life\.
@@ -62,7 +62,8 @@ Dual faced lands:
 \{T\}\: Add \{[WUBRG]}\.
 
 Thriving gates:
-This land enters tapped\. As this land enters\, choose an? color other than black\. \{T\}\: Add \{[WUBRG]} or one mana of the chosen color\.
+This land enters tapped\. As this land enters\, choose an? color other than ((\bwhite\b)|(\bblue\b)|(\bblack\b)|(\bred\b)|(\bgreen\b))\. \{T\}\: Add \{[WUBRG]} or one mana of the chosen color\.
+
 
 Thriving lands:
 This land enters tapped\. As it enters\, choose an? color other than red\. \{T\}\: Add \{[WUBRG]} or one mana of the chosen color\.

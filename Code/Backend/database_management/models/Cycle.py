@@ -35,3 +35,7 @@ class Cycle(db.Model):
     @property
     def cards(self) -> List["Card"]:
         return self._cards
+
+    @property
+    def synergy(self):
+        return self._synergy

@@ -203,6 +203,20 @@ class Card(db.Model):
 
         return {"supertypes": supertypes, "cardtypes": types, "subtypes": subtypes}
 
+    @property
+    def typed(self) -> bool:
+        if "Land" not in self.subtypes:
+            return False
+        land_types = ["Plains",
+                      "Island",
+                      "Swamp",
+                      "Mountain",
+                      "Forest"]
+        for type in land_types:
+            if type in self.subtypes:
+                return True
+        return False
+
     #setter and getter functions that work with cached properties
     @property
     def cardtypes(self) -> List[str]:
@@ -246,26 +260,37 @@ class Card(db.Model):
                 land = False
         if land:
             if len(self.faces) == 2:
-                self.determine_cycle_regex("Dual-Faced")
+                self.determine_cycle_regex(syn="Dual-Faced")
             elif "Snow" in self.supertypes:
-                self.determine_cycle_regex("Snow")
+                self.determine_cycle_regex(syn="Snow")
             elif "Gate" in self.cardtypes:
-                self.determine_cycle_regex("Gate")
+                self.determine_cycle_regex(syn="Gate")
             elif "Desert" in self.cardtypes:
-                self.determine_cycle_regex("Desert")
+                self.determine_cycle_regex(syn="Desert")
             elif "Town" in self.cardtypes:
-                self.determine_cycle_regex("Town")
+                self.determine_cycle_regex(syn="Town")
             elif "Artifact" in self.cardtypes:
-                self.determine_cycle_regex("Artifact")
+                self.determine_cycle_regex(syn="Artifact")
+            elif self.typed:
+                self.determine_cycle_regex(typed=True)
             else:
-                self.determine_cycle_regex("None")
+                self.determine_cycle_regex()
 
 
 
 
-    def determine_cycle_regex(self, syn):
-        statement = select(Cycle).where(Cycle._synergy == syn and Cycle._name != "misc")
-        result = db.session.scalars(statement)
+    def determine_cycle_regex(self, syn=None, typed=None):
+        result = db.session.query(Cycle)
+        if syn is not None:
+            result = result.filter(Cycle._synergy == syn).all()
+        else:
+            result = result.filter(Cycle._synergy == "None")
+        if typed is not None:
+            result = result.filter(Cycle._typed == typed).all()
+
+
+        #statement = select(Cycle).where(Cycle._synergy == syn and Cycle._name != "misc")
+        #result = db.session.scalars(statement)
         for c in result:
             regex = c.regex
             for face in self.faces:
@@ -351,7 +376,6 @@ class Card(db.Model):
         self.name = sco['name']
         self.color_identity = ''.join(sco['color_identity'])
         self.cmc = sco['cmc']
-
 
         self.usd = self.handle_price(sco['prices']['usd'])
         self.eur = self.handle_price(sco['prices']['eur'])

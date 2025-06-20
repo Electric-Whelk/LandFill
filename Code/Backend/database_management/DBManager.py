@@ -9,6 +9,7 @@ from database_management.models.Game import Game
 from database_management.models.Intermediates import *
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
+from typing import List
 
 
 from sqlalchemy import (MetaData, Table, text)
@@ -339,7 +340,8 @@ class DBManager:
 
     def set_cycles(self, reset=False):
         statement = select(Card)
-        results = self.db_scalars(statement)
+        results = self.db.session.query(Card).all()
+        #results = self.db_scalars(statement)
         if reset:
             for card in results:
                 card.reset_cycle()
@@ -368,8 +370,23 @@ class DBManager:
             case _:
                 raise Exception(f"no match for proposed attribute {key}")
 
+    def isolate(self, results, expect_single):
+        if expect_single:
+            return results.first()
+        else:
+            return results.all()
+
 
     #ACCESS FUNCTIONS
+    def all_entries(self, table_name, context=False):
+        table = self.fetch_table(table_name)
+        if context:
+            with self.app.app_context():
+                output = self.db.session.query(table).all()
+        else:
+            output = self.db.session.query(table).all()
+        return output;
+
 
     def db_execute(self, statement, context=False):
         if context:
@@ -378,14 +395,14 @@ class DBManager:
         else:
             return self.db.session.execute(statement)
 
-    def db_scalars(self, statement, context=False):
+    def db_scalars(self, statement, expect_single = True, context=False):
         if context:
             with self.app.app_context():
-                return self.db.session.scalars(statement)
+                result = self.db.session.scalars(statement)
+                return self.isolate(result, expect_single)
         else:
-            return self.db.session.scalars(statement)
-
-
+            result = self.db.session.scalars(statement)
+            return self.isolate(result, expect_single)
 
     def fetch_table(self, string):
         return self.model_map.get(string)
@@ -393,13 +410,21 @@ class DBManager:
     def key_lookup(self, term, tablename, key, expect_single=True, context=False):
         table = self.fetch_table(tablename)
         attribute = self.fetch_attribute(key, table)
-        statement = select(table).where(attribute == term)
-        result = self.db_scalars(statement, context)
-        if expect_single:
+
+        if context:
+            with self.app.app_context():
+                result = self.db.session.query(table).filter(attribute == term)
+                return self.isolate(result, expect_single)
+        else:
+            result = self.db.session.query(attribute).filter(attribute == term)
+            return self.isolate(result, expect_single)
+
+
+"""        if expect_single:
             return result.one()
         else:
             return result
-
+"""
 
 
 
