@@ -58,6 +58,59 @@ class Format(db.Model):
     def copies(self, value:int):
         self._copies = value
 
+    @property
+    def deck_size(self) -> int:
+        return self._deck_size
+
+    @property
+    def hard_max(self) -> bool:
+        return self._hard_max
+
+    @property
+    def arena(self) -> bool:
+        return self._arena
+
+    @property
+    def mtg_online(self) -> bool:
+        return self._mtg_online
+
+    @property
+    def paper(self) -> bool:
+        return self._paper
+
+    @property
+    def banned(self) -> bool:
+        return self._banned
+
+    @property
+    def restricted(self) -> bool:
+        return self._restricted
+
+    @property
+    def legal(self) -> bool:
+        return self._legal
+
+    @property
+    def games(self) -> int:
+        return self._games
+
+
+
+    #App Interaction Functions
+    def to_JSON(self):
+        return {
+            'id': self.id,
+            'display_name': self.display_name,
+            'scryfall_name': self.scryfall_name,
+            'copies': self.copies,
+            'deck_size': self.deck_size,
+            'hard_max': self.hard_max,
+            'arena': self.arena,
+            'mtg_online': self.mtg_online,
+            'paper': self.paper,
+        }
+
+
 
 
 

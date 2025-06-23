@@ -1,16 +1,19 @@
-from Extensions import db, migrate
+from Extensions import db
+#from Extensions import migrate
 from flask import Flask
-from flask_migrate import Migrate
+from flask_cors import CORS
+#from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 import secrets
 
 def create_app():
     app = Flask(__name__)
+    CORS(app=app, supports_credentials=True)
     app.secret_key = secrets.token_urlsafe(32)
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mtg.db'
     #app.config['SQLALCHEMY_ECHO'] = True
     db.init_app(app)
-    migrate.init_app(app, db)
+#    migrate.init_app(app, db)
 
     from sqlalchemy import event
     from sqlalchemy.engine import Engine
