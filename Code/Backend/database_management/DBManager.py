@@ -415,7 +415,6 @@ class DBManager:
         return self.model_map.get(string)
 
     def key_lookup(self, term, tablename, key, expect_single=True, context=False):
-        x = 3
         table = self.fetch_table(tablename)
         attribute = self.fetch_attribute(key, table)
 

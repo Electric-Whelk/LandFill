@@ -233,6 +233,7 @@ class Card(db.Model):
 
 
 
+
     #parsing functions
     def add_face_manually(self, sco):
         self.faces.append(self.parse_face(sco))
@@ -413,3 +414,31 @@ class Card(db.Model):
                 raise Exception(f"{status} not understood by format association function")
 
 
+    #app interaction functions
+    def to_JSON(self):
+        output = {
+            "id": self.id,
+            "name": self.name,
+            "cmc": self.cmc,
+            "usd": self.usd,
+            "eur": self.eur,
+            "color_identity": self.color_identity,
+            "produced": self.produced,
+            "overall_land": self.overall_land,
+            "layout": self.layout,
+            "game_changer": self.game_changer,
+            "silver_bordered": self.silver_bordered,
+            "cycle_id": self.cycle_id,
+            "last_printing": self.last_printing,
+            "typed": self.typed,
+            "cardtypes": self.cardtypes,
+            "subtypes": self.subtypes,
+            "supertypes": self.supertypes,
+        }
+
+        i = 0
+        for face in self.faces:
+            output.update({f"face_{i}": face.to_JSON()})
+            i += 1
+
+        return output

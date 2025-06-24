@@ -25,7 +25,7 @@ const PlayerInput = ({ lock, setInputCards, setFormat, setRequestedQuantity }) =
 
 
     return (
-        <div>
+        <div id="playerinput">
             <textarea id="inputCards"
                       cols="40"
                       rows="20"

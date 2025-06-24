@@ -1,3 +1,5 @@
+import json
+
 from database_management.models.Intermediates import Banned, Restricted, Legal, GameFormats
 from Extensions import db
 

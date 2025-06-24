@@ -33,9 +33,36 @@ class Cycle(db.Model):
         self._regex = value
 
     @property
+    def official(self) -> bool:
+        return self._official
+
+    @property
     def cards(self) -> List["Card"]:
         return self._cards
 
     @property
-    def synergy(self):
+    def synergy(self) -> str:
         return self._synergy
+
+    @property
+    def typed(self) -> bool:
+        return self._typed
+
+    @property
+    def category(self) -> str:
+        return self._category
+
+
+    #app interaction functions
+    def to_JSON(self):
+        cards_json = [x.to_JSON() for x in self.cards]
+        return {
+            "id": self.id,
+            "name": self.name,
+            "regex": self.regex,
+            "official": self.official,
+            "category": self.category,
+            "synergy": self.synergy,
+            "typed": self.typed,
+            "cards": cards_json
+        }

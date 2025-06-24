@@ -108,3 +108,21 @@ class Face(db.Model):
         self._land = 'Land' in self.cardtypes
 
         self.mana_cost = obj['mana_cost']
+
+
+    #app interaction functions
+    def to_JSON(self):
+        return {
+            "id": self.id,
+            "card_id": self.card_id,
+            "name": self.name,
+            "typeline": self.typeline,
+            "text": self.text,
+            "playable": self.playable,
+            "land": self.land,
+            "mana_cost": self.mana_cost,
+            "cardtypes": self.cardtypes,
+            "subtypes": self.subtypes,
+            "supertypes": self.supertypes,
+        }
+
