@@ -20,7 +20,7 @@ with app.app_context():
     man.manage_cycles(
                         drop=False,
                         clear=False,
-                        mass_insert=True,
+                        mass_insert=False,
                         source=all_cycles,
                         reset_cards=False
 
@@ -47,8 +47,8 @@ with app.app_context():
         source = 0,
         parse_legality = False,
         list_unknown_legalities = False,
-        set_lands = True,
-        only_lands = True
+        set_lands = False,
+        only_lands = False
     )
 
     man.get_card_information(

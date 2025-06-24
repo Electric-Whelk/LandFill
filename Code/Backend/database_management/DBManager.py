@@ -273,7 +273,8 @@ class DBManager:
                        clear=False,
                        mass_insert=False,
                        source=None,
-                       reset_cards=False):
+                       reset_cards=False,
+                       reset_categories=False,):
         if drop:
             Cycle.__table__.drop(self._engine)
         if clear:
@@ -338,6 +339,7 @@ class DBManager:
 
     def run_join(self, t):
         pass
+
 
     def set_cycles(self, reset=False, lands=True):
         statement = select(Card)

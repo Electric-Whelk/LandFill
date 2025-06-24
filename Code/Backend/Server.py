@@ -28,6 +28,9 @@ def lock():
     quantity = session["quantity"] = request.json.get("requestedQuantity")
 
     deck = Deck(input_cards, format, quantity)
+    print(f"Requested {deck.lands_requested} for deck")
+    for card in deck.input_cards:
+        print(f"{card.name}: {card.cmc}")
 
     return jsonify({"card_list": f"Cardlist: {input_cards}"})
 
