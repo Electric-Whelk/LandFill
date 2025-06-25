@@ -11,6 +11,8 @@ def create_app():
     CORS(app=app, supports_credentials=True)
     app.secret_key = secrets.token_urlsafe(32)
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mtg.db'
+    #app.config['CACHE_TYPE'] = "SimpleCache"
+    #app.config['CACHE_']
     #app.config['SQLALCHEMY_ECHO'] = True
     db.init_app(app)
 #    migrate.init_app(app, db)

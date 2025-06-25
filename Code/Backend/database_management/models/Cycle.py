@@ -10,6 +10,8 @@ class Cycle(db.Model):
     _category = db.Column(db.String, nullable=False)
     _synergy = db.Column(db.String, nullable=False)
     _typed = db.Column(db.Boolean, nullable=False)
+    _fetch = db.Column(db.Boolean, nullable=False)
+    _ramp = db.Column(db.Boolean, nullable=False)
 
     _cards = db.relationship('Card', back_populates='_cycle')
 
@@ -51,6 +53,17 @@ class Cycle(db.Model):
     @property
     def category(self) -> str:
         return self._category
+
+    @property
+    def fetch(self) -> bool:
+        return self._fetch
+    @fetch.setter
+    def fetch(self, value):
+        self._fetch = value
+
+    @property
+    def ramp(self) -> bool:
+        return self._ramp
 
 
     #app interaction functions

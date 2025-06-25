@@ -192,15 +192,18 @@ class Card(db.Model):
 
     #cached properties
     @cached_property
-    def color_score(self):
-        if self.overall_land:
+    def produced_score(self) -> ColorPie:
+        if not self.overall_land:
             return 0
-        l_searched = self.check_searched_lands()
+
+        l_text = self.check_searched_lands()
         l_produced = list(self.produced)
         pie = ColorPie()
         pie.parse_colors(l_produced)
         pie.parse_lands(l_text)
         pie.parse_lands(self.subtypes)
+        return pie
+
 
     @cached_property
     def parsed_types(self) -> Dict[str, List[str]]:
@@ -268,10 +271,10 @@ class Card(db.Model):
             self.produced = "none"
 
     def check_searched_lands(self):
-        regex = (r"search your library for an?)
-        re.search()
-
-        pass
+        if not self.cycle.fetch:
+            return []
+        words = self.text.split()
+        return words
             
     def check_if_land(self):
         for face in self.faces:
@@ -344,11 +347,6 @@ class Card(db.Model):
                 self.cycle = db.session.query(Cycle).filter(Cycle._name == "Snow Basic Lands").first()
             case "Coastal Tower":
                 self.cycle = db.session.query(Cycle).filter(Cycle._name == "Vanilla Dual Lands").first()
-
-
-
-
-
 
 
     def determine_face_playability(self):

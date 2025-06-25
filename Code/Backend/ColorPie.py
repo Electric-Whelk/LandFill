@@ -1,7 +1,7 @@
 
 class ColorPie():
-    def __init__(self):
-        self._value = 1
+    def __init__(self, value = 1):
+        self._value = value
         self._colors =  [
             "W",
             "U",
@@ -43,6 +43,15 @@ class ColorPie():
         self._value = value
 
     @property
+    def count(self) -> int:
+        output = 0
+        for color in self.colors:
+            prime = self.score[color]
+            if self.modzero(self.value, prime):
+                output += 1
+        return output
+
+    @property
     def colors(self):
         return self._colors
 
@@ -60,8 +69,11 @@ class ColorPie():
 
     #parsing functions
     def prime_mult(self, prime):
-        if self.value % prime != 0:
+        if not self.modzero(self.value, prime):
             self.value *= prime
+
+    def produces_needed(self, produces_score: int) -> bool:
+        return self.modzero(self.value, produces_score)
 
     def parse_colors(self, color_list:list[str]):
         for color in self.colors:
@@ -72,6 +84,19 @@ class ColorPie():
         for land in self.lands:
             if land in land_list:
                 self.prime_mult(self.l_score[land])
+
+
+
+
+
+
+    #internally useful functions
+    def modzero(self, x:int, y:int) -> bool:
+        try:
+            return x % y == 0
+        except ZeroDivisionError:
+            return False
+
 
 
 

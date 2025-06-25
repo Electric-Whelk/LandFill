@@ -1,4 +1,5 @@
 from Extensions import db
+from ColorPie import ColorPie
 from database_management.DBManager import DBManager
 from database_management.models.Card import Card
 from database_management.models.Face import Face
@@ -82,7 +83,17 @@ class Deck:
 
 
     def determine_possible_lands(self) -> list:
-        all = self.get_all_lands()
+        all = db.session.query(Card).filter(Card._overall_land == True).all()
+        print(f"queried for {len(all)} lands")
+        pie = ColorPie()
+        pie.parse_colors(self.colors_needed)
+        lands = [x for x in all
+                 if pie.produces_needed(x.produced_score.value) and
+                 x.produced_score.count > 1]
+        print(f"List comprehension returned {len(lands)} lands")
+        return lands
+
+
 
 
 
