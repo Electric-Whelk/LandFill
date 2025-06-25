@@ -2,7 +2,7 @@ import React from "react"
 import { useState, useEffect } from "react"
 
 
-const MonteCarlo = ({ }) => {
+const MonteCarlo = ({ run, setBudget, setMaxPricePerCard, setCurrency, setPainThreshold, setMinBasics }) => {
 
 
     return (

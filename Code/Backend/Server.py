@@ -2,9 +2,11 @@ from AppFactory import create_app
 from database_management.models.Cycle import Cycle
 from database_management.models.Format import Format
 from flask import jsonify, session, request
+from flask_caching import Cache
 from simulation_objects.Deck import Deck
 
 app = create_app()
+cache = Cache(app)
 
 
 @app.route('/fetch_cycles', methods=['GET'])
@@ -23,15 +25,22 @@ def fetch_formats():
 
 @app.route('/lock', methods=["POST"])
 def lock():
-    input_cards = session["input_cards"] = request.json.get("inputCards")
-    format = session["format"] = request.json.get("format")
-    quantity = session["quantity"] = request.json.get("requestedQuantity")
+    try:
+        input_cards = session["input_cards"] = request.json.get("inputCards")
+        format = session["format"] = request.json.get("format")
+        quantity = session["quantity"] = request.json.get("requestedQuantity")
 
-    deck = Deck(input_cards, format, quantity)
-    for land in deck.possible_lands:
-        print(f"{land.name}: {land.produced}")
+        deck = Deck(input_cards, format, quantity)
+        cache.set("deck", deck)
 
-    return jsonify({"card_list": f"Cardlist: {input_cards}"})
+        return jsonify({"response": "Success - hey Leah shouldn't you be doing this with headers?"})
+    except Exception:
+        return jsonify({"response": "Failed - hey Leah shouldn't you be doing this with headers?"})
+
+@app.route('/run', methods=["POST"])
+def run():
+    pass
+
 
 
 if __name__ == '__main__':

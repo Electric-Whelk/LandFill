@@ -8,23 +8,13 @@ import './App.css';
 
 
 const App = () => {
+    //used on the homepage
     const [allCycles, setAllCycles] = useState([])
+
+    //passed to PlayerInput
     const [format, setFormat] = useState({})
     const [requestedQuantity, setRequestedQuantity] = useState(0)
     const [inputCards, setInputCards] = useState([])
-
-    useEffect(() => {
-        fetchCycles()
-    }, []);
-
-
-    const fetchCycles = async() => {
-        const response = await fetch("http://127.0.0.1:5000/fetch_cycles")
-        const data = await response.json()
-        setAllCycles(data.cycles)
-    }
-
-
 
     const lock = async (e) => {
         e.preventDefault()
@@ -42,6 +32,32 @@ const App = () => {
 
         const response = await fetch(url, options)
         const info = await response.json()
+    }
+
+    //passed to MonteCarlo
+    const [budget, setBudget] = useState([])
+    const [maxPricePerCard, setMaxPricePerCard] = useState(0)
+    const [currency, setCurrency] = useState({})
+    const [painThreshold, setPaintThreshold] = useState(0)
+    const [minBasics, setMinBasics] = useState(0)
+
+    const run = async (e) => {
+        e.preventDefault()
+        const url = "http://127.0.0.1:5000/run"
+    }
+
+
+
+    //used here
+    useEffect(() => {
+        fetchCycles()
+    }, []);
+
+
+    const fetchCycles = async() => {
+        const response = await fetch("http://127.0.0.1:5000/fetch_cycles")
+        const data = await response.json()
+        setAllCycles(data.cycles)
     }
 
     return (
