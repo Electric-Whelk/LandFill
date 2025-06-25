@@ -1,5 +1,6 @@
 import re
 
+from ColorPie import ColorPie
 from database_management.models.Cycle import Cycle
 from database_management.models.Face import Face
 from database_management.models.Format import Format
@@ -191,6 +192,17 @@ class Card(db.Model):
 
     #cached properties
     @cached_property
+    def color_score(self):
+        if self.overall_land:
+            return 0
+        l_searched = self.check_searched_lands()
+        l_produced = list(self.produced)
+        pie = ColorPie()
+        pie.parse_colors(l_produced)
+        pie.parse_lands(l_text)
+        pie.parse_lands(self.subtypes)
+
+    @cached_property
     def parsed_types(self) -> Dict[str, List[str]]:
         supertypes = []
         types = []
@@ -203,7 +215,7 @@ class Card(db.Model):
 
         return {"supertypes": supertypes, "cardtypes": types, "subtypes": subtypes}
 
-    @property
+    @cached_property
     def typed(self) -> bool:
         if "Land" not in self.cardtypes:
             return False
@@ -216,6 +228,14 @@ class Card(db.Model):
             if type in self.subtypes:
                 return True
         return False
+
+    @cached_property
+    def text(self) -> str:
+        text = ""
+        for face in self.faces:
+            text += face.text
+        return text
+
 
     #setter and getter functions that work with cached properties
     @property
@@ -246,6 +266,12 @@ class Card(db.Model):
             self.produced = "".join(produced)
         except Exception:
             self.produced = "none"
+
+    def check_searched_lands(self):
+        regex = (r"search your library for an?)
+        re.search()
+
+        pass
             
     def check_if_land(self):
         for face in self.faces:
