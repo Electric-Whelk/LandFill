@@ -20,7 +20,6 @@ const App = () => {
         e.preventDefault()
         const url = "http://127.0.0.1:5000/lock"
 
-
         const options = {
             method: "POST",
             credentials: "include",
@@ -37,13 +36,39 @@ const App = () => {
     //passed to MonteCarlo
     const [budget, setBudget] = useState([])
     const [maxPricePerCard, setMaxPricePerCard] = useState(0)
-    const [currency, setCurrency] = useState({})
-    const [painThreshold, setPaintThreshold] = useState(0)
+    const [currency, setCurrency] = useState("GBP")
+    const [painThreshold, setPainThreshold] = useState(0)
     const [minBasics, setMinBasics] = useState(0)
 
     const run = async (e) => {
+        console.log("Currency: " + currency)
         e.preventDefault()
         const url = "http://127.0.0.1:5000/run"
+
+        const options = {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({budget,
+                maxPricePerCard,
+                currency,
+                painThreshold,
+                minBasics}),
+        }
+
+        const response = await fetch(url, options)
+        const info = await response.json()
+    }
+
+    const options = {
+        method: "POST",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({format, requestedQuantity, inputCards}),
     }
 
 
@@ -66,7 +91,12 @@ const App = () => {
                          setFormat={setFormat}
                          setRequestedQuantity={setRequestedQuantity}
                          setInputCards={setInputCards}/>
-            <MonteCarlo/>
+            <MonteCarlo run={run}
+                        setBudget={setBudget}
+                        setMaxPricePerCard={setMaxPricePerCard}
+                        setCurrency={setCurrency}
+                        setPainThreshold={setPainThreshold}
+                        setMinBasics={setMinBasics}/>
             <Output/>
             <div className="landOptions">
                 <CyclePanel cycles={allCycles}/>

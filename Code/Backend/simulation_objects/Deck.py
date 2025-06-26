@@ -7,7 +7,7 @@ from database_management.models.Format import Format
 
 
 class Deck:
-    def __init__(self, input_cards, format, quantity):
+    def setup(self, input_cards, format, quantity, test_int):
         self._format = self.parse_format_from_json(format)
         self._input_cards = self.parse_cards_from_json(input_cards)
         self._lands_requested = self.determine_lands_requested_from_json(quantity)
@@ -15,8 +15,16 @@ class Deck:
         self._pips = self.determine_pips()
         self._colors_needed = self.determine_colors_needed()
         self._possible_lands = self.determine_possible_lands()
+        self._test_int = test_int
 
     #getters and setters
+    @property
+    def test_int(self):
+        return self._test_int
+    @test_int.setter
+    def test_int(self, value):
+        self._test_int = value
+
     @property
     def format(self) -> Format:
         return self._format

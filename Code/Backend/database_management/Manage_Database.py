@@ -47,14 +47,19 @@ with app.app_context():
         source = 0,
         parse_legality = False,
         list_unknown_legalities = False,
-        set_lands = True,
-        only_lands = True
+        set_lands = False,
+        only_lands = False
     )
 
     man.get_card_information(
         run=False,
         source=test_cards
     )
+
+    from database_management.models.Card import Card
+
+    db.session.query(Card).filter(Card._id % 2 == 0).all()
+    
 
 
 
