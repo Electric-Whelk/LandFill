@@ -14,7 +14,7 @@ const MonteCarlo = ({ run, setBudget, setMaxPricePerCard, setCurrency, setPainTh
             <div>
                 <label htmlFor="budget">Budget</label>
                 <input type="number" id="budget" name="budget"
-                onChange={(e) => setBudget(e.target.value)}/>
+                onChange={(e) => setBudget(e.currentTarget.value)}/>
             </div>
 
             <div>

@@ -14,7 +14,7 @@ const App = () => {
     //passed to PlayerInput
     const [format, setFormat] = useState({})
     const [requestedQuantity, setRequestedQuantity] = useState(0)
-    const [inputCards, setInputCards] = useState([])
+    const [inputCards, setInputCards] = useState("")
 
     const lock = async (e) => {
         e.preventDefault()
@@ -34,7 +34,7 @@ const App = () => {
     }
 
     //passed to MonteCarlo
-    const [budget, setBudget] = useState([])
+    const [budget, setBudget] = useState(0                                                  )
     const [maxPricePerCard, setMaxPricePerCard] = useState(0)
     const [currency, setCurrency] = useState("GBP")
     const [painThreshold, setPainThreshold] = useState(0)
@@ -59,7 +59,9 @@ const App = () => {
         }
 
         const response = await fetch(url, options)
-        const info = await response.json()
+        const data = await response.json()
+        setOutputCards(data.response.cards)
+        console.log(outputCards)
     }
 
     const options = {
@@ -70,6 +72,10 @@ const App = () => {
         },
         body: JSON.stringify({format, requestedQuantity, inputCards}),
     }
+
+    //passed to output
+    const [outputCards, setOutputCards] = useState([])
+
 
 
 
@@ -89,15 +95,18 @@ const App = () => {
         <div className="container">
             <PlayerInput lock={lock}
                          setFormat={setFormat}
+                         format = {format}
                          setRequestedQuantity={setRequestedQuantity}
-                         setInputCards={setInputCards}/>
+                         setInputCards={setInputCards}
+                         inputCards = {inputCards}
+                         requestedQuantity={requestedQuantity}/>
             <MonteCarlo run={run}
                         setBudget={setBudget}
                         setMaxPricePerCard={setMaxPricePerCard}
                         setCurrency={setCurrency}
                         setPainThreshold={setPainThreshold}
                         setMinBasics={setMinBasics}/>
-            <Output/>
+            <Output outputCards = { outputCards }/>
             <div className="landOptions">
                 <CyclePanel cycles={allCycles}/>
             </div>

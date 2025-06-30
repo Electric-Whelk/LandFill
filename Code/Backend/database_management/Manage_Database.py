@@ -10,7 +10,7 @@ from sqlalchemy import MetaData, text
 
 app = create_app()
 
-with app.app_context():
+with (((app.app_context()))):
     engine = db.engine
     metadata = MetaData()
     metadata.reflect(bind=engine)
@@ -58,8 +58,8 @@ with app.app_context():
 
     from database_management.models.Card import Card
 
-    db.session.query(Card).filter(Card._id % 2 == 0).all()
-    
+
+
 
 
 

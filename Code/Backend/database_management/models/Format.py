@@ -1,5 +1,7 @@
 import json
 
+from propcache import cached_property
+
 from database_management.models.Intermediates import Banned, Restricted, Legal, GameFormats
 from Extensions import db
 
@@ -95,6 +97,20 @@ class Format(db.Model):
     @property
     def games(self) -> int:
         return self._games
+
+    #Cached Properties
+    @cached_property
+    def color_id(self) -> bool:
+        relevant = [
+            "EDH",
+            "Oathbreaker",
+            "Standard Brawl",
+            "Brawl",
+            "Pauper Commander",
+            "Duel Commander",
+            "Pre-EDH"
+        ]
+        return self.display_name in relevant
 
 
 

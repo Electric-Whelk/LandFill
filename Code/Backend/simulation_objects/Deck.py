@@ -4,33 +4,38 @@ from database_management.DBManager import DBManager
 from database_management.models.Card import Card
 from database_management.models.Face import Face
 from database_management.models.Format import Format
+from simulation_objects.CardCollection import CardCollection
+from simulation_objects.GameCard import GameCard
+from simulation_objects.Land import Land
+from simulation_objects.Spell import Spell
 
 
-class Deck:
-    def setup(self, input_cards, format, quantity, test_int):
+
+
+class Deck(CardCollection):
+    def __init__(self):
+        self._lands_requested = None
+
+    def setup(self, input_cards, format, quantity):
         self._format = self.parse_format_from_json(format)
-        self._input_cards = self.parse_cards_from_json(input_cards)
+
+        input_as_cards = self.parse_cards_from_json(input_cards)
+        self._input_cards = [self.parse_GameCards(x, "deck") for x in input_as_cards]
         self._lands_requested = self.determine_lands_requested_from_json(quantity)
-        self._color_id = self.determine_color_id()
-        self._pips = self.determine_pips()
+        self._size = self.determine_size()
+        self._color_id = self.determine_color_id(input_as_cards)
+        self._pips = self.determine_pips(input_as_cards)
         self._colors_needed = self.determine_colors_needed()
         self._possible_lands = self.determine_possible_lands()
-        self._test_int = test_int
 
     #getters and setters
-    @property
-    def test_int(self):
-        return self._test_int
-    @test_int.setter
-    def test_int(self, value):
-        self._test_int = value
 
     @property
     def format(self) -> Format:
         return self._format
 
     @property
-    def input_cards(self) -> list[Card]:
+    def input_cards(self) -> list[GameCard]:
         return self._input_cards
 
     @property
@@ -50,13 +55,17 @@ class Deck:
         return self._colors_needed
 
     @property
-    def possible_lands(self) -> list:
+    def possible_lands(self) -> list[Land]:
         return self._possible_lands
 
+    @property
+    def size(self) -> int:
+        return self._size
+
     #setup functions
-    def determine_color_id(self):
+    def determine_color_id(self, input_as_cards):
         output = []
-        for card in self._input_cards:
+        for card in input_as_cards:
             id = list(card.color_identity)
             for color in id:
                 if color not in output:
@@ -70,9 +79,12 @@ class Deck:
         return as_list
 
 
-    def determine_pips(self) -> dict:
+    def determine_lands_requested_from_json(self, quantity):
+        return int(quantity)
+
+    def determine_pips(self, input_as_cards) -> dict:
         output = {'W': 0, 'U': 0, 'B': 0, 'R': 0, 'G': 0, 'C': 0, 'S': 0}
-        for card in self._input_cards:
+        for card in input_as_cards:
             for face in card.faces:
                 cost = list(face.mana_cost)
                 i = 0
@@ -92,23 +104,25 @@ class Deck:
 
     def determine_possible_lands(self) -> list:
         all = db.session.query(Card).filter(Card._overall_land == True).all()
-        print(f"queried for {len(all)} lands")
-        pie = ColorPie()
-        pie.parse_colors(self.colors_needed)
-        lands = [x for x in all
-                 if pie.produces_needed(x.produced_score.value) and
-                 x.produced_score.count > 1]
-        print(f"List comprehension returned {len(lands)} lands")
+        lands = []
+        for card in all:
+            if len(card.true_produced) != 0:
+                match = 0
+                for color in card.true_produced:
+                    if color in self.colors_needed:
+                        match += 1
+                    if match >= 2:
+                        lands.append(self.parse_GameCards(card, "heap"))
+                        break
         return lands
 
+    def determine_size(self) -> int:
+        inp = len(self._input_cards)
+        req = self.lands_requested
+        return inp + req
 
 
-
-
-    def determine_lands_requested_from_json(self, quantity):
-        return int(quantity)
-
-    def get_card_by_name(self, name):
+    def get_card_by_name(self, name) -> Card:
         face = db.session.query(Face).filter(Face._name == name).first()
         card = db.session.query(Card).filter(Card._id == face.card_id).first()
         return card
@@ -123,6 +137,7 @@ class Deck:
 
     def parse_format_from_json(self, format):
         return db.session.query(Format).filter(Format._id == format["id"]).first()
+
 
 
     #misc functions

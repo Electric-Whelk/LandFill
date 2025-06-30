@@ -193,6 +193,7 @@ class Card(db.Model):
     #cached properties
     @cached_property
     def produced_score(self) -> ColorPie:
+        #possibly condemned, if I go without the primes thing
         if not self.overall_land:
             return 0
 
@@ -239,6 +240,44 @@ class Card(db.Model):
             text += face.text
         return text
 
+    @cached_property
+    def true_produced(self) -> list:
+        if not self.overall_land:
+            return []
+
+        p_list = list(self.produced)
+
+        if len(p_list) < 2 and not self.cycle.fetch:
+            return []
+
+        s_list = self.check_searched_lands()
+
+        dict = {
+            "Plains": "W",
+            "Island": "U",
+            "Swamp": "B",
+            "Mountain": "R",
+            "Forest": "G",
+            "Wastes": "C"
+        }
+
+        for word in s_list:
+            try:
+                pip = dict[word]
+                if pip not in p_list:
+                    p_list.append(pip)
+            except KeyError:
+                pass
+
+        return p_list
+
+
+
+
+
+
+
+
 
     #setter and getter functions that work with cached properties
     @property
@@ -273,6 +312,13 @@ class Card(db.Model):
     def check_searched_lands(self):
         if not self.cycle.fetch:
             return []
+
+        nonbasic_fetches = ["Fetch Lands",
+                            "Mirage Fetches"]
+
+        if self.cycle.name in nonbasic_fetches:
+            return ["Plains", "Island", "Swamp", "Mountain", "Forest"]
+
         words = self.text.split()
         return words
             
