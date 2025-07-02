@@ -8,6 +8,8 @@ import './App.css';
 
 
 const App = () => {
+    const host = "http://127.0.0.1:5000";
+
     //used on the homepage
     const [allCycles, setAllCycles] = useState([])
 
@@ -18,7 +20,7 @@ const App = () => {
 
     const lock = async (e) => {
         e.preventDefault()
-        const url = "http://127.0.0.1:5000/lock"
+        const url = "/lock"
 
         const options = {
             method: "POST",
@@ -43,7 +45,7 @@ const App = () => {
     const run = async (e) => {
         console.log("Currency: " + currency)
         e.preventDefault()
-        const url = "http://127.0.0.1:5000/run"
+        const url = "/run"
 
         const options = {
             method: "POST",
@@ -86,7 +88,7 @@ const App = () => {
 
 
     const fetchCycles = async() => {
-        const response = await fetch("http://127.0.0.1:5000/fetch_cycles")
+        const response = await fetch("/fetch_cycles")
         const data = await response.json()
         setAllCycles(data.cycles)
     }
@@ -99,7 +101,8 @@ const App = () => {
                          setRequestedQuantity={setRequestedQuantity}
                          setInputCards={setInputCards}
                          inputCards = {inputCards}
-                         requestedQuantity={requestedQuantity}/>
+                         requestedQuantity={requestedQuantity}
+                         host={host}/>
             <MonteCarlo run={run}
                         setBudget={setBudget}
                         setMaxPricePerCard={setMaxPricePerCard}

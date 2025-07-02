@@ -3,7 +3,7 @@ import React from "react"
 import { useState, useEffect } from "react"
 
 
-const PlayerInput = ({ lock, setInputCards, inputCards, setFormat, format, setRequestedQuantity, requestedQuantity }) => {
+const PlayerInput = ({ lock, setInputCards, inputCards, setFormat, format, setRequestedQuantity, requestedQuantity, host }) => {
     const [allFormats, setAllFormats] = useState([]);
 
 
@@ -19,7 +19,7 @@ const PlayerInput = ({ lock, setInputCards, inputCards, setFormat, format, setRe
 
 
     const fetchFormats = async() => {
-        const response = await fetch("http://127.0.0.1:5000/fetch_formats")
+        const response = await fetch("/fetch_formats")
         const data = await response.json()
         setFormat(data.formats[0])
         setAllFormats(data.formats)

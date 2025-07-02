@@ -1,26 +1,22 @@
 from Extensions import db
-from ColorPie import ColorPie
-from database_management.DBManager import DBManager
 from database_management.models.Card import Card
 from database_management.models.Face import Face
 from database_management.models.Format import Format
-from simulation_objects.CardCollection import CardCollection
-from simulation_objects.GameCard import GameCard
-from simulation_objects.Land import Land
-from simulation_objects.Spell import Spell
-
-
+from simulation_objects.CardCollectiions.CardCollection import CardCollection
+from simulation_objects.GameCards.GameCard import GameCard
+from simulation_objects.GameCards.Land import Land
 
 
 class Deck(CardCollection):
     def __init__(self):
+        CardCollection.__init__(self)
         self._lands_requested = None
 
     def setup(self, input_cards, format, quantity):
         self._format = self.parse_format_from_json(format)
 
         input_as_cards = self.parse_cards_from_json(input_cards)
-        self._input_cards = [self.parse_GameCards(x, "deck") for x in input_as_cards]
+        self.set_card_list_from_ORM(input_as_cards, mandatory=True)
         self._lands_requested = self.determine_lands_requested_from_json(quantity)
         self._size = self.determine_size()
         self._color_id = self.determine_color_id(input_as_cards)
@@ -33,10 +29,6 @@ class Deck(CardCollection):
     @property
     def format(self) -> Format:
         return self._format
-
-    @property
-    def input_cards(self) -> list[GameCard]:
-        return self._input_cards
 
     @property
     def lands_requested(self) -> int:
@@ -112,28 +104,14 @@ class Deck(CardCollection):
                     if color in self.colors_needed:
                         match += 1
                     if match >= 2:
-                        lands.append(self.parse_GameCards(card, "heap"))
+                        lands.append(self.parse_GameCard(card))
                         break
         return lands
 
     def determine_size(self) -> int:
-        inp = len(self._input_cards)
+        inp = len([x for x in self.card_list if x.mandatory])
         req = self.lands_requested
         return inp + req
-
-
-    def get_card_by_name(self, name) -> Card:
-        face = db.session.query(Face).filter(Face._name == name).first()
-        card = db.session.query(Card).filter(Card._id == face.card_id).first()
-        return card
-
-    def parse_cards_from_json(self, cards):
-        as_list = cards.split("\n")
-        output = []
-        for name in as_list:
-            card = self.get_card_by_name(name)
-            output.append(card)
-        return output
 
     def parse_format_from_json(self, format):
         return db.session.query(Format).filter(Format._id == format["id"]).first()
@@ -141,6 +119,9 @@ class Deck(CardCollection):
 
 
     #misc functions
+    def full(self) -> bool:
+        return len(self.card_list) >= self.size
+
     def get_all_lands(self) -> list[Card]:
         print("Getting lands...")
         lands = db.session.query(Card).filter(Card._overall_land == True)

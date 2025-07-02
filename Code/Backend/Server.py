@@ -3,9 +3,9 @@ from database_management.models.Cycle import Cycle
 from database_management.models.Format import Format
 from flask import jsonify, session, request
 from flask_caching import Cache
-from simulation_objects.Deck import Deck
-from simulation_objects.MCUsrTest import MCUsrTest
-from simulation_objects.MonteCarlo import MonteCarlo
+from simulation_objects.CardCollectiions.Deck import Deck
+from simulation_objects.CardCollectiions.MCUsrTest import MCUsrTest
+from simulation_objects.CardCollectiions.MonteCarlo import MonteCarlo
 
 app = create_app()
 cache = Cache(app)
@@ -39,18 +39,18 @@ def fetch_formats():
 
 @app.route('/lock', methods=["POST"])
 def lock():
-    try:
-        input_cards = session["input_cards"] = request.json.get("inputCards")
-        format = session["format"] = request.json.get("format")
-        quantity = session["quantity"] = request.json.get("requestedQuantity")
+    #try:
+    input_cards = session["input_cards"] = request.json.get("inputCards")
+    format = session["format"] = request.json.get("format")
+    quantity = session["quantity"] = request.json.get("requestedQuantity")
 
-        deck.setup(input_cards, format, quantity)
-        monty.fill_heap()
+    deck.setup(input_cards, format, quantity)
+    monty.fill_heap()
 
-        return jsonify({"response": "Success - hey Leah shouldn't you be doing this with headers?"})
-    except Exception as e:
-        print(e)
-        return jsonify({"response": "Failed - hey Leah shouldn't you be doing this with headers?"})
+    return jsonify({"response": "Success - hey Leah shouldn't you be doing this with headers?"})
+    #except Exception as e:
+        #raise(e)
+        #return jsonify({"response": "Failed - hey Leah shouldn't you be doing this with headers?"})
 
 @app.route('/run', methods=["POST"])
 def run():

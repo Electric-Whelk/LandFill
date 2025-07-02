@@ -55,7 +55,7 @@ class DBManager:
 
     def add_entry(self, entry):
         try:
-            self.db.session.add(entry)
+            self.db.session.add_to_sample(entry)
             self.db.session.commit()
         except IntegrityError:
             self.db.session.rollback()
@@ -80,7 +80,7 @@ class DBManager:
             if not self.check_edge_case(sco):
                 new_card = Card()
                 new_card.parse_scrython_object(sco)
-                self.db.session.add(new_card)
+                self.db.session.add_to_sample(new_card)
                 self.db.session.flush()
                 new_card.determine_games_from_object(sco)
                 if parse_legality:
@@ -138,7 +138,7 @@ class DBManager:
         lg = Card()
         lg.parse_scrython_object(sco)
 
-        self.db.session.add(lg)
+        self.db.session.add_to_sample(lg)
         self.db.session.flush()
         lg.determine_games_from_object(sco)
         lg.determine_legality_from_object(sco)
