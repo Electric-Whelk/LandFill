@@ -1,13 +1,18 @@
 from database_management.models.Card import Card
 
 class GameCard(object):
-    def __init__(self, card, mandatory=False):
+    def __init__(self, card:Card, mandatory=False, permitted = True):
         self._name = card.name
         self._usd = card.usd
         self._eur = card.eur
 
         self._mandatory = mandatory
+        self._permitted = permitted
         self._tapped = False
+
+
+    def __repr__(self):
+        return self._name
 
 
     #getters and setters
@@ -29,6 +34,13 @@ class GameCard(object):
     @mandatory.setter
     def mandatory(self, value:bool):
         self._mandatory = value
+
+    @property
+    def permitted(self) -> bool:
+        return self._permitted
+    @permitted.setter
+    def permitted(self, value:bool):
+        self._permitted = value
 
     @property
     def tapped(self) -> bool:

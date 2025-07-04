@@ -2,7 +2,7 @@ from Extensions import db
 from database_management.models.Card import Card
 from database_management.models.Face import Face
 from database_management.models.Format import Format
-from simulation_objects.CardCollectiions.CardCollection import CardCollection
+from simulation_objects.CardCollections.CardCollection import CardCollection
 from simulation_objects.GameCards.GameCard import GameCard
 from simulation_objects.GameCards.Land import Land
 

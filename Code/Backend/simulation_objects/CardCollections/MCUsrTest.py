@@ -1,5 +1,5 @@
 from numpy import random
-from simulation_objects.CardCollectiions.MonteCarlo import MonteCarlo
+from simulation_objects.CardCollections.MonteCarlo import MonteCarlo
 
 
 class MCUsrTest(MonteCarlo):

@@ -3,6 +3,8 @@ from database_management.models.Cycle import Cycle
 from database_management.models.Face import Face
 from Extensions import db
 from random import shuffle
+
+from simulation_objects.GameCards import CommandTower
 from simulation_objects.GameCards.BasicLand import BasicLand
 from simulation_objects.GameCards.GameCard import GameCard
 from simulation_objects.GameCards.Land import Land
@@ -21,6 +23,13 @@ class CardCollection:
     def card_list(self, cards: list[GameCard]):
         self._cards = cards
 
+    #sublists
+    def lands_list(self) -> list[Land]:
+        return [x for x in self.card_list if isinstance(x, Land)]
+
+    def spells_list(self) -> list[Spell]:
+        return [x for x in self.card_list if isinstance(x, Spell)]
+
     #card shifting
     def give(self, recipient:"CardCollection", item:GameCard):
         recipient.receive(item)
@@ -37,6 +46,7 @@ class CardCollection:
 
     #cards used to add new GameCard objects
     def get_card_by_name(self, name) -> Card:
+        #print(f"looking up card {name}...")
         face = db.session.query(Face).filter(Face._name == name).first()
         card = db.session.query(Card).filter(Card._id == face.card_id).first()
         return card
@@ -64,5 +74,12 @@ class CardCollection:
                 case "Basic Lands":
                     return BasicLand(card, mandatory)
                 case _:
-                    return Land(card, mandatory)
+                    return self.parse_land_by_name(card, mandatory)
+
+    def parse_land_by_name(self, card:Card, mandatory):
+        match card.name:
+            case "Command Tower":
+                return CommandTower(card, mandatory)
+            case _:
+                return Land(card, mandatory)
 

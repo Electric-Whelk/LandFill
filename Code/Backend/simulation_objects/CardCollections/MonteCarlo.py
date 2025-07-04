@@ -1,15 +1,16 @@
+
+import random
 from copy import deepcopy
 from database_management.models.Card import Card
 from Extensions import db
 from math import inf
-from random import shuffle
 
-from simulation_objects.CardCollectiions.CardCollection import CardCollection
-from simulation_objects.CardCollectiions.Deck import Deck
+from simulation_objects.CardCollections.CardCollection import CardCollection
+from simulation_objects.CardCollections.Deck import Deck
 from simulation_objects.GameCards.BasicLand import BasicLand
 from simulation_objects.GameCards.GameCard import GameCard
 from simulation_objects.GameCards.Land import Land
-from simulation_objects.Misc.Test import Test
+from simulation_objects.Simulations.Test import Test
 
 
 class MonteCarlo(CardCollection):
@@ -44,13 +45,12 @@ class MonteCarlo(CardCollection):
     def optimized(self, value: list):
         self._optimized = value
 
-    @property
-    def permitted_lands(self) -> list:
-        return self._permitted_lands
+    """
     @permitted_lands.setter
     def permitted_lands(self, value: list):
         self._permitted_lands = value
 
+    """
     @property
     def remaining(self) -> int:
         return self._remaining
@@ -99,7 +99,10 @@ class MonteCarlo(CardCollection):
     def minbasics(self, value:int):
         self._minbasics = value
 
-
+    #pseudosetters
+    def permitted_lands(self) -> list:
+        #return self._permitted_lands
+        return [c for c in self.card_list if c.permitted]
 
     #deck attribute setup functions
     def check_identity(self, card) -> bool:
@@ -111,27 +114,33 @@ class MonteCarlo(CardCollection):
         return True
 
 
-    def fill_heap(self):
-        self.card_list = []
-        all = db.session.query(Card).filter(Card._overall_land == True).all()
-        lands = []
-        basics = []
-        for card in all:
-            tp = card.true_produced
-            if not self.check_identity(card):
-                pass
-            elif card.cycle.name == "Basic Lands":
-                if card.produced[0] in self.deck.colors_needed:
-                    self.card_list.append(self.parse_GameCard(card))
-            elif len(tp) != 0:
-                match = 0
-                for color in tp:
-                    if color in self.deck.colors_needed:
-                        match += 1
-                    if match >= 2:
+    def fill_heap(self, from_testlist=None):
+        if from_testlist is None:
+            self.card_list = []
+            all = db.session.query(Card).filter(Card._overall_land == True).all()
+            lands = []
+            basics = []
+            for card in all:
+                tp = card.true_produced
+                if not self.check_identity(card):
+                    pass
+                elif card.cycle.name == "Basic Lands":
+                    if card.produced[0] in self.deck.colors_needed:
                         self.card_list.append(self.parse_GameCard(card))
-                        break
-        print(f"Set heap with a total of {len(self.card_list)} cards.")
+                elif len(tp) != 0:
+                    match = 0
+                    for color in tp:
+                        if color in self.deck.colors_needed:
+                            match += 1
+                        if match >= 2:
+                            self.card_list.append(self.parse_GameCard(card))
+                            break
+            #print(f"Set heap with a total of {len(self.card_list)} cards.")
+        else:
+            as_cards = (self.parse_cards_from_json(from_testlist))
+            self.card_list = [self.parse_GameCard(x, mandatory=True) for x in as_cards]
+            #for card in self.card_list:
+                #print(f"{card.name}:{isinstance(card, Land)}")
         #self.heap = lands
         #self.basics = basics
 
@@ -164,16 +173,20 @@ class MonteCarlo(CardCollection):
 
 
     def reset_session(self):
-        self.permitted_lands = self.winnow_by_price()
+        #self.permitted_lands = self.winnow_by_price()
+        self.winnow_by_price()
         self.remaining = self.deck.lands_requested
         self.optimized = []
 
 
-    def winnow_by_price(self) -> list[GameCard]:
-        if self.mppc == 0:
+    def winnow_by_price(self):# -> list[GameCard]:
+        if self.mppc == 0 or self.mppc is None:
             return self.card_list
         else:
-            return [c for c in self.card_list if self.card_below_max(c)]
+            for c in self.card_list:
+                if self.card_below_max(c):
+                    c.permitted = False
+            #return [c for c in self.card_list if self.card_below_max(c)]
 
 
 
@@ -185,33 +198,35 @@ class MonteCarlo(CardCollection):
         self.remaining -= 1
 
     def recall_sample(self):
-        for card in self.deck.card_list:
+        l = [c for c in self.deck.card_list]
+        for card in l:
             if not card.mandatory:
-                self.give(self, card)
+                self.deck.give(self, card)
 
     def set_sample(self):
         #curently pays no attention to minbasics, or allows for duplicates
-        self.shuffle() #SCAFFOLD just doing it randomly for now
+        p = self.permitted_lands()
+        random.shuffle(p) #SCAFFOLD just doing it randomly for now
         i = 0 #hey this doesn't allow for the edge case where a deck is big enough to need more lands then we have to offer
-        while not self.deck.full:
-            self.give(self.deck, self.permitted_lands[i])
+        while not self.deck.full():
+            self.give(self.deck, p[i])
             i += 1
 
-
+        """
         output = []
         for i in range(0, self.minbasics):
             len = len(self.basics)
             self.add_to_sample(self.basics[i % len])
-        shuffle(self.permitted_lands)
+        sp = random.shuffle(self.permitted_lands)
         i = 0
         while self.remaining > 0:
-            self.add_to_sample(self.permitted_lands[i])
+            self.add_to_sample(sp[i])
             i += 1
 
-
+        """
     def run(self) -> dict:
         self.reset_session()
-        #self.run_tests()
+        self.run_tests()
 
         cards = self.output_cards()
         metrics = self.output_metrics()
@@ -222,23 +237,24 @@ class MonteCarlo(CardCollection):
         return output
 
     def run_tests(self):
+        print("Running tests")
         temp_count = 5
-        for i in range(0, 5): #SCAFFOLD
+        for i in range(0, 1):#SCAFFOLD
             self.set_sample()
             t = Test(self.deck)
+            t.run()
             self.recall_sample()
 
     def output_cards(self) -> list[str]:
         for i in range(0, self.minbasics):
             len = len(self.basics)
             self.add_to_sample(self.basics[i % len])
-        shuffle(self.permitted_lands)
+        p = self.permitted_lands()
+        random.shuffle(p)
         i = 0
         while self.remaining > 0:
-            self.add_to_sample(self.permitted_lands[i])
+            self.add_to_sample(p[i])
             i += 1
-
-        print(f"optimized: {self.optimized}")
 
         return [x.name for x in self.optimized]
 

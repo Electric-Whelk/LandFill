@@ -3,9 +3,9 @@ from database_management.models.Cycle import Cycle
 from database_management.models.Format import Format
 from flask import jsonify, session, request
 from flask_caching import Cache
-from simulation_objects.CardCollectiions.Deck import Deck
-from simulation_objects.CardCollectiions.MCUsrTest import MCUsrTest
-from simulation_objects.CardCollectiions.MonteCarlo import MonteCarlo
+from simulation_objects.CardCollections.Deck import Deck
+from simulation_objects.CardCollections.MCUsrTest import MCUsrTest
+from simulation_objects.CardCollections.MonteCarlo import MonteCarlo
 
 app = create_app()
 cache = Cache(app)
