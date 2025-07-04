@@ -1,8 +1,8 @@
 from .UniqueLand import UniqueLand
-from ... import CardCollections
+#from simulation_objects.CardCollections import Deck
 
 
 class CommandTower(UniqueLand):
 
-    def live_prod(self, deck:CardCollections.Deck) -> list[str]:
-        return deck.color_id
+    def live_prod(self, game) -> list[str]:
+        return game.deck.color_id

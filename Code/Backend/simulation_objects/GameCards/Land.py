@@ -1,6 +1,6 @@
 from simulation_objects.GameCards.GameCard import GameCard
-import simulation_objects.Simulations as Simulations
-import simulation_objects.CardCollections as CardCollections
+#import simulation_objects.Simulations as Simulations
+#from simulation_objects.CardCollections import Deck
 
 
 class Land(GameCard):
@@ -14,21 +14,22 @@ class Land(GameCard):
 
 
     #pseudogetters
-    def live_prod(self, deck:CardCollections.Deck) -> list[str]:
+    def live_prod(self, game) -> list[str]:
         return self._produced
 
 
-    def conditions(self, deck:CardCollections.Deck):
+    def conditions(self, game):
         #print(f"{self.name} produces {str(self.produced)}")
         output = []
-        for color in self.live_prod(deck):
+        for color in self.live_prod(game):
             dict = {
+                "land": self,
                 "color": color,
                 "pain": None,
                 "sac": None,
             }
             output.append(dict)
-        print(f"{self} can produce {len(output)} mana")
+        #print(f"{self} can produce {len(output)} mana")
         return output
 
 

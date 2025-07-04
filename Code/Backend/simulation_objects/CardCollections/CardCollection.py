@@ -35,6 +35,11 @@ class CardCollection:
         recipient.receive(item)
         self.card_list.remove(item)
 
+    def give_all(self, recipient:"CardCollection"):
+        cl = [c for c in self.card_list]
+        for item in cl:
+            self.give(recipient, item)
+
     def give_top(self, recipient:"CardCollection"):
         self.give(recipient, self.card_list[0])
 

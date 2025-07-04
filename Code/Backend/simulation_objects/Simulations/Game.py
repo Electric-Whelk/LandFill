@@ -21,7 +21,7 @@ class Game(Simulation):
         self._turn = 0
 
         #def attributes
-        self.verbose = True
+        self.verbose = False
 
     #getters
     @property
@@ -54,28 +54,36 @@ class Game(Simulation):
             print(input)
 
     #run!
+    def conclude_game(self):
+        zones = [self.hand, self.battlefield, self.graveyard]
+        for zone in zones:
+            zone.give_all(self.deck)
+        self.vprint("Game complete")
+
     def run(self):
         self.setup_game()
-        for _ in range(4): #SCAFFOLD - number of turns
+        for _ in range(7): #SCAFFOLD - number of turns
             self.run_turn()
 
-        self.vprint("Game complete")
+        self.conclude_game()
         self.turn = 0
         pass
 
     def play_land_at_random(self):
-        self.deck.give(self.battlefield, [l for l in self.deck.card_list if isinstance(l, Land)][0])
+        lands = [l for l in self.deck.card_list if isinstance(l, Land)]
+        if len(lands) > 0:
+            self.deck.give(self.battlefield, lands[0])
 
     def run_turn(self):
         self.turn += 1
-        self.vprint(f"Beginning turn {self.turn} with max mana {self.max_mana}")
         self.battlefield.untap()
         self.draw()
         self.vprint(f"Hand: {self.hand.card_list}")
-        self.play_land_at_random()
         self.vprint(f"Battlefield: {self.battlefield.card_list} ")
-        self.determine_play()
+        hey = self.determine_play()
+        self.play_land_at_random()
         self.vprint("")
+
 
     def setup_game(self):
         deck = self.deck
@@ -134,19 +142,33 @@ class Game(Simulation):
 
 
     def determine_play(self):
-        max = self.determine_max_mana()
+        max = self.battlefield.max_mana()
+        self.vprint(f"begnning turn {self.turn} with max mana {max}")
         fodder = [x for x in self.hand.spells_list() if x.cmc[0] <= max]
-        print(f"Playable cards: {fodder}")
+        self.vprint(f"Playable cards: {fodder}")
         lumps = self.determine_lumps_from_hand(fodder)
-        info = self.battlefield.mana_combinations(self)
-        for mlump in info:
-            print(f"{[m["color"] for m in mlump]}")
+        #for lump in lumps:
+            #self.battlefield.mana_combinations(self, lump)
+
+        if len(lumps) < 1:
+            return 0
+
+        testlump = lumps[random.randint(0, len(lumps) - 1)]
+        self.vprint(f"Test lump: {testlump}")
+        self.battlefield.mana_combinations(self, testlump)
+        return 1
+
+        #for lump in lumps:
+            #self.can_I_play_this(lump)
+        #info = self.battlefield.mana_combinations(self, n=3)
+        #for mlump in info:
+            #print(f"we get: {mlump}")
         #self.vprint(f"Available mana: {[[x:["color"] for x in ] ]}")
 
         pass
 
     def purge_lumps(self, lumps:list[Lump]) -> list[Lump]:
-        l = [lump for lump in lumps if lump.cmc <= self.max_mana]
+        l = [lump for lump in lumps if lump.cmc <= self.battlefield.max_mana()]
         l.sort(key=lambda x: x.cmc, reverse=True)
         return l
 
@@ -164,11 +186,10 @@ class Game(Simulation):
 
     #card simulation
 
-    def can_I_play_this(self, suggestions:list[Spell], extra_land:Land = None):
-        untapped = [x for x in self.battlefield.card_list if x.untapped]
-        if extra_land is not None:
-            if self.does_it_enter_tapped(extra_land):
-                untapped.append(extra_land)
+    def can_I_play_this(self, lump):
+        info = self.battlefield.mana_combinations(self, n=lump.cmc)
+
+
 
 
 

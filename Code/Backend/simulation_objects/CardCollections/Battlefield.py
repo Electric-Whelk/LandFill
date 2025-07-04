@@ -1,13 +1,19 @@
-from itertools import product
+import itertools
+from itertools import product, combinations
 
-import simulation_objects.CardCollections as CC
-import simulation_objects.GameCards as GC
 
-class Battlefield(CC.CardCollection):
+from .CardCollection import CardCollection
+from simulation_objects.GameCards import Land
+from simulation_objects.Misc.Wodge import Wodge
 
-    #pseudosetters
-    def accessible_mana(self) -> list[GC.Land]:
+class Battlefield(CardCollection):
+
+    #pseudogetters
+    def accessible_mana(self) -> list[Land]:
         return [l for l in self.card_list if not l.tapped]
+
+    def max_mana(self) -> int:
+        return len(self.accessible_mana())
 
     #game actions
     def untap(self):
@@ -16,21 +22,45 @@ class Battlefield(CC.CardCollection):
 
 
     #game information
-    def mana_combinations(self, game):
-        landinfo = []
-        for land in self.accessible_mana():
-            d = {
-                "land":land,
-                "produced": land.conditions(game)
-            }
-            landinfo.append(d)
-        grouped = [land["produced"] for land in landinfo]
-        combinations = product(*grouped)
-        output = []
-        for c in combinations:
-            colours = [x["color"] for x in c]
-            output.append(c)
-        return output
+    def mana_combinations(self, game, lump):
+
+        """
+        if n is None:
+            accessible = [(self.accessible_mana())]
+        else:
+            accessible = list(itertools.combinations(self.accessible_mana(), n))
+
+            """
+
+        accessible = list(itertools.combinations(self.accessible_mana(), lump.cmc))
+
+        for bunch in accessible:
+            assert(len(bunch) == lump.cmc)
+            lump.parse_wodge(Wodge(bunch, game))
+
+
+
+
+
+
+        metaout = []
+        for arrangement in accessible:
+            landinfo = []
+            for land in arrangement:
+                d = {
+                    "land":land,
+                    "produced": land.conditions(game)
+                }
+                landinfo.append(d)
+                grouped = [land["produced"] for land in landinfo]
+            combinations = product(*grouped)
+            output = []
+
+            for c in combinations:
+                colours = [x["color"] for x in c]
+                output.append(c)
+            metaout.append(output)
+        return metaout
 
 
 
