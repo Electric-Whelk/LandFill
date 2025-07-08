@@ -10,7 +10,7 @@ class Battlefield(CardCollection):
 
     #pseudogetters
     def accessible_mana(self) -> list[Land]:
-        return [l for l in self.card_list if not l.tapped]
+        return [l for l in self.card_list if not l.tapped and isinstance(l, Land)]
 
     def max_mana(self) -> int:
         return len(self.accessible_mana())
@@ -22,7 +22,20 @@ class Battlefield(CardCollection):
 
 
     #game information
-    def mana_combinations(self, game, lump):
+    def mana_permutations(self, game, extra_land=None):
+        #all_info = [{"land": x, "produced":x.conditions(game)} for x in self.accessible_mana()]
+        mana = self.accessible_mana()
+        if extra_land != None and extra_land.enters_untapped(game):
+            mana.append(extra_land)
+        all_produced = [x.conditions(game) for x in mana]
+        all_combinations = product(*all_produced)
+
+
+
+        return list(all_combinations)
+
+
+    def encode_lump(self, game, lump):
 
         """
         if n is None:
@@ -32,17 +45,16 @@ class Battlefield(CardCollection):
 
             """
 
-        accessible = list(itertools.combinations(self.accessible_mana(), lump.cmc))
+        lands = self.accessible_mana()
+
+        accessible = list(itertools.combinations(lands, len(lands)))
+
 
         for bunch in accessible:
-            assert(len(bunch) == lump.cmc)
+            #assert(len(bunch) == lump.cmc)
             lump.parse_wodge(Wodge(bunch, game))
 
-
-
-
-
-
+        """
         metaout = []
         for arrangement in accessible:
             landinfo = []
@@ -62,7 +74,7 @@ class Battlefield(CardCollection):
             metaout.append(output)
         return metaout
 
-
+        """
 
 
 

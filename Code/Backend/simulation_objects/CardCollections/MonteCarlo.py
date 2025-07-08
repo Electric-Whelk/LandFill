@@ -252,12 +252,13 @@ class MonteCarlo(CardCollection):
         p = self.permitted_lands()
         random.shuffle(p)
         i = 0
-        while self.remaining > 0:
+        pass
+        """        while self.remaining > 0:
             self.add_to_sample(p[i])
             i += 1
 
         return [x.name for x in self.optimized]
-
+        """
 
     def output_metrics(self) -> dict:
         pass

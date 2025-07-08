@@ -18,6 +18,8 @@ class Land(GameCard):
         return self._produced
 
 
+    #determine play state
+
     def conditions(self, game):
         #print(f"{self.name} produces {str(self.produced)}")
         output = []
@@ -32,6 +34,14 @@ class Land(GameCard):
         #print(f"{self} can produce {len(output)} mana")
         return output
 
+    def enters_untapped(self, game) -> bool:
+        return True
+
+    def produced_on_entry(self, game) -> list[dict]:
+        if self.enters_untapped(game):
+            return self.conditions(game)
+        else:
+            return []
 
 
 
