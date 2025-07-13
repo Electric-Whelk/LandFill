@@ -101,6 +101,8 @@ class Card(db.Model):
 
     @property
     def produced(self) -> str:
+        if self._produced == "none":
+            return []
         return self._produced
     @produced.setter
     def produced(self, value:str):
@@ -245,10 +247,46 @@ class Card(db.Model):
         if not self.overall_land:
             return []
 
+
         p_list = list(self.produced)
 
         if len(p_list) < 2 and not self.cycle.fetch:
             return []
+
+        s_list = self.check_searched_lands()
+
+        dict = {
+            "Plains": "W",
+            "Island": "U",
+            "Swamp": "B",
+            "Mountain": "R",
+            "Forest": "G",
+            "Wastes": "C"
+        }
+
+        for word in s_list:
+            try:
+                pip = dict[word]
+                if pip not in p_list:
+                    p_list.append(pip)
+            except KeyError:
+                pass
+
+        return p_list
+
+
+    @cached_property
+    def alt_true_produced(self):
+        if not self.overall_land:
+            return []
+
+        if self.produced == "none":
+            p_list = []
+        else:
+            p_list = list(self.produced)
+
+        if not self.cycle.fetch:
+            return p_list
 
         s_list = self.check_searched_lands()
 
@@ -321,12 +359,29 @@ class Card(db.Model):
 
         words = self.text.split()
         return words
+
+    def check_searched_lands_comprehensive(self):
+        output = []
+        if not self.cycle.fetch:
+            return output
+
+        words = self.text.split()
+        landtypes = ["Plains", "Island", "Swamp", "Mountain", "Forest", "Wastes"]
+        for word in words:
+            if word in landtypes:
+                output.append(word)
+        return output
+
+
+
             
     def check_if_land(self):
         for face in self.faces:
             if face.playable and not face.land:
                 return False
         return True
+
+
 
     def determine_cycle(self):
         self.reset_cycle()

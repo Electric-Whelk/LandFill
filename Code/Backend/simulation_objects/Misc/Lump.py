@@ -69,6 +69,21 @@ class Lump:
     def castable_with_generic(self, value:bool):
         self._castable_with_generic = value
 
+    def mana_to_seek(self):
+        output = []
+        if self.castable:
+            #print(f"\t{self} can be cast")
+            return output
+        else:
+            for m in self.moots:
+                for p in m.pips:
+                    if p not in output:
+                        output.append(p)
+        return output
+
+
+
+
 
     def check_option_castability(self, option):
         colors = [x["color"] for x in option]
@@ -94,11 +109,21 @@ class Lump:
 
         return "uncastable"
 
+    def parse_submission_color(self, sub):
+        if isinstance(sub["color"], str):
+            return [sub["color"]]
+        return sub["color"]
 
     def check_pip_castability(self, option) -> list[str]:
         #if self.colorless:
             #return "castable"
-        colors = [x["color"] for x in option]
+        #colors = [*self.parse_submission_color(x) for x in option]
+        colors = []
+        for item in option:
+            colors.extend(self.parse_submission_color(item))
+        #print(f"colors: {colors}")
+        one_offs = []
+        castable = True
         missing = []
         for initial in pips:
             needed = self.cost[initial]
@@ -111,12 +136,18 @@ class Lump:
     def check_playmaker(self, game, land) -> bool:
         if self.castable:
             return True
+
+        colors_enough = False
+        mana_enough = False
+
         prod = land.produced_on_entry(game)
         prod_colours = [o[("color")] for o in prod]
+        #print(f"\tChecking as playmaker for {self}")
         for m in self.moots:
+            #print(f"\t\tchecking {m}")
             if m.accept_submission(prod_colours):
-                return True
-
+                if m.accept_mana_submission(land, game):
+                    return True
         return False
 
 
@@ -160,18 +191,50 @@ class Lump:
         self.castable = False
         self.moots = []
 
+        if input == []:
+            self.empty_moot()
+        else:
+            self.full_moot(input)
+
+    def empty_moot(self):
+        initials = ["W", "U", "B", "R", "G", "C"]
+        tmppips = []
+        for initial in initials:
+            for _ in range(0, self.cost[initial]):
+                tmppips.append(initial)
+
+        #print(f"tmppips: {tmppips}, gen: {self.cost['Gen']}")
+
+        creation = Moot(None, tmppips, self.cost["Gen"])
+
+        self.moots.append(creation)
+
+
+    def full_moot(self, input:list):
+
         generic_moot = False
 
         for option in input:
             pips = self.check_pip_castability(option)
-            generic = max(0, self.cmc - len(option) - len(pips))
+            option_cmc = self.get_option_cmc(option)
+            generic = max(0, self.cmc - option_cmc - len(pips))
             new_moot = Moot(option, pips, generic)
             if new_moot.castable:
                 self.castable = True
+                #assert(self.cmc <= len(option))
+                #print(f"cmc{self.cmc}, optionlen = {len(option)}")
             if len(new_moot.pips) == 0:
                 generic_moot = True
             self.moots.append(Moot(option, pips, generic))
         self.cull_moots(generic_moot)
+
+
+    def get_option_cmc(self, option):
+        output = len(option)
+        output = 0
+        for item in option:
+            output += len(self.parse_submission_color(item))
+        return output
 
 
 
@@ -221,6 +284,15 @@ class Lump:
             for moot in self.moots:
                 if len(moot.pips) != 0:
                     self.moots.remove(moot)
+
+
+    def tap_mana(self, game):
+        for m in self.moots:
+            if m.castable:
+                m.tap_moot_mana(game)
+                break
+
+
 
 
 

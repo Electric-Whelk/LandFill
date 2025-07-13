@@ -6,6 +6,7 @@ class Spell(GameCard):
         GameCard.__init__(self, orm_obj, mandatory)
         self._mana = self.parse_mana(orm_obj)
         self._cmc = self.parse_cmc(self._mana)
+        self._pips = self.parse_pips(self._mana)
 
     #setters and getters
     @property
@@ -15,6 +16,11 @@ class Spell(GameCard):
     @property
     def cmc(self) -> list[int]:
         return self._cmc
+
+    @property
+    def pips(self) -> list[dict[str, int]]:
+        return self._pips
+
 
 
     #setup functions
@@ -47,6 +53,10 @@ class Spell(GameCard):
                 j += 1
             output.append(d)
         return output
+
+    def parse_pips(self, input):
+
+        return {colour: quantity for colour, quantity in input[0].items() if colour not in {"X", "Gen"}}
 
 
 

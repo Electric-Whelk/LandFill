@@ -27,6 +27,19 @@ class Moot:
     def generic(self):
         return self._generic
 
+    @property
+    def option(self):
+        return self._option
+
+    def accept_mana_submission(self, sub, game):
+        totalneeded = len(self.pips) + self.generic
+        quant = sub.increase(game)
+        available = quant + game.battlefield.max_mana()
+        #print(f"\t\tneeds {totalneeded}, has {available}")
+        return quant >= totalneeded
+
+
+
     def accept_submission(self, sub) -> bool:
         if self.pure_generic:
             if self.generic <= len(sub):
@@ -37,5 +50,10 @@ class Moot:
             if color in self._pips:
                 return True
         return False
+
+    def tap_moot_mana(self, game):
+        x = 4
+        for entity in self.option:
+            entity['land'].tap_for(game, entity['color'])
 
 

@@ -14,7 +14,7 @@ from simulation_objects.Simulations.Test import Test
 
 
 class MonteCarlo(CardCollection):
-    def __init__(self, deck):
+    def __init__(self, deck, close_examine=False, timer=False):
         CardCollection.__init__(self)
         #set on creation of the object
         self._deck = deck
@@ -31,6 +31,10 @@ class MonteCarlo(CardCollection):
         self._permitted_lands = []
         self._remaining = 0
         self._optimized = []
+
+        #dev variables
+        self._close_examine = close_examine
+        self._timer = timer
 
 
     #setters and getters
@@ -241,7 +245,7 @@ class MonteCarlo(CardCollection):
         temp_count = 5
         for i in range(0, 1):#SCAFFOLD
             self.set_sample()
-            t = Test(self.deck)
+            t = Test(self.deck, close_examine=self._close_examine, timer=self._timer)
             t.run()
             self.recall_sample()
 

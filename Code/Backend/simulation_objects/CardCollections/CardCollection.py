@@ -8,7 +8,13 @@ from simulation_objects.GameCards import CommandTower
 from simulation_objects.GameCards.BasicLand import BasicLand
 from simulation_objects.GameCards.GameCard import GameCard
 from simulation_objects.GameCards.Land import Land
+from simulation_objects.GameCards.SearchLands.FetchLand import FetchLand
+from simulation_objects.GameCards.FilterLands.FilterLand import FilterLand
+from simulation_objects.GameCards.UntappableCycles.RevealLand import RevealLand
+from simulation_objects.GameCards.FilterLands.BounceLand import BounceLand
 from simulation_objects.GameCards.Spell import Spell
+from simulation_objects.GameCards.TappedCycles.Triome import Triome
+from simulation_objects.GameCards.UntappableCycles.CheckLand import CheckLand
 
 
 class CardCollection:
@@ -50,6 +56,8 @@ class CardCollection:
         shuffle(self.card_list)
 
     #cards used to add new GameCard objects
+
+
     def get_card_by_name(self, name) -> Card:
         #print(f"looking up card {name}...")
         face = db.session.query(Face).filter(Face._name == name).first()
@@ -60,6 +68,7 @@ class CardCollection:
         as_list = cards.split("\n")
         output = []
         for name in as_list:
+            #print(f"Parsing {name}")
             card = self.get_card_by_name(name)
             output.append(card)
         return output
@@ -78,6 +87,18 @@ class CardCollection:
             match name:
                 case "Basic Lands":
                     return BasicLand(card, mandatory)
+                case "Fetch Lands":
+                    return FetchLand(card, mandatory)
+                case "Triomes":
+                    return Triome(card, mandatory)
+                case "Filter Lands":
+                    return FilterLand(card, mandatory)
+                case "Check Lands":
+                    return CheckLand(card, mandatory)
+                case "Reveal Lands":
+                    return RevealLand(card, mandatory)
+                case "Bounce Lands":
+                    return BounceLand(card, mandatory)
                 case _:
                     return self.parse_land_by_name(card, mandatory)
 
@@ -87,4 +108,30 @@ class CardCollection:
                 return CommandTower(card, mandatory)
             case _:
                 return Land(card, mandatory)
+
+
+
+    def accessible_colours(self, game, exclude=None):
+        if exclude == None:
+            l = self.lands_list()
+        else:
+            l = [item for item in self.lands_list() if item != exclude]
+        dict = {"W": 0, "U": 0, "B": 0, "R": 0, "G": 0, "C": 0}
+        for land in l:
+            for c in land.live_prod(game):
+                dict[c] += 1
+        return dict
+
+    def necessary_colours(self, allow_duplicates=True):
+        l = self.spells_list()
+        dict = {"W":0, "U":0, "B":0, "R":0, "G":0, "C":0}
+        for spell in l:
+            for key in dict:
+                dict[key] += spell.pips[key]
+        return dict
+
+
+
+
+
 
