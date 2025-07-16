@@ -12,6 +12,24 @@ class Land(GameCard):
         #print(f"{self.name}:{self._landtypes}")
         #self._tp = list(card.true_produced)
         #self._produced = list(card.true_produced)
+        self._grade = {"Mana": 0,
+                       "Options": 0,
+                       "Appearances": 0}
+        self._monocolor = False
+
+        #dev attributes
+        self.peek = False
+
+    @property
+    def grade(self):
+        return self._grade
+    @grade.setter
+    def grade(self, grade:dict):
+        self._grade = grade
+
+    @property
+    def monocolor(self):
+        return self._monocolor
 
 
     @property
@@ -62,6 +80,9 @@ class Land(GameCard):
         else:
             return []
 
+    def run_etb(self, game):
+        pass
+
     def tap_for(self, game, color):
         self.tap_specific(game, color)
         self.tap_general()
@@ -81,6 +102,29 @@ class Land(GameCard):
             return 0
         else:
             return 1
+
+    #grade
+    def award_points(self, mana, options):
+        self.grade["Mana"] += mana
+        self.grade["Options"] += options
+        self.grade["Appearances"] += 1
+
+    def reset_grade(self):
+        for item in self.grade:
+            self.grade[item] = 0
+
+    def to_mean(self, runs):
+        self.grade["Mana"] /= self.grade["Appearances"]
+        self.grade["Options"] /= self.grade["Appearances"]
+
+    #overridden fuctions
+    def produced_quantity(self) -> int:
+        return 1
+
+    #Dev Functions
+    def peek_board_state(self, game):
+        if self.peek:
+            print(f"Playing {self} with {game.hand.card_list} in hand and {game.battlefield.lands_list} in play")
 
 
 

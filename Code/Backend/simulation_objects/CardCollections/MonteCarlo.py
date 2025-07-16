@@ -241,7 +241,7 @@ class MonteCarlo(CardCollection):
         return output
 
     def run_tests(self):
-        print("Running tests")
+        #print("Running tests")
         temp_count = 5
         for i in range(0, 1):#SCAFFOLD
             self.set_sample()

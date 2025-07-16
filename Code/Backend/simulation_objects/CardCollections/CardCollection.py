@@ -9,9 +9,9 @@ from simulation_objects.GameCards.BasicLand import BasicLand
 from simulation_objects.GameCards.GameCard import GameCard
 from simulation_objects.GameCards.Land import Land
 from simulation_objects.GameCards.SearchLands.FetchLand import FetchLand
-from simulation_objects.GameCards.FilterLands.FilterLand import FilterLand
+from simulation_objects.GameCards.RampLands.FilterLand import FilterLand
 from simulation_objects.GameCards.UntappableCycles.RevealLand import RevealLand
-from simulation_objects.GameCards.FilterLands.BounceLand import BounceLand
+from simulation_objects.GameCards.RampLands.BounceLand import BounceLand
 from simulation_objects.GameCards.Spell import Spell
 from simulation_objects.GameCards.TappedCycles.Triome import Triome
 from simulation_objects.GameCards.UntappableCycles.CheckLand import CheckLand
@@ -101,6 +101,18 @@ class CardCollection:
                     return BounceLand(card, mandatory)
                 case _:
                     return self.parse_land_by_name(card, mandatory)
+
+    def parse_land_by_category(self, card, mandatory):
+        untapped_duals = [
+            "Bond Lands",
+            "OG Dual Lands"
+        ]
+        tapped_duals = [
+            "Artifact Taplands",
+            "Bicycle Lands",
+            "Gain Lands",
+            "Guildgates",
+        ]
 
     def parse_land_by_name(self, card:Card, mandatory):
         match card.name:

@@ -24,8 +24,8 @@ class FetchLand(SearchLand):
         for land in graded_lands:
             if graded_lands[land] == the_minimum:
                 the_minima.append(land)
-        game.prioritize_tapland(the_minima, library=True)
         game.battlefield.give(game.graveyard, self)
+        game.prioritize_tapland(the_minima, library=True)
 
 
 
@@ -87,8 +87,11 @@ class FetchLand(SearchLand):
             target = self.determine_general_target(no_basics, game)
         else:
             target = self.determine_search_target(no_basics, game, color)
-            game.deck.give(game.battlefield, target)
+            #game.deck.give(game.battlefield, target)
             game.battlefield.give(game.graveyard, self)
+            game.play_land(target, library=True)
+            #print(f"Battlefield: {game.battlefield.card_list}")
+            #print(f"Hand: {game.hand.card_list}\n")
 
     def tap_specific(self, game, c_word):
         self.fetch(game, color=c_word)

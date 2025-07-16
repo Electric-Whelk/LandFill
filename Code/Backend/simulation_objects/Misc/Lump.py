@@ -1,5 +1,6 @@
 from .ColorPie import pips
 from simulation_objects.GameCards.Spell import Spell
+from simulation_objects.GameCards.BasicLand import BasicLand
 from simulation_objects.Misc.WodgeSocket import WodgeSocket
 from .Moot import Moot
 
@@ -119,6 +120,7 @@ class Lump:
             #return "castable"
         #colors = [*self.parse_submission_color(x) for x in option]
         colors = []
+        #print(option)
         for item in option:
             colors.extend(self.parse_submission_color(item))
         #print(f"colors: {colors}")
@@ -290,8 +292,26 @@ class Lump:
         for m in self.moots:
             if m.castable:
                 m.tap_moot_mana(game)
+                self.assess_land_contributions(m)
                 break
 
+
+    def assess_land_contributions(self, m):
+        #print(self.cost)
+        #print(m.option)
+        basics = []
+        nonbasics = []
+        for item in m.option:
+            if isinstance(item['land'], BasicLand):
+                basics.append(item['land'])
+            else:
+                nonbasics.append(item['land'])
+        self.pay_mana(basics, m)
+        self.pay_mana(nonbasics, m)
+
+    def pay_mana(self, sources:list, moot):
+        pass
+        
 
 
 

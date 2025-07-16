@@ -10,6 +10,7 @@ from simulation_objects.CardCollections.Graveyard import Graveyard
 from simulation_objects.CardCollections.Hand import Hand
 from simulation_objects.GameCards.Land import Land
 from simulation_objects.GameCards.SearchLands.FetchLand import FetchLand
+from simulation_objects.GameCards.SearchLands.SearchLand import SearchLand
 from simulation_objects.GameCards.Spell import Spell
 from simulation_objects.Misc.Lump import Lump
 from simulation_objects.Simulations.Simulation import Simulation
@@ -59,7 +60,7 @@ class Game(Simulation):
     @lumps.setter
     def lumps(self, lumps):
         self._lumps = lumps
-        
+
 
     @property
     def hand(self) -> Hand:
@@ -129,16 +130,19 @@ class Game(Simulation):
     #run!
     def conclude_game(self):
         zones = [self.hand, self.battlefield, self.graveyard]
-        for zone in zones:
-            zone.give_all(self.deck)
         self.options_per_turn /= self.total_turns
+        for zone in zones:
+            for item in zone.card_list:
+                if isinstance(item, Land) and zone != self.hand: #you also need to set this to cover mandatory
+                    item.award_points(self.total_spent_mana, self.options_per_turn)
+            zone.give_all(self.deck)
         self.vprint("Game complete")
         #print(f"Spent {self.total_spent_mana} mana")
 
     def run(self):
-        #self.setup_game()
-        samplehand = ["Golgari Rot Farm", "Island", "Mazirek, Kraul Death Priest", "Xavier Sal, Infested Captain"]
-        self.sample_hand(samplehand)
+        self.setup_game()
+        #samplehand = ["Zagoth Triome", "Breeding Pool", "Forest", "Mazirek, Kraul Death Priest", "Binding the Old Gods", "Misty Rainforest", "Sol Ring", "Island"] #Sol ring
+        #self.sample_hand(samplehand)
         for _ in range(self.total_turns): #SCAFFOLD - number of turns
             self.run_turn()
 
@@ -146,10 +150,22 @@ class Game(Simulation):
         self.turn = 0
         pass
 
-    def play_land(self, land):
+    def play_land(self, land, library=False):
         if land is not None:
-            self.vprint(f"Playing {land}...")
-            self.hand.give(self.battlefield, land)
+            if library:
+                self.vprint(f"Fetching {land} from library")
+                self.deck.give(self.battlefield, land)
+            else:
+                self.vprint(f"Playing {land}...")
+                self.hand.give(self.battlefield, land)
+            land.run_etb(self)
+            land.tapped = not land.enters_untapped(self)
+            land.peek_board_state(self)
+            #if not isinstance(land, SearchLand):
+            self.battlefield.reset_permutations(self)
+            #when gettinbg back into test mode, remember to turn permutations back to a list of tuples
+                #self.battlefield.add_land_to_permutations(self, land)
+            #self.battlefield.add_land_to_permutations(self, land)
         else:
             self.vprint("No land to play")
 
@@ -180,7 +196,6 @@ class Game(Simulation):
         self.determine_play()
         #self.play_land_at_random()
         self.move_through_phases()
-        self.vprint("")
 
     def move_through_phases(self):
         self.secondmain = True
@@ -220,10 +235,6 @@ class Game(Simulation):
     #strategizing algorithms
     def prioritize_tapland(self, input:list[Land], library=False):
         #add a layer so that it prioritizes fetchlands that can get a perm over a current, and fetchlands that can get a current over a leftover
-        if library:
-            source = self.deck
-        else:
-            source = self.hand
         perm = []
         current = []
         leftover = []
@@ -235,11 +246,14 @@ class Game(Simulation):
             else:
                 leftover.append(land)
         if len(perm) > 0:
-            source.give(self.battlefield, perm[0])
+            self.play_land(perm[0], library=library)
+            #source.give(self.battlefield, perm[0])
         elif len(current) > 0:
-            source.give(self.battlefield, current[0])
+            self.play_land(current[0], library=library)
+            #source.give(self.battlefield, current[0])
         elif len(leftover) > 0:
-            source.give(self.battlefield, leftover[0])
+            self.play_land(leftover[0], library=library)
+            #source.give(self.battlefield, leftover[0])
 
 
 
@@ -259,6 +273,39 @@ class Game(Simulation):
             else:
                 fodder[spell] = random.randint(0, 1)
         return [Lump(fodder)]
+
+    def determine_and_play_land(self, playoptions:dict):
+        champ = None
+        champlen = 0
+        for option in playoptions:
+            if champ == None:
+                champ = option
+                champlen = playoptions[option]
+            elif playoptions[option] > playoptions[champ]:
+                champ = option
+                champlen = playoptions[option]
+                self.decisions += 1
+
+        allows_highest_expenditure = [land for land in playoptions if playoptions[land] >= champlen]
+        provides_most_colours =  self.provides_most_colours(allows_highest_expenditure)
+
+        self.prioritize_tapland(provides_most_colours)
+
+    def determine_and_play_lump(self):
+        new_moots = self.battlefield.permutations
+        new_playable = []
+        for lump in self.lumps:
+            lump.parse_moots(new_moots)
+            if lump.castable:
+                new_playable.append(lump)
+        self.options_per_turn += len(new_playable)
+
+        lumpchamp = None
+        for option in new_playable:
+            if lumpchamp == None or option.cmc > lumpchamp.cmc:
+                lumpchamp = option
+        self.play_lump(lumpchamp)
+
 
     def determine_spell_lumps(self, input:list[Spell]) -> list[Lump]:
         output = []
@@ -333,53 +380,34 @@ class Game(Simulation):
             else:
                 not_castable.append(lump)
 
-        """
-        moots = self.battlefield.permutations
-        for lump in lumps:
-            lump.parse_moots(moots)"""
 
         playoptions = {}
 
         self.vprint(f"The following {len(castable)} lumps are playable: {castable}")
 
-
+        no_playmakers = True
         for land in lands:
             enabled = [l for l in lumps if l.check_playmaker(self, land)]
-            playoptions[land] = len(enabled)
+            playmaker_count = len(enabled)
+            playoptions[land] = playmaker_count
+            if playmaker_count > 0:
+                no_playmakers = False
             self.vprint(f"Playing {land} will allow {playoptions[land]} lumps to be played ({enabled})")
 
-        champ = None
-        champlen = 0
-        for option in playoptions:
-            if champ == None:
-                champ = option
-                champlen = playoptions[option]
-            elif playoptions[option] > playoptions[champ]:
-                champ = option
-                champlen = playoptions[option]
-                self.decisions += 1
 
-        allows_highest_expenditure = [land for land in playoptions if playoptions[land] >= champlen]
-        provides_most_colours =  self.provides_most_colours(allows_highest_expenditure)
-
-        self.prioritize_tapland(provides_most_colours)
+        if no_playmakers:
+            self.determine_and_play_lump()
+            self.determine_and_play_land(playoptions)
+        else:
+            self.determine_and_play_land(playoptions)
+            self.determine_and_play_lump()
 
 
-        #self.play_land(champ)
-        self.battlefield.reset_permutations(self)
-        new_moots = self.battlefield.permutations
-        new_playable = []
-        for lump in lumps:
-            lump.parse_moots(new_moots)
-            if lump.castable:
-                new_playable.append(lump)
-        self.options_per_turn += len(new_playable)
-
-        lumpchamp = None
-        for option in new_playable:
-            if lumpchamp == None or option.cmc > lumpchamp.cmc:
-                lumpchamp = option
-        self.play_lump(lumpchamp)
+    def assign_moots_to_lumps(self):
+        pass
+    #create lumps
+    #see which one can be cast via Ben's method
+    #
 
 
 

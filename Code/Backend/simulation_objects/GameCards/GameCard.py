@@ -49,3 +49,7 @@ class GameCard(object):
     def tapped(self, value:bool):
         self._tapped = value
 
+    def produced_quantity(self) -> int:
+        return 0
+
+

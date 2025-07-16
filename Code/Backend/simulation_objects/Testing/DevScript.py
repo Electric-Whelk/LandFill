@@ -14,15 +14,15 @@ with open("XavierSal.json", "r") as file:
 app = create_app()
 cache = Cache(app)
 
-close_examine = True
+close_examine = False
 timer = False
 
 with app.app_context():
     if close_examine:
-        land_options = [data['Lands']]
+        land_options = [data['AllLands']]
     else:
-        land_options = [data["AllBasics"], data["Lands"], data["AllTowers"]]
-        #land_options = [data["AllBasics"]]
+        #land_options = [data["AllBasics"], data["Lands"], data["AllTowers"]]
+        land_options = [data["AllBasics"]]
     for option in land_options:
         print("Running allbasics, normal, all command towers")
         deck = Deck()

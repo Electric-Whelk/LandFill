@@ -1,7 +1,6 @@
 from .TappedCycle import TappedCycle
 
-
-class Triome(TappedCycle):
+class TappedDuals(TappedCycle):
     def __init__(self, card, mandatory=False):
         TappedCycle.__init__(self, card, mandatory)
-        self.peek = False
+        self._typed = True
