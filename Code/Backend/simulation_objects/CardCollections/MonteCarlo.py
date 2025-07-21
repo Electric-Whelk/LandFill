@@ -11,6 +11,7 @@ from simulation_objects.GameCards.BasicLand import BasicLand
 from simulation_objects.GameCards.GameCard import GameCard
 from simulation_objects.GameCards.Land import Land
 from simulation_objects.Simulations.Test import Test
+from simulation_objects.Misc.LandPermutationCache import LandPermutationCache
 
 
 class MonteCarlo(CardCollection):
@@ -18,6 +19,7 @@ class MonteCarlo(CardCollection):
         CardCollection.__init__(self)
         #set on creation of the object
         self._deck = deck
+        self._cache = LandPermutationCache()
 
 
         #requirements - set at the start of each run
@@ -38,6 +40,10 @@ class MonteCarlo(CardCollection):
 
 
     #setters and getters
+    @property
+    def cache(self):
+        return self._cache
+
     @property
     def deck(self) -> Deck:
         return self._deck
@@ -148,6 +154,7 @@ class MonteCarlo(CardCollection):
         #self.heap = lands
         #self.basics = basics
 
+
     #requirements setting functions
     def set_requirements(self, budget=None, mppc=None, currency=None, threshold=None, minbasics=0):
         self.budget = self.set_if_not_none(float(budget), self.budget)
@@ -245,7 +252,7 @@ class MonteCarlo(CardCollection):
         temp_count = 5
         for i in range(0, 1):#SCAFFOLD
             self.set_sample()
-            t = Test(self.deck, close_examine=self._close_examine, timer=self._timer)
+            t = Test(self.deck, self.cache, close_examine=self._close_examine, timer=self._timer)
             t.run()
             self.recall_sample()
 
@@ -266,6 +273,41 @@ class MonteCarlo(CardCollection):
 
     def output_metrics(self) -> dict:
         pass
+
+    #below are versions of all of the above but just designed for testing with, not designed to be user friendly
+
+    def dev_run(self):
+        self.dev_fill_heap(self.deck.name) #get all possible lands for that deck
+        self.deck.add_initial_lands("proportional_basics")
+        #add to the deck an initial set of lands - make this a function so you can try out different initial sets
+            #ponder: what if it was all wastes? That'd certainly make your early interventions much more fiery.
+        halt = False
+        while not halt:
+            t = Test(self.deck, self.cache, close_examine=False, timer=False)
+            t.run()
+            halt = self.swap_lower_basics_algorithm(t)
+
+
+
+
+    def swap_lower_basics_algorithm(self, test) -> bool:
+        return True
+
+
+
+
+    def dev_fill_heap(self, deckname):
+        match deckname:
+            case _:
+                heap = "Zagoth Triome\nDarkslick Shores\nBotanical Sanctum\nBlooming Marsh\nUnderground River\nYavimaya Coast\nLlanowar Wastes\nDimir Guildgate\nSimic Guildgate\nGolgari Guildgate\nShipwreck Marsh\nDreamroot Cascade\nDeathcap Glade\nChoked Estuary\nVineglimmer Snarl\nNecroblossom Snarl\nWatery Grave\nBreeding Pool\nOvergrown Tomb\nDrowned Catacomb\nHinterland Harbor\nWoodland Cemetery\nSunken Hollow\nPolluted Delta\nMisty Rainforest\nVerdant Catacombs\nWaterlogged Grove\nNurturing Peatland\nMorphic Pool\nRejuvenating Springs\nUndergrowth Stadium\nCommand Tower"
+
+                #currently default is Xavier Sal
+
+
+        as_cards = self.parse_cards_from_json(heap)
+        self.card_list = [self.parse_GameCard(x, mandatory=True) for x in as_cards]
+
+
 
 
 

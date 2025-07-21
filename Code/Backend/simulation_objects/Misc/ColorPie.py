@@ -1,4 +1,4 @@
 
-pips = ["W", "U", "B", "R", "G", "C"]
+piepips = ["W", "U", "B", "R", "G", "C"]
 
-landtype_map = {"W":"Plains", "U":"Island", "B":"Swamp", "R":"Mountain", "G":"Green"}
+landtype_map = {"W":"Plains", "U":"Island", "B":"Swamp", "R":"Mountain", "G":"Forest"}

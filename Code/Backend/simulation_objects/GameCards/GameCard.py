@@ -52,4 +52,13 @@ class GameCard(object):
     def produced_quantity(self) -> int:
         return 0
 
+    def can_produce(self, color:str, game) -> bool:
+        return False
+
+    def parse_modal_output(self, input) -> str:
+        if input == []:
+            return "Not A Color"
+        return input[0][0]
+
+
 

@@ -1,106 +1,38 @@
-Rethinking
-Calculates the lumps.
-
-
-
-Referring down - simulating the battlefield:
-create a manabase array and add all untapped lands to it
-take the input land and call the deck method, does land enter untapped?
-
-
-
-lumps now have a dict object which is a "details" that will work a bit like a JSON.
-Lands have this too.
-We've sorted your lumps by size, hooray. We're iterating through them large to small.
-
-
-
-For lump i:
-P = number of pips in the lump
-X = number of lands on the battlefield
-Pass it to the battlefield object.
-For each land, the battlefield creates one or more arrays of dict objects:
-    Colour: each colour it can get (so first dict object is W, second is U for an azorius land)
-    Land: the land being used to get it.
-    Pain: the life it would cost to get that.
-    Sac: does it have to sac itself to go get it?
-    Thin: a list of lands it could potentially go and get from the deck to allow it to make it).
-
-The battlefield permutates these into all arrangements of P colours, stored as arrays.
-The lump iterates through this list of permutations, and creates in its details dict an entry called permutations, whch is a list.
-It adds to permutations the following dict objects:
-    content: the current iteration, the array of dicts.
-    can_play_if: what mana is lacking from the array.
-    total_pain: the total pain of the array
-
-Then take the lump's CMC. Subtract from it the number of lands on the battlefield and put that in the dict under "increase_needed".
-
-All information is now stored in the lump.
-
-
-Then iterate through your lumps again.
-if lump.details.permutations contains x[can_play_if] = None AND lump.details.increase_needed <= 0, set lump.details[playable] = "Playable"
-else if lump.details.permutations contains x[can play if] len 1 AND lump.details.increase_needed = 1, set lump.details[playable] = "Pivotal"
-else set lump.details[playable] = "Unplayable"
-
-
-then we iterate through the lands:
-call a virtual_battlefield function within battlefield, where it simulates the arrival of a new land.
-Iterate through each of the lumps where lump.details[playable] = "Pivotal"
-Repeat the process, but this time, have it all go through a new dict attribute, "Hypothetical".
-
-
-(god this next bit is so hard to script without indents and flow control)
-land.details gets two new keys: lumps_need_colour, where lump can_play_if doesn't change. This is a dict of lump:list[str], where the list[str] is the colours the land can't provide
-lumps_need_untap, for if lump increase_needed doesn't change.
-
-
-
-if lump.hypothetical.permutations contains x[can_play_if] = None, add to the land's details dict a
-If lump.hypothetical[playable] = "Playable" AND lump.details[playable] = "Pivotal": add to the land's details dict an "lumps_enabled" list (if not exists; if does exist, add the lump to it)
-
-
-then we create a LumpChamp that is None
-and a LandChamp that is none
-Then we iterate through the lands again:
-For each land, iterate through the enabled.
-If the LumpChamp is None OR the enabled lump's cmc is greater than it, replace LumpChamp with enabled lump and LandChamp with the current land.
-
-
-Then go through where lump.details[playable] = "Playable" and we see which has the largest cmc.
-If that land has a cmc that is GREATER than LumpChamp, play that lump, iterate through your lands, and go tapland > most colours > random
-If that land has a cmc that is LESS THAN OR EQUAL to LumpChamp, then:
-
-play the lumpchamp land.
-play lumpchamp.
-
-
-Rejotting:
-X = the size of the largest lump.
-
-Go through all your lands and simulate putting them onto the battlefield.
-The function returns a dict with some arrays.
-            "Big Playable Lumps": any lumps of cost X that can be cast.
-            "Big Almost Lumps": lumps of size X that could be cast if they required 1 extra mana.
-            "Largest Playable Lumps": all lumps of size Y, where Y is the largest size that can be played
-Store these in the land object as TurnDetails.
-Then for all the lands, we can say:
-    if at least one has a big playable lump, everyone survives; we can move onto casting.
-    If not, do any lands have almost lumps? If so, we mark the land down.
-    If not, then this land isn't really relevant, is it?
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Zagoth Triome
+Darkslick Shores
+Botanical Sanctum
+Blooming Marsh
+Underground River
+Yavimaya Coast
+Llanowar Wastes
+Dimir Guildgate
+Simic Guildgate
+Golgari Guildgate
+Shipwreck Marsh
+Dreamroot Cascade
+Deathcap Glade
+Choked Estuary
+Vineglimmer Snarl
+Necroblossom Snarl
+Watery Grave
+Breeding Pool
+Overgrown Tomb
+Drowned Catacomb
+Hinterland Harbor
+Woodland Cemetery
+Sunken Hollow
+Polluted Delta
+Misty Rainforest
+Verdant Catacombs
+Waterlogged Grove
+Nurturing Peatland
+Morphic Pool
+Rejuvenating Springs
+Undergrowth Stadium
+Command Tower
+Island
+Island
+Swamp
+Swamp
+Forest
+Forest

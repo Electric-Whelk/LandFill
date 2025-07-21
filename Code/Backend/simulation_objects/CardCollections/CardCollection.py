@@ -4,17 +4,22 @@ from database_management.models.Face import Face
 from Extensions import db
 from random import shuffle
 
-from simulation_objects.GameCards import CommandTower
+from simulation_objects.GameCards import CommandTower, BondLand, DualLand, BattleLand, FastLand, SlowLand, PainLand, \
+    HorizonLand
 from simulation_objects.GameCards.BasicLand import BasicLand
 from simulation_objects.GameCards.GameCard import GameCard
 from simulation_objects.GameCards.Land import Land
+from simulation_objects.GameCards.SearchLands import SearchLand
 from simulation_objects.GameCards.SearchLands.FetchLand import FetchLand
 from simulation_objects.GameCards.RampLands.FilterLand import FilterLand
+from simulation_objects.GameCards.TappedCycles.GuildGate import GuildGate
 from simulation_objects.GameCards.UntappableCycles.RevealLand import RevealLand
 from simulation_objects.GameCards.RampLands.BounceLand import BounceLand
 from simulation_objects.GameCards.Spell import Spell
 from simulation_objects.GameCards.TappedCycles.Triome import Triome
 from simulation_objects.GameCards.UntappableCycles.CheckLand import CheckLand
+from simulation_objects.GameCards.UntappableCycles.ShockLand import ShockLand
+from simulation_objects.Misc.ColorPie import landtype_map
 
 
 class CardCollection:
@@ -89,8 +94,26 @@ class CardCollection:
                     return BasicLand(card, mandatory)
                 case "Fetch Lands":
                     return FetchLand(card, mandatory)
+                case "Bond Lands":
+                    return BondLand(card, mandatory)
+                case "Dual Lands":
+                    return DualLand(card, mandatory)
+                case "Battle Lands":
+                    return BattleLand(card, mandatory)
+                case "Fast Lands":
+                    return FastLand(card, mandatory)
+                case "Slow Lands":
+                    return SlowLand(card, mandatory)
+                case "Pain Lands":
+                    return PainLand(card, mandatory)
+                case "Horizon Lands":
+                    return HorizonLand(card, mandatory)
+                case "Shock Lands":
+                    return ShockLand(card, mandatory)
                 case "Triomes":
                     return Triome(card, mandatory)
+                case "Guildgates":
+                    return GuildGate(card, mandatory)
                 case "Filter Lands":
                     return FilterLand(card, mandatory)
                 case "Check Lands":
@@ -141,6 +164,23 @@ class CardCollection:
             for key in dict:
                 dict[key] += spell.pips[key]
         return dict
+
+    def contains_searchland(self):
+        for card in self.card_list:
+            if isinstance(card, SearchLand):
+                return True
+        return False
+
+    def determine_basics_from_dict(self, input:dict[str, int]) -> str:
+        names = []
+        for letter in input:
+            for _ in range(input[letter]):
+                names.append(landtype_map[letter])
+        return '\n'.join(names)
+
+
+
+
 
 
 

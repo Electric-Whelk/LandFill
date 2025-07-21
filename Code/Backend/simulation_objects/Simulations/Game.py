@@ -8,20 +8,22 @@ from simulation_objects.CardCollections.CardCollection import CardCollection
 from simulation_objects.CardCollections.Deck import Deck
 from simulation_objects.CardCollections.Graveyard import Graveyard
 from simulation_objects.CardCollections.Hand import Hand
+from simulation_objects.GameCards import PainLand, ShockLand, GameCard
 from simulation_objects.GameCards.Land import Land
 from simulation_objects.GameCards.SearchLands.FetchLand import FetchLand
 from simulation_objects.GameCards.SearchLands.SearchLand import SearchLand
 from simulation_objects.GameCards.Spell import Spell
+from simulation_objects.GameCards.TappedCycles.Triome import Triome
 from simulation_objects.Misc.Lump import Lump
 from simulation_objects.Simulations.Simulation import Simulation
 
 
 
 class Game(Simulation):
-    def __init__(self, deck, verbose=False):
+    def __init__(self, deck, cache, verbose=False):
         Simulation.__init__(self, deck)
         self._hand = Hand()
-        self._battlefield = Battlefield()
+        self._battlefield = Battlefield(cache)
         self._graveyard = Graveyard()
         self._turn = 0
 
@@ -30,16 +32,34 @@ class Game(Simulation):
         self._lumps = []
         self._spell_lumps = []
         self._secondmain = False
+        self._last_land_played = None
 
         #dev attributes
         self.verbose = verbose
+        self.log = None
         self.decisions = 0
         self.total_spent_mana = 0
         self.options_per_turn = 0
         self.total_turns = 7
+        self.total_played_lands = 0
+        self.on_curve_casts = 0
+        self.castable_cmc_in_hand = 0
+        self.total_theoretcial_mana = 0
+        self.leftover_mana = 0
+        self.shockproblems = 0
+        self.painproblems = 0
+        self.fetchproblems = 0
+        self.played_lands = []
 
 
     #getters
+    @property
+    def last_land_played(self) -> Land:
+        return self._last_land_played
+    @last_land_played.setter
+    def last_land_played(self, land_played:Land) -> None:
+        self._last_land_played = land_played
+
     @property
     def spell_lumps(self):
         return self._spell_lumps
@@ -110,6 +130,8 @@ class Game(Simulation):
     def vprint(self, input):
         if self.verbose:
             print(input)
+        if self.log is not None:
+            self.log.append(input)
 
     def oor(self, input):
         try:
@@ -117,13 +139,22 @@ class Game(Simulation):
         except IndexError:
             return "NONE"
 
-    def sample_hand(self, input:list):
+    def sample_hand(self, input:list, topdeck=[]):
         self.deck.shuffle()
         for term in input:
-            for card in self.deck.card_list:
-                if card.name == term:
-                    self.deck.give(self.hand, card)
-                    break
+            self.deck.give(self.hand, self.tutor(term))
+        for term in topdeck:
+            card = self.tutor(term)
+            self.deck.card_list.insert(0, card)
+
+    def tutor(self, input:str) -> GameCard:
+        for card in self.deck.card_list:
+            if card.name == input:
+                return card
+        return None
+
+
+
 
 
 
@@ -131,18 +162,29 @@ class Game(Simulation):
     def conclude_game(self):
         zones = [self.hand, self.battlefield, self.graveyard]
         self.options_per_turn /= self.total_turns
+        #self.total_spent_mana /= self.total_played_lands #NOTE THAT THIS INCLUDES FETCHED LANDS
+        #self.total_spent_mana /= self.castable_cmc_in_hand
+        self.leftover_mana = self.total_theoretcial_mana - self.total_spent_mana
+
+
         for zone in zones:
             for item in zone.card_list:
                 if isinstance(item, Land) and zone != self.hand: #you also need to set this to cover mandatory
-                    item.award_points(self.total_spent_mana, self.options_per_turn)
+                    item.award_points(self.leftover_mana, self.options_per_turn)
             zone.give_all(self.deck)
+
         self.vprint("Game complete")
+        self.vprint(f"Leftover mana: {self.leftover_mana}\n")
+        #if fetchland_included and not triome_included and self.leftover_mana > 0:
+            #for entry in self.log:
+                #print(entry)
         #print(f"Spent {self.total_spent_mana} mana")
 
     def run(self):
+        #samplehand = ["Putrefy", "Lightning Greaves", "Misty Rainforest", "Island", "Mystic Remora", "Forest", "Llanowar Wastes"] #Misty Rainforest/Watery Grave
+        #topdeck =  ["Phyrexian Arena","Verdant Catacombs", "Swamp", "Risen Reef"] #Verdat Catacombs/Breeding Pool
+        #self.sample_hand(samplehand, topdeck=topdeck)
         self.setup_game()
-        #samplehand = ["Zagoth Triome", "Breeding Pool", "Forest", "Mazirek, Kraul Death Priest", "Binding the Old Gods", "Misty Rainforest", "Sol Ring", "Island"] #Sol ring
-        #self.sample_hand(samplehand)
         for _ in range(self.total_turns): #SCAFFOLD - number of turns
             self.run_turn()
 
@@ -160,12 +202,24 @@ class Game(Simulation):
                 self.hand.give(self.battlefield, land)
             land.run_etb(self)
             land.tapped = not land.enters_untapped(self)
-            land.peek_board_state(self)
+            self.last_land_played = land
+            land.tapped = not land.enters_untapped(self)
+            #land.peek_board_state(self)
             #if not isinstance(land, SearchLand):
+            self.played_lands.append(land)
             self.battlefield.reset_permutations(self)
+            """
+            if isinstance(land, SearchLand) and len(self.hand.card_list) == 0 and self.total_spent_mana == self.total_theoretcial_mana:
+                self.fetchproblems += 1
+            elif isinstance(land, PainLand) and len(self.hand.card_list) == 0 and self.total_spent_mana == self.total_theoretcial_mana:
+                self.painproblems += 1
+            elif isinstance(land, ShockLand) and len(self.hand.card_list) == 0 and self.total_spent_mana == self.total_theoretcial_mana:
+                self.shockproblems += 1#
+                """
             #when gettinbg back into test mode, remember to turn permutations back to a list of tuples
                 #self.battlefield.add_land_to_permutations(self, land)
             #self.battlefield.add_land_to_permutations(self, land)
+            self.total_played_lands += 1
         else:
             self.vprint("No land to play")
 
@@ -189,36 +243,46 @@ class Game(Simulation):
 
     def run_turn(self):
         self.turn += 1
-        self.battlefield.untap()
+        #if len([x for x in self.hand.lands_list() if isinstance(x, SearchLand)]) > 0:
+            #self.verbose = True
+        self.battlefield.untap(self)
+        self.battlefield.reset_permutations(self)
         self.draw()
         self.vprint(f"Hand: {self.hand.card_list}")
         self.vprint(f"Battlefield: {self.battlefield.card_list} ")
         self.determine_play()
         #self.play_land_at_random()
         self.move_through_phases()
+        #if len(self.hand.card_list) == 0:
+            #raise Exception("Nada!")
 
     def move_through_phases(self):
         self.secondmain = True
         self.tap_unused_lands()
         self.reset_values()
+        self.vprint("")
 
-    def mulligan(self):
+    def mulligan(self, times):
         if len(self.lands_in_hand) < 3:
             self.hand.give_all(self.deck)
-            self.vprint("Mulliganing...")
+            self.vprint(f"Mulliganing")
+            #print(f"Mulliganing...{times}")
             return True
         return False
-
-
 
 
     def setup_game(self):
         deck = self.deck
         deck.shuffle()
         mull = True
-        while mull:
-            self.draw(7)
-            mull = self.mulligan()
+        i = 0
+        while mull: #and i < 2
+            self.draw(7)#restricting to two mulls
+            i += 1
+            mull = self.mulligan(i)
+        #if i == 2:
+            #self.draw(7)
+        #assert(len(self.lands_in_hand) != 0)
 
     def tap_unused_lands(self):
         for land in self.battlefield.lands_list():
@@ -233,6 +297,13 @@ class Game(Simulation):
 
 
     #strategizing algorithms
+    def hand_cant_produce(self, color, exclude=None):
+        if exclude is None:
+            l = len([x for x in self.hand.card_list if x.can_produce(color, self)])
+        else:
+            l = len([x for x in self.hand.card_list if x.can_produce(color, self) and x != exclude])
+        return l == 0
+
     def prioritize_tapland(self, input:list[Land], library=False):
         #add a layer so that it prioritizes fetchlands that can get a perm over a current, and fetchlands that can get a current over a leftover
         perm = []
@@ -264,6 +335,7 @@ class Game(Simulation):
         self.spell_lumps = []
         self.secondmain = False
 
+
     def create_lumps(self, input:list[Spell]) -> list[Lump]:
         #draft version that picks a MDFC output randomly, but there is room to improve here by getting all MDFC permutations
         fodder = {}
@@ -286,8 +358,12 @@ class Game(Simulation):
                 champlen = playoptions[option]
                 self.decisions += 1
 
+
+
         allows_highest_expenditure = [land for land in playoptions if playoptions[land] >= champlen]
+
         provides_most_colours =  self.provides_most_colours(allows_highest_expenditure)
+
 
         self.prioritize_tapland(provides_most_colours)
 
@@ -304,6 +380,9 @@ class Game(Simulation):
         for option in new_playable:
             if lumpchamp == None or option.cmc > lumpchamp.cmc:
                 lumpchamp = option
+        if lumpchamp != None and lumpchamp.cmc == self.battlefield.max_mana():
+            self.on_curve_casts += 1
+
         self.play_lump(lumpchamp)
 
 
@@ -320,10 +399,10 @@ class Game(Simulation):
         minrange = min(m, 3) + 1
 
         #allowing some looking ahead if you have a fetchland
-        fetches_in_hand = [x for x in self.hand.card_list if isinstance(x, FetchLand)]
-        if len(fetches_in_hand) > 0:
-            max = m = len(self.hand.lands_list()) + len(self.battlefield.lands_list())
-            minrange = m + 1
+        #fetches_in_hand = [x for x in self.hand.card_list if isinstance(x, FetchLand)]
+        #if len(fetches_in_hand) > 0:
+           # max = m = len(self.hand.lands_list()) + len(self.battlefield.lands_list())
+            #minrange = m + 1
 
 
         fodder = [x for x in input if x.cmc[0] <= max]
@@ -357,7 +436,7 @@ class Game(Simulation):
 
     def determine_play(self):
         lands = [x for x in self.hand.card_list if isinstance(x, Land)]
-        self.vprint(f"begnning turn {self.turn} with {lands} in hand and {self.battlefield.lands_list()} on battlefield")
+        self.vprint(f"begnning turn {self.turn} with {lands} in hand and {self.battlefield.lands_list()} on battlefield {[x.live_prod(self) for x in self.battlefield.lands_list()]}")
         spells = self.hand.spells_list()
         lumps = self.determine_lumps_from_hand(spells)
         self.lumps = lumps
@@ -374,6 +453,8 @@ class Game(Simulation):
 
         castable = []
         not_castable = []
+
+
         for lump in lumps:
             if lump.castable:
                 castable.append(lump)
@@ -395,19 +476,35 @@ class Game(Simulation):
             self.vprint(f"Playing {land} will allow {playoptions[land]} lumps to be played ({enabled})")
 
 
+
         if no_playmakers:
             self.determine_and_play_lump()
             self.determine_and_play_land(playoptions)
+            #if you might be playing a lump before sorting permutations, make sure to allow for lands that are untapped
+            #this is a very brute force way to do it but w/e
+            self.battlefield.new_tapland = True
         else:
             self.determine_and_play_land(playoptions)
             self.determine_and_play_lump()
 
+        """
+        Number of turns we had enough lands to cast at least one of the lump in our hand
+        Regadless of whether it's the right spell
+        """
 
-    def assign_moots_to_lumps(self):
-        pass
-    #create lumps
-    #see which one can be cast via Ben's method
-    #
+        self.assess_turn_score()
+
+
+
+    def assess_turn_score(self):
+        maxmana = self.battlefield.max_mana()
+        achievable = [lump for lump in self.lumps if lump.cmc <= maxmana]
+        try:
+            largest_achievable = max(lump.cmc for lump in achievable)
+        except ValueError:
+            largest_achievable = 0
+        self.total_theoretcial_mana += largest_achievable
+
 
 
 

@@ -1,4 +1,4 @@
-from .ColorPie import pips
+from .ColorPie import piepips
 from simulation_objects.GameCards.Spell import Spell
 from simulation_objects.GameCards.BasicLand import BasicLand
 from simulation_objects.Misc.WodgeSocket import WodgeSocket
@@ -127,7 +127,7 @@ class Lump:
         one_offs = []
         castable = True
         missing = []
-        for initial in pips:
+        for initial in piepips:
             needed = self.cost[initial]
             available = colors.count(initial)
             diff = needed - available
@@ -174,7 +174,7 @@ class Lump:
         return output
 
     def parse_colorless(self, input:dict) -> bool:
-        for pip in pips:
+        for pip in piepips:
             if input[pip] != 0:
                 return False
         return True
@@ -223,6 +223,8 @@ class Lump:
             new_moot = Moot(option, pips, generic)
             if new_moot.castable:
                 self.castable = True
+                if new_moot.includes_searchland:
+                    new_moot.generalize_searchland(self)
                 #assert(self.cmc <= len(option))
                 #print(f"cmc{self.cmc}, optionlen = {len(option)}")
             if len(new_moot.pips) == 0:
@@ -294,6 +296,37 @@ class Lump:
                 m.tap_moot_mana(game)
                 self.assess_land_contributions(m)
                 break
+
+
+    def prioritize_agnostic_moot(self, game):
+        finished = False
+        for m in self.moots:
+            if m.searchland_agnostic(self, game):
+                m.tap_moot_mana(game)
+                finished = True
+                self.assess_land_contributions(m)
+                break
+        if finished == False:
+            self.play_first_moot()
+
+
+
+    def play_first_moot(self, game):
+        for m in self.moots:
+            if m.castable:
+                m.tap_moot_mana(game)
+                self.assess_land_contributions(m)
+                break
+
+
+    def prioritize_moots(self, game) -> list[Moot]:
+        #arranges your moots to make sure you're using your fetchlands responsibly
+        #if not game.battlefield.contains_searchland():
+        #maybe instead of searching the battlefield for fetchlands you should make "crack a fetch" an optional parameter, default false, in tap_mana?
+        return self.moots
+
+
+
 
 
     def assess_land_contributions(self, m):

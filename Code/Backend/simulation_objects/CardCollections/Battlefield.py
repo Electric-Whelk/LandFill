@@ -1,5 +1,6 @@
 import itertools
 import pickle
+import time
 from itertools import product, combinations
 from collections import Counter
 
@@ -13,18 +14,34 @@ from simulation_objects.Misc.LandPermutationCache import LandPermutationCache
 #global(big_ones) = 0
 
 class Battlefield(CardCollection):
-    def __init__(self):
+    def __init__(self, cache):
         CardCollection.__init__(self)
         self._permutations = []
         self._perms_as_dicts = []
         #print(f"Set permutations as: {self._permutations}")
-        self.cache = LandPermutationCache()
+        #start = time.time()
+        self._cache = cache
+        #end = time.time()
+        #total = (end - start) * 10000
+        #print(f"Total: {total}")
+        self._new_tapland = False
 
         #dev attributes
         self.megaaltpermutations = []
         self.dummy_cache = {}
 
     #getters and setters
+    @property
+    def new_tapland(self):
+        return self._new_tapland
+    @new_tapland.setter
+    def new_tapland(self, value):
+        self._new_tapland = value
+
+    @property
+    def cache(self):
+        return self._cache
+
     @property
     def permutations(self) -> list:
         return self._permutations
@@ -38,6 +55,9 @@ class Battlefield(CardCollection):
     @perms_as_dicts.setter
     def perms_as_dicts(self, value):
         self._perms_as_dicts = value
+
+
+
 
     #pseudogetters
     def accessible_mana(self) -> list[Land]:
@@ -55,9 +75,12 @@ class Battlefield(CardCollection):
         return [x for x in self.card_list if isinstance(x, RampLand)]
 
     #game actions
-    def untap(self):
+    def untap(self, game):
         for card in self._cards:
             card.tapped = False
+        if self.new_tapland:
+            self.new_tapland = False
+            self.reset_permutations(game)
 
 
     #game information
@@ -90,10 +113,15 @@ class Battlefield(CardCollection):
         #as programmed this returns nothing, it only messes about in the lac
         pass
 
-
     def reset_permutations(self, game, extra_land=None):
-        self.reset_permutations_v2(game, extra_land)
-        """        
+        self.reset_permutations_v1(game, extra_land)
+
+
+
+
+    def reset_permutations_v1(self, game, extra_land=None):
+        #self.reset_permutations_v2(game, extra_land)
+        #starttime = time.time()
         game.vprint("Resetting permutations...")
         #all_info = [{"land": x, "produced":x.conditions(game)} for x in self.accessible_mana()]
         mana = self.accessible_mana()
@@ -102,6 +130,7 @@ class Battlefield(CardCollection):
             mana.append(extra_land)
         all_produced = [x.conditions(game) for x in mana]
         #lac = self.determine_permutations(all_produced)
+        #print(f"{[len(x) for x in all_produced]}")
         all_combinations = product(*all_produced)
         lac = list(all_combinations)
         #if len(self.filters()) > 0:
@@ -110,14 +139,17 @@ class Battlefield(CardCollection):
         #print(self.permutations)
         #self.perms_as_dicts = self.perms_to_dicts(lac)
         #print(f"Created {len(self.permutations)} permutations out of {mana}")
-        self.reset_permutations_v2(game, extra_land=extra_land)
+        #self.reset_permutations_v2(game, extra_land=extra_land)
+        #endtime = time.time()
+        #print(endtime - starttime)
         
         
-        """
+
 
         #return list(all_combinations)
 
     def reset_permutations_v2(self, game, extra_land=None):
+        #start = time.time()
         #game.vprint("Resetting permutations...")
         # all_info = [{"land": x, "produced":x.conditions(game)} for x in self.accessible_mana()]
         available = self.accessible_mana()
@@ -126,11 +158,25 @@ class Battlefield(CardCollection):
         divided = self.divide_monos_and_multis(available)
         #multimoots = self.get_multicolor_permutations(divided["multi"], divided["mono"], game)
         othermoots = self.get_multicolor_permutations_v2(divided["multi"], divided["mono"], game)
+        #print(f"Othermoots: {len(othermoots)}")
         #print(self.lands_list())
         #for m in othermoots:
             #print(f"\t{m}")
         #print("")
         self.permutations = othermoots
+
+        """        
+        end = time.time()
+        runtime = (end - start) * 90000
+        print(runtime)
+        
+        if not self.hit:
+            print("Miss")
+        if runtime > 2000:
+            print(f"{runtime} ({self.hit}) for {self.permlen} permutations")
+            print(f"{self.lands_list()}")
+            print("")"""
+
 
         """
         #cut out when you do this properly
@@ -218,8 +264,11 @@ class Battlefield(CardCollection):
         #print(key)
         if result := self.cache.get(key):
             #print("Cache hit!")
+            #self.hit = True
             return result
         else:
+            #self.hit = False
+
             #print(f"{key} not in dummy_cache")
             groups = [land.live_prod(game) for land in lands]
             abstract_permutations = list(product(*groups))
@@ -239,8 +288,11 @@ class Battlefield(CardCollection):
 
 
         abstract_permutations = self.recall_permutations(key, lands, game)
+        self.abs = abstract_permutations
+        #self.permlen = len(abstract_permutations)
         #for moot in abstract_permutations:
             #print(f"\t{moot}")
+        print(f"Abs: {abstract_permutations}")
         return self.determine_named_permutations(abstract_permutations, multiprods, monoprods)
 
     def purge_permutations(self, perms):
@@ -309,12 +361,14 @@ class Battlefield(CardCollection):
             "mono": [],
             "multi": []
         }
+
         for card in cardlist:
             if isinstance(card, Land):
                 if card.monocolor:
                     output["mono"].append(card)
                 else:
                     output["multi"].append(card)
+        #print(f"Lengths: {len(output["mono"])} {len(output['multi'])}")
         return output
 
 

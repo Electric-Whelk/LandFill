@@ -1,6 +1,8 @@
 from simulation_objects.GameCards.GameCard import GameCard
 #import simulation_objects.Simulations as Simulations
 #from simulation_objects.CardCollections import Deck
+import numpy
+from scipy.stats import skew, kurtosis
 
 
 class Land(GameCard):
@@ -14,6 +16,7 @@ class Land(GameCard):
         #self._produced = list(card.true_produced)
         self._grade = {"Mana": 0,
                        "Options": 0,
+                       "Wasted": [],
                        "Appearances": 0}
         self._monocolor = False
 
@@ -107,19 +110,48 @@ class Land(GameCard):
     def award_points(self, mana, options):
         self.grade["Mana"] += mana
         self.grade["Options"] += options
+        self.grade["Wasted"].append(mana)
         self.grade["Appearances"] += 1
+        #if self.name == "Polluted Delta":
+            #print(f"Awarding Polluted Delta {mana}")
 
     def reset_grade(self):
-        for item in self.grade:
-            self.grade[item] = 0
+        self.grade["Mana"] = 0
+        self.grade["Options"] = 0
+        self.grade["Wasted"] = []
+        self.grade["Appearances"] = 0
 
-    def to_mean(self, runs):
+    def to_mean(self):
         self.grade["Mana"] /= self.grade["Appearances"]
         self.grade["Options"] /= self.grade["Appearances"]
+
+    def wasted(self):
+        return self.grade["Wasted"]
+
+    def average_wasted(self):
+        return numpy.mean(self.wasted())
+
+    def appearances(self):
+        return self.grade["Appearances"]
+
+    def kurtosis(self):
+        return kurtosis(self.wasted())
+
+    def skew(self):
+        return skew(self.wasted())
+
+    def proportion(self):
+        zeroes = len([x for x in self.wasted() if x == 0])
+        return zeroes/self.appearances()
+
 
     #overridden fuctions
     def produced_quantity(self) -> int:
         return 1
+
+    def can_produce(self, color: str, game) -> bool:
+        #this will be different for ramp/filter lands jsyk
+        return color in self.live_prod(game)
 
     #Dev Functions
     def peek_board_state(self, game):

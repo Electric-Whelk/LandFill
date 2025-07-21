@@ -1,3 +1,7 @@
+from math import floor
+
+import numpy as np
+
 from Extensions import db
 from database_management.models.Card import Card
 from database_management.models.Face import Face
@@ -16,6 +20,7 @@ class Deck(CardCollection):
         self._format = self.parse_format_from_json(format)
 
         input_as_cards = self.parse_cards_from_json(input_cards)
+        self._name = "XavierSal"
         self.set_card_list_from_ORM(input_as_cards, mandatory=True)
         self._lands_requested = self.determine_lands_requested_from_json(quantity)
         self._size = self.determine_size()
@@ -24,7 +29,11 @@ class Deck(CardCollection):
         self._colors_needed = self.determine_colors_needed()
         self._possible_lands = self.determine_possible_lands()
 
+
     #getters and setters
+    @property
+    def name(self):
+        return self._name
 
     @property
     def format(self) -> Format:
@@ -90,6 +99,7 @@ class Deck(CardCollection):
                             pass
                     i += 1
                     j += 1
+        #print(f"output: {output}")
 
         return output
 
@@ -136,4 +146,41 @@ class Deck(CardCollection):
         primes = {"W": 2, "U": 3, "B": 5, "R": 7, "G": 11, "C": 13}
         c_val = 1
         pass
+
+    def add_initial_lands(self, type):
+        match type:
+            case "proportional_basics":
+                self.add_proportional_basics()
+            case _:
+                raise Exception("Invalid input to Deck.add_initial_lands()")
+
+
+
+    def add_proportional_basics(self):
+        proportionalized = self.proportions(self.pips, self.lands_requested)
+        as_string = self.determine_basics_from_dict(proportionalized)
+        as_cards = self.parse_cards_from_json(as_string)
+        self.card_list.extend([self.parse_GameCard(x, mandatory=False) for x in as_cards])
+
+    def proportions(self, pips, lands_requested):
+        # Filter out colors with zero need
+        filtered_needs = {color: amount for color, amount in pips.items() if amount > 0}
+        total_mana = sum(filtered_needs.values())
+
+        # Get raw land counts (floored), and remainders for rounding
+        raw_lands = {color: amount / total_mana * lands_requested for color, amount in filtered_needs.items()}
+        floored_lands = {color: floor(val) for color, val in raw_lands.items()}
+        remainders = {color: raw_lands[color] - floored_lands[color] for color in raw_lands}
+
+        # Distribute remaining lands based on highest remainder
+        lands_allocated = sum(floored_lands.values())
+        lands_to_allocate = lands_requested - lands_allocated
+
+        for color, _ in sorted(remainders.items(), key=lambda x: x[1], reverse=True)[:lands_to_allocate]:
+            floored_lands[color] += 1
+
+        return floored_lands
+
+
+
 

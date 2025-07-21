@@ -4,3 +4,4 @@ from .Land import Land
 from .Spell import Spell
 from .UniqueLands.UniqueLand import UniqueLand
 from .UniqueLands.CommandTower import CommandTower
+from .UntappableCycles import *
