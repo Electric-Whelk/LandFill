@@ -17,7 +17,6 @@ cache = Cache(app)
 close_examine = False
 timer = False
 
-
 with app.app_context():
     i = 0
     if close_examine:
@@ -30,8 +29,8 @@ with app.app_context():
         #land_options = [data["UnevenBasics"], data["OneDiff"], data["OneGood"], data["OneEstuary"], data["OneTower"], data["Bad"]]
         #titles = ["Basics", "Check", "Shock", "Snarl", "Command Tower", "Guildgate"]
 
-        #land_options = [data["PropCheck"], data["PropShock"]]
-        #titles = ["Check", "Shock"]
+        #land_options = [data["PropCheck"], data["PropShock"], data["FullProportional"]]
+        #titles = ["Check", "Shock", "Proportional"]
 
         #land_options = [data["AllBasics"], data["NoBasics"], data["AsIBuild"]]
         #titles = ["All Basics", "No Basics", "Mix"]
@@ -39,11 +38,11 @@ with app.app_context():
         #land_options = [data["AsIBuild"], data["NoFetch"]]
         #titles = ["AsIBuild", "NoFetch"]
 
-        #land_options = [data["AsIBuild"]]
-        #titles = ["As i build"]
-
         land_options = [data["Handcrank"]]
-        titles = ["Handcrank"]
+        titles = ["As i build"]
+
+        #land_options = [data["FullProportional"]]
+        #titles = ["Prop"]
 
     for option in land_options:
         if not close_examine:

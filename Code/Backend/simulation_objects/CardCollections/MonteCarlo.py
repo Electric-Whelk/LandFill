@@ -12,6 +12,7 @@ from simulation_objects.GameCards.GameCard import GameCard
 from simulation_objects.GameCards.Land import Land
 from simulation_objects.Simulations.Test import Test
 from simulation_objects.Misc.LandPermutationCache import LandPermutationCache
+from simulation_objects.Timer import functimer_perturn, functimer_once
 
 
 class MonteCarlo(CardCollection):
@@ -253,7 +254,7 @@ class MonteCarlo(CardCollection):
         for i in range(0, 1):#SCAFFOLD
             self.set_sample()
             t = Test(self.deck, self.cache, close_examine=self._close_examine, timer=self._timer)
-            t.run()
+            t.proper_run()
             self.recall_sample()
 
     def output_cards(self) -> list[str]:

@@ -10,6 +10,8 @@ from simulation_objects.GameCards import Land
 from simulation_objects.Misc.Wodge import Wodge
 from ..GameCards.RampLands.RampLand import RampLand
 from simulation_objects.Misc.LandPermutationCache import LandPermutationCache
+from ..GameCards.SearchLands import SearchLand
+
 
 #global(big_ones) = 0
 
@@ -18,6 +20,8 @@ class Battlefield(CardCollection):
         CardCollection.__init__(self)
         self._permutations = []
         self._perms_as_dicts = []
+        self._monomoots = []
+        self._searchmoots = []
         #print(f"Set permutations as: {self._permutations}")
         #start = time.time()
         self._cache = cache
@@ -27,10 +31,24 @@ class Battlefield(CardCollection):
         self._new_tapland = False
 
         #dev attributes
-        self.megaaltpermutations = []
+        self.altpermutations = []
         self.dummy_cache = {}
 
     #getters and setters
+    @property
+    def searchmoots(self):
+        return self._searchmoots
+    @searchmoots.setter
+    def searchmoots(self, value):
+        self._searchmoots = value
+
+    @property
+    def monomoots(self):
+        return self._monomoots
+    @monomoots.setter
+    def monomoots(self, monomoots):
+        self._monomoots = monomoots
+
     @property
     def new_tapland(self):
         return self._new_tapland
@@ -114,8 +132,30 @@ class Battlefield(CardCollection):
         pass
 
     def reset_permutations(self, game, extra_land=None):
-        self.reset_permutations_v1(game, extra_land)
+        self.reset_permutations_v2(game, extra_land)
+        """
 
+
+
+        if game.prototype_comparison is None:
+            self.reset_permutations_v1(game, extra_land)
+            print("One!")
+        else:
+            self.reset_permutations_v2(game, extra_land)
+            print("Two!")"""
+
+
+        """ 
+        self.reset_permutations_v2(game, extra_land)
+        for item in self.permutations:
+            for altitem in self.altpermutations:
+                litem = len(item)
+                laltitem = len(altitem) + len(self.monomoots)
+                if litem != laltitem:
+                    print(f"{item} ({litem})")
+                    print(f"{altitem} {self.monomoots} ({laltitem})")
+                    raise Exception("Halt!")
+        """
 
 
 
@@ -157,13 +197,15 @@ class Battlefield(CardCollection):
             available.append(extra_land)
         divided = self.divide_monos_and_multis(available)
         #multimoots = self.get_multicolor_permutations(divided["multi"], divided["mono"], game)
-        othermoots = self.get_multicolor_permutations_v2(divided["multi"], divided["mono"], game)
+        othermoots = self.get_multicolor_permutations_v2(divided["multi"], divided["mono"], divided["search"], game)
         #print(f"Othermoots: {len(othermoots)}")
         #print(self.lands_list())
         #for m in othermoots:
             #print(f"\t{m}")
         #print("")
-        self.permutations = othermoots
+        self.permutations = othermoots["multis"]
+        self.monomoots = othermoots["monos"]
+        self.searchmoots = othermoots["search"]
 
         """        
         end = time.time()
@@ -268,6 +310,7 @@ class Battlefield(CardCollection):
             return result
         else:
             #self.hit = False
+            print("Cache miss!")
 
             #print(f"{key} not in dummy_cache")
             groups = [land.live_prod(game) for land in lands]
@@ -280,20 +323,30 @@ class Battlefield(CardCollection):
             return purged
 
 
-    def get_multicolor_permutations_v2(self, lands:list[Land], monos:list[Land], game):
+    def get_multicolor_permutations_v2(self, lands:list[Land], monos:list[Land], search:list[Land], game):
         key = self.canonicalize(lands, game)
+        if len(search) > 1:
+            raise Exception("hey, you shouldn't have multiple searchlands!")
 
-        multiprods = [x.conditions(game) for x in lands]
-        monoprods = [x.conditions(game)[0] for x in monos]
+        #multiprods = [x.conditions(game) for x in lands]
+        monoprods = [x.conditions(game)[0]["color"] for x in monos]
+        if len(search) == 1:
+            searchprods = search[0].conditions(game)
+        else:
+            searchprods = ()
 
 
-        abstract_permutations = self.recall_permutations(key, lands, game)
-        self.abs = abstract_permutations
+        return {
+            "multis": self.recall_permutations(key, lands, game),
+            "monos": monoprods,
+            "search": searchprods
+        }
+        #self.abs = abstract_permutations
         #self.permlen = len(abstract_permutations)
         #for moot in abstract_permutations:
             #print(f"\t{moot}")
-        print(f"Abs: {abstract_permutations}")
-        return self.determine_named_permutations(abstract_permutations, multiprods, monoprods)
+        #print(f"Abs: {abstract_permutations} lands: {self.lands_list()}")
+
 
     def purge_permutations(self, perms):
         seen = set()
@@ -359,11 +412,14 @@ class Battlefield(CardCollection):
     def divide_monos_and_multis(self, cardlist) -> dict[str, list[Land]]:
         output = {
             "mono": [],
-            "multi": []
+            "multi": [],
+            "search": []
         }
 
         for card in cardlist:
             if isinstance(card, Land):
+                if isinstance(card, SearchLand):
+                    output["search"].append(card)
                 if card.monocolor:
                     output["mono"].append(card)
                 else:

@@ -23,6 +23,42 @@ class Land(GameCard):
         #dev attributes
         self.peek = False
 
+        #stats attributes
+        self._turn_appearances = 0
+        self._wasteless_turns = 0
+        self._above_average_wasteless_turns = False
+        self._above_average_wasteless_games = False
+
+    #getters and setters
+    @property
+    def above_average_wasteless_turns(self):
+        return self._above_average_wasteless_turns
+    @above_average_wasteless_turns.setter
+    def above_average_wasteless_turns(self, value):
+        self._above_average_wasteless_turns = value
+
+    @property
+    def above_average_wasteless_games(self):
+        return self._above_average_wasteless_games
+    @above_average_wasteless_games.setter
+    def above_average_wasteless_games(self, value):
+        self._above_average_wasteless_games = value
+
+
+    @property
+    def turn_appearances(self) -> int:
+        return self._turn_appearances
+    @turn_appearances.setter
+    def turn_appearances(self, value:int):
+        self._turn_appearances = value
+
+    @property
+    def wasteless_turns(self) -> int:
+        return self._wasteless_turns
+    @wasteless_turns.setter
+    def wasteless_turns(self, value:int):
+        self._wasteless_turns = value
+
     @property
     def grade(self):
         return self._grade
@@ -120,6 +156,10 @@ class Land(GameCard):
         self.grade["Options"] = 0
         self.grade["Wasted"] = []
         self.grade["Appearances"] = 0
+        self.wasteless_turns = 0
+        self.turn_appearances = 0
+        self.above_average_wasteless_games = False
+        self.above_average_wasteless_turns = False
 
     def to_mean(self):
         self.grade["Mana"] /= self.grade["Appearances"]
@@ -140,9 +180,12 @@ class Land(GameCard):
     def skew(self):
         return skew(self.wasted())
 
-    def proportion(self):
+    def proportion_of_games(self):
         zeroes = len([x for x in self.wasted() if x == 0])
         return zeroes/self.appearances()
+
+    def proportion_of_turns(self) -> float:
+        return self.wasteless_turns/self.turn_appearances
 
 
     #overridden fuctions

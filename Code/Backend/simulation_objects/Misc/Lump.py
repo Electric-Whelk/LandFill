@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 from .ColorPie import piepips
 from simulation_objects.GameCards.Spell import Spell
 from simulation_objects.GameCards.BasicLand import BasicLand
@@ -17,10 +19,26 @@ class Lump:
         self._castable = False
         self._castable_with_generic = False
         self._moots = []
+        self._originals = {"cmc": self._cmc, "cost": self._cost}
+        self._searchland_present = False
 
 
     def __repr__(self):
         return str(self._to_cast)
+
+    @property
+    def searchland_present(self):
+        return self._searchland_present
+    @searchland_present.setter
+    def searchland_present(self, value):
+        self._searchland_present = value
+
+    @property
+    def originals(self):
+        return self._originals
+    @originals.setter
+    def originals(self, value):
+        self._originals = value
 
     @property
     def moots(self):
@@ -46,6 +64,10 @@ class Lump:
     @property
     def cmc(self):
         return self._cmc
+    @cmc.setter
+    def cmc(self, value:bool):
+        self._cmc = value
+
 
     @property
     def to_cast(self):
@@ -58,6 +80,9 @@ class Lump:
     @property
     def cost(self):
         return self._cost
+    @cost.setter
+    def cost(self, value):
+        self._cost = value
 
     @property
     def colorless(self) -> bool:
@@ -81,9 +106,6 @@ class Lump:
                     if p not in output:
                         output.append(p)
         return output
-
-
-
 
 
     def check_option_castability(self, option):
@@ -111,18 +133,23 @@ class Lump:
         return "uncastable"
 
     def parse_submission_color(self, sub):
-        if isinstance(sub["color"], str):
-            return [sub["color"]]
-        return sub["color"]
+        if isinstance(sub, dict):
+            if isinstance(sub["color"], str):
+                return [sub["color"]]
+            return sub["color"]
+        elif isinstance(sub, str):
+            return [sub]
+        elif isinstance(sub, list):
+            return sub
+        else:
+            raise Exception("Attempting to parse an invalid submission option")
 
-    def check_pip_castability(self, option) -> list[str]:
-        #if self.colorless:
-            #return "castable"
-        #colors = [*self.parse_submission_color(x) for x in option]
+    def check_pip_castability(self, option, crack=None) -> list[str]:
         colors = []
-        #print(option)
         for item in option:
             colors.extend(self.parse_submission_color(item))
+            if crack is not None:
+                colors.extend(crack)
         #print(f"colors: {colors}")
         one_offs = []
         castable = True
@@ -189,14 +216,67 @@ class Lump:
                 output[color] += cost[color]
         return output
 
-    def parse_moots(self, input:list):
+    def parse_moots(self, input:list, monoprods = [], search = ()):
+        self.tribute = False
+
+        if len(self.to_cast) == 1 and self.to_cast[0].name == "Tribute to the World Tree":
+            self.tribute = True
+            #print(f"Cost: {self.cost}")
+
+
+        if monoprods != []:
+            self.subtract_monoprods(monoprods) #GET IT TO RESTORE ORIGINAL CMC/PIPS
+        if search != ():
+            self.searchland_present = True
+
+
         self.castable = False
         self.moots = []
 
         if input == []:
             self.empty_moot()
         else:
-            self.full_moot(input)
+            if len(search) == 0:
+                self.full_moot(input)
+            else:
+                for color in search:
+                    self.full_moot(input, crack=color)
+
+        self.reset_original_values()
+
+    def reset_original_values(self):
+        self.cmc = self.originals["cmc"]
+        self.cost = self.originals["cost"]
+        assert(self.tribute == False or self.cost["G"] == 3)
+            #self.tprint(f"Reset to {self.cost} using {self.originals["cost"]}")
+
+    def tprint(self, text):
+        if self.tribute:
+            print(text)
+
+    def subtract_monoprods(self, prods):
+        self.originals = {"cmc": self.cmc,
+                          "cost": deepcopy(self.cost)}
+        #oldcmc = self.cmc
+        #oldcost = self.cost
+
+        for letter in prods:
+            if self.cost[letter] > 0:
+                self.cost[letter] -= 1
+                self.cmc -= 1
+            elif self.cost['Gen'] > 0:
+                self.cost['Gen'] -= 1
+                self.cmc -= 1
+        """
+        print(f"Monoprods: {prods}")
+        for letter in prods:
+            self.cmc -= 1
+            if self.cost[letter] > 0:
+                self.cost[letter] -= 1
+        print(f"Cost: {self.cost} Cmc: {self.cmc}")"""
+
+
+
 
     def empty_moot(self):
         initials = ["W", "U", "B", "R", "G", "C"]
@@ -212,15 +292,15 @@ class Lump:
         self.moots.append(creation)
 
 
-    def full_moot(self, input:list):
+    def full_moot(self, input:list, crack=None):
 
         generic_moot = False
 
         for option in input:
-            pips = self.check_pip_castability(option)
-            option_cmc = self.get_option_cmc(option)
+            pips = self.check_pip_castability(option, crack=crack)
+            option_cmc = self.get_option_cmc(option, crack=crack)
             generic = max(0, self.cmc - option_cmc - len(pips))
-            new_moot = Moot(option, pips, generic)
+            new_moot = Moot(option, pips, generic, crack=crack)
             if new_moot.castable:
                 self.castable = True
                 if new_moot.includes_searchland:
@@ -229,16 +309,20 @@ class Lump:
                 #print(f"cmc{self.cmc}, optionlen = {len(option)}")
             if len(new_moot.pips) == 0:
                 generic_moot = True
-            self.moots.append(Moot(option, pips, generic))
+            self.moots.append(new_moot)
+            #self.moots.append(Moot(option, pips, generic))
+
         self.cull_moots(generic_moot)
 
 
-    def get_option_cmc(self, option):
-        output = len(option)
+    def get_option_cmc(self, option, crack=None):
         output = 0
         for item in option:
             output += len(self.parse_submission_color(item))
-        return output
+        if crack is None:
+            return output
+        else:
+            return output + 1
 
 
 
@@ -291,11 +375,19 @@ class Lump:
 
 
     def tap_mana(self, game):
+        if not self.searchland_present:
+            crackmoots = [m for m in self.moots if m.castable and m.crack != None]
+            anycrackmoots = [m for m in crackmoots if m.crack["color"] == "Any"]
+            if len(anycrackmoots) > 0:
+                anycrackmoots[0].crack_fetch(game)
+            elif len(crackmoots) > 0:
+                crackmoots[0].crack_fetch(game)
+        """
         for m in self.moots:
             if m.castable:
                 m.tap_moot_mana(game)
                 self.assess_land_contributions(m)
-                break
+                break"""
 
 
     def prioritize_agnostic_moot(self, game):

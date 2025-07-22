@@ -2,16 +2,27 @@
 import numpy
 from scipy.stats import skew, kurtosis
 
-from simulation_objects.GameCards import BasicLand
+from simulation_objects.GameCards import BasicLand, Land
 from simulation_objects.Simulations.Game import Game
 from simulation_objects.Simulations.Simulation import Simulation
 from datetime import datetime
 import time
+import pandas as pd
+from simulation_objects.Timer import functimer_once
+
 
 class Test(Simulation):
-    def __init__(self, deck, cache, close_examine=False, timer=False):
+    def __init__(self, deck, cache, turns=7, close_examine=False, timer=False):
         Simulation.__init__(self, deck)
         self._cache = cache
+        self._wasteless_turns = 0
+        self._wasteless_games = 0
+        self._turns = turns
+        self._lands = self.deck.lands_list()
+
+        #stats attributes used in analysis
+        self._turn_proportions = 0
+        self._game_proportions = 0
 
         #dev attributes
         self._close_examine = close_examine
@@ -19,10 +30,48 @@ class Test(Simulation):
         if self._close_examine:
             self._runs = 1
         else:
-            self._runs = 10000 #CHANGE BACK TO TEN THOUSAND
+            self._runs = 3000 #CHANGE BACK TO TEN THOUSAND
 
         #variables returned by the test
         self._runtime = 0
+
+    @property
+    def game_proportions(self) -> float:
+        return self._game_proportions
+    @game_proportions.setter
+    def game_proportions(self, value):
+        self._game_proportions = value
+
+    @property
+    def wasteless_games(self) -> int:
+        return self._wasteless_games
+    @wasteless_games.setter
+    def wasteless_games(self, value):
+        self._wasteless_games = value
+
+
+
+    @property
+    def turn_proportions(self) -> float:
+        return self._turn_proportions
+    @turn_proportions.setter
+    def turn_proportions(self, value):
+        self._turn_proportions = value
+
+    @property
+    def turns(self):
+        return self._turns
+
+    @property
+    def lands(self):
+        return self._lands
+
+    @property
+    def wasteless_turns(self) -> int:
+        return self._wasteless_turns
+    @wasteless_turns.setter
+    def wasteless_turns(self, value: int):
+        self._wasteless_turns = value
 
     @property
     def cache(self):
@@ -45,8 +94,16 @@ class Test(Simulation):
         for i in range(0, self._runs):#SCAFFOLD - currently at 6 seconds per 10,000 games
             if self._timer and i % 1000 == 0:
                 print(f"{i}...")
-            g = Game(self.deck, self.cache, verbose=self._close_examine)
+            g = Game(self.deck, self.cache, turns=self.turns, verbose=self._close_examine)
             g.run()
+
+            """pg = Game(g.copydeck, self.cache, verbose=self._close_examine, prototype_comparison={
+                "leftover_mana": g.leftover_mana,
+                "log": g.log,
+                "hand": g.copyhand
+            })
+            pg.run()"""
+
 
             #options_per_turn += (g.options_per_turn/self.runs)
             mana_per_game_array.append(g.total_spent_mana)
@@ -54,12 +111,13 @@ class Test(Simulation):
             leftover.append(g.leftover_mana)
             if g.leftover_mana == 0:
                 wasteless_games += 1
+                self.get_game_info(g)
 
 
         all_lands = self.deck.lands_list()
         for land in all_lands:
             land.to_mean()
-        ranked = sorted(all_lands, key=lambda x: x.proportion(), reverse=True)
+        ranked = sorted(all_lands, key=lambda x: x.proportion_of_turns(), reverse=True)
         endtime = time.time()
         diff = endtime - starttime
 
@@ -71,7 +129,7 @@ class Test(Simulation):
         #print(f"average spend -> mean: {numpy.mean(mana_per_game_array)} med: {numpy.median(mana_per_game_array)} std: {numpy.std(mana_per_game_array)} skew: {skew(mana_per_game_array)}")
         print(f"Leftover spend -> mean {numpy.mean(leftover)} std: {numpy.std(leftover)} med: {numpy.median(leftover)} skew: {skew(leftover)} kurtosis: {kurtosis(leftover)}")
         #print(f"{kurtosis(leftover)}")
-        print(f"In {wasteless_games} out of {self.runs} ({wasteless_games/10000}), you wasted no mana")
+        print(f"In {self.wasteless_turns} out of {self.runs} ({self.wasteless_turns/70000}), you wasted no mana")
 
         #print(f"\nShockproblems: {shock} Painproblems: {pain} Fetchproblems: {fetch}")
 
@@ -84,6 +142,136 @@ class Test(Simulation):
 
         for land in ranked:
             #print(f"{i}: {land} appeared {land.grade["Appearances"]} times, allowing for the spending of {land.grade["Mana"]} mana and {land.grade["Options"]} options")
-            print(f"{i}: {land.name} appeared {land.appearances()}  times, allowing zero waste {land.proportion()} times, proportionally, wasting on average {land.average_wasted()}")
+            print(f"{i}: {land.name} appeared {land.turn_appearances}  times, allowing zero waste {land.proportion_of_turns()} times, proportionally, wasting on average {land.average_wasted()}")
             land.reset_grade()
             i += 1
+
+    @functimer_once
+    def proper_run(self):
+        dev_values = ["proportion_of_turns", "proportion_of_games"]
+        dev_value = dev_values[1]
+
+        self.reset_lands()
+        self.run_tests()
+
+        self.assess_deck()
+        self.assess_lands()
+        ranked = self.rank_lands(dev_value)
+        self.weighted_average([x for x in ranked if isinstance(x, BasicLand)])
+
+
+        self.print_deck_details(dev_value)
+        self.print_list(ranked, dev_value)
+
+    def print_deck_details(self, criterion):
+        match criterion:
+            case "proportion_of_turns":
+                print(f"{self.turn_proportions} <- {self.wasteless_turns} wasteless turns out of {self.total_turns()} ")
+            case "proportion_of_games":
+                print(f"{self.game_proportions} <- {self.wasteless_games} wasteless games out of {self.runs} ")
+
+    def total_turns(self):
+        return self.turns * self.runs
+
+    def assess_deck(self):
+        self.turn_proportions = self.wasteless_turns / self.total_turns()
+        self.game_proportions = self.wasteless_games / self.runs
+
+    def assess_lands(self):
+        for land in self.lands:
+            land.above_average_wasteless_turns = land.proportion_of_turns() >= self.turn_proportions
+            land.above_average_wasteless_games = land.proportion_of_games() >= self.game_proportions
+
+
+    def print_list(self, input, criterion):
+        i = 1
+        for item in input:
+            match criterion:
+                case "proportion_of_turns":
+                    print(f"{i}: {item} -> {item.proportion_of_turns()} over {item.turn_appearances} appearances {self.format_rank_position(item.above_average_wasteless_turns)}")
+                case "proportion_of_games":
+                    print(f"{i}: {item} -> {item.proportion_of_games()} over {item.appearances()} appearances {self.format_rank_position(item.above_average_wasteless_games)}")
+                case _:
+                    raise Exception(f"{criterion} is not a valid criterion for print_list")
+            i += 1
+
+    def format_rank_position(self, test):
+        if test:
+            return "ABOVE"
+        else:
+            return "BELOW"
+
+
+
+    def rank_lands(self, criterion):
+        match criterion:
+            case "proportion_of_turns":
+                return sorted(self.lands, key=lambda x: x.proportion_of_turns(), reverse=True)
+            case "proportion_of_games":
+                return sorted(self.lands, key=lambda x: x.proportion_of_games(), reverse=True)
+            case _:
+                raise Exception(f"{criterion} is not a valid input to test.rank_lands()")
+
+
+    def reset_lands(self):
+        for land in self.lands:
+            land.reset_grade()
+
+
+    def run_tests(self):
+        for i in range(0, self._runs):#SCAFFOLD - currently at 6 seconds per 10,000 games
+            if self._timer and i % 1000 == 0:
+                print(f"{i}...")
+            g = Game(self.deck, self.cache, turns=self.turns, verbose=self._close_examine)
+            g.run()
+            self.get_game_info(g)
+
+    def get_game_info(self, game):
+        self.wasteless_turns += game.wasteless_turns
+        self.wasteless_games += self.wastelessness(game)
+
+    def wastelessness(self, game) -> int:
+        if game.leftover_mana == 0:
+            return 1
+        return 0
+
+    def most_represented_basics(self, input:list[Land]):
+        above_dict = {}
+        below_dict = {}
+        for item in input:
+            if isinstance(item, BasicLand):
+                if item.above_average_wasteless_games:
+                    self.add_or_increase_dict(above_dict, item.name)
+                else:
+                    self.add_or_increase_dict(below_dict, item.name)
+        print(f"Abovedict: {above_dict} Belowdict: {below_dict}")
+
+    def add_or_increase_dict(self, dict, item):
+        if item not in dict:
+            dict[item] = 1
+        else:
+            dict[item] += 1
+
+    def format_pandas_dataframe(self, input):
+        i = 1
+        data = []
+        for item in input:
+            data.append({
+                'rank': i,
+                'name': item.name,
+                'score': item.proportion_of_games(),
+                'appearances': item.appearances(),
+            })
+            i += 1
+        return pd.DataFrame(data)
+
+    def weighted_average(self, ranked_list):
+        df = self.format_pandas_dataframe(ranked_list)
+
+        # Group by individual land name and compute weighted average rank
+        war_by_land = df.groupby('name')[['rank', 'appearances']].apply(
+            lambda g: (g['rank'] * g['appearances']).sum() / g['appearances'].sum()
+        ).sort_values()
+
+        print("Weighted Average Rank by Land:")
+        print(war_by_land)

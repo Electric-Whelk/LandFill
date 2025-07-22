@@ -1,4 +1,5 @@
 import random
+from copy import deepcopy
 
 from itertools import combinations
 from tabnanny import verbose
@@ -16,16 +17,19 @@ from simulation_objects.GameCards.Spell import Spell
 from simulation_objects.GameCards.TappedCycles.Triome import Triome
 from simulation_objects.Misc.Lump import Lump
 from simulation_objects.Simulations.Simulation import Simulation
-
+from simulation_objects.Timer import functimer_perturn
 
 
 class Game(Simulation):
-    def __init__(self, deck, cache, verbose=False):
+    def __init__(self, deck, cache, turns=7, verbose=False, prototype_comparison = None):
         Simulation.__init__(self, deck)
         self._hand = Hand()
         self._battlefield = Battlefield(cache)
         self._graveyard = Graveyard()
         self._turn = 0
+
+
+        self._total_turns = turns
 
 
         #global reset during the turn
@@ -34,13 +38,20 @@ class Game(Simulation):
         self._secondmain = False
         self._last_land_played = None
 
+        #stats variables
+        self._wasteless_turns = 0
+
+        #variables that support the stats variables
+        self._spent_this_turn = 0
+        self._played_lands = []
+
+
         #dev attributes
-        self.verbose = verbose
-        self.log = None
+        self.verbose = verbose #verbose
+        self.log = []
         self.decisions = 0
         self.total_spent_mana = 0
         self.options_per_turn = 0
-        self.total_turns = 7
         self.total_played_lands = 0
         self.on_curve_casts = 0
         self.castable_cmc_in_hand = 0
@@ -49,10 +60,39 @@ class Game(Simulation):
         self.shockproblems = 0
         self.painproblems = 0
         self.fetchproblems = 0
-        self.played_lands = []
+        #self.played_lands = []
+
+        self.prototype_comparison = prototype_comparison
+        self.copydeck = None
+        self.copyhand = None
 
 
     #getters
+    @property
+    def total_turns(self) -> int:
+        return self._total_turns
+
+    @property
+    def played_lands(self):
+        return self._played_lands
+    @played_lands.setter
+    def played_lands(self, value:list):
+        self._played_lands = value
+
+    @property
+    def wasteless_turns(self) -> int:
+        return self._wasteless_turns
+    @wasteless_turns.setter
+    def wasteless_turns(self, value:int):
+        self._wasteless_turns = value
+
+    @property
+    def spent_this_turn(self) -> int:
+        return self._spent_this_turn
+    @spent_this_turn.setter
+    def spent_this_turn(self, value:int):
+        self._spent_this_turn = value
+
     @property
     def last_land_played(self) -> Land:
         return self._last_land_played
@@ -165,6 +205,10 @@ class Game(Simulation):
         #self.total_spent_mana /= self.total_played_lands #NOTE THAT THIS INCLUDES FETCHED LANDS
         #self.total_spent_mana /= self.castable_cmc_in_hand
         self.leftover_mana = self.total_theoretcial_mana - self.total_spent_mana
+        if self.leftover_mana == 0:
+            if self.wasteless_turns != self.total_turns:
+                print(f"Uh oh!")
+
 
 
         for zone in zones:
@@ -175,16 +219,32 @@ class Game(Simulation):
 
         self.vprint("Game complete")
         self.vprint(f"Leftover mana: {self.leftover_mana}\n")
-        #if fetchland_included and not triome_included and self.leftover_mana > 0:
-            #for entry in self.log:
-                #print(entry)
-        #print(f"Spent {self.total_spent_mana} mana")
+        if self.prototype_comparison is not None:
+            if self.leftover_mana == 0 or self.prototype_comparison["leftover_mana"] == 0:
+                if self.leftover_mana != self.prototype_comparison["leftover_mana"]:
+                    print("---------------ORIGINAL---------------")
+                    for item in self.prototype_comparison["log"]:
+                        print(item)
+                    print("---------------PROTOTYPE---------------")
+                    for item in self.log:
+                        print(item)
+                    raise Exception("Stop!")
 
     def run(self):
         #samplehand = ["Putrefy", "Lightning Greaves", "Misty Rainforest", "Island", "Mystic Remora", "Forest", "Llanowar Wastes"] #Misty Rainforest/Watery Grave
         #topdeck =  ["Phyrexian Arena","Verdant Catacombs", "Swamp", "Risen Reef"] #Verdat Catacombs/Breeding Pool
         #self.sample_hand(samplehand, topdeck=topdeck)
-        self.setup_game()
+
+        if self.prototype_comparison == None:
+            self.setup_game()
+        else:
+            self._hand = self.prototype_comparison["hand"]
+        #self.setup_game()
+
+        #samplehand = ["Forest", "Mycoloth", "Underground River", "Watchful Radstag", "Tribute to the World Tree", "Drowned Catacomb", "Zagoth Triome"]
+        topdeck = ["Haunting Imitation", "Tender Wildguide","Propagator Drone","Glen Elendra Archmage", "Polluted Delta","Cyclonic Rift","Xavier Sal, Infested Captain"]
+        #topdeck = ["Xavier Sal, Infested Captain", "Cyclonic Rift", "Polluted Delta", "Glen Elendra Archmage", "Propagator Drone", "Tender Wildguide", "Haunting Imitation"]
+        #self.sample_hand(samplehand, topdeck=topdeck)
         for _ in range(self.total_turns): #SCAFFOLD - number of turns
             self.run_turn()
 
@@ -232,16 +292,19 @@ class Game(Simulation):
     def play_lump(self, lump):
         try:
             lump.tap_mana(self)
+            if lump.cmc > self.battlefield.max_mana():
+                print(f"Uh oh - casting {lump} on a battlefield of {self.battlefield}")
+            self.spent_this_turn = lump.cmc
             for spell in lump.to_cast:
                 self.total_spent_mana += spell.cmc[0]
-                self.vprint(f"Playing {spell}...")
+                self.vprint(f"Playing {spell} at cost {spell.cmc[0]}...")
                 self.hand.give(self.battlefield, spell)
         except AttributeError as e:
             self.vprint("No playable lumps")
 
 
-
     def run_turn(self):
+        self.spent_this_turn = 0
         self.turn += 1
         #if len([x for x in self.hand.lands_list() if isinstance(x, SearchLand)]) > 0:
             #self.verbose = True
@@ -268,6 +331,9 @@ class Game(Simulation):
             self.vprint(f"Mulliganing")
             #print(f"Mulliganing...{times}")
             return True
+        #if self.prototype_comparison is None:
+            #self.copydeck = deepcopy(self.deck)
+            #self.copyhand = deepcopy(self.hand)
         return False
 
 
@@ -359,19 +425,20 @@ class Game(Simulation):
                 self.decisions += 1
 
 
-
         allows_highest_expenditure = [land for land in playoptions if playoptions[land] >= champlen]
-
         provides_most_colours =  self.provides_most_colours(allows_highest_expenditure)
 
 
         self.prioritize_tapland(provides_most_colours)
 
+
     def determine_and_play_lump(self):
         new_moots = self.battlefield.permutations
+        new_monos = self.battlefield.monomoots
+        search = self.battlefield.searchmoots
         new_playable = []
         for lump in self.lumps:
-            lump.parse_moots(new_moots)
+            lump.parse_moots(new_moots, monoprods=new_monos, search=search)
             if lump.castable:
                 new_playable.append(lump)
         self.options_per_turn += len(new_playable)
@@ -421,7 +488,22 @@ class Game(Simulation):
             #as_list = list(combos)
             #print(f"Combos returned {len(as_list)} combos for range {r}")
             for c in combos:
-                output.extend(self.create_lumps(c))
+                summed = sum([x.cmc[0] for x in c])
+                if summed <= max:
+                    output.extend(self.create_lumps(c))
+
+                """
+                if self.prototype_comparison is None:
+                    output.extend(self.create_lumps(c))
+                else:
+                    #print(f"c:{c} for max:{max}")
+                    summed = sum([x.cmc[0] for x in c])
+                    self.vprint(f"{c} summed to {summed} for max {max}")
+                    #print(f"Summed: {summed}")
+                    if summed <= max:
+                        output.extend(self.create_lumps(c))"""
+
+            #print("")
 
         #purged_output = self.purge_lumps(output)
         #print(f"{m}: purged {len(output)-len(purged_output)} from {len(output)} lumps ({input})")
@@ -431,7 +513,6 @@ class Game(Simulation):
 
     def determine_max_mana(self) -> int:
         return self.turn
-
 
 
     def determine_play(self):
@@ -445,11 +526,13 @@ class Game(Simulation):
         #self.vprint(f"Playable cards: {fodder} divisible into {len(lumps)} lumps")
 
         moots = self.battlefield.permutations
+        monomoots = self.battlefield.monomoots
+        search = self.battlefield.searchmoots
         for lump in lumps:
-            lump.parse_moots(moots)
+            lump.parse_moots(moots, monoprods=monomoots, search=search)
 
         for lump in self.spell_lumps:
-            lump.parse_moots(moots)
+            lump.parse_moots(moots, monoprods=monomoots, search=search)
 
         castable = []
         not_castable = []
@@ -495,15 +578,27 @@ class Game(Simulation):
         self.assess_turn_score()
 
 
-
     def assess_turn_score(self):
         maxmana = self.battlefield.max_mana()
         achievable = [lump for lump in self.lumps if lump.cmc <= maxmana]
         try:
             largest_achievable = max(lump.cmc for lump in achievable)
+            self.vprint(f"largest: {largest_achievable}")
         except ValueError:
             largest_achievable = 0
         self.total_theoretcial_mana += largest_achievable
+        wasteless = False
+        if largest_achievable <= self.spent_this_turn:
+            self.wasteless_turns += 1
+            wasteless = True
+        self.grade_lands_per_turn(wasteless)
+
+    def grade_lands_per_turn(self, wasteless):
+        for land in self.played_lands:
+            land.turn_appearances += 1
+            if wasteless:
+                land.wasteless_turns += 1
+
 
 
 
