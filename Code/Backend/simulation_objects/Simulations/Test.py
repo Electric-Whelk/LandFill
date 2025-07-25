@@ -1,8 +1,11 @@
 #from simulation_objects.CardCollections.Deck import Deck
+import functools
+
 import numpy
 from scipy.stats import skew, kurtosis
 
 from simulation_objects.GameCards import BasicLand, Land
+from simulation_objects.Misc.ColorPie import landtype_map
 from simulation_objects.Simulations.Game import Game
 from simulation_objects.Simulations.Simulation import Simulation
 from datetime import datetime
@@ -12,28 +15,42 @@ from simulation_objects.Timer import functimer_once
 
 
 class Test(Simulation):
-    def __init__(self, deck, cache, turns=7, close_examine=False, timer=False):
+    def __init__(self, deck, cache, turns=7, runs=None, ct_runs=100, close_examine=False, timer=False):
         Simulation.__init__(self, deck)
         self._cache = cache
         self._wasteless_turns = 0
         self._wasteless_games = 0
         self._turns = turns
         self._lands = self.deck.lands_list()
+        self._ct_runs = ct_runs
 
         #stats attributes used in analysis
         self._turn_proportions = 0
         self._game_proportions = 0
+        self._worst_performing_card = None
 
         #dev attributes
+        self.like_for_like = False
         self._close_examine = close_examine
         self._timer = timer
         if self._close_examine:
             self._runs = 1
         else:
-            self._runs = 3000 #CHANGE BACK TO TEN THOUSAND
+            self._runs = 500 #CHANGE BACK TO ONE THOUSAND
+        if runs != None:
+            self._runs = runs
+
+        #3000 vs 300 at first
 
         #variables returned by the test
         self._runtime = 0
+
+    @property
+    def worst_performing_card(self) -> Land:
+        return self._worst_performing_card
+    @worst_performing_card.setter
+    def worst_performing_card(self, card:Land):
+        self._worst_performing_card = card
 
     @property
     def game_proportions(self) -> float:
@@ -41,6 +58,10 @@ class Test(Simulation):
     @game_proportions.setter
     def game_proportions(self, value):
         self._game_proportions = value
+
+    @property
+    def ct_runs(self) -> int:
+        return self._ct_runs
 
     @property
     def wasteless_games(self) -> int:
@@ -146,8 +167,8 @@ class Test(Simulation):
             land.reset_grade()
             i += 1
 
-    @functimer_once
-    def proper_run(self):
+    #@functimer_once
+    def run_deck_test(self):
         dev_values = ["proportion_of_turns", "proportion_of_games"]
         dev_value = dev_values[1]
 
@@ -155,13 +176,78 @@ class Test(Simulation):
         self.run_tests()
 
         self.assess_deck()
-        self.assess_lands()
+        #self.assess_lands()
         ranked = self.rank_lands(dev_value)
-        self.weighted_average([x for x in ranked if isinstance(x, BasicLand)])
+        #self.weighted_average([x for x in ranked if isinstance(x, BasicLand)])
+
+        #self.print_deck_details(dev_value)
+        #self.print_list(ranked, dev_value)
+
+    def hill_climb_test(self):
+        self.run_tests()
+        self.assess_deck_hc()
+        self.assess_lands_hc()
+        ranked = [x for x in self.deck.lands_list()]
+
+    def assess_deck_hc(self):
+        self.game_proportions = self.wasteless_games / self.runs
 
 
-        self.print_deck_details(dev_value)
-        self.print_list(ranked, dev_value)
+    def assess_lands_hc(self):
+        for card in self.deck.lands_list(): #inelegant solution here to the way your proportion of games() and self.proportions interact
+            x = card.proportion_of_games()
+
+        worst = None
+        worst_score = 0
+        for color in self.deck.color_id:
+            self.normalize_basics(landtype_map[color])
+
+
+        """ranked = sorted(self.deck.lands_list(), key=lambda x: x.proportions, reverse=True)
+        i = 0
+        for r in ranked:
+            print(f"\t{i}: {r} -> {r.proportions}")
+            i += 1"""
+
+        for card in self.deck.card_list:
+            if isinstance(card, Land):
+                if card.mandatory == True:
+                    card.reset_grade()
+                else:
+                    if worst == None or card.proportions < worst_score:
+                        worst = card
+                        worst_score = card.proportions
+                    card.reset_grade()
+        self.worst_performing_card = worst
+
+
+    def normalize_basics(self, basicname):
+        basicscores = [x.proportion_of_games() for x in self.deck.card_list if x.name == basicname]
+        #print(f"{basicname} scores: {basicscores}")
+        med = numpy.median(basicscores)
+        for card in self.deck.card_list:
+            if card.name == basicname:
+                card.proportions = med
+
+
+
+
+
+    def run_card_test(self, card_in):
+        #wasted_per_game = [] #TEST VARIABLE
+        wasteless_turns = 0
+        for _ in range(0, self.ct_runs):
+            g = Game(self.deck, self.cache, turns=self.turns)
+            g.run(card_to_test = card_in)
+            wasteless_turns += self.wastelessness(g)
+            #wasted_per_game.append(g.leftover_mana) #TEST VARIABLE
+        for card in self.deck.card_list:
+            if isinstance(card, Land):
+                card.reset_grade()
+
+        #return numpy.mean(wasted_per_game) * -1
+        return wasteless_turns / self.ct_runs
+
 
     def print_deck_details(self, criterion):
         match criterion:
@@ -183,7 +269,7 @@ class Test(Simulation):
             land.above_average_wasteless_games = land.proportion_of_games() >= self.game_proportions
 
 
-    def print_list(self, input, criterion):
+    def print_list(self, input, criterion=None):
         i = 1
         for item in input:
             match criterion:
@@ -192,7 +278,8 @@ class Test(Simulation):
                 case "proportion_of_games":
                     print(f"{i}: {item} -> {item.proportion_of_games()} over {item.appearances()} appearances {self.format_rank_position(item.above_average_wasteless_games)}")
                 case _:
-                    raise Exception(f"{criterion} is not a valid criterion for print_list")
+                    print(f"{i}: {item}")
+                    #raise Exception(f"{criterion} is not a valid criterion for print_list")
             i += 1
 
     def format_rank_position(self, test):
@@ -275,3 +362,7 @@ class Test(Simulation):
 
         print("Weighted Average Rank by Land:")
         print(war_by_land)
+
+
+    #def worst_performing_card(self):
+        #return min(self.lands, key=lambda x: x.proportion_of_games())

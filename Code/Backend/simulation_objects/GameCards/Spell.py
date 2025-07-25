@@ -2,16 +2,21 @@ from simulation_objects.GameCards.GameCard import GameCard
 from database_management.models.Card import Card
 
 class Spell(GameCard):
-    def __init__(self, orm_obj:Card, mandatory=False):
+    def __init__(self, orm_obj:Card, mandatory=False, commander=False):
         GameCard.__init__(self, orm_obj, mandatory)
         self._mana = self.parse_mana(orm_obj)
         self._cmc = self.parse_cmc(self._mana)
         self._pips = self.parse_pips(self._mana)
+        self._commander = commander
 
     #setters and getters
     @property
     def mana(self) -> list[dict[str, int]]:
         return self._mana
+
+    @property
+    def commander(self) -> bool:
+        return self._commander
 
     @property
     def cmc(self) -> list[int]:

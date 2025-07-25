@@ -1,26 +1,57 @@
 
 import random
 from copy import deepcopy
+
+from numpy.ma.core import set_fill_value
+
 from database_management.models.Card import Card
 from Extensions import db
 from math import inf
 
 from simulation_objects.CardCollections.CardCollection import CardCollection
 from simulation_objects.CardCollections.Deck import Deck
+from simulation_objects.GameCards import FastLand, ShockLand, MiscLand, BondLand, CheckLand, SlowLand, RevealLand, \
+    PainLand, HorizonLand
 from simulation_objects.GameCards.BasicLand import BasicLand
 from simulation_objects.GameCards.GameCard import GameCard
 from simulation_objects.GameCards.Land import Land
+from simulation_objects.GameCards.SearchLands.FetchLand import FetchLand
+from simulation_objects.GameCards.TappedCycles.GuildGate import GuildGate
+from simulation_objects.Misc.ColorPie import colortype_map
 from simulation_objects.Simulations.Test import Test
 from simulation_objects.Misc.LandPermutationCache import LandPermutationCache
 from simulation_objects.Timer import functimer_perturn, functimer_once
 
 
 class MonteCarlo(CardCollection):
-    def __init__(self, deck, close_examine=False, timer=False):
+    def __init__(self, deck, close_examine=False, timer=False, verbose=False):
         CardCollection.__init__(self)
         #set on creation of the object
         self._deck = deck
         self._cache = LandPermutationCache()
+        self._colorless_pips = deck.colorless_pips
+        self._pie_slices = self.deck.pie_slices
+        self._categories = [["SearchLand"]]
+
+        #will figure out when to set the below
+        self._prioritization= {
+            "Command Tower": 1,
+            "Triomes": 1,
+            "Shock Lands": 1,
+            "Basic Lands": 1,
+            "OG Dual Lands": 1,
+            "Fetch Lands": 1,
+            "Tri-Color Taplands": 2,
+            "Bond Lands": 2,
+            "Pain Lands": 2,
+            "Horizon Lands": 2,
+            "Check Lands": 3,
+            "Reveal Lands": 3,
+            "Battle Lands": 3,
+            "Fast Lands": 3,
+            "Slow Lands": 3,
+            "Guildgates": 4
+        }
 
 
         #requirements - set at the start of each run
@@ -38,12 +69,35 @@ class MonteCarlo(CardCollection):
         #dev variables
         self._close_examine = close_examine
         self._timer = timer
+        self._verbose = verbose
+        self.swapped_out_nonbasics = []
+
 
 
     #setters and getters
     @property
+    def prioritization(self):
+        return self._prioritization
+
+    @property
+    def categories(self):
+        return self._categories
+
+    @property
+    def pie_slices(self):
+        return self._pie_slices
+
+    @property
+    def colorless_pips(self):
+        return self._colorless_pips
+
+    @property
     def cache(self):
         return self._cache
+
+    @property
+    def verbose(self):
+        return self._verbose
 
     @property
     def deck(self) -> Deck:
@@ -124,8 +178,12 @@ class MonteCarlo(CardCollection):
                 return False
         return True
 
+    def vprint(self, text):
+        if self.verbose:
+            print(text)
 
-    def fill_heap(self, from_testlist=None):
+
+    def fill_heap_CONDEMNED(self, from_testlist=None):
         if from_testlist is None:
             self.card_list = []
             all = db.session.query(Card).filter(Card._overall_land == True).all()
@@ -254,7 +312,7 @@ class MonteCarlo(CardCollection):
         for i in range(0, 1):#SCAFFOLD
             self.set_sample()
             t = Test(self.deck, self.cache, close_examine=self._close_examine, timer=self._timer)
-            t.proper_run()
+            t.run_deck_test()
             self.recall_sample()
 
     def output_cards(self) -> list[str]:
@@ -278,24 +336,166 @@ class MonteCarlo(CardCollection):
     #below are versions of all of the above but just designed for testing with, not designed to be user friendly
 
     def dev_run(self):
-        self.dev_fill_heap(self.deck.name) #get all possible lands for that deck
+        self.fill_heap() #get all possible lands for that deck
         self.deck.add_initial_lands("proportional_basics")
         #add to the deck an initial set of lands - make this a function so you can try out different initial sets
             #ponder: what if it was all wastes? That'd certainly make your early interventions much more fiery.
+        self.hill_climb()
+
+
+    @functimer_once
+    def hill_climb(self):
         halt = False
+        step_output = Test(self.deck, self.cache)
+        step_output.hill_climb_test()
+        self.vprint(f"Starting score: {step_output.game_proportions}")
+        scores = []
+        scores.insert(0, step_output.game_proportions)
+        iterations = 0
         while not halt:
-            t = Test(self.deck, self.cache, close_examine=False, timer=False)
-            t.run()
-            halt = self.swap_lower_basics_algorithm(t)
+            iterations += 1
+            step_output = self.hill_climb_increment(step_output)
+            scores.insert(0, step_output.game_proportions)
+            halt = self.check_for_halt(scores, step_output)
+        self.print_results(step_output)
+        self.dev_assess_results()
+        print(f"Took {iterations} iterations")
+
+    def dev_assess_results(self):
+        lands = self.deck.lands_list()
+        print(f"Fetches: {[x for x in lands if isinstance(x, FetchLand)]}")
+        print(f"Shocks: {[x for x in lands if isinstance(x, ShockLand)]}")
+        print(f"Fasts: {[x for x in lands if isinstance(x, FastLand)]}")
+        print(f"Guildgates: {[x for x in lands if isinstance(x, GuildGate)]}")
+        print(f"Bonds: {[x for x in lands if isinstance(x, BondLand)]}")
+
+        print(f"Checks: {[x for x in lands if isinstance(x, CheckLand)]}")
+        print(f"Slows: {[x for x in lands if isinstance(x, SlowLand)]}")
+        print(f"Snarls: {[x for x in lands if isinstance(x, RevealLand)]}")
+        print(f"Pains: {[x for x in lands if isinstance(x, PainLand)]}")
+        print(f"Horizons: {[x for x in lands if isinstance(x, HorizonLand)]}")
+
+        print(f"Swapped nonbasics: {[self.swapped_out_nonbasics]}")
+
+
+
+    def print_results(self, step_output, error=None):
+        if error is not None:
+            print(f"ERROR: {error}")
+
+        step_output.print_deck_details("proportion_of_games")
+        step_output.print_list(self.deck.lands_list())
+
+
+    def check_for_halt(self, scores, test) -> bool:
+        if test.like_for_like:
+            return True
+
+        success_number = 5
+        meaningless_improvement = 0.02
+        give_up_number = 300
+        l = len(scores)
+
+        if l > give_up_number:
+            self.vprint(f"Giving up after {l} tries")
+            return True
+
+        if l < success_number:
+            return False
+
+        i = 0
+        to_test = []
+        while i < success_number:
+            to_test.append(scores[i])
+            i += 1
+
+        maxi = max(to_test)
+        mini = min(to_test)
+
+        return maxi - mini <= meaningless_improvement
+
+    @functimer_once
+    def hill_climb_increment(self, prior_test):
+        print("")
+        print(f"Cache at length {len(self.cache.cache)}")
+        worst_card = prior_test.worst_performing_card
+        if not isinstance(worst_card, BasicLand):
+            self.swapped_out_nonbasics.append(worst_card)
+
+
+        t = Test(self.deck, self.cache)
+        cards_to_test = self.get_cards_to_test()
+        self.deck.give(self, worst_card)
+
+        champ = None
+        tested_cards = []
+        for trial_card in cards_to_test:
+            self.give(self.deck, trial_card)
+            trial_card.card_test_score = t.run_card_test(trial_card)
+            self.deck.give(self, trial_card)
+            if champ is None or trial_card.card_test_score > champ.card_test_score:
+                champ = trial_card
+            tested_cards.append(trial_card)
+
+        tested_cards.sort(key=lambda x: x.card_test_score, reverse=True)
+        #for c in tested_cards:
+            #print(f"\t{c} -> {c.card_test_score}")
+
+        self.give(self.deck, champ)
+        self.reset_scores(cards_to_test)
+        t.hill_climb_test()
+        self.vprint(f"Swapped {worst_card} for {champ} ({t.game_proportions})")
+        self.cache.compare()
+        if worst_card.name == champ.name:
+            t.like_for_like = True
+        return t
+
+    def get_cards_to_test(self) -> list:
+        output = self.get_unique_cards()
+
+        for slice in self.pie_slices:
+            output = self.enqueue_category(slice, output)
+        for category in self.categories:
+            output = self.enqueue_category(category, output)
+        #print(f"First output: {output}")
+        return output
+
+
+    def enqueue_category(self, category, lands):
+        #print(f"category: {category} lands: {lands}")
+        try:
+            front = min((x.priority for x in lands if self.ranking_equivalence(x, category)))
+            output = [x for x in lands if not self.ranking_equivalence(x, category) or x.priority == front]
+            return output
+        except ValueError:
+            return lands
+
+    def ranking_equivalence(self, land, category):
+        sland = sorted(land.ranking_category(self))
+        scat = sorted(category)
+        output = sland == scat
+        return output
 
 
 
 
-    def swap_lower_basics_algorithm(self, test) -> bool:
-        return True
 
 
 
+    def get_unique_cards(self) -> list:
+        cardlist = []
+        basicnames = []
+        for card in self.card_list:
+            if card.name not in basicnames:
+                cardlist.append(card)
+            if isinstance(card, BasicLand) and card.name not in basicnames:
+                if card.name != "Wastes" and not self.colorless_pips:
+                    basicnames.append(card.name)
+        return cardlist
+
+    def reset_scores(self, input):
+        for item in input:
+            item.card_test_score = None
 
     def dev_fill_heap(self, deckname):
         match deckname:
@@ -306,7 +506,69 @@ class MonteCarlo(CardCollection):
 
 
         as_cards = self.parse_cards_from_json(heap)
-        self.card_list = [self.parse_GameCard(x, mandatory=True) for x in as_cards]
+        self.card_list = [self.parse_GameCard(x, mandatory=False) for x in as_cards]
+
+    def fill_heap(self):
+        all = db.session.query(Card).filter(Card._overall_land == True).all()
+        for card in all:
+            if self.deck.within_color_identity(card):
+                as_GC = self.parse_GameCard(card, mandatory=False)
+                if not isinstance(as_GC, MiscLand) and not self.irrelevant_fetchland(as_GC):
+                    self.card_list.append(as_GC)
+
+        self.prioritize_heap(self.prioritization)
+
+        self.print_all()
+
+    def prioritize_heap(self, prioritization:dict):
+        for land in self.card_list:
+            land.priority = prioritization[land.cycle]
+
+
+    def irrelevant_fetchland(self, card):
+        if not isinstance(card, FetchLand):
+            return False
+        for landtype in card.searchable:
+            if colortype_map[landtype] in self.deck.colors_needed:
+                return False
+        return True
+
+
+
+
+
+
+
+
+    """    def fill_heap_CONDEMNED(self, from_testlist=None):
+        if from_testlist is None:
+            self.card_list = []
+            all = db.session.query(Card).filter(Card._overall_land == True).all()
+            lands = []
+            basics = []
+            for card in all:
+                tp = card.true_produced
+                if not self.check_identity(card):
+                    pass
+                elif card.cycle.name == "Basic Lands":
+                    if card.produced[0] in self.deck.colors_needed:
+                        self.card_list.append(self.parse_GameCard(card))
+                elif len(tp) != 0:
+                    match = 0
+                    for color in tp:
+                        if color in self.deck.colors_needed:
+                            match += 1
+                        if match >= 2:
+                            self.card_list.append(self.parse_GameCard(card))
+                            break
+            #print(f"Set heap with a total of {len(self.card_list)} cards.")
+        else:
+            as_cards = (self.parse_cards_from_json(from_testlist))
+            self.card_list = [self.parse_GameCard(x, mandatory=True) for x in as_cards]
+            #for card in self.card_list:
+                #print(f"{card.name}:{isinstance(card, Land)}")
+        #self.heap = lands
+        #self.basics = basics"""
 
 
 

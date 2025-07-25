@@ -5,6 +5,7 @@ class GameCard(object):
         self._name = card.name
         self._usd = card.usd
         self._eur = card.eur
+        self._color_id = list(card._color_identity)
 
         self._mandatory = mandatory
         self._permitted = permitted
@@ -16,6 +17,10 @@ class GameCard(object):
 
 
     #getters and setters
+    @property
+    def color_id(self) -> list:
+        return self._color_id
+
     @property
     def name(self):
         return self._name

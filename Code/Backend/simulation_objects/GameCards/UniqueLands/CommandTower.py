@@ -6,3 +6,6 @@ class CommandTower(UniqueLand):
 
     def live_prod(self, game) -> list[str]:
         return game.deck.color_id
+
+    def ranking_category(self, monty):
+        return monty.deck.color_id

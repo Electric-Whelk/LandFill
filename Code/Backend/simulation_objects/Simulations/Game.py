@@ -1,5 +1,7 @@
+import functools
 import random
 from copy import deepcopy
+import time
 
 from itertools import combinations
 from tabnanny import verbose
@@ -17,7 +19,7 @@ from simulation_objects.GameCards.Spell import Spell
 from simulation_objects.GameCards.TappedCycles.Triome import Triome
 from simulation_objects.Misc.Lump import Lump
 from simulation_objects.Simulations.Simulation import Simulation
-from simulation_objects.Timer import functimer_perturn
+from simulation_objects.Timer import functimer_perturn, functimer_once
 
 
 class Game(Simulation):
@@ -213,7 +215,7 @@ class Game(Simulation):
 
         for zone in zones:
             for item in zone.card_list:
-                if isinstance(item, Land) and zone != self.hand: #you also need to set this to cover mandatory
+                if isinstance(item, Land): #you also need to set this to cover mandatory
                     item.award_points(self.leftover_mana, self.options_per_turn)
             zone.give_all(self.deck)
 
@@ -230,13 +232,24 @@ class Game(Simulation):
                         print(item)
                     raise Exception("Stop!")
 
-    def run(self):
+    def check_card_made_available(self, subject):
+        if subject in self.hand.card_list:
+            return True
+        if subject in self.battlefield.card_list:
+            return True
+        if subject in self.graveyard.card_list:
+            return True
+        return False
+
+
+    def run(self, card_to_test=None):
         #samplehand = ["Putrefy", "Lightning Greaves", "Misty Rainforest", "Island", "Mystic Remora", "Forest", "Llanowar Wastes"] #Misty Rainforest/Watery Grave
         #topdeck =  ["Phyrexian Arena","Verdant Catacombs", "Swamp", "Risen Reef"] #Verdat Catacombs/Breeding Pool
         #self.sample_hand(samplehand, topdeck=topdeck)
+        start = time.time()
 
         if self.prototype_comparison == None:
-            self.setup_game()
+            self.setup_game(card_to_test = card_to_test)
         else:
             self._hand = self.prototype_comparison["hand"]
         #self.setup_game()
@@ -245,8 +258,22 @@ class Game(Simulation):
         topdeck = ["Haunting Imitation", "Tender Wildguide","Propagator Drone","Glen Elendra Archmage", "Polluted Delta","Cyclonic Rift","Xavier Sal, Infested Captain"]
         #topdeck = ["Xavier Sal, Infested Captain", "Cyclonic Rift", "Polluted Delta", "Glen Elendra Archmage", "Propagator Drone", "Tender Wildguide", "Haunting Imitation"]
         #self.sample_hand(samplehand, topdeck=topdeck)
-        for _ in range(self.total_turns): #SCAFFOLD - number of turns
-            self.run_turn()
+        abandoned = False
+        for _ in range(self.total_turns):
+            if card_to_test is not None:
+                if not self.check_card_made_available(card_to_test):
+                    self.total_theoretcal_mana = 0
+                    self.total_spent_mana = 0
+            if self.total_theoretcial_mana <= self.total_spent_mana: #SCAFFOLD - number of turns
+                self.run_turn()
+            else:
+                abandoned = True
+                break
+
+        #if abandoned:
+            #print("Abandoned!")
+        #else:
+            #print("Completed!")
 
         self.conclude_game()
         self.turn = 0
@@ -337,18 +364,35 @@ class Game(Simulation):
         return False
 
 
-    def setup_game(self):
+    def setup_game(self, card_to_test=None):
         deck = self.deck
-        deck.shuffle()
+        #deck.shuffle()
         mull = True
         i = 0
-        while mull: #and i < 2
+        while mull:#and i < 2
+            deck.shuffle()
+            self.fill_command_zone()
+            self.ensure_visible_card(card_to_test)
             self.draw(7)#restricting to two mulls
             i += 1
             mull = self.mulligan(i)
         #if i == 2:
             #self.draw(7)
         #assert(len(self.lands_in_hand) != 0)
+
+    def fill_command_zone(self):
+        self.deck.give(self.hand, self.deck.commander)
+        if self.deck.partner is not None:
+            self.deck.give(self.hand, self.deck.partner)
+
+    def ensure_visible_card(self, subject):
+        visible_cards = 7 + self.total_turns - 1  # since randint includes the values
+        position = random.randint(0, visible_cards)
+        if subject is not None:
+            self.deck.card_list.remove(subject)
+            self.deck.card_list.insert(position, subject)
+        #potentially change this to, if subject is not none, insert a random land
+
 
     def tap_unused_lands(self):
         for land in self.battlefield.lands_list():
@@ -514,13 +558,25 @@ class Game(Simulation):
     def determine_max_mana(self) -> int:
         return self.turn
 
+    def get_playable_lands(self):
+        output = []
+        for card in self.hand.card_list:
+            if isinstance(card, Land):
+                if not isinstance(card, SearchLand):
+                    output.append(card)
+                else:
+                    if card.live_prod(self) != []:
+                        output.append(card)
+        return output
+
+
 
     def determine_play(self):
-        lands = [x for x in self.hand.card_list if isinstance(x, Land)]
+        lands = self.get_playable_lands()
         self.vprint(f"begnning turn {self.turn} with {lands} in hand and {self.battlefield.lands_list()} on battlefield {[x.live_prod(self) for x in self.battlefield.lands_list()]}")
         spells = self.hand.spells_list()
         lumps = self.determine_lumps_from_hand(spells)
-        self.lumps = lumps
+        self.lumps = sorted(lumps, key=lambda x: x.cmc, reverse=True)
         self.spell_lumps = self.determine_spell_lumps(spells)
         self.vprint(f"identified {len(self.lumps)} lumps")
         #self.vprint(f"Playable cards: {fodder} divisible into {len(lumps)} lumps")
@@ -528,8 +584,11 @@ class Game(Simulation):
         moots = self.battlefield.permutations
         monomoots = self.battlefield.monomoots
         search = self.battlefield.searchmoots
-        for lump in lumps:
+
+        #this isn't QUITE going to work because it doesn't account for newly played lands
+        for lump in self.lumps:
             lump.parse_moots(moots, monoprods=monomoots, search=search)
+
 
         for lump in self.spell_lumps:
             lump.parse_moots(moots, monoprods=monomoots, search=search)

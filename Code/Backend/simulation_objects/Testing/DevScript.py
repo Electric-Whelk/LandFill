@@ -16,6 +16,7 @@ cache = Cache(app)
 
 close_examine = False
 timer = False
+montytest = True
 
 with app.app_context():
     i = 0
@@ -38,19 +39,29 @@ with app.app_context():
         #land_options = [data["AsIBuild"], data["NoFetch"]]
         #titles = ["AsIBuild", "NoFetch"]
 
-        land_options = [data["Handcrank"]]
-        titles = ["As i build"]
+        #land_options = [data["Handcrank"]]
+        #titles = ["As i build"]
 
         #land_options = [data["FullProportional"]]
         #titles = ["Prop"]
+
+        land_options = "hooty"
+        titles = "hoo"
+    if montytest:
+        deck = Deck()
+        deck.setup(data["Nonlands"], data["Format"], data["Quantity"], data["Commander"])
+        monty = MonteCarlo(deck, close_examine=close_examine, timer=timer, verbose=True)
+        monty.dev_run()
+        #replaced Glen Elendra Archmage with Helm of the Ghastlord
+
 
     for option in land_options:
         if not close_examine:
             print(titles[i])
         deck = Deck()
-        deck.setup(data["Nonlands"], data["Format"], data["Quantity"])
+        deck.setup(data["Nonlands"], data["Format"], data["Quantity"], data["Commander"])
         monty = MonteCarlo(deck, close_examine=close_examine, timer=timer)
-        monty.fill_heap(from_testlist=option)
+        monty.fill_heap_CONDEMNED(from_testlist=option)
         #monty.dev_run()
         #break
         for _ in range(1):

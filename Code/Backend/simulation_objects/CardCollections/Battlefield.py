@@ -11,6 +11,7 @@ from simulation_objects.Misc.Wodge import Wodge
 from ..GameCards.RampLands.RampLand import RampLand
 from simulation_objects.Misc.LandPermutationCache import LandPermutationCache
 from ..GameCards.SearchLands import SearchLand
+from ..Timer import functimer_once, functimer_perturn
 
 
 #global(big_ones) = 0
@@ -198,11 +199,9 @@ class Battlefield(CardCollection):
         divided = self.divide_monos_and_multis(available)
         #multimoots = self.get_multicolor_permutations(divided["multi"], divided["mono"], game)
         othermoots = self.get_multicolor_permutations_v2(divided["multi"], divided["mono"], divided["search"], game)
-        #print(f"Othermoots: {len(othermoots)}")
-        #print(self.lands_list())
-        #for m in othermoots:
-            #print(f"\t{m}")
-        #print("")
+        #print(othermoots["multis"])
+        #raise Exception("Stop!")
+
         self.permutations = othermoots["multis"]
         self.monomoots = othermoots["monos"]
         self.searchmoots = othermoots["search"]
@@ -302,15 +301,22 @@ class Battlefield(CardCollection):
             self.dummy_cache[key] = permutations
             return permutations
 
+    @functimer_perturn
     def recall_permutations(self, key, lands, game):
-        #print(key)
+        if len(key) == 0:
+            #print(f"Empty key: {key}")
+            return [()]
         if result := self.cache.get(key):
-            #print("Cache hit!")
-            #self.hit = True
+            #print(f"Recognised key {key}")
+            #end = time.time()vb
+            self.cache.hit()
+            #runtime = (end - start) * 3 * 7 * 1000
+            #print(f"Hit would add {runtime} seconds per 1000 games if representative")
             return result
         else:
+            self.cache.miss()
             #self.hit = False
-            print("Cache miss!")
+            #print(f"Cache miss for key {key}!")
 
             #print(f"{key} not in dummy_cache")
             groups = [land.live_prod(game) for land in lands]
@@ -334,6 +340,8 @@ class Battlefield(CardCollection):
             searchprods = search[0].conditions(game)
         else:
             searchprods = ()
+
+
 
 
         return {

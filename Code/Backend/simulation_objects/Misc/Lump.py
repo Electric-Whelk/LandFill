@@ -310,6 +310,8 @@ class Lump:
             if len(new_moot.pips) == 0:
                 generic_moot = True
             self.moots.append(new_moot)
+            if self.castable:
+                break
             #self.moots.append(Moot(option, pips, generic))
 
         self.cull_moots(generic_moot)
@@ -375,7 +377,7 @@ class Lump:
 
 
     def tap_mana(self, game):
-        if not self.searchland_present:
+        if self.searchland_present:
             crackmoots = [m for m in self.moots if m.castable and m.crack != None]
             anycrackmoots = [m for m in crackmoots if m.crack["color"] == "Any"]
             if len(anycrackmoots) > 0:

@@ -15,3 +15,6 @@ class SearchLand(Land):
     def searchable(self):
         return self._searchable
 
+    def ranking_category(self, monty):
+        return ["SearchLand"]
+

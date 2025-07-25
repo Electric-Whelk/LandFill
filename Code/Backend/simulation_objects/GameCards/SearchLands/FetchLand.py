@@ -93,7 +93,7 @@ class FetchLand(SearchLand):
             acceptable = [c for c in fetchable if
                           color in c.live_prod(game) and c.enters_untapped(game)]
         if len(acceptable) == 0:
-            raise Exception(f"{self.name}'s ability to tap for {color} has been exaggerated; only {fetchable} is fetchable")
+            raise Exception(f"{self.name}'s ability to tap for {color} has been exaggerated; only {fetchable} is fetchable (hand: {game.hand.lands_list()} board: {game.battlefield.lands_list()})")
         no_basics = self.filter_monocolours(acceptable, game)
         if color is None:
             self.determine_general_target(no_basics, game)

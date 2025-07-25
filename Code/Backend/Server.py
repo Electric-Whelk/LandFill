@@ -45,7 +45,7 @@ def lock():
     quantity = session["quantity"] = request.json.get("requestedQuantity")
 
     deck.setup(input_cards, format, quantity)
-    monty.fill_heap()
+    monty.fill_heap_CONDEMNED()
 
     return jsonify({"response": "Success - hey Leah shouldn't you be doing this with headers?"})
     #except Exception as e:

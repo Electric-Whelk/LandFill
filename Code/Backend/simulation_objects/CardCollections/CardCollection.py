@@ -9,10 +9,12 @@ from simulation_objects.GameCards import CommandTower, BondLand, DualLand, Battl
 from simulation_objects.GameCards.BasicLand import BasicLand
 from simulation_objects.GameCards.GameCard import GameCard
 from simulation_objects.GameCards.Land import Land
+from simulation_objects.GameCards.MiscLand import MiscLand
 from simulation_objects.GameCards.SearchLands import SearchLand
 from simulation_objects.GameCards.SearchLands.FetchLand import FetchLand
 from simulation_objects.GameCards.RampLands.FilterLand import FilterLand
 from simulation_objects.GameCards.TappedCycles.GuildGate import GuildGate
+from simulation_objects.GameCards.TappedCycles.TriTap import TriTap
 from simulation_objects.GameCards.UntappableCycles.RevealLand import RevealLand
 from simulation_objects.GameCards.RampLands.BounceLand import BounceLand
 from simulation_objects.GameCards.Spell import Spell
@@ -33,6 +35,9 @@ class CardCollection:
     @card_list.setter
     def card_list(self, cards: list[GameCard]):
         self._cards = cards
+
+    def length(self):
+        return len(self.card_list)
 
     #sublists
     def lands_list(self) -> list[Land]:
@@ -82,9 +87,9 @@ class CardCollection:
         self.card_list = [self.parse_GameCard(x, mandatory) for x in cards]
 
 
-    def parse_GameCard(self, card:Card, mandatory=False):
+    def parse_GameCard(self, card:Card, mandatory=False, commander=False):
         if not card.overall_land:
-            return Spell(card, mandatory)
+            return Spell(card, mandatory, commander=commander)
         else:
             cycle = card.cycle
             text = card.text
@@ -112,16 +117,18 @@ class CardCollection:
                     return ShockLand(card, mandatory)
                 case "Triomes":
                     return Triome(card, mandatory)
+                case "Tri-Color Taplands":
+                    return TriTap(card, mandatory)
                 case "Guildgates":
                     return GuildGate(card, mandatory)
-                case "Filter Lands":
-                    return FilterLand(card, mandatory)
+                #case "Filter Lands":
+                    #return FilterLand(card, mandatory)
                 case "Check Lands":
                     return CheckLand(card, mandatory)
                 case "Reveal Lands":
                     return RevealLand(card, mandatory)
-                case "Bounce Lands":
-                    return BounceLand(card, mandatory)
+                #case "Bounce Lands":
+                    #return BounceLand(card, mandatory)
                 case _:
                     return self.parse_land_by_name(card, mandatory)
 
@@ -142,7 +149,11 @@ class CardCollection:
             case "Command Tower":
                 return CommandTower(card, mandatory)
             case _:
-                return Land(card, mandatory)
+                return MiscLand(card, mandatory)
+
+    def print_all(self):
+        for card in self.card_list:
+            print(f"{card.name}")
 
 
 

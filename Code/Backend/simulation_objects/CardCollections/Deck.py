@@ -1,4 +1,5 @@
 from math import floor
+from itertools import combinations
 
 import numpy as np
 
@@ -16,24 +17,31 @@ class Deck(CardCollection):
         CardCollection.__init__(self)
         self._lands_requested = None
 
-    def setup(self, input_cards, format, quantity):
+    def setup(self, input_cards, format, quantity, commander_name, partner=None):
         self._format = self.parse_format_from_json(format)
 
         input_as_cards = self.parse_cards_from_json(input_cards)
-        self._name = "XavierSal"
         self.set_card_list_from_ORM(input_as_cards, mandatory=True)
+        self.set_commanders(commander_name, partner=partner)
+
         self._lands_requested = self.determine_lands_requested_from_json(quantity)
         self._size = self.determine_size()
-        self._color_id = self.determine_color_id(input_as_cards)
+        self._color_id = self.determine_color_id()
+        self._pie_slices = self.slice_the_pie(self._color_id)
         self._pips = self.determine_pips(input_as_cards)
+        self._colorless_pips = self._pips["C"] > 0
         self._colors_needed = self.determine_colors_needed()
         self._possible_lands = self.determine_possible_lands()
 
 
     #getters and setters
     @property
-    def name(self):
-        return self._name
+    def pie_slices(self):
+        return self._pie_slices
+
+    @property
+    def colorless_pips(self):
+        return self._colorless_pips
 
     @property
     def format(self) -> Format:
@@ -63,15 +71,59 @@ class Deck(CardCollection):
     def size(self) -> int:
         return self._size
 
+    @property
+    def commander(self):
+        return self._commander
+
+    @property
+    def partner(self):
+        return self._partner
+
     #setup functions
-    def determine_color_id(self, input_as_cards):
+    def slice_the_pie(self, color_id:list):
+        output = []
+        for r in range(2, len(color_id) + 1):
+            #print(f"R: {r}")
+            combos = list(combinations(color_id, r))
+            for c in combos:
+                output.append(list(c))
+        return output
+
+    def set_commanders(self, commander_name, partner=None):
+        commander = self.create_commander_gamecard(commander_name)
+        if partner is not None:
+            partner = self.create_commander_gamecard(partner)
+        self._commander = commander
+        self._partner = partner
+
+
+    def create_commander_gamecard(self, name):
+        as_card = self.get_card_by_name(name)
+        as_gamecard = self.parse_GameCard(as_card, mandatory=True, commander=True)
+        self.card_list.append(as_gamecard)
+        return as_gamecard
+
+
+    def determine_color_id_CONDEMNED(self, input_as_cards):
         output = []
         for card in input_as_cards:
             id = list(card.color_identity)
             for color in id:
                 if color not in output:
                     output.append(color)
+        print(f"Id: {output}")
         return output
+
+    def determine_color_id(self):
+        output = [x for x in self.commander.color_id]
+        if self.partner is not None:
+            for color in self.partner.color_id:
+                if color not in output:
+                    output.append(color)
+        return output
+
+
+
 
     def determine_colors_needed(self) -> list:
         all_colors = ["W", "U", "B", "R", "G", "C"]
@@ -180,6 +232,14 @@ class Deck(CardCollection):
             floored_lands[color] += 1
 
         return floored_lands
+
+    def within_color_identity(self, card:Card) -> bool:
+        as_list = list(card._color_identity)
+        output = True
+        for color in as_list:
+            if color not in self.color_id:
+                return False
+        return True
 
 
 
