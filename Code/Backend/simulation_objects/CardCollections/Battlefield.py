@@ -11,6 +11,7 @@ from simulation_objects.Misc.Wodge import Wodge
 from ..GameCards.RampLands.RampLand import RampLand
 from simulation_objects.Misc.LandPermutationCache import LandPermutationCache
 from ..GameCards.SearchLands import SearchLand
+from ..GameCards.SearchLands.FetchLand import FetchLand
 from ..Timer import functimer_once, functimer_perturn
 
 
@@ -97,6 +98,7 @@ class Battlefield(CardCollection):
     def untap(self, game):
         for card in self._cards:
             card.tapped = False
+
         if self.new_tapland:
             self.new_tapland = False
             self.reset_permutations(game)
@@ -199,6 +201,9 @@ class Battlefield(CardCollection):
         divided = self.divide_monos_and_multis(available)
         #multimoots = self.get_multicolor_permutations(divided["multi"], divided["mono"], game)
         othermoots = self.get_multicolor_permutations_v2(divided["multi"], divided["mono"], divided["search"], game)
+        l = len(othermoots["multis"])
+        if l > 500:
+            print(f"MOOTLENGTH: {l}")
         #print(othermoots["multis"])
         #raise Exception("Stop!")
 
@@ -301,7 +306,8 @@ class Battlefield(CardCollection):
             self.dummy_cache[key] = permutations
             return permutations
 
-    @functimer_perturn
+    #
+    #@functimer_perturn
     def recall_permutations(self, key, lands, game):
         if len(key) == 0:
             #print(f"Empty key: {key}")

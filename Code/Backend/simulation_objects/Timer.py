@@ -8,9 +8,9 @@ def functimer_perturn(func):
         result = func(*args, **kwargs)
         end = time.time()
         runtime = end-start
-        totaltime = runtime * 22000
+        totaltime = runtime * 7 * 1000
         if totaltime > 1:
-            print(f"{func.__name__} would add {totaltime} seconds")
+            print(f"{func.__name__} takes {totaltime} seconds per thousand games")
         #print(f"Finished {func.__name__} in {end - start:.4f} seconds.")
         return result
     return wrapper

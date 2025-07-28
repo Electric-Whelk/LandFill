@@ -8,7 +8,7 @@ from Extensions import db
 from simulation_objects.CardCollections.Deck import Deck
 from simulation_objects.CardCollections.MonteCarlo import MonteCarlo
 
-with open("XavierSal.json", "r") as file:
+with open("Rukarumel.json", "r") as file:
     data = json.load(file)
 
 app = create_app()
@@ -21,7 +21,7 @@ montytest = True
 with app.app_context():
     i = 0
     if close_examine:
-        land_options = [data['AsIBuild']]
+        land_options = [data['BounceLandsAhoy']]
     else:
         #tomorrow see if the results are starker if you start the game with everything better than a basic
         #and how a guildgate performs

@@ -128,7 +128,7 @@ class CardCollection:
                 case "Reveal Lands":
                     return RevealLand(card, mandatory)
                 #case "Bounce Lands":
-                    #return BounceLand(card, mandatory)
+                    #return BounceLand(card)
                 case _:
                     return self.parse_land_by_name(card, mandatory)
 

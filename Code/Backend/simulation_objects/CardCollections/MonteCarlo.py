@@ -2,6 +2,7 @@
 import random
 from copy import deepcopy
 
+import numpy
 from numpy.ma.core import set_fill_value
 
 from database_management.models.Card import Card
@@ -17,6 +18,7 @@ from simulation_objects.GameCards.GameCard import GameCard
 from simulation_objects.GameCards.Land import Land
 from simulation_objects.GameCards.SearchLands.FetchLand import FetchLand
 from simulation_objects.GameCards.TappedCycles.GuildGate import GuildGate
+from simulation_objects.GameCards.TappedCycles.Triome import Triome
 from simulation_objects.Misc.ColorPie import colortype_map
 from simulation_objects.Simulations.Test import Test
 from simulation_objects.Misc.LandPermutationCache import LandPermutationCache
@@ -32,6 +34,8 @@ class MonteCarlo(CardCollection):
         self._colorless_pips = deck.colorless_pips
         self._pie_slices = self.deck.pie_slices
         self._categories = [["SearchLand"]]
+        
+        self.halt = False
 
         #will figure out when to set the below
         self._prioritization= {
@@ -374,8 +378,13 @@ class MonteCarlo(CardCollection):
         print(f"Snarls: {[x for x in lands if isinstance(x, RevealLand)]}")
         print(f"Pains: {[x for x in lands if isinstance(x, PainLand)]}")
         print(f"Horizons: {[x for x in lands if isinstance(x, HorizonLand)]}")
+        print(f"Triomes: {[x for x in lands if isinstance(x, Triome)]}")
 
         print(f"Swapped nonbasics: {[self.swapped_out_nonbasics]}")
+        print(f"Totalbasics {len([x for x in lands if isinstance(x, BasicLand)])}:")
+        for x in lands:
+            if isinstance(x, BasicLand):
+                print(f"\t{x.name}")
 
 
 
@@ -388,12 +397,15 @@ class MonteCarlo(CardCollection):
 
 
     def check_for_halt(self, scores, test) -> bool:
-        if test.like_for_like:
+        if self.halt:
             return True
+
+        #if test.like_for_like:
+            #return True
 
         success_number = 5
         meaningless_improvement = 0.02
-        give_up_number = 300
+        give_up_number = 200
         l = len(scores)
 
         if l > give_up_number:
@@ -419,6 +431,7 @@ class MonteCarlo(CardCollection):
         print("")
         print(f"Cache at length {len(self.cache.cache)}")
         worst_card = prior_test.worst_performing_card
+        prev_score = prior_test.game_proportions
         if not isinstance(worst_card, BasicLand):
             self.swapped_out_nonbasics.append(worst_card)
 
@@ -438,8 +451,21 @@ class MonteCarlo(CardCollection):
             tested_cards.append(trial_card)
 
         tested_cards.sort(key=lambda x: x.card_test_score, reverse=True)
-        #for c in tested_cards:
-            #print(f"\t{c} -> {c.card_test_score}")
+        tiebreaker_candidates = []
+        for card in tested_cards:
+            if card.card_test_score >= champ.card_test_score - 0.01:
+                tiebreaker_candidates.append(card)
+            else:
+                break
+
+        for c in tested_cards:
+            print(f"\t{c} -> {c.card_test_score} ({numpy.mean(c.options)})")
+
+        if champ.card_test_score < prev_score:
+            self.halt = True
+
+        champ = self.break_tie(tiebreaker_candidates)
+
 
         self.give(self.deck, champ)
         self.reset_scores(cards_to_test)
@@ -449,6 +475,20 @@ class MonteCarlo(CardCollection):
         if worst_card.name == champ.name:
             t.like_for_like = True
         return t
+
+    def break_tie(self, candidates):
+        if len(candidates) == 1:
+            return candidates[0]
+
+
+        output = max(candidates, key=lambda x: numpy.mean(x.options))
+
+        if output != candidates[0]:
+            print(f"Shifting {output} ({float(numpy.mean(output.options))}) ahead of {candidates[0]} ({float(numpy.mean(candidates[0].options))})")
+
+        return output
+
+
 
     def get_cards_to_test(self) -> list:
         output = self.get_unique_cards()
@@ -513,7 +553,7 @@ class MonteCarlo(CardCollection):
         for card in all:
             if self.deck.within_color_identity(card):
                 as_GC = self.parse_GameCard(card, mandatory=False)
-                if not isinstance(as_GC, MiscLand) and not self.irrelevant_fetchland(as_GC):
+                if not isinstance(as_GC, MiscLand) and not self.irrelevant_fetchland(as_GC, exclude_offcolors=True):
                     self.card_list.append(as_GC)
 
         self.prioritize_heap(self.prioritization)
@@ -525,8 +565,13 @@ class MonteCarlo(CardCollection):
             land.priority = prioritization[land.cycle]
 
 
-    def irrelevant_fetchland(self, card):
+    def irrelevant_fetchland(self, card, exclude_offcolors = False):
         if not isinstance(card, FetchLand):
+            return False
+        if exclude_offcolors:
+            for landtype in card.searchable:
+                if colortype_map[landtype] not in self.deck.colors_needed:
+                    return True
             return False
         for landtype in card.searchable:
             if colortype_map[landtype] in self.deck.colors_needed:

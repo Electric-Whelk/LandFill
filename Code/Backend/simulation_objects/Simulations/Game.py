@@ -68,8 +68,12 @@ class Game(Simulation):
         self.copydeck = None
         self.copyhand = None
 
+        self._found_target = False
+        self._seeking_target = None
+
 
     #getters
+
     @property
     def total_turns(self) -> int:
         return self._total_turns
@@ -143,6 +147,14 @@ class Game(Simulation):
     def turn(self, turn):
         self._turn = turn
 
+    @property
+    def seeking_target(self):
+        return self._seeking_target
+    @seeking_target.setter
+    def seeking_target(self, value):
+        self._seeking_target = value
+
+
     #psuedogetters
     @property
     def max_mana(self) -> int:
@@ -151,6 +163,17 @@ class Game(Simulation):
     @property
     def lands_in_hand(self) -> list:
         return [l for l in self.hand.card_list if isinstance(l, Land)]
+
+    @property
+    def found_target(self):
+        if self.seeking_target is None:
+            return True
+        if self._found_target == True:
+            return True
+        if self.check_card_made_available(self.seeking_target):
+            self._found_target = True
+            return True
+        return False
 
     def absent_pips(self, exclude=None):
         req = self.required_pips()
@@ -207,9 +230,6 @@ class Game(Simulation):
         #self.total_spent_mana /= self.total_played_lands #NOTE THAT THIS INCLUDES FETCHED LANDS
         #self.total_spent_mana /= self.castable_cmc_in_hand
         self.leftover_mana = self.total_theoretcial_mana - self.total_spent_mana
-        if self.leftover_mana == 0:
-            if self.wasteless_turns != self.total_turns:
-                print(f"Uh oh!")
 
 
 
@@ -243,10 +263,11 @@ class Game(Simulation):
 
 
     def run(self, card_to_test=None):
-        #samplehand = ["Putrefy", "Lightning Greaves", "Misty Rainforest", "Island", "Mystic Remora", "Forest", "Llanowar Wastes"] #Misty Rainforest/Watery Grave
+        #samplehand = ["Hallowed Fountain", "Misty Rainforest"] #Misty Rainforest/Watery Grave
         #topdeck =  ["Phyrexian Arena","Verdant Catacombs", "Swamp", "Risen Reef"] #Verdat Catacombs/Breeding Pool
         #self.sample_hand(samplehand, topdeck=topdeck)
         start = time.time()
+        self.seeking_target = card_to_test
 
         if self.prototype_comparison == None:
             self.setup_game(card_to_test = card_to_test)
@@ -336,11 +357,12 @@ class Game(Simulation):
         #if len([x for x in self.hand.lands_list() if isinstance(x, SearchLand)]) > 0:
             #self.verbose = True
         self.battlefield.untap(self)
-        self.battlefield.reset_permutations(self)
+        #self.battlefield.reset_permutations(self)
         self.draw()
         self.vprint(f"Hand: {self.hand.card_list}")
         self.vprint(f"Battlefield: {self.battlefield.card_list} ")
-        self.determine_play()
+        #self.determine_play()
+        self.determine_play_v2()
         #self.play_land_at_random()
         self.move_through_phases()
         #if len(self.hand.card_list) == 0:
@@ -369,15 +391,18 @@ class Game(Simulation):
         #deck.shuffle()
         mull = True
         i = 0
-        while mull:#and i < 2
+        while mull and i < 2:
             deck.shuffle()
             self.fill_command_zone()
             self.ensure_visible_card(card_to_test)
             self.draw(7)#restricting to two mulls
-            i += 1
             mull = self.mulligan(i)
-        #if i == 2:
-            #self.draw(7)
+            if mull:
+                i += 1
+        if i == 2:
+            self.fill_command_zone()
+            self.ensure_visible_card(card_to_test)
+            self.draw(7)
         #assert(len(self.lands_in_hand) != 0)
 
     def fill_command_zone(self):
@@ -395,9 +420,186 @@ class Game(Simulation):
 
 
     def tap_unused_lands(self):
-        for land in self.battlefield.lands_list():
+        pass
+
+        """for land in self.battlefield.lands_list():
             if not land.tapped:
-                land.conclude_turn(self)
+                land.conclude_turn(self)"""
+
+
+    #VERSION 2
+    #@functimer_perturn
+    def determine_play_v2(self):
+        current_max = self.battlefield.max_mana()
+        potential_max = self.maximum_playable_mana() + current_max
+        lands = self.lands_in_hand
+
+        self.lumps = self.generate_lumps(maxi=potential_max,
+                                    mini=current_max,
+                                    max_plays=3,
+                                    found=self.found_target)
+        #add a null lump to play if nothing is available - helps with the searching
+        null = Lump({})
+        self.lumps.append(null)
+
+        self.master_lump = self.create_lumps(self.hand.spells_list())[0]
+
+        if len(lands) > 0:
+            self.play_land_and_spell()
+        else:
+            self.play_spell_no_land()
+
+        self.assess_turn_score()
+
+
+
+    def play_land_and_spell(self):
+        lands = self.lands_in_hand
+        played_lands = self.battlefield.lands_list()
+
+        for land in lands:
+            self.hand.give(self.battlefield, land)
+            land.tapped = not land.enters_untapped(self)
+            land.tapped = not land.enters_untapped(self)
+            played_lands.append(land)
+            land.setpermits([x for x in self.lumps if x.set_playability(played_lands, self)])
+            played_lands.remove(land)
+            self.battlefield.give(self.hand, land)
+
+
+        self.vprint(f"Lands: {lands}")
+        allows_largest = self.filter_by_largest(lands)
+        self.vprint(f"Allows largest: {allows_largest}")
+        filtered_as_taplands = self.filter_as_taplands(allows_largest)
+        self.vprint(f"Filtered as taplands: {filtered_as_taplands}")
+        filtered_by_most_produced = self.filter_by_most_produced(filtered_as_taplands, library=False)
+        self.vprint(f"Filtered by most_produced: {filtered_by_most_produced}")
+        to_play = filtered_by_most_produced[0]
+
+        largest = to_play.largest_lump
+        self.play_land_v2(to_play)
+
+        largest.mapping = to_play.proposed_mapping
+
+        self.play_lump_v2(to_play.largest_lump)
+        for land in lands:
+            land.reset_permits()
+
+    def play_spell_no_land(self):
+        castable = [l for l in self.lumps if l.set_playability(self.battlefield.lands_list(), self)]
+        by_size = max(castable, key=lambda l: l.cmc)
+
+        self.play_lump_v2(by_size)
+
+    def filter_by_most_produced(self, lands, library=False):
+        if library == False:
+            relevant_lands = self.battlefield.lands_list()
+        else:
+            relevant_lands = []
+            relevant_lands.extend(self.battlefield.lands_list())
+            relevant_lands.extend(self.hand.lands_list())
+
+        available = self.get_available_pips(relevant_lands)
+        self.vprint(f"Available: {available}")
+        needed = [x for x in self.master_lump.colorpips]
+        self.vprint(f"Needed: {needed}")
+        self.vprint(f"Needed as set: {set(needed)}")
+        absent = self.calculate_absence(needed, available)
+        self.vprint(f"Absent: {absent}")
+
+        biggest_contributors = []
+        for land in lands:
+            land.contribution = len(self.calculate_absence(absent, land.live_prod(self)))
+            self.vprint(f"Land: {land} contribution: {land.contribution}")
+            if biggest_contributors == [] or land.contribution < biggest_contributors[0].contribution:
+                biggest_contributors = [land]
+            elif land.contribution == biggest_contributors[0].contribution:
+                biggest_contributors.append(land)
+
+        try:
+            max_colors = max([len(x.live_prod(self)) for x in biggest_contributors])
+        except ValueError:
+            max_colors = 0
+        return [x for x in biggest_contributors if len(x.live_prod(self)) >= max_colors]
+
+    def calculate_absence(self, needed, available):
+        ncopy = [x for x in needed]
+        for item in available:
+            try:
+                ncopy.remove(item)
+            except ValueError:
+                pass
+        return ncopy
+
+
+    def filter_as_taplands(self, lands):
+        taplands = [x for x in lands if not x.enters_untapped(self)]
+        if len(taplands) > 0:
+            return taplands
+        else:
+            return lands
+
+    def filter_by_largest(self, lands):
+        biggest_enabled = max([l.largest_cmc for l in lands])
+        return [l for l in lands if l.largest_cmc >= biggest_enabled]
+
+    def get_available_pips(self, lands):
+        output = []
+        for land in lands:
+            output.extend(land.live_prod(self))
+        return output
+
+    def generate_lumps(self, maxi = None, mini = None, max_plays = None, found = False):
+        playable = [x for x in self.hand.spells_list() if x.cmc[0] <= maxi]
+        upper_limit = min(maxi, max_plays) + 1
+        output = []
+        for r in range(1, upper_limit):
+            combos = combinations(playable, r)
+            for c in combos:
+                summed = sum([x.cmc[0] for x in c])
+                if summed <= maxi:
+                    if found and summed >= mini:
+                        output.extend(self.create_lumps(c))
+                    else:
+                        output.extend(self.create_lumps(c))
+        return output
+
+
+    def play_lump_v2(self, lump):
+        try:
+            lump.tap_mana_v2(self)
+            if lump.cmc > self.battlefield.max_mana():
+                print(f"Uh oh - casting {lump} on a battlefield of {self.battlefield.lands_list()}")
+            self.spent_this_turn = lump.cmc
+            for spell in lump.to_cast:
+                self.total_spent_mana += spell.cmc[0]
+                self.vprint(f"Playing {spell} at cost {spell.cmc[0]}...")
+                self.hand.give(self.battlefield, spell)
+        except AttributeError as e:
+            self.vprint("No playable lumps")
+
+    def play_land_v2(self, land, library = False):
+        if land is not None:
+            if library:
+                self.vprint(f"Fetching {land} from library")
+                self.deck.give(self.battlefield, land)
+            else:
+                self.vprint(f"Playing {land}...")
+                self.hand.give(self.battlefield, land)
+            land.run_etb(self)
+            land.tapped = not land.enters_untapped(self)
+            self.played_lands.append(land)
+            self.total_played_lands += 1
+        else:
+            self.vprint("No land to play")
+
+
+    def maximum_playable_mana(self):
+        #this will basically be 1 if there is a land in your hand, 0 otherwise
+        #possibly 2 if we're including things like ancient tomb
+        #but this does NOT come back as zero if you only have taplands
+        #because taplands must be punished
+        return 1
 
 
     #game actions
@@ -483,6 +685,7 @@ class Game(Simulation):
         new_playable = []
         for lump in self.lumps:
             lump.parse_moots(new_moots, monoprods=new_monos, search=search)
+            #assert(lump.castable == lump.set_playability(self.battlefield.lands_list(), self))
             if lump.castable:
                 new_playable.append(lump)
         self.options_per_turn += len(new_playable)
@@ -534,18 +737,13 @@ class Game(Simulation):
             for c in combos:
                 summed = sum([x.cmc[0] for x in c])
                 if summed <= max:
-                    output.extend(self.create_lumps(c))
+                    if self.found_target:
+                        if summed >= max - 1:
+                            output.extend(self.create_lumps(c))
+                    else:
+                        output.extend(self.create_lumps(c))
 
-                """
-                if self.prototype_comparison is None:
-                    output.extend(self.create_lumps(c))
-                else:
-                    #print(f"c:{c} for max:{max}")
-                    summed = sum([x.cmc[0] for x in c])
-                    self.vprint(f"{c} summed to {summed} for max {max}")
-                    #print(f"Summed: {summed}")
-                    if summed <= max:
-                        output.extend(self.create_lumps(c))"""
+
 
             #print("")
 
@@ -569,8 +767,7 @@ class Game(Simulation):
                         output.append(card)
         return output
 
-
-
+    @functimer_perturn
     def determine_play(self):
         lands = self.get_playable_lands()
         self.vprint(f"begnning turn {self.turn} with {lands} in hand and {self.battlefield.lands_list()} on battlefield {[x.live_prod(self) for x in self.battlefield.lands_list()]}")
@@ -588,6 +785,7 @@ class Game(Simulation):
         #this isn't QUITE going to work because it doesn't account for newly played lands
         for lump in self.lumps:
             lump.parse_moots(moots, monoprods=monomoots, search=search)
+            #print("trying it!")
 
 
         for lump in self.spell_lumps:

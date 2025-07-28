@@ -1,8 +1,12 @@
+from copy import deepcopy
+
 from simulation_objects.GameCards.GameCard import GameCard
 #import simulation_objects.Simulations as Simulations
 #from simulation_objects.CardCollections import Deck
 import numpy
 from scipy.stats import skew, kurtosis
+
+
 
 
 class Land(GameCard):
@@ -34,7 +38,54 @@ class Land(GameCard):
         #monte carlo attributes
         self._card_test_score = None
 
+        #version 2 attributes
+        self._largest_lump = None
+        self._largest_cmc = 0
+        self._options = []
+        self._proposed_mapping = None
+        self._generic_price = 2
+        self._color_price = 2
+
+
     #getters and setters
+    @property
+    def generic_price(self):
+        return self._generic_price
+
+    @property
+    def color_price(self):
+        return self._color_price
+
+
+    @property
+    def proposed_mapping(self):
+        return self._proposed_mapping
+    @proposed_mapping.setter
+    def proposed_mapping(self, value):
+        self._proposed_mapping = value
+
+    @property
+    def largest_lump(self):
+        return self._largest_lump
+    @largest_lump.setter
+    def largest_lump(self, value):
+        self._largest_lump = value
+
+    @property
+    def largest_cmc(self):
+        return self._largest_cmc
+    @largest_cmc.setter
+    def largest_cmc(self, value):
+        self._largest_cmc = value
+
+    @property
+    def options(self):
+        return self._options
+    @options.setter
+    def options(self, value):
+        self._options = value
+
+
     @property
     def proportions(self):
         return self._proportions
@@ -110,9 +161,60 @@ class Land(GameCard):
         self._permatap = value
 
 
+    #VERSION 2
+    def setpermits(self, lumps):
+        self.options.append(len(lumps))
+        for lump in lumps:
+            if lump.cmc >= self.largest_cmc:
+                self.largest_cmc = lump.cmc
+                self.largest_lump = lump
+                self.proposed_mapping = lump.mapping
+
+
+    def set_price(self, game, color):
+        if color == "None":
+            return self.generic_price
+        if not self.tapped:
+            if color == "Gen":
+                return self.generic_price
+            if color in self.live_prod(game):
+                return self.color_price
+        return 9999
+
+
+
+    def reset_permits(self):
+        self.largest_lump = None
+        self.proposed_mapping = None
+        self.largest_cmc = 0
+        pass
+
+
+    def tap_for_v2(self, color, game):
+        self.tap_for_specific_v2(color, game)
+        self.tap_for_general_v2(color, game)
+
+    def tap_for_general_v2(self, color, game):
+        self.tapped = True
+
+    def tap_for_specific_v2(self, color, game):
+        pass
+
+
+
+
     #pseudogetters
     def live_prod(self, game) -> list[str]:
         return self._produced
+
+    def live_prod_assign(self, game):
+        if self.tapped:
+            return ["None"]
+        else:
+            output = deepcopy(self.live_prod(game))
+            output.append("Gen")
+            output.append("None")
+            return output
 
 
     #determine play state
@@ -187,6 +289,7 @@ class Land(GameCard):
         self.above_average_wasteless_games = False
         self.above_average_wasteless_turns = False
         self.proportions = 0
+        #self.options = []
 
     def to_mean(self):
         self.grade["Mana"] /= self.grade["Appearances"]

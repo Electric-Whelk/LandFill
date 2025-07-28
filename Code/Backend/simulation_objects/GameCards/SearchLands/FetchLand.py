@@ -7,6 +7,13 @@ class FetchLand(SearchLand):
     def __init__(self, card, mandatory):
         SearchLand.__init__(self, card, False, mandatory)
 
+
+    #version 2
+    def get_searchable_lands(self, game):
+        return self.search_deck(game)
+
+
+
     def determine_general_target(self, input:list, game, specific=True):
         lumps = game.spell_lumps
        # if len(lumps) == 0:

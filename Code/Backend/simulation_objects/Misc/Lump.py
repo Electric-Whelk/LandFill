@@ -1,3 +1,4 @@
+
 from copy import deepcopy
 
 from .ColorPie import piepips
@@ -6,6 +7,12 @@ from simulation_objects.GameCards.BasicLand import BasicLand
 from simulation_objects.Misc.WodgeSocket import WodgeSocket
 from .Moot import Moot
 
+import numpy as np
+import scipy.optimize
+
+from ..GameCards.RampLands.RampLand import RampLand
+from ..Timer import functimer_once
+
 
 class Lump:
     def __init__(self, casting_list: {Spell:int}):
@@ -13,6 +20,13 @@ class Lump:
         self._cost = self.parse_cost(casting_list, self._to_cast)
         self._cmc = self.parse_cmc(self._cost)
         self._x = self._cost["X"] != 0
+        self._pips = self.parse_pips_as_list(self._cost)
+        self._colorpips = [x for x in self._pips if x not in ["Gen", "X"]]
+
+        #version 2
+        self._playable = False
+        self._mapping = {}
+
         self._colorless = self.parse_colorless(self._cost)
         self._wodges = []
         self._playmakers = []
@@ -25,6 +39,28 @@ class Lump:
 
     def __repr__(self):
         return str(self._to_cast)
+
+    @property
+    def playable(self):
+        return self._playable
+    @playable.setter
+    def playable(self, value):
+        self._playable = value
+
+    @property
+    def mapping(self):
+        return self._mapping
+    @mapping.setter
+    def mapping(self, value):
+        self._mapping = value
+
+    @property
+    def pips(self):
+        return self._pips
+
+    @property
+    def colorpips(self):
+        return self._colorpips
 
     @property
     def searchland_present(self):
@@ -94,6 +130,65 @@ class Lump:
     @castable_with_generic.setter
     def castable_with_generic(self, value:bool):
         self._castable_with_generic = value
+
+
+    #VERSION 2
+
+    def set_playability(self, lands, game):
+        if self.cmc > len(lands):
+            return False
+        if len(lands) == 0 and self.cmc == 0:
+            return True
+
+        self.account_for_ramplands(lands)
+
+
+        invalid = 9999
+        mana_required = self.mana_as_list(len(lands))
+        weighted = np.array([[land.set_price(game, m) for m in mana_required] for land in lands])
+        row, col = scipy.optimize.linear_sum_assignment(weighted)
+        cost = sum([weighted[row[i]][col[i]] for i in range(len(lands))])
+        self.mapping = {}
+        for i in range(len(lands)):
+            self.mapping[lands[row[i]]] = mana_required[col[i]]
+        return cost < invalid
+
+    def account_for_ramplands(self, lands):
+        doppelgangers = []
+        for land in lands:
+            if isinstance(land, RampLand):
+                doppelgangers.append(land)
+        lands.extend(doppelgangers)
+
+    def mana_as_list(self, length):
+            output = []
+            for item in self.cost:
+                for _ in range(self.cost[item]):
+                    output.append(item)
+            while len(output) < length:
+                output.append("None")
+            return output
+
+
+    def tap_mana_v2(self, game):
+        for key in self.mapping:
+            key.tap_for_v2(self.mapping[key], game)
+
+
+
+
+
+
+
+    def parse_pips_as_list(self, cost):
+        output = []
+        for initial in cost:
+            for _ in range(cost[initial]):
+                output.append(initial)
+        return output
+
+
+
 
     def mana_to_seek(self):
         output = []
@@ -215,6 +310,7 @@ class Lump:
             for color in wubrg:
                 output[color] += cost[color]
         return output
+
 
     def parse_moots(self, input:list, monoprods = [], search = ()):
         self.tribute = False

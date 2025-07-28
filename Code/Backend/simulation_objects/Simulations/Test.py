@@ -15,7 +15,7 @@ from simulation_objects.Timer import functimer_once
 
 
 class Test(Simulation):
-    def __init__(self, deck, cache, turns=7, runs=None, ct_runs=100, close_examine=False, timer=False):
+    def __init__(self, deck, cache, turns=7, runs=None, ct_runs=500, close_examine=False, timer=False):
         Simulation.__init__(self, deck)
         self._cache = cache
         self._wasteless_turns = 0
@@ -36,7 +36,7 @@ class Test(Simulation):
         if self._close_examine:
             self._runs = 1
         else:
-            self._runs = 500 #CHANGE BACK TO ONE THOUSAND
+            self._runs = 2000 #CHANGE BACK TO ONE THOUSAND
         if runs != None:
             self._runs = runs
 
@@ -234,6 +234,7 @@ class Test(Simulation):
 
 
     def run_card_test(self, card_in):
+        card_in.options = []
         #wasted_per_game = [] #TEST VARIABLE
         wasteless_turns = 0
         for _ in range(0, self.ct_runs):
