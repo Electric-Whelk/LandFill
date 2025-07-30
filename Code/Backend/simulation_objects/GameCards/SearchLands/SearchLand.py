@@ -35,8 +35,11 @@ class SearchLand(Land):
         try:
             target = taplands_prioritized[0]
             game.play_land_v2(target, library=True)
-        except ValueError or IndexError:
+        except ValueError:
             print(f"Had no fetch options on battlefield {game.battlefield.cards_list} and hand {game.hand.cards_list}")
+        except IndexError:
+            print(f"Had no fetch options on battlefield {game.battlefield.cards_list} and hand {game.hand.cards_list}")
+
 
 
 

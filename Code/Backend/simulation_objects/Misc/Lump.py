@@ -10,8 +10,11 @@ from .Moot import Moot
 import numpy as np
 import scipy.optimize
 
+from ..GameCards.PermaUntapped.FilterLand import FilterLand
 from ..GameCards.RampLands.RampLand import RampLand
 from ..Timer import functimer_once
+
+from itertools import permutations
 
 
 class Lump:
@@ -22,6 +25,7 @@ class Lump:
         self._x = self._cost["X"] != 0
         self._pips = self.parse_pips_as_list(self._cost)
         self._colorpips = [x for x in self._pips if x not in ["Gen", "X"]]
+        self._commander = len([x for x in self._to_cast if x.commander]) > 0
 
         #version 2
         self._playable = False
@@ -39,6 +43,10 @@ class Lump:
 
     def __repr__(self):
         return str(self._to_cast)
+
+    @property
+    def commander(self):
+        return self._commander
 
     @property
     def playable(self):
@@ -134,13 +142,16 @@ class Lump:
 
     #VERSION 2
 
-    def set_playability(self, lands, game):
-        if self.cmc > len(lands):
-            return False
-        if len(lands) == 0 and self.cmc == 0:
-            return True
+    def set_playability(self, lands, game, filter_subversion = False):
 
-        self.account_for_ramplands(lands)
+        if not filter_subversion:
+            if self.cmc > len(lands):
+                return False
+            if len(lands) == 0 and self.cmc == 0:
+                return True
+
+
+            self.account_for_ramplands(lands)
 
 
         invalid = 9999
@@ -149,9 +160,86 @@ class Lump:
         row, col = scipy.optimize.linear_sum_assignment(weighted)
         cost = sum([weighted[row[i]][col[i]] for i in range(len(lands))])
         self.mapping = {}
-        for i in range(len(lands)):
-            self.mapping[lands[row[i]]] = mana_required[col[i]]
-        return cost < invalid
+        output = cost < invalid
+        if output:
+            for i in range(len(lands)):
+                self.mapping[lands[row[i]]] = mana_required[col[i]]
+        if not output:
+            if not filter_subversion:
+                if game.battlefield.filterlands_present():
+                    return self.account_for_filterlands(lands, game)
+
+        #if filter_subversion:
+            #print(f"\t\t\tChecking playabilility for {lands} -> {output}")
+            #for land in lands:
+                #print(f"\t\t\t\t{land} -> {land.live_prod_assign(game)} -> {land.tapped}")
+
+        return output
+
+    def account_for_filterlands(self, lands, game):
+        #print(f"\tAccounting for filterlands for {self} ({lands})")
+        if not self.check_filterland_feasible(lands):
+            return False
+
+        divided = self.divide_filters(lands)
+        normals = divided["normals"]
+        filters = divided["filters"]
+
+        filterperms = self.get_filter_permutations(filters)
+        for perm in filterperms:
+            #print(f"\tRunning filterperm {perm} for lump {self}")
+            combinations = self.assign_filter_combinations(perm, normals, game)
+            for combination in combinations:
+                if self.set_playability(combination, game, filter_subversion = True):
+                    return True
+
+        return False
+
+    def assess_filter_combinations(self, combos, game):
+
+        pass
+
+    def assign_filter_combinations(self, filters, normals, game):
+        ncopy = [[x for x in normals]]
+        for filter in filters:
+            ncopy = self.get_filter_possibilties(filter, ncopy, game)
+        return ncopy
+
+    def get_filter_possibilties(self, filter, meta_normals, game):
+        output = []
+        #tmp = deepcopy(meta_normals)
+        for sublist in meta_normals:
+
+            candidates = [x for x in sublist if x.produces_at_least_one(filter.required, game)]
+            for candidate in candidates:
+                permutation = [x for x in sublist if x != candidate]
+                permutation.extend(filter.sublands)
+                output.append(permutation)
+            sublist.append(filter)
+            output.append(sublist)
+        #print(f"\t\tFor {filter} and meta normals: {tmp}, output is {output}")
+        return output
+
+
+
+
+
+    def get_filter_permutations(self, filters):
+        output = list(permutations(filters))
+        return output
+
+    def divide_filters(self, lands) -> dict:
+        filters = []
+        normals = []
+        for land in lands:
+            if isinstance(land, FilterLand):
+                filters.append(land)
+            else:
+                normals.append(land)
+        return {"normals": normals, "filters": filters}
+
+    def check_filterland_feasible(self, lands) -> bool:
+        return True
 
     def account_for_ramplands(self, lands):
         doppelgangers = []

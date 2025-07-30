@@ -8,7 +8,7 @@ from Extensions import db
 from simulation_objects.CardCollections.Deck import Deck
 from simulation_objects.CardCollections.MonteCarlo import MonteCarlo
 
-with open("Rukarumel.json", "r") as file:
+with open("XavierSal.json", "r") as file:
     data = json.load(file)
 
 app = create_app()
@@ -21,7 +21,7 @@ montytest = True
 with app.app_context():
     i = 0
     if close_examine:
-        land_options = [data['BounceLandsAhoy']]
+        land_options = [data['WithFilters']]
     else:
         #tomorrow see if the results are starker if you start the game with everything better than a basic
         #and how a guildgate performs
@@ -51,7 +51,8 @@ with app.app_context():
         deck = Deck()
         deck.setup(data["Nonlands"], data["Format"], data["Quantity"], data["Commander"])
         monty = MonteCarlo(deck, close_examine=close_examine, timer=timer, verbose=True)
-        monty.dev_run()
+        #monty.dev_run()
+        monty.simulated_annealing_method()
         #replaced Glen Elendra Archmage with Helm of the Ghastlord
 
 

@@ -5,4 +5,5 @@ from .Spell import Spell
 from .UniqueLands.UniqueLand import UniqueLand
 from .UniqueLands.CommandTower import CommandTower
 from .UntappableCycles import *
+from .TappedCycles import *
 from .MiscLand import MiscLand

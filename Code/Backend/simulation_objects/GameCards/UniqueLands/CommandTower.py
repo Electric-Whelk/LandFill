@@ -3,6 +3,9 @@ from .UniqueLand import UniqueLand
 
 
 class CommandTower(UniqueLand):
+    def __init__(self, card, mandatory=False):
+        UniqueLand.__init__(self, card, mandatory=mandatory)
+
 
     def live_prod(self, game) -> list[str]:
         return game.deck.color_id

@@ -3,6 +3,7 @@ import random
 from copy import deepcopy
 
 import numpy
+from numpy import median
 from numpy.ma.core import set_fill_value
 
 from database_management.models.Card import Card
@@ -19,7 +20,7 @@ from simulation_objects.GameCards.Land import Land
 from simulation_objects.GameCards.SearchLands.FetchLand import FetchLand
 from simulation_objects.GameCards.TappedCycles.GuildGate import GuildGate
 from simulation_objects.GameCards.TappedCycles.Triome import Triome
-from simulation_objects.Misc.ColorPie import colortype_map
+from simulation_objects.Misc.ColorPie import colortype_map, landtype_map
 from simulation_objects.Simulations.Test import Test
 from simulation_objects.Misc.LandPermutationCache import LandPermutationCache
 from simulation_objects.Timer import functimer_perturn, functimer_once
@@ -40,6 +41,7 @@ class MonteCarlo(CardCollection):
         #will figure out when to set the below
         self._prioritization= {
             "Command Tower": 1,
+            "Filter Lands": 1,
             "Triomes": 1,
             "Shock Lands": 1,
             "Basic Lands": 1,
@@ -47,11 +49,12 @@ class MonteCarlo(CardCollection):
             "Fetch Lands": 1,
             "Tri-Color Taplands": 2,
             "Bond Lands": 2,
+            "Verge Lands": 2,
             "Pain Lands": 2,
             "Horizon Lands": 2,
             "Check Lands": 3,
             "Reveal Lands": 3,
-            "Battle Lands": 3,
+            "Battle Lands": 2,
             "Fast Lands": 3,
             "Slow Lands": 3,
             "Guildgates": 4
@@ -380,7 +383,7 @@ class MonteCarlo(CardCollection):
         print(f"Horizons: {[x for x in lands if isinstance(x, HorizonLand)]}")
         print(f"Triomes: {[x for x in lands if isinstance(x, Triome)]}")
 
-        print(f"Swapped nonbasics: {[self.swapped_out_nonbasics]}")
+        #print(f"Swapped nonbasics: {[self.swapped_out_nonbasics]}")
         print(f"Totalbasics {len([x for x in lands if isinstance(x, BasicLand)])}:")
         for x in lands:
             if isinstance(x, BasicLand):
@@ -398,12 +401,13 @@ class MonteCarlo(CardCollection):
 
     def check_for_halt(self, scores, test) -> bool:
         if self.halt:
+            print("Halting because the score has decreased")
             return True
 
         #if test.like_for_like:
             #return True
 
-        success_number = 5
+        success_number = 7
         meaningless_improvement = 0.02
         give_up_number = 200
         l = len(scores)
@@ -458,33 +462,51 @@ class MonteCarlo(CardCollection):
             else:
                 break
 
+
         for c in tested_cards:
-            print(f"\t{c} -> {c.card_test_score} ({numpy.mean(c.options)})")
+            print(f"\t{c} -> {c.card_test_score} ({median(c.options)})")
+
+        champ = self.break_tie(tiebreaker_candidates)
+        #champ = self.break_tie_median(tiebreaker_candidates)
 
         if champ.card_test_score < prev_score:
             self.halt = True
 
-        champ = self.break_tie(tiebreaker_candidates)
+        if not self.halt:
 
 
-        self.give(self.deck, champ)
-        self.reset_scores(cards_to_test)
-        t.hill_climb_test()
-        self.vprint(f"Swapped {worst_card} for {champ} ({t.game_proportions})")
-        self.cache.compare()
-        if worst_card.name == champ.name:
-            t.like_for_like = True
+
+
+            self.give(self.deck, champ)
+            self.reset_scores(cards_to_test)
+            t.hill_climb_test()
+            self.vprint(f"Swapped {worst_card} for {champ} ({t.game_proportions})")
+            self.cache.compare()
+            if worst_card.name == champ.name:
+                t.like_for_like = True
+        print(f"Halting at prior test score {prior_test.game_proportions}")
         return t
 
     def break_tie(self, candidates):
         if len(candidates) == 1:
             return candidates[0]
 
-
-        output = max(candidates, key=lambda x: numpy.mean(x.options))
+        output = max(candidates, key=lambda x: numpy.median(x.options))
 
         if output != candidates[0]:
             print(f"Shifting {output} ({float(numpy.mean(output.options))}) ahead of {candidates[0]} ({float(numpy.mean(candidates[0].options))})")
+
+        return output
+
+    def break_tie_median(self, candidates):
+        if len(candidates) == 1:
+            return candidates[0]
+
+        output = max(candidates, key=lambda x: x.card_test_score)
+
+        if output != candidates[0]:
+            print(
+                f"Shifting {output} ({float(numpy.mean(output.options))}) ahead of {candidates[0]} ({float(numpy.mean(candidates[0].options))})")
 
         return output
 
@@ -614,6 +636,109 @@ class MonteCarlo(CardCollection):
                 #print(f"{card.name}:{isinstance(card, Land)}")
         #self.heap = lands
         #self.basics = basics"""
+
+    #SIMULATED ANNEALING DEMO
+    def simulated_annealing_method(self):
+        self.fill_heap()
+        self.add_max_basics()
+        self.shuffle()
+        for i in range(self.deck.lands_requested):
+            self.give_top(self.deck)
+        halt = False
+        temperature = 0.75
+        scoreboard = []
+        t = Test(self.deck, self.cache, close_examine=self._close_examine, timer=self._timer)
+        t.run_tests()
+        t.assess_deck_hc()
+        while not halt:
+            t = self.anneal(temperature, t)
+            print(f"Score of {t.game_proportions}")
+            scoreboard.append(t.game_proportions)
+            temperature *= 0.9
+            if len(scoreboard) == 30:
+                halt = True
+        print(f"Scoreboard: {scoreboard}")
+        for card in self.deck.lands_list():
+            print(card)
+
+
+    def random_deck_fill(self, count):
+        pass
+
+    def anneal(self, temperature, mastertest):
+        print("")
+        #mastertest = Test(self.deck, self.cache, close_examine=self._close_examine, timer=self._timer)
+        #mastertest.run_tests()
+        #mastertest.assess_deck_hc()
+        sorted_lands = sorted(self.deck.lands_list(), key=lambda x: x.proportion_of_games(), reverse=False)
+        print(sorted_lands)
+        quant = round(temperature * len(sorted_lands))
+
+
+        print(f"Mastertest output {mastertest.game_proportions}")
+        i = 0
+        for land in sorted_lands:
+            if i == quant:
+                print("----SAFETY ZONE----")
+            print(f"\t{land} -> {land.proportions}")
+            land.reset_grade()
+            i += 1
+
+        low_scorers = []
+        for i in range(quant):
+            low_scorers.append(sorted_lands[i])
+            self.deck.card_list.remove(sorted_lands[i])
+
+        give_up = 0
+
+        while give_up < 100:
+            self.shuffle()
+            canister = []
+            for _ in range(quant):
+                topcard = self.card_list.pop()
+                canister.append(topcard)
+                self.deck.card_list.append(topcard)
+            subtest = Test(self.deck, self.cache, close_examine=self._close_examine, timer=self._timer)
+            subtest.run_tests()
+            subtest.assess_deck_hc()
+            if subtest.game_proportions > mastertest.game_proportions:
+                print(f"New list bumped up to {subtest.game_proportions}")
+                for card in canister:
+                    print(f"\t{card}")
+                for card in low_scorers:
+                    self.card_list.append(card)
+                return subtest
+            else:
+                for land in self.deck.lands_list():
+                    land.reset_grade()
+                for card in canister:
+                    self.deck.give(self, card)
+                give_up += 1
+                if give_up == 30:
+                    print("Tried 30 times...")
+                if give_up == 60:
+                    print("Tried 60 times...")
+                if give_up == 90:
+                    print("Only going to try this ten more times...")
+
+        print(f"No improvement recorded")
+        for card in low_scorers:
+            self.deck.card_list.append(card)
+        self.dev_assess_results()
+        raise Exception("Stop!")
+        #return mastertest
+
+
+
+    def add_max_basics(self):
+        quant = self.deck.lands_requested - 1
+        for color in self.deck.colors_needed:
+            sought_land = [x for x in self.card_list if x.name == landtype_map[color]][0]
+            for _ in range(quant):
+                self.card_list.append(deepcopy(sought_land))
+
+
+
 
 
 

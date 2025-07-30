@@ -15,7 +15,7 @@ from simulation_objects.Timer import functimer_once
 
 
 class Test(Simulation):
-    def __init__(self, deck, cache, turns=7, runs=None, ct_runs=500, close_examine=False, timer=False):
+    def __init__(self, deck, cache, turns=7, runs=None, ct_runs=300, close_examine=False, timer=False):
         Simulation.__init__(self, deck)
         self._cache = cache
         self._wasteless_turns = 0
@@ -36,7 +36,7 @@ class Test(Simulation):
         if self._close_examine:
             self._runs = 1
         else:
-            self._runs = 2000 #CHANGE BACK TO ONE THOUSAND
+            self._runs = 1000 #CHANGE BACK TO ONE THOUSAND
         if runs != None:
             self._runs = runs
 
@@ -203,13 +203,18 @@ class Test(Simulation):
             self.normalize_basics(landtype_map[color])
 
 
-        """ranked = sorted(self.deck.lands_list(), key=lambda x: x.proportions, reverse=True)
-        i = 0
-        for r in ranked:
-            print(f"\t{i}: {r} -> {r.proportions}")
-            i += 1"""
+
+        sklorted = sorted(self.deck.lands_list(), key=lambda x: x.proportions, reverse=False)
+        print("Running test")
+        #forestcount = len([x for x in self.deck.lands_list() if x.name == "Forest"])
+        #islandcount = len([x for x in self.deck.lands_list() if x.name == "Island"])
+        #swampcount = len([x for x in self.deck.lands_list() if x.name == "Swamp"])
+        #print(f"Low performers ({forestcount} forests, {islandcount} islands, {swampcount} swamps)")
+        for i in range(len(self.deck.lands_list())):
+            print(f"\t{sklorted[i]} -> {sklorted[i].proportions} -> {numpy.median(sklorted[i].options)}")
 
         for card in self.deck.card_list:
+
             if isinstance(card, Land):
                 if card.mandatory == True:
                     card.reset_grade()
@@ -219,6 +224,8 @@ class Test(Simulation):
                         worst_score = card.proportions
                     card.reset_grade()
         self.worst_performing_card = worst
+
+
 
 
     def normalize_basics(self, basicname):
@@ -235,6 +242,7 @@ class Test(Simulation):
 
     def run_card_test(self, card_in):
         card_in.options = []
+        card_in.turns_without_commander = []
         #wasted_per_game = [] #TEST VARIABLE
         wasteless_turns = 0
         for _ in range(0, self.ct_runs):

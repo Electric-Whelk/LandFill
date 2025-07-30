@@ -46,8 +46,31 @@ class Land(GameCard):
         self._generic_price = 2
         self._color_price = 2
 
+        self._turns_without_commander = 0
+        self._options_at_play = 0
+
+        self._strict_superiors = []
+
 
     #getters and setters
+    @property
+    def strict_superiors(self):
+        return self._strict_superiors
+
+    @property
+    def options_at_play(self):
+        return self._options_at_play
+    @options_at_play.setter
+    def options_at_play(self, value):
+        self._options_at_play = value
+
+    @property
+    def turns_without_commander(self):
+        return self._turns_without_commander
+    @turns_without_commander.setter
+    def turns_without_commander(self, value):
+        self._turns_without_commander = value
+
     @property
     def generic_price(self):
         return self._generic_price
@@ -163,12 +186,23 @@ class Land(GameCard):
 
     #VERSION 2
     def setpermits(self, lumps):
-        self.options.append(len(lumps))
+        self.options_at_play = len(lumps)
         for lump in lumps:
+            if lump.cmc > self.largest_cmc:
+                self.fine_tune_permits(lump)
             if lump.cmc >= self.largest_cmc:
-                self.largest_cmc = lump.cmc
-                self.largest_lump = lump
-                self.proposed_mapping = lump.mapping
+                if lump.commander:
+                    self.fine_tune_permits(lump)
+                if self.largest_cmc == 0:
+                    self.fine_tune_permits(lump)
+
+            #if lump.cmc > self.largest_cmc or (lump.cmc >= self.largest_cmc and lump.commander):
+
+
+    def fine_tune_permits(self, lump):
+        self.largest_cmc = lump.cmc
+        self.largest_lump = lump
+        self.proposed_mapping = lump.mapping
 
 
     def set_price(self, game, color):
@@ -182,11 +216,16 @@ class Land(GameCard):
         return 9999
 
 
+    def live_prod_contribution_subtraction(self, game):
+        return self.live_prod(game)
+
+
 
     def reset_permits(self):
         self.largest_lump = None
         self.proposed_mapping = None
         self.largest_cmc = 0
+        self.options_at_play = 0
         pass
 
 
@@ -199,6 +238,17 @@ class Land(GameCard):
 
     def tap_for_specific_v2(self, color, game):
         pass
+
+
+    def produces_at_least_one(self, inputlist, game, live=True):
+        if live:
+            prod = self.live_prod(game)
+        else:
+            prod = self.produced
+        for color in prod:
+            if color in inputlist:
+                return True
+        return False
 
 
 
@@ -318,7 +368,7 @@ class Land(GameCard):
             return output
         except ZeroDivisionError:
             print(f"{self} did not appear in a deck test")
-            self.proportions = output
+            self.proportions = 0.5
             return 0.5
 
     def proportion_of_turns(self) -> float:

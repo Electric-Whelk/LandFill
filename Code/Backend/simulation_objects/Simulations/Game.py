@@ -57,7 +57,7 @@ class Game(Simulation):
         self.total_played_lands = 0
         self.on_curve_casts = 0
         self.castable_cmc_in_hand = 0
-        self.total_theoretcial_mana = 0
+        self.total_theoretical_mana = 0
         self.leftover_mana = 0
         self.shockproblems = 0
         self.painproblems = 0
@@ -70,13 +70,28 @@ class Game(Simulation):
 
         self._found_target = False
         self._seeking_target = None
+        self._turns_without_commander = 0
+        self._options_each_land_drop = 0
 
 
     #getters
+    @property
+    def options_each_land_drop(self):
+        return self._options_each_land_drop
+    @options_each_land_drop.setter
+    def options_each_land_drop(self, value):
+        self._options_each_land_drop = value
 
     @property
     def total_turns(self) -> int:
         return self._total_turns
+
+    @property
+    def turns_without_commander(self) -> int:
+        return self._turns_without_commander
+    @turns_without_commander.setter
+    def turns_without_commander(self, turns_without_commander):
+        self._turns_without_commander = turns_without_commander
 
     @property
     def played_lands(self):
@@ -207,6 +222,7 @@ class Game(Simulation):
     def sample_hand(self, input:list, topdeck=[]):
         self.deck.shuffle()
         for term in input:
+            print(f"Term: {term}")
             self.deck.give(self.hand, self.tutor(term))
         for term in topdeck:
             card = self.tutor(term)
@@ -229,7 +245,18 @@ class Game(Simulation):
         self.options_per_turn /= self.total_turns
         #self.total_spent_mana /= self.total_played_lands #NOTE THAT THIS INCLUDES FETCHED LANDS
         #self.total_spent_mana /= self.castable_cmc_in_hand
-        self.leftover_mana = self.total_theoretcial_mana - self.total_spent_mana
+        self.leftover_mana = self.total_theoretical_mana - self.total_spent_mana
+
+        if self.seeking_target is not None:
+            self.seeking_target.turns_without_commander.append(self.turns_without_commander)
+            self.seeking_target.options.append(self.options_each_land_drop)
+
+        if not self.found_target:
+            print(f"Seeking: {self.seeking_target}")
+            print(f"Hand: {self.hand.card_list}")
+            print(f"Battlefield: {self.battlefield.card_list}")
+            print(f"Graveyard: {self.graveyard.card_list}")
+            raise Exception("Stop!")
 
 
 
@@ -263,14 +290,14 @@ class Game(Simulation):
 
 
     def run(self, card_to_test=None):
-        #samplehand = ["Hallowed Fountain", "Misty Rainforest"] #Misty Rainforest/Watery Grave
-        #topdeck =  ["Phyrexian Arena","Verdant Catacombs", "Swamp", "Risen Reef"] #Verdat Catacombs/Breeding Pool
-        #self.sample_hand(samplehand, topdeck=topdeck)
         start = time.time()
         self.seeking_target = card_to_test
 
         if self.prototype_comparison == None:
             self.setup_game(card_to_test = card_to_test)
+            #samplehand = ["Zagoth Triome", "Twilight Mire", "Sunken Ruins", "Tender Wildguide", "Cyclonic Rift", "Scurry Oak", "Propagator Drone"]
+            #topdeck = ["Wood Elves", "Watchful Radstag", "Reef Worm", "Toxic Deluge"]
+            #self.sample_hand(samplehand, topdeck=topdeck)
         else:
             self._hand = self.prototype_comparison["hand"]
         #self.setup_game()
@@ -281,14 +308,13 @@ class Game(Simulation):
         #self.sample_hand(samplehand, topdeck=topdeck)
         abandoned = False
         for _ in range(self.total_turns):
-            if card_to_test is not None:
-                if not self.check_card_made_available(card_to_test):
-                    self.total_theoretcal_mana = 0
+            if self.seeking_target and not self.found_target:
+                    self.total_theoretical_mana = 0
                     self.total_spent_mana = 0
-            if self.total_theoretcial_mana <= self.total_spent_mana: #SCAFFOLD - number of turns
+
+            if self.total_theoretical_mana <= self.total_spent_mana: #SCAFFOLD - number of turns
                 self.run_turn()
             else:
-                abandoned = True
                 break
 
         #if abandoned:
@@ -416,6 +442,14 @@ class Game(Simulation):
         if subject is not None:
             self.deck.card_list.remove(subject)
             self.deck.card_list.insert(position, subject)
+            """
+            print(f"Decklist:")
+            for i in range(len(self.deck.card_list)):
+                subject = self.deck.card_list[i]
+                print(f"\t{i}: {subject}")
+                if subject == self.seeking_target:
+                    break"""
+
         #potentially change this to, if subject is not none, insert a random land
 
 
@@ -482,14 +516,24 @@ class Game(Simulation):
         largest.mapping = to_play.proposed_mapping
 
         self.play_lump_v2(to_play.largest_lump)
+
+        self.update_options(to_play.options_at_play)
+
         for land in lands:
             land.reset_permits()
 
     def play_spell_no_land(self):
         castable = [l for l in self.lumps if l.set_playability(self.battlefield.lands_list(), self)]
         by_size = max(castable, key=lambda l: l.cmc)
+        self.update_options(len(castable))
 
         self.play_lump_v2(by_size)
+
+    def update_options(self, options):
+        if self.seeking_target is not None:
+            if self.found_target:
+                if options >= 1:
+                    self.options_each_land_drop += options
 
     def filter_by_most_produced(self, lands, library=False):
         if library == False:
@@ -503,9 +547,8 @@ class Game(Simulation):
         self.vprint(f"Available: {available}")
         needed = [x for x in self.master_lump.colorpips]
         self.vprint(f"Needed: {needed}")
-        self.vprint(f"Needed as set: {set(needed)}")
         absent = self.calculate_absence(needed, available)
-        self.vprint(f"Absent: {absent}")
+        self.vprint(f"Absent: {absent} ({len(absent)})")
 
         biggest_contributors = []
         for land in lands:
@@ -544,10 +587,13 @@ class Game(Simulation):
         return [l for l in lands if l.largest_cmc >= biggest_enabled]
 
     def get_available_pips(self, lands):
-        output = []
-        for land in lands:
-            output.extend(land.live_prod(self))
-        return output
+        try:
+            output = []
+            for land in lands:
+                output.extend(land.live_prod(self))
+            return output
+        except RecursionError as re:
+            raise Exception(f"recursion Error on battlefield {self.battlefield.card_list}")
 
     def generate_lumps(self, maxi = None, mini = None, max_plays = None, found = False):
         playable = [x for x in self.hand.spells_list() if x.cmc[0] <= maxi]
@@ -843,11 +889,16 @@ class Game(Simulation):
             self.vprint(f"largest: {largest_achievable}")
         except ValueError:
             largest_achievable = 0
-        self.total_theoretcial_mana += largest_achievable
+        self.total_theoretical_mana += largest_achievable
         wasteless = False
         if largest_achievable <= self.spent_this_turn:
             self.wasteless_turns += 1
             wasteless = True
+
+        if self.seeking_target is not None and self.battlefield.max_mana() >= self.deck.commander.cmc[0]:
+            if self.deck.commander not in self.battlefield.card_list:
+                self.turns_without_commander += 1
+
         self.grade_lands_per_turn(wasteless)
 
     def grade_lands_per_turn(self, wasteless):

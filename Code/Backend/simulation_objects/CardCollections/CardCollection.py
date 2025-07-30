@@ -1,5 +1,4 @@
 from database_management.models.Card import Card
-from database_management.models.Cycle import Cycle
 from database_management.models.Face import Face
 from Extensions import db
 from random import shuffle
@@ -10,13 +9,13 @@ from simulation_objects.GameCards.BasicLand import BasicLand
 from simulation_objects.GameCards.GameCard import GameCard
 from simulation_objects.GameCards.Land import Land
 from simulation_objects.GameCards.MiscLand import MiscLand
+from simulation_objects.GameCards.PermaUntapped.Verge import Verge
 from simulation_objects.GameCards.SearchLands import SearchLand
 from simulation_objects.GameCards.SearchLands.FetchLand import FetchLand
-from simulation_objects.GameCards.RampLands.FilterLand import FilterLand
+from simulation_objects.GameCards.PermaUntapped.FilterLand import FilterLand
 from simulation_objects.GameCards.TappedCycles.GuildGate import GuildGate
 from simulation_objects.GameCards.TappedCycles.TriTap import TriTap
 from simulation_objects.GameCards.UntappableCycles.RevealLand import RevealLand
-from simulation_objects.GameCards.RampLands.BounceLand import BounceLand
 from simulation_objects.GameCards.Spell import Spell
 from simulation_objects.GameCards.TappedCycles.Triome import Triome
 from simulation_objects.GameCards.UntappableCycles.CheckLand import CheckLand
@@ -40,8 +39,11 @@ class CardCollection:
         return len(self.card_list)
 
     #sublists
-    def lands_list(self) -> list[Land]:
-        return [x for x in self.card_list if isinstance(x, Land)]
+    def lands_list(self, exclude = None) -> list[Land]:
+        if exclude == None:
+            return [x for x in self.card_list if isinstance(x, Land)]
+        else:
+            return [x for x in self.card_list if isinstance(x, Land) and x not in exclude]
 
     def spells_list(self) -> list[Spell]:
         return [x for x in self.card_list if isinstance(x, Spell)]
@@ -121,8 +123,10 @@ class CardCollection:
                     return TriTap(card, mandatory)
                 case "Guildgates":
                     return GuildGate(card, mandatory)
-                #case "Filter Lands":
-                    #return FilterLand(card, mandatory)
+                case "Filter Lands":
+                    return FilterLand(card, mandatory)
+                case "Verge Lands":
+                    return Verge(card, mandatory)
                 case "Check Lands":
                     return CheckLand(card, mandatory)
                 case "Reveal Lands":
@@ -189,7 +193,12 @@ class CardCollection:
                 names.append(landtype_map[letter])
         return '\n'.join(names)
 
-
+#check for filter lands
+    def filterlands_present(self):
+        for card in self.card_list:
+            if isinstance(card, FilterLand):
+                return True
+        return False
 
 
 
