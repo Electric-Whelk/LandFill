@@ -1,5 +1,9 @@
-
+import random
 from copy import deepcopy
+import time
+
+from joblib import Parallel, delayed
+from line_profiler import profile
 
 from .ColorPie import piepips
 from simulation_objects.GameCards.Spell import Spell
@@ -12,17 +16,25 @@ import scipy.optimize
 
 from ..GameCards.PermaUntapped.FilterLand import FilterLand
 from ..GameCards.RampLands.RampLand import RampLand
-from ..Timer import functimer_once
 
 from itertools import permutations
 
 
+def compute_prices(land, mana_required, game):
+    return [land.set_price(game, m) for m in mana_required]
+
 class Lump:
-    def __init__(self, casting_list: {Spell:int}):
+    def __init__(self, casting_list: {Spell:int}, **kwargs):
+
         self._to_cast = list(casting_list.keys())
+        if 'landcount' in kwargs:
+            self._mana_as_list = self.parse_cost_as_list(casting_list, self._to_cast, kwargs.get('landcount'))
+        else:
+            self._mana_as_list = None
         self._cost = self.parse_cost(casting_list, self._to_cast)
         self._cmc = self.parse_cmc(self._cost)
-        self._x = self._cost["X"] != 0
+        #self._x = self._cost["X"] != 0 Temporarily disregarding X spels
+        self._x = False
         self._pips = self.parse_pips_as_list(self._cost)
         self._colorpips = [x for x in self._pips if x not in ["Gen", "X"]]
         self._commander = len([x for x in self._to_cast if x.commander]) > 0
@@ -40,9 +52,17 @@ class Lump:
         self._originals = {"cmc": self._cmc, "cost": self._cost}
         self._searchland_present = False
 
+        #dev attributes
+        self.filterloops = 0
+        self.starttime = 0
+
 
     def __repr__(self):
         return str(self._to_cast)
+
+    @property
+    def mana_as_list(self):
+        return self._mana_as_list
 
     @property
     def commander(self):
@@ -141,26 +161,32 @@ class Lump:
 
 
     #VERSION 2
-
+    #@profile
     def set_playability(self, lands, game, filter_subversion = False):
-
+        playstart = time.time()
         if not filter_subversion:
             if self.cmc > len(lands):
                 return False
             if len(lands) == 0 and self.cmc == 0:
                 return True
 
-
             self.account_for_ramplands(lands)
 
-
         invalid = 9999
-        mana_required = self.mana_as_list(len(lands))
-        weighted = np.array([[land.set_price(game, m) for m in mana_required] for land in lands])
+        mana_required = self.mana_as_list
+        #weightstart = time.time()
+        #weighted = np.array([[land.set_price(game, m) for m in mana_required] for land in lands])
+        weighted = [[land.set_price(game, m) for m in mana_required] for land in lands]
+
+
+        #weightrun = time.time() - weightstart
+        #if weightrun > 0.001:
+            #print(f"assigning weight took {weightrun} seconds for lands {lands}")
         row, col = scipy.optimize.linear_sum_assignment(weighted)
         cost = sum([weighted[row[i]][col[i]] for i in range(len(lands))])
         self.mapping = {}
         output = cost < invalid
+
         if output:
             for i in range(len(lands)):
                 self.mapping[lands[row[i]]] = mana_required[col[i]]
@@ -168,16 +194,22 @@ class Lump:
             if not filter_subversion:
                 if game.battlefield.filterlands_present():
                     return self.account_for_filterlands(lands, game)
-
-        #if filter_subversion:
-            #print(f"\t\t\tChecking playabilility for {lands} -> {output}")
-            #for land in lands:
-                #print(f"\t\t\t\t{land} -> {land.live_prod_assign(game)} -> {land.tapped}")
-
         return output
+
+    def cointoss(self):
+        x = random.randint(1, 4)
+        return x > 1
+
+    def write_report(self, target, lands, message):
+        for land in lands:
+            if land.name == target:
+                land.report(message)
+                break
+
 
     def account_for_filterlands(self, lands, game):
         #print(f"\tAccounting for filterlands for {self} ({lands})")
+        #print("Hey you're still accessing me somewhere ")
         if not self.check_filterland_feasible(lands):
             return False
 
@@ -185,15 +217,29 @@ class Lump:
         normals = divided["normals"]
         filters = divided["filters"]
 
-        filterperms = self.get_filter_permutations(filters)
-        for perm in filterperms:
-            #print(f"\tRunning filterperm {perm} for lump {self}")
-            combinations = self.assign_filter_combinations(perm, normals, game)
+        #filter_ids = tuple(sorted(f.id for f in filters))
+        #filterperms = self.get_filter_permutations(filters)
+        #filterperms = permutations(filters)
+
+        start_combotime = time.time()
+        for perm in permutations(filters):
+            combinations = self.assign_filter_combinations_v2(perm, normals, game)
+            #if len(filters) == 3:
+                #print(f"Took {assigntime} seconds to get all {len(combinations)} combinations for permutation {perm}")
             for combination in combinations:
+                self.filterloops += 1
                 if self.set_playability(combination, game, filter_subversion = True):
+                    #end_combotime = time.time() - start_combotime
+                    #self.filter_report(game, True, time.time() - filterstart)
                     return True
 
+        #end_combotime = time.time() - start_combotime
+        #self.filter_report(game, False, time.time() - filterstart)
         return False
+
+    def filter_report(self, game, success, runtime):
+        if self.filterloops > 20:
+            print(f"Took {runtime} to return a value of {success} over {self.filterloops} iterations for {self} with battlefield {game.battlefield.lands_list()}")
 
     def assess_filter_combinations(self, combos, game):
 
@@ -203,30 +249,65 @@ class Lump:
         ncopy = [[x for x in normals]]
         for filter in filters:
             ncopy = self.get_filter_possibilties(filter, ncopy, game)
-        return ncopy
+        yield from ncopy
+
+    def assign_filter_combinations_v2(self, filters, normals, game):
+        """
+        Lazily yields all possible land configurations resulting from resolving the filters in order,
+        replacing activating lands with sublands, and adding colorless-only if not activated.
+        """
+
+        def _recurse(filters_left, current_lands):
+            if not filters_left:
+                # No more filters to resolve; yield this land setup
+                yield current_lands
+                return
+
+            current_filter = filters_left[0]
+            remaining_filters = filters_left[1:]
+
+            # Try all possible activating lands
+            activated = False
+            for i, land in enumerate(current_lands):
+                if land.produces_at_least_one(current_filter.required, game):
+                    # Replace this land with the filter's sublands
+                    new_lands = current_lands[:i] + current_lands[i + 1:] + current_filter.sublands
+                    yield from _recurse(remaining_filters, new_lands)
+                    activated = True
+
+            # If no land can activate this filter, add it as-is (colorless-only producer)
+            if not activated:
+                yield from _recurse(remaining_filters, current_lands + [current_filter])
+
+        yield from _recurse(filters, normals)
 
     def get_filter_possibilties(self, filter, meta_normals, game):
         output = []
         #tmp = deepcopy(meta_normals)
-        for sublist in meta_normals:
+        production_map = {}
 
+
+        for sublist in meta_normals:
+            #for land in sublist:
+                #if isinstance(land, SubLand):
+                    #print(f"Sublist: {sublist}")
             candidates = [x for x in sublist if x.produces_at_least_one(filter.required, game)]
             for candidate in candidates:
                 permutation = [x for x in sublist if x != candidate]
                 permutation.extend(filter.sublands)
                 output.append(permutation)
-            sublist.append(filter)
-            output.append(sublist)
+            #sublist.append(filter)
+            #output.append(sublist)
+            output.append(sublist + [filter])
         #print(f"\t\tFor {filter} and meta normals: {tmp}, output is {output}")
         return output
 
 
 
 
-
+    #lru_cache(maxsize=None)
     def get_filter_permutations(self, filters):
-        output = list(permutations(filters))
-        return output
+        return permutations(filters)
 
     def divide_filters(self, lands) -> dict:
         filters = []
@@ -248,10 +329,12 @@ class Lump:
                 doppelgangers.append(land)
         lands.extend(doppelgangers)
 
-    def mana_as_list(self, length):
+    def mana_as_list_live(self, length):
             output = []
             for item in self.cost:
                 for _ in range(self.cost[item]):
+                    if item not in ["W", "U", "B", "R", "G", "Gen"]:
+                        print(f"Mana as list attempting to get {item}")
                     output.append(item)
             while len(output) < length:
                 output.append("None")
@@ -389,9 +472,23 @@ class Lump:
                 return False
         return True
 
+    def parse_cost_as_list(self, input, keys, excess):
+        output = []
+        for key in keys:
+            spell_cost = key.mana[input[key]]
+            for spell_key in list(spell_cost.keys()):
+                for _ in range(spell_cost[spell_key]):
+                    if spell_key == "X":
+                        output.append("Gen")
+                    else:
+                        output.append(spell_key)
+        while len(output) < excess:
+            output.append("None")
+        return output
 
     def parse_cost(self, input, keys):
-        output = {"W":0, "U":0, "B":0, "R":0, "G":0, "C":0, "X":0, "Gen":0}
+        #output = {"W":0, "U":0, "B":0, "R":0, "G":0, "C":0, "X":0, "Gen":0} #doing a version without X
+        output = {"W":0, "U":0, "B":0, "R":0, "G":0, "C":0, "Gen":0}
         wubrg = list(output.keys())
         for key in keys:
             cost = key.mana[input[key]]

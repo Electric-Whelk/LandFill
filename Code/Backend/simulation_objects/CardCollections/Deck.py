@@ -8,8 +8,10 @@ from database_management.models.Card import Card
 from database_management.models.Face import Face
 from database_management.models.Format import Format
 from simulation_objects.CardCollections.CardCollection import CardCollection
+from simulation_objects.GameCards import BasicLand
 from simulation_objects.GameCards.GameCard import GameCard
 from simulation_objects.GameCards.Land import Land
+from simulation_objects.Misc.ColorPie import landtype_map
 
 
 class Deck(CardCollection):
@@ -203,8 +205,40 @@ class Deck(CardCollection):
         match type:
             case "proportional_basics":
                 self.add_proportional_basics()
+            case "equal_basics":
+                self.add_equal_basics()
             case _:
                 raise Exception("Invalid input to Deck.add_initial_lands()")
+
+
+    def set_each(self, of_each):
+        landnames = {landtype_map[c]:0 for c in self.colors_needed}
+        for card in self.card_list:
+            if isinstance(card, BasicLand) and landnames[card.name] < of_each:
+                landnames[card.name] += 1
+                card.mandatory = True
+
+
+
+
+
+
+    def add_equal_basics(self):
+        landnames = [landtype_map[c] for c in self.colors_needed]
+        l = len(landnames)
+        as_string = None
+        for i in range(self.lands_requested):
+            if as_string is None:
+                as_string = f"{landnames[i % l]}\n"
+
+            if i == self.lands_requested - 1:
+                as_string = as_string + f"{landnames[i % l]}"
+            else:
+                as_string = as_string + f"{landnames[i % l]}\n"
+        as_cards = self.parse_cards_from_json(as_string)
+        self.card_list.extend([self.parse_GameCard(x, mandatory=False) for x in as_cards])
+
+
 
 
 

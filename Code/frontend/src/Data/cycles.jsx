@@ -1,0 +1,73 @@
+
+
+const ShockLands = {
+    displayName: 'Shock Lands',
+    description: "Has basic landtypes, enters tapped unless you pay 2 life",
+    maxPriceInDollars: 15.43,
+    maxPriceInEuros: 17.94,
+    maxPriceInGBP: 13.54,
+    alwaysTapped: false,
+    fetchable: true,
+    suggestAutoInclude: true
+}
+
+const FilterLands = {
+    displayName: 'Filter Lands',
+    description: "No basic landtypes, taps for colorless, or you tap and pay hybrid to add two mana in any combination of those two colours",
+    maxPriceInDollars: 15.43,
+    maxPriceInEuros: 17.94,
+    maxPriceInGBP: 13.54,
+    alwaysTapped: false,
+    fetchable: false,
+    suggestAutoInclude: false
+}
+
+const SurveilLands = {
+    displayName: 'Surveil Lands',
+    description: "Has basic landtypes, enters tapped, surveils 1 on entry",
+    maxPriceInDollars: 15.43,
+    maxPriceInEuros: 17.94,
+    maxPriceInGBP: 13.54,
+    alwaysTapped: true,
+    fetchable: true,
+    suggestAutoInclude: false
+}
+
+const BicycleLands = {
+    displayName: 'Bicycle Lands',
+    description: "Has basic landtypes, enters tapped, can be cycled for 2 mana",
+    maxPriceInDollars: 15.43,
+    maxPriceInEuros: 17.94,
+    maxPriceInGBP: 13.54,
+    alwaysTapped: true,
+    fetchable: true,
+    suggestAutoInclude: false
+}
+
+const GuildGates = {
+    displayName: 'GuildGates',
+    description: "No basic landtypes, enters tapped",
+    maxPriceInDollars: 15.43,
+    maxPriceInEuros: 17.94,
+    maxPriceInGBP: 13.54,
+    alwaysTapped: true,
+    fetchable: false,
+    suggestAutoInclude: false
+}
+
+const ScryLands = {
+    displayName: 'Scry Lands',
+    description: "No basic landtypes, scries on entry",
+    maxPriceInDollars: 15.43,
+    maxPriceInEuros: 17.94,
+    maxPriceInGBP: 13.54,
+    alwaysTapped: true,
+    fetchable: false,
+    suggestAutoInclude: false
+}
+
+
+
+const cyclesData = [ShockLands, FilterLands, SurveilLands, GuildGates, ScryLands]
+
+export default cyclesData;

@@ -1,14 +1,18 @@
-
+import time
 import random
 from copy import deepcopy
 
 import numpy
+import numpy as np
+from line_profiler import profile
 from numpy import median
 from numpy.ma.core import set_fill_value
+from scipy.signal import savgol_filter
+from sqlalchemy import false
 
 from database_management.models.Card import Card
 from Extensions import db
-from math import inf
+from math import inf, ceil
 
 from simulation_objects.CardCollections.CardCollection import CardCollection
 from simulation_objects.CardCollections.Deck import Deck
@@ -17,6 +21,7 @@ from simulation_objects.GameCards import FastLand, ShockLand, MiscLand, BondLand
 from simulation_objects.GameCards.BasicLand import BasicLand
 from simulation_objects.GameCards.GameCard import GameCard
 from simulation_objects.GameCards.Land import Land
+from simulation_objects.GameCards.PermaUntapped import FilterLand, Verge
 from simulation_objects.GameCards.SearchLands.FetchLand import FetchLand
 from simulation_objects.GameCards.TappedCycles.GuildGate import GuildGate
 from simulation_objects.GameCards.TappedCycles.Triome import Triome
@@ -35,10 +40,12 @@ class MonteCarlo(CardCollection):
         self._colorless_pips = deck.colorless_pips
         self._pie_slices = self.deck.pie_slices
         self._categories = [["SearchLand"]]
+        self._minbasics = 0
         
         self.halt = False
 
         #will figure out when to set the below
+        """
         self._prioritization= {
             "Command Tower": 1,
             "Filter Lands": 1,
@@ -58,7 +65,7 @@ class MonteCarlo(CardCollection):
             "Fast Lands": 3,
             "Slow Lands": 3,
             "Guildgates": 4
-        }
+        }"""
 
 
         #requirements - set at the start of each run
@@ -82,6 +89,13 @@ class MonteCarlo(CardCollection):
 
 
     #setters and getters
+    @property
+    def minbasics(self):
+        return self._minbasics
+    @minbasics.setter
+    def minbasics(self, value):
+        self._minbasics = value
+
     @property
     def prioritization(self):
         return self._prioritization
@@ -342,31 +356,111 @@ class MonteCarlo(CardCollection):
 
     #below are versions of all of the above but just designed for testing with, not designed to be user friendly
 
-    def dev_run(self):
+    def dev_run(self, **kwargs):
+        self.start_time = time.time()
         self.fill_heap() #get all possible lands for that deck
-        self.deck.add_initial_lands("proportional_basics")
+        self.deck.add_initial_lands("equal_basics")
         #add to the deck an initial set of lands - make this a function so you can try out different initial sets
             #ponder: what if it was all wastes? That'd certainly make your early interventions much more fiery.
+        self.deck.set_each( kwargs["of_each_basic"])
+        if kwargs["min_basics"] is not None:
+            self.minbasics = kwargs["min_basics"]
         self.hill_climb()
 
 
     @functimer_once
     def hill_climb(self):
-        halt = False
+        self.halt = False
         step_output = Test(self.deck, self.cache)
         step_output.hill_climb_test()
         self.vprint(f"Starting score: {step_output.game_proportions}")
         scores = []
         scores.insert(0, step_output.game_proportions)
         iterations = 0
-        while not halt:
+        while not self.halt:
             iterations += 1
+            print(f"Iteration {iterations}")
             step_output = self.hill_climb_increment(step_output)
-            scores.insert(0, step_output.game_proportions)
-            halt = self.check_for_halt(scores, step_output)
+            #scores.insert(0, step_output.game_proportions)
+            scores.append(step_output.game_proportions)
+            self.halt = self.check_rolling_max(scores)
+            #halt = self.check_for_halt(scores, step_output)
+            if self.halt or iterations > 50:
+                print(f"Halting at step {iterations}")
         self.print_results(step_output)
         self.dev_assess_results()
         print(f"Took {iterations} iterations")
+
+    def check_for_plateau(self, scores):
+        savgol_window_length = 9
+        window_length = 7
+        minimum = max(window_length, savgol_window_length)
+
+        if len(scores) < minimum or len(scores) < savgol_window_length:
+            return False
+
+        smoothed = savgol_filter(scores, window_length=savgol_window_length, polyorder=3)
+        derivative = np.gradient(smoothed)
+        threshold = 0.001
+        min_fraction = 0.45
+        for i in range(window_length, len(derivative)):
+            window = derivative[i-window_length + 1:i+1]
+            flat_num = sum(abs(d) < threshold for d in window)
+            flat_frac = flat_num / window_length
+            with open("Rukarumel_Derivatves", "a") as file:
+                file.write(f"{flat_frac}\n")
+            if flat_frac >= min_fraction:
+                return True
+
+        return False
+
+    def check_for_plateau_v2(self, scores, threshold=0.001, window_length=7, min_fraction=0.7):
+        savgol_window_length = 9
+        poly_order = 3
+        minimum = max(window_length, savgol_window_length)
+
+        if len(scores) < minimum:
+            return False
+
+        # Smooth the scores
+        smoothed = savgol_filter(scores, window_length=savgol_window_length, polyorder=poly_order)
+
+        # Smooth the derivative
+        derivative = np.gradient(smoothed)
+        derivative_smoothed = savgol_filter(derivative, window_length=5, polyorder=2)
+
+        for i in range(window_length, len(derivative_smoothed)):
+            window = derivative_smoothed[i - window_length + 1:i + 1]
+            flat_num = sum(abs(d) < threshold for d in window)
+            flat_frac = flat_num / window_length
+
+            # Debug print if needed
+            # print(f"i={i}, flat_frac={flat_frac:.2f}, window={window}")
+
+            if flat_frac >= min_fraction:
+                return True
+
+        return False
+
+    def check_rolling_max(self, scores, window_size=10, improvement_threshold=0.05):
+        if len(scores) < window_size *2:
+            return False
+
+        prior_window = scores[len(scores) - 2 * window_size: len(scores) - window_size]
+        recent_window = scores[len(scores) - window_size:]
+
+        best_recent = max(recent_window)
+        best_prior = max(prior_window)
+
+        #with open("Rukarumel_Performance", "a") as file:
+            #file.write(f"recent: {recent_window} prior: {prior_window}\n")
+
+        improvement = best_recent - best_prior
+
+        # Debug print to visualize what’s going on
+        print(f"Best recent: {best_recent:.3f}, Best prior: {best_prior:.3f}, Improvement: {improvement:.4f}")
+
+        return improvement < improvement_threshold
 
     def dev_assess_results(self):
         lands = self.deck.lands_list()
@@ -375,6 +469,8 @@ class MonteCarlo(CardCollection):
         print(f"Fasts: {[x for x in lands if isinstance(x, FastLand)]}")
         print(f"Guildgates: {[x for x in lands if isinstance(x, GuildGate)]}")
         print(f"Bonds: {[x for x in lands if isinstance(x, BondLand)]}")
+        print(f"Filters {[x for x in lands if isinstance(x, FilterLand)]}")
+        print(f"Verges: {[x for x in lands if isinstance(x, Verge)]}")
 
         print(f"Checks: {[x for x in lands if isinstance(x, CheckLand)]}")
         print(f"Slows: {[x for x in lands if isinstance(x, SlowLand)]}")
@@ -401,13 +497,15 @@ class MonteCarlo(CardCollection):
 
     def check_for_halt(self, scores, test) -> bool:
         if self.halt:
-            print("Halting because the score has decreased")
+            print("Halting")
             return True
+        else:
+            return False
 
         #if test.like_for_like:
             #return True
 
-        success_number = 7
+        """success_number = 7
         meaningless_improvement = 0.02
         give_up_number = 200
         l = len(scores)
@@ -428,8 +526,9 @@ class MonteCarlo(CardCollection):
         maxi = max(to_test)
         mini = min(to_test)
 
-        return maxi - mini <= meaningless_improvement
+        return maxi - mini <= meaningless_improvement"""
 
+    #@functimer_once
     @functimer_once
     def hill_climb_increment(self, prior_test):
         print("")
@@ -441,7 +540,10 @@ class MonteCarlo(CardCollection):
 
 
         t = Test(self.deck, self.cache)
-        cards_to_test = self.get_cards_to_test()
+        if self.meets_minbasic_criteria(worst_card):
+            cards_to_test = self.get_basic_spread()
+        else:
+            cards_to_test = self.get_cards_to_test()
         self.deck.give(self, worst_card)
 
         champ = None
@@ -469,23 +571,35 @@ class MonteCarlo(CardCollection):
         champ = self.break_tie(tiebreaker_candidates)
         #champ = self.break_tie_median(tiebreaker_candidates)
 
-        if champ.card_test_score < prev_score:
-            self.halt = True
+        #if champ.card_test_score < prev_score:
+            #print(f"Halting at prior test score {prior_test.game_proportions}")
+            #self.halt = True
 
         if not self.halt:
-
-
-
-
             self.give(self.deck, champ)
             self.reset_scores(cards_to_test)
             t.hill_climb_test()
             self.vprint(f"Swapped {worst_card} for {champ} ({t.game_proportions})")
+            #with open("another rukarumeeel", "a") as file:
+                #print("Writing to file!")
+                #file.write(f"{t.game_proportions}\n")
+
             self.cache.compare()
             if worst_card.name == champ.name:
                 t.like_for_like = True
-        print(f"Halting at prior test score {prior_test.game_proportions}")
+        print(f"total of {(time.time() - self.start_time)/60} minutes elapsed")
         return t
+
+    def meets_minbasic_criteria(self, card):
+        if not isinstance(card, BasicLand):
+            return False
+
+        basic_count = 0
+        for card in self.deck.card_list:
+            if isinstance(card, BasicLand):
+                basic_count += 1
+
+        return basic_count <= self.minbasics
 
     def break_tie(self, candidates):
         if len(candidates) == 1:
@@ -513,13 +627,22 @@ class MonteCarlo(CardCollection):
 
 
     def get_cards_to_test(self) -> list:
-        output = self.get_unique_cards()
+        uniques = self.get_unique_cards()
+        output = []
+        for card in uniques:
+            if not any(superior not in self.deck.card_list for superior in card.superior_lands):
+                output.append(card)
+
+
+
+        """output = self.get_unique_cards()
 
         for slice in self.pie_slices:
             output = self.enqueue_category(slice, output)
         for category in self.categories:
             output = self.enqueue_category(category, output)
         #print(f"First output: {output}")
+        return output"""
         return output
 
 
@@ -575,16 +698,40 @@ class MonteCarlo(CardCollection):
         for card in all:
             if self.deck.within_color_identity(card):
                 as_GC = self.parse_GameCard(card, mandatory=False)
+                self.prioritization_object.register_land(as_GC)
                 if not isinstance(as_GC, MiscLand) and not self.irrelevant_fetchland(as_GC, exclude_offcolors=True):
                     self.card_list.append(as_GC)
 
-        self.prioritize_heap(self.prioritization)
+        for card in self.deck.lands_list():
+            self.prioritization_object.register_land(card)
+        self.prioritize_heap()
 
         self.print_all()
 
-    def prioritize_heap(self, prioritization:dict):
+    def prioritize_heap(self):
+        for land in self.lands_list():
+            land.superior_lands = self.prioritization_object.cascade_superiors(land, self.deck)
+            print(f"{land} has superiors {land.superior_lands}")
+
+    def prioritize_heap_CONDEMNED(self, prioritization:dict):
         for land in self.card_list:
             land.priority = prioritization[land.cycle]
+
+    def prioritize_heap_CONDEMNED_2(self):
+        heap = self.lands_list()
+        for land in heap:
+            all_except = [x for x in heap if x != land and len(list(set(land.heap_prod(self.deck)) - set(x.heap_prod(self.deck)))) == 0]
+            for candidate in all_except:
+                if any(isinstance(candidate, cls) for cls in land.superior_classes):
+                    land.superior_lands.append(candidate)
+            print(f"{land} has superiors {land.superior_lands}")
+        self.card_list = [x for x in heap if x.name != "Wastes" and not self.colorless_pips]
+
+
+
+
+
+
 
 
     def irrelevant_fetchland(self, card, exclude_offcolors = False):
@@ -641,9 +788,10 @@ class MonteCarlo(CardCollection):
     def simulated_annealing_method(self):
         self.fill_heap()
         self.add_max_basics()
-        self.shuffle()
+        """self.shuffle()
         for i in range(self.deck.lands_requested):
-            self.give_top(self.deck)
+            self.give_top(self.deck)"""
+        self.fill_deck_and_canister(self.deck.lands_requested)
         halt = False
         temperature = 0.75
         scoreboard = []
@@ -680,7 +828,7 @@ class MonteCarlo(CardCollection):
         for land in sorted_lands:
             if i == quant:
                 print("----SAFETY ZONE----")
-            print(f"\t{land} -> {land.proportions}")
+            print(f"\t{i}:{land} -> {land.proportions}")
             land.reset_grade()
             i += 1
 
@@ -692,12 +840,13 @@ class MonteCarlo(CardCollection):
         give_up = 0
 
         while give_up < 100:
-            self.shuffle()
+            """self.shuffle()
             canister = []
             for _ in range(quant):
                 topcard = self.card_list.pop()
                 canister.append(topcard)
-                self.deck.card_list.append(topcard)
+                self.deck.card_list.append(topcard)"""
+            canister = self.fill_deck_and_canister(quant)
             subtest = Test(self.deck, self.cache, close_examine=self._close_examine, timer=self._timer)
             subtest.run_tests()
             subtest.assess_deck_hc()
@@ -727,6 +876,53 @@ class MonteCarlo(CardCollection):
         self.dev_assess_results()
         raise Exception("Stop!")
         #return mastertest
+
+    def fill_deck_and_canister(self, quant_needed):
+        removed_basics = self.restrict_basics(quant_needed)
+        #print(f"Removing basics and left with {len(self.card_list)} cards")
+        self.shuffle()
+        obtained = 0
+        i = 0
+
+        output = []
+        while obtained < quant_needed:
+            candidate = self.card_list[i % len(self.card_list)]
+            if not any(superior not in self.deck.card_list for superior in candidate.superior_lands):
+                output.append(candidate)
+                self.give(self.deck, candidate)
+                obtained += 1
+            else:
+                i += 1
+            if i > 1000:
+                raise Exception("fill_deck_and_canister having the issue you thought it might")
+        for land in removed_basics:
+            self.card_list.append(land)
+        return output
+
+    def restrict_basics(self, quant):
+        furtherquant = ceil(quant / 2)
+        bank = {"Plains":0,
+                "Island":0,
+                "Swamp":0,
+                "Mountain":0,
+                "Forest":0,
+                "Wastes": 0
+                }
+        output = []
+        for card in self.card_list:
+            if isinstance(card, BasicLand):
+                bank[card.name] += 1
+                if bank[card.name] >= furtherquant:
+                    self.card_list.remove(card)
+                    output.append(card)
+        return output
+
+
+
+
+
+
+
 
 
 

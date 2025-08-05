@@ -1,16 +1,21 @@
+from filecmp import cmp
+
 from .SearchLand import SearchLand
 from .. import BasicLand
 from ..Land import Land
 from collections import Counter
 
 class FetchLand(SearchLand):
-    def __init__(self, card, mandatory):
-        SearchLand.__init__(self, card, False, mandatory)
+    def __init__(self, card, mandatory, **kwargs):
+        SearchLand.__init__(self, card, False, mandatory, **kwargs)
 
 
     #version 2
     def get_searchable_lands(self, game):
         return self.search_deck(game)
+
+    def can_find(self, subject):
+        return any(map(lambda v: v in subject.landtypes, self.searchable))
 
 
 

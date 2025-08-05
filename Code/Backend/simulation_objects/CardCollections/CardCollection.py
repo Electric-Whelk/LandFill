@@ -6,6 +6,7 @@ from random import shuffle
 from simulation_objects.GameCards import CommandTower, BondLand, DualLand, BattleLand, FastLand, SlowLand, PainLand, \
     HorizonLand
 from simulation_objects.GameCards.BasicLand import BasicLand
+from simulation_objects.GameCards.ChoiceLands import DualFacedLand
 from simulation_objects.GameCards.GameCard import GameCard
 from simulation_objects.GameCards.Land import Land
 from simulation_objects.GameCards.MiscLand import MiscLand
@@ -21,13 +22,24 @@ from simulation_objects.GameCards.TappedCycles.Triome import Triome
 from simulation_objects.GameCards.UntappableCycles.CheckLand import CheckLand
 from simulation_objects.GameCards.UntappableCycles.ShockLand import ShockLand
 from simulation_objects.Misc.ColorPie import landtype_map
+from simulation_objects.Misc.LandPrioritization import stdprioritization, LandPrioritization
 
 
 class CardCollection:
     def __init__(self):
         self._cards = []
+        self._prioritization = stdprioritization
+        self._prioritization_object = LandPrioritization(stdprioritization)
 
     #getters and setters
+    @property
+    def prioritization_object(self):
+        return self._prioritization_object
+
+    @property
+    def prioritization(self):
+        return self._prioritization
+    
     @property
     def card_list(self) -> list[GameCard]:
         return self._cards
@@ -44,6 +56,13 @@ class CardCollection:
             return [x for x in self.card_list if isinstance(x, Land)]
         else:
             return [x for x in self.card_list if isinstance(x, Land) and x not in exclude]
+
+    def landtypes_list(self):
+        output = []
+        for card in self.card_list:
+            if isinstance(card, Land):
+                output.extend(card.landtypes)
+        return output
 
     def spells_list(self) -> list[Spell]:
         return [x for x in self.card_list if isinstance(x, Spell)]
@@ -72,9 +91,26 @@ class CardCollection:
 
     def get_card_by_name(self, name) -> Card:
         #print(f"looking up card {name}...")
-        face = db.session.query(Face).filter(Face._name == name).first()
-        card = db.session.query(Card).filter(Card._id == face.card_id).first()
-        return card
+        try:
+            face = db.session.query(Face).filter(Face._name == name).first()
+            card = db.session.query(Card).filter(Card._id == face.card_id).first()
+            return card
+        except AttributeError:
+            raise Exception(f"Could not find card {name}")
+
+
+    def get_basic_spread(self):
+        found = []
+        output = []
+        for card in self.card_list:
+            if isinstance(card, BasicLand) and card.name not in [found]:
+                found.append(card.name)
+                output.append(card)
+        return output
+
+
+
+
 
     def parse_cards_from_json(self, cards):
         as_list = cards.split("\n")
@@ -87,6 +123,10 @@ class CardCollection:
 
     def set_card_list_from_ORM(self, cards:list[Card], mandatory=False):
         self.card_list = [self.parse_GameCard(x, mandatory) for x in cards]
+
+
+
+
 
 
     def parse_GameCard(self, card:Card, mandatory=False, commander=False):
@@ -131,6 +171,8 @@ class CardCollection:
                     return CheckLand(card, mandatory)
                 case "Reveal Lands":
                     return RevealLand(card, mandatory)
+                case "Dual Faced Lands":
+                    return DualFacedLand(card, mandatory)
                 #case "Bounce Lands":
                     #return BounceLand(card)
                 case _:
@@ -149,7 +191,8 @@ class CardCollection:
         ]
 
     def parse_land_by_name(self, card:Card, mandatory):
-        match card.name:
+        name = card.name
+        match name:
             case "Command Tower":
                 return CommandTower(card, mandatory)
             case _:

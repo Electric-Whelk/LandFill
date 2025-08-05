@@ -1,0 +1,78 @@
+.page2 {
+    padding: 2rem;
+    font-family: sans-serif;
+}
+
+.columns {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+
+
+.column {
+    flex: 1;
+    min-height: 300px;
+    border: 2px dashed #999;
+    background-color: #f9f9f9;
+    padding: 1rem;
+    columns: 2
+}
+
+.cycle-card {
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: grab;
+}
+
+.cycle-card:active {
+    cursor: grabbing;
+}
+
+.faq-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.faq {
+    border: 1px solid #aaa;
+    padding: 0.5rem;
+    background: #f0f0f0;
+    cursor: pointer;
+}
+
+.faq-content {
+    margin-top: 0.5rem;
+}
+
+.columns {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.column {
+    flex: 1;
+    min-height: 200px;
+    border: 2px dashed #999;
+    background-color: #f9f9f9;
+    padding: 1rem;
+}
+
+.cycle-card {
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: grab;
+}
+
+.cycle-card:active {
+    cursor: grabbing;
+}

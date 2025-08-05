@@ -6,4 +6,6 @@ from .UniqueLands.UniqueLand import UniqueLand
 from .UniqueLands.CommandTower import CommandTower
 from .UntappableCycles import *
 from .TappedCycles import *
+from .ChoiceLands import *
 from .MiscLand import MiscLand
+from .SubLand import SubLand

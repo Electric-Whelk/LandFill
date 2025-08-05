@@ -5,9 +5,10 @@ import PlayerInput from "./Page_Elements/PlayerInput"
 import React, { useState, useEffect } from "react";
 
 import './App.css';
+import Page2 from "./Pages/Page2";
 
 
-const App = () => {
+/*const App = () => {
     const host = "http://127.0.0.1:5000";
 
     //used on the homepage
@@ -115,6 +116,10 @@ const App = () => {
             </div>
         </div>
     );
+}*/
+
+function App() {
+    return <Page2 />;
 }
 
 export default App;

@@ -10,7 +10,7 @@ from scipy.stats import skew, kurtosis
 
 
 class Land(GameCard):
-    def __init__(self, card, mandatory=False):
+    def __init__(self, card, mandatory=False, superiorclasses = []):
         GameCard.__init__(self, card, mandatory)
         self._produced = list(card.produced)
         self._landtypes = card.subtypes
@@ -45,17 +45,30 @@ class Land(GameCard):
         self._proposed_mapping = None
         self._generic_price = 2
         self._color_price = 2
+        self._none_price = 2
 
         self._turns_without_commander = 0
         self._options_at_play = 0
 
-        self._strict_superiors = []
+        self._superior_classes = superiorclasses
+        self._superior_lands = []
 
 
     #getters and setters
     @property
-    def strict_superiors(self):
-        return self._strict_superiors
+    def none_price(self):
+        return self._none_price
+
+    @property
+    def superior_lands(self):
+        return self._superior_lands
+    @superior_lands.setter
+    def superior_lands(self, value):
+        self._superior_lands = value
+
+    @property
+    def superior_classes(self):
+        return self._superior_classes
 
     @property
     def options_at_play(self):
@@ -207,7 +220,7 @@ class Land(GameCard):
 
     def set_price(self, game, color):
         if color == "None":
-            return self.generic_price
+            return self.none_price
         if not self.tapped:
             if color == "Gen":
                 return self.generic_price
@@ -245,16 +258,16 @@ class Land(GameCard):
             prod = self.live_prod(game)
         else:
             prod = self.produced
-        for color in prod:
-            if color in inputlist:
-                return True
-        return False
+        return bool(set(prod) & set(inputlist))
 
 
 
 
     #pseudogetters
     def live_prod(self, game) -> list[str]:
+        return self._produced
+
+    def heap_prod(self, deck):
         return self._produced
 
     def live_prod_assign(self, game):
@@ -392,6 +405,16 @@ class Land(GameCard):
         if self.peek:
             print(f"Playing {self} with {game.hand.card_list} in hand and {game.battlefield.lands_list} in play")
 
+
+    def parse_simple_tapline(self, line):
+        words = line.split(" ")
+        pipchars = list(words[2])
+        return pipchars[1]
+
+
+    def report(self, message):
+        with open(f"{self.name}", "a") as file:
+            file.write(f"{message}\n")
 
 
 

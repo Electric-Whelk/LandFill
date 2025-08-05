@@ -21,7 +21,7 @@ montytest = True
 with app.app_context():
     i = 0
     if close_examine:
-        land_options = [data['WithFilters']]
+        land_options = [data['FilterLandsAhoy']]
     else:
         #tomorrow see if the results are starker if you start the game with everything better than a basic
         #and how a guildgate performs
@@ -51,8 +51,8 @@ with app.app_context():
         deck = Deck()
         deck.setup(data["Nonlands"], data["Format"], data["Quantity"], data["Commander"])
         monty = MonteCarlo(deck, close_examine=close_examine, timer=timer, verbose=True)
-        #monty.dev_run()
-        monty.simulated_annealing_method()
+        monty.dev_run(min_basics=data["MinBasics"], of_each_basic=data["OfEachBasic"])
+        #monty.simulated_annealing_method()
         #replaced Glen Elendra Archmage with Helm of the Ghastlord
 
 

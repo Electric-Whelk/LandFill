@@ -1,9 +1,13 @@
 #from simulation_objects.CardCollections.Deck import Deck
 import functools
+import pickle
+from copy import deepcopy
 
 import numpy
+from joblib import delayed, Parallel
 from scipy.stats import skew, kurtosis
 
+from simulation_objects.CardCollections.DelayedFunctions import run_tests_exterior
 from simulation_objects.GameCards import BasicLand, Land
 from simulation_objects.Misc.ColorPie import landtype_map
 from simulation_objects.Simulations.Game import Game
@@ -115,7 +119,7 @@ class Test(Simulation):
         for i in range(0, self._runs):#SCAFFOLD - currently at 6 seconds per 10,000 games
             if self._timer and i % 1000 == 0:
                 print(f"{i}...")
-            g = Game(self.deck, self.cache, turns=self.turns, verbose=self._close_examine)
+            g = Game(self.deck, turns=self.turns, verbose=self._close_examine)
             g.run()
 
             """pg = Game(g.copydeck, self.cache, verbose=self._close_examine, prototype_comparison={
@@ -211,7 +215,7 @@ class Test(Simulation):
         #swampcount = len([x for x in self.deck.lands_list() if x.name == "Swamp"])
         #print(f"Low performers ({forestcount} forests, {islandcount} islands, {swampcount} swamps)")
         for i in range(len(self.deck.lands_list())):
-            print(f"\t{sklorted[i]} -> {sklorted[i].proportions} -> {numpy.median(sklorted[i].options)}")
+            print(f"\tCURRENTLY IN DECK {sklorted[i]} -> {sklorted[i].proportions} -> {numpy.median(sklorted[i].options)}")
 
         for card in self.deck.card_list:
 
@@ -237,7 +241,10 @@ class Test(Simulation):
                 card.proportions = med
 
 
-
+    def single_card_test(self, card_in):
+        g = Game(self.deck, turns=self.turns)
+        g.run(card_to_test=card_in)
+        return self.wastelessness(g)
 
 
     def run_card_test(self, card_in):
@@ -246,10 +253,13 @@ class Test(Simulation):
         #wasted_per_game = [] #TEST VARIABLE
         wasteless_turns = 0
         for _ in range(0, self.ct_runs):
-            g = Game(self.deck, self.cache, turns=self.turns)
-            g.run(card_to_test = card_in)
-            wasteless_turns += self.wastelessness(g)
+            #g = Game(self.deck, self.cache, turns=self.turns)
+            #g.run(card_to_test = card_in)
+            wasteless_turns += self.single_card_test(card_in)
             #wasted_per_game.append(g.leftover_mana) #TEST VARIABLE
+
+        #wasteless_turns += Parallel(n_jobs=-1)(delayed(self.single_card_test)(card_in) for _ in range(self.runs))
+
         for card in self.deck.card_list:
             if isinstance(card, Land):
                 card.reset_grade()
@@ -314,13 +324,21 @@ class Test(Simulation):
             land.reset_grade()
 
 
+
     def run_tests(self):
         for i in range(0, self._runs):#SCAFFOLD - currently at 6 seconds per 10,000 games
             if self._timer and i % 1000 == 0:
                 print(f"{i}...")
-            g = Game(self.deck, self.cache, turns=self.turns, verbose=self._close_examine)
+            g = Game(self.deck, turns=self.turns, verbose=self._close_examine)
+            #pickle.dumps(g)
             g.run()
             self.get_game_info(g)
+
+        #games = Parallel(n_jobs=-1, backend="threading")(delayed(run_tests_exterior)(deepcopy(self.deck), turns=self.turns, verbose=self._close_examine) for _ in range(self._runs))
+        #print(f"Completed games!")
+        #for g in games:
+            #self.get_game_info(g)
+
 
     def get_game_info(self, game):
         self.wasteless_turns += game.wasteless_turns

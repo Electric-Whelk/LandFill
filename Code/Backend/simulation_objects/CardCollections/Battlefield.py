@@ -6,7 +6,7 @@ from collections import Counter
 
 
 from .CardCollection import CardCollection
-from simulation_objects.GameCards import Land
+from simulation_objects.GameCards import Land, GameCard, ChoiceLand
 from simulation_objects.Misc.Wodge import Wodge
 from ..GameCards.RampLands.RampLand import RampLand
 from simulation_objects.Misc.LandPermutationCache import LandPermutationCache
@@ -18,7 +18,7 @@ from ..Timer import functimer_once, functimer_perturn
 #global(big_ones) = 0
 
 class Battlefield(CardCollection):
-    def __init__(self, cache):
+    def __init__(self):
         CardCollection.__init__(self)
         self._permutations = []
         self._perms_as_dicts = []
@@ -26,7 +26,7 @@ class Battlefield(CardCollection):
         self._searchmoots = []
         #print(f"Set permutations as: {self._permutations}")
         #start = time.time()
-        self._cache = cache
+        #self._cache = cache
         #end = time.time()
         #total = (end - start) * 10000
         #print(f"Total: {total}")
@@ -77,6 +77,11 @@ class Battlefield(CardCollection):
         self._perms_as_dicts = value
 
 
+    def give(self, recipient:"CardCollection", item:GameCard):
+        recipient.receive(item)
+        self.card_list.remove(item)
+        if isinstance(item, ChoiceLand):
+            item.reset_choices()
 
 
     #pseudogetters

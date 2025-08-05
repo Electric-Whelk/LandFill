@@ -1,7 +1,7 @@
 from simulation_objects.GameCards.Land import Land
 
 class UniqueLand(Land):
-    def __init__(self, card, mandatory=False):
-        Land.__init__(self, card, mandatory=mandatory)
+    def __init__(self, card, mandatory=False, **kwargs):
+        Land.__init__(self, card, mandatory=mandatory, **kwargs)
         self._cycle = card._name
 

@@ -6,6 +6,8 @@ import time
 from itertools import combinations
 from tabnanny import verbose
 
+from line_profiler import profile
+
 from simulation_objects.CardCollections.Battlefield import Battlefield
 from simulation_objects.CardCollections.CardCollection import CardCollection
 from simulation_objects.CardCollections.Deck import Deck
@@ -23,10 +25,10 @@ from simulation_objects.Timer import functimer_perturn, functimer_once
 
 
 class Game(Simulation):
-    def __init__(self, deck, cache, turns=7, verbose=False, prototype_comparison = None):
+    def __init__(self, deck, turns=7, verbose=False, prototype_comparison = None):
         Simulation.__init__(self, deck)
         self._hand = Hand()
-        self._battlefield = Battlefield(cache)
+        self._battlefield = Battlefield()
         self._graveyard = Graveyard()
         self._turn = 0
 
@@ -251,12 +253,14 @@ class Game(Simulation):
             self.seeking_target.turns_without_commander.append(self.turns_without_commander)
             self.seeking_target.options.append(self.options_each_land_drop)
 
-        if not self.found_target:
-            print(f"Seeking: {self.seeking_target}")
+        #if not self.found_target:
+            """print(f"Seeking: {self.seeking_target}")
             print(f"Hand: {self.hand.card_list}")
             print(f"Battlefield: {self.battlefield.card_list}")
             print(f"Graveyard: {self.graveyard.card_list}")
-            raise Exception("Stop!")
+            raise Exception("Stop!")"""
+            #with open("Missed_Searchables", "a") as file:
+                #file.write(f"{self.seeking_target}\n")
 
 
 
@@ -439,7 +443,7 @@ class Game(Simulation):
     def ensure_visible_card(self, subject):
         visible_cards = 7 + self.total_turns - 1  # since randint includes the values
         position = random.randint(0, visible_cards)
-        if subject is not None:
+        if subject is not None and not self.trial_card_searchable(subject, visible_cards):
             self.deck.card_list.remove(subject)
             self.deck.card_list.insert(position, subject)
             """
@@ -452,6 +456,15 @@ class Game(Simulation):
 
         #potentially change this to, if subject is not none, insert a random land
 
+    def trial_card_searchable(self, subject, visible_cards):
+        top_cards = self.deck.card_list[:visible_cards]
+        for card in top_cards:
+            if isinstance(card, SearchLand):
+                if card.can_find(subject):
+                    return True
+        return False
+
+
 
     def tap_unused_lands(self):
         pass
@@ -463,20 +476,22 @@ class Game(Simulation):
 
     #VERSION 2
     #@functimer_perturn
+    #@profile
     def determine_play_v2(self):
         current_max = self.battlefield.max_mana()
         potential_max = self.maximum_playable_mana() + current_max
         lands = self.lands_in_hand
 
-        self.lumps = self.generate_lumps(maxi=potential_max,
+        lumps = self.generate_lumps(maxi=potential_max,
                                     mini=current_max,
                                     max_plays=3,
                                     found=self.found_target)
         #add a null lump to play if nothing is available - helps with the searching
-        null = Lump({})
-        self.lumps.append(null)
+        null = Lump({}, landcount=potential_max)
+        lumps.append(null)
+        self.lumps = sorted(lumps, key=lambda l: l.cmc, reverse=True)
 
-        self.master_lump = self.create_lumps(self.hand.spells_list())[0]
+        self.master_lump = self.create_lumps(self.hand.spells_list(), landcount=potential_max)[0]
 
         if len(lands) > 0:
             self.play_land_and_spell()
@@ -486,7 +501,6 @@ class Game(Simulation):
         self.assess_turn_score()
 
 
-
     def play_land_and_spell(self):
         lands = self.lands_in_hand
         played_lands = self.battlefield.lands_list()
@@ -494,9 +508,8 @@ class Game(Simulation):
         for land in lands:
             self.hand.give(self.battlefield, land)
             land.tapped = not land.enters_untapped(self)
-            land.tapped = not land.enters_untapped(self)
             played_lands.append(land)
-            land.setpermits([x for x in self.lumps if x.set_playability(played_lands, self)])
+            self.set_land_permit(land, played_lands)
             played_lands.remove(land)
             self.battlefield.give(self.hand, land)
 
@@ -515,12 +528,22 @@ class Game(Simulation):
 
         largest.mapping = to_play.proposed_mapping
 
+
         self.play_lump_v2(to_play.largest_lump)
 
         self.update_options(to_play.options_at_play)
 
         for land in lands:
             land.reset_permits()
+
+    def set_land_permit(self, land, played_lands):
+        land.setpermits([x for x in self.lumps if x.set_playability(played_lands, self)])
+        """for lump in self.lumps:
+            if lump.set_playability(played_lands, self):
+                #print(f"Setting {lump} from {self.lumps}")
+                land.fine_tune_permits(lump)
+                break"""
+
 
     def play_spell_no_land(self):
         castable = [l for l in self.lumps if l.set_playability(self.battlefield.lands_list(), self)]
@@ -536,6 +559,8 @@ class Game(Simulation):
                     self.options_each_land_drop += options
 
     def filter_by_most_produced(self, lands, library=False):
+        if len(lands) < 2:
+            return lands
         if library == False:
             relevant_lands = self.battlefield.lands_list()
         else:
@@ -605,9 +630,9 @@ class Game(Simulation):
                 summed = sum([x.cmc[0] for x in c])
                 if summed <= maxi:
                     if found and summed >= mini:
-                        output.extend(self.create_lumps(c))
+                        output.extend(self.create_lumps(c, landcount=maxi))
                     else:
-                        output.extend(self.create_lumps(c))
+                        output.extend(self.create_lumps(c, landcount=maxi))
         return output
 
 
@@ -694,7 +719,7 @@ class Game(Simulation):
         self.secondmain = False
 
 
-    def create_lumps(self, input:list[Spell]) -> list[Lump]:
+    def create_lumps(self, input:list[Spell], landcount=None) -> list[Lump]:
         #draft version that picks a MDFC output randomly, but there is room to improve here by getting all MDFC permutations
         fodder = {}
         for spell in input:
@@ -702,7 +727,7 @@ class Game(Simulation):
                 fodder[spell] = 0
             else:
                 fodder[spell] = random.randint(0, 1)
-        return [Lump(fodder)]
+        return [Lump(fodder, landcount=landcount)]
 
     def determine_and_play_land(self, playoptions:dict):
         champ = None

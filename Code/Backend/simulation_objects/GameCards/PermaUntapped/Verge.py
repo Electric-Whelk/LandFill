@@ -3,8 +3,8 @@ from simulation_objects.Misc.ColorPie import landtype_map
 
 
 class Verge(PermaUntapped):
-    def __init__(self, card, mandatory=False):
-        PermaUntapped.__init__(self, card, mandatory=mandatory)
+    def __init__(self, card, mandatory=False, **kwargs):
+        PermaUntapped.__init__(self, card, mandatory=mandatory, **kwargs)
         divided_colours = self.determine_color_primacy(self._produced, card.faces[0].text)
         self._primary = divided_colours["primary"]
         self._secondary = divided_colours["secondary"]
@@ -27,9 +27,7 @@ class Verge(PermaUntapped):
         lines = text.split("\n")
         topline = lines[0]
 
-        topwords = topline.split(" ")
-        pipchars = list(topwords[2])
-        primary = pipchars[1]
+        primary = self.parse_simple_tapline(topline)
 
         secondary = "X"
         for color in prod:
@@ -43,7 +41,7 @@ class Verge(PermaUntapped):
     def live_prod(self, game):
         active = False
         for needed in self.needed_types:
-            if needed in game.battlefield.lands_list():
+            if needed in game.battlefield.landtypes_list():
                 active = True
                 break
         if not active:

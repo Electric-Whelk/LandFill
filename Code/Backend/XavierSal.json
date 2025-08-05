@@ -3,6 +3,8 @@
   "Commander": "Xavier Sal, Infested Captain",
   "Format": {"id": 4},
   "Quantity": 37,
+  "MinBasics": 9,
+  "OfEachBasic": 2,
   "Lands": "Swamp\nBreeding Pool\nCommand Tower\nDrowned Catacomb\nFlooded Grove\nForest\nForest\nForest\nForest\nForest\nForest\nForest\nForest\nForest\nHinterland Harbor\nIsland\nIsland\nIsland\nIsland\nIsland\nIsland\nIsland\nIsland\nMisty Rainforest\nOvergrown Tomb\nPolluted Delta\nIsland\nSunken Ruins\nSwamp\nTwilight Mire\nVerdant Catacombs\nWatery Grave\nWoodland Cemetery\nZagoth Triome\nSwamp\nSwamp\nSwamp\nSwamp\nSwamp",
   "AllTowers": "Command Tower\nCommand Tower\nCommand Tower\nCommand Tower\nCommand Tower\nCommand Tower\nCommand Tower\nCommand Tower\nCommand Tower\nCommand Tower\nCommand Tower\nCommand Tower\nCommand Tower\nCommand Tower\nCommand Tower\nCommand Tower\nCommand Tower\nCommand Tower\nCommand Tower\nCommand Tower\nCommand Tower\nCommand Tower\nCommand Tower\nCommand Tower\nCommand Tower\nCommand Tower\nCommand Tower\nCommand Tower\nCommand Tower\nCommand Tower\nCommand Tower\nCommand Tower\nCommand Tower\nCommand Tower\nCommand Tower\nCommand Tower\nCommand Tower\nCommand Tower",
   "AllBasics": "Forest\nForest\nForest\nForest\nForest\nForest\nForest\nForest\nForest\nForest\nForest\nForest\nForest\nForest\nForest\nForest\nForest\nForest\nIsland\nIsland\nIsland\nIsland\nIsland\nIsland\nIsland\nIsland\nIsland\nIsland\nIsland\nIsland\nSwamp\nSwamp\nSwamp\nSwamp\nSwamp\nSwamp\nSwamp\nSwamp",
