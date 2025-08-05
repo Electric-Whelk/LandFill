@@ -8,7 +8,8 @@ const ShockLands = {
     maxPriceInGBP: 13.54,
     alwaysTapped: false,
     fetchable: true,
-    suggestAutoInclude: true
+    suggestAutoInclude: true,
+    rank: null
 }
 
 const FilterLands = {
@@ -19,7 +20,8 @@ const FilterLands = {
     maxPriceInGBP: 13.54,
     alwaysTapped: false,
     fetchable: false,
-    suggestAutoInclude: false
+    suggestAutoInclude: false,
+    rank: null
 }
 
 const SurveilLands = {
@@ -30,7 +32,8 @@ const SurveilLands = {
     maxPriceInGBP: 13.54,
     alwaysTapped: true,
     fetchable: true,
-    suggestAutoInclude: false
+    suggestAutoInclude: false,
+    rank: 0
 }
 
 const BicycleLands = {
@@ -41,7 +44,8 @@ const BicycleLands = {
     maxPriceInGBP: 13.54,
     alwaysTapped: true,
     fetchable: true,
-    suggestAutoInclude: false
+    suggestAutoInclude: false,
+    rank: 1
 }
 
 const GuildGates = {
@@ -52,7 +56,8 @@ const GuildGates = {
     maxPriceInGBP: 13.54,
     alwaysTapped: true,
     fetchable: false,
-    suggestAutoInclude: false
+    suggestAutoInclude: false,
+    rank: 2
 }
 
 const ScryLands = {
@@ -63,7 +68,8 @@ const ScryLands = {
     maxPriceInGBP: 13.54,
     alwaysTapped: true,
     fetchable: false,
-    suggestAutoInclude: false
+    suggestAutoInclude: false,
+    rank: 1
 }
 
 

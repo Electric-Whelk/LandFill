@@ -11,46 +11,23 @@ const COLUMN_IDS = {
     exclude: 'Never include these'
 };
 
+const RANK_IDS = {
+    fetchable: 'Fetchable Taplands',
+    nonfetchable: 'Nonfetchable Taplands'
+}
+
 const Page2 = () => {
-    console.log("📦 Rendering Page2 — cyclesData:", cyclesData);
 
     const navigate = useNavigate();
-
-    /*const [columns, setColumns] = useState({
-        include: [],
-        consider: [],
-        exclude: []
-    });*/
 
     const [filters, setFilters] = useState({
         tappedNonfetch: false,
         tappedFetchable: false,
         maxPrice: '',
         currency: 'USD',
-        allowOffColorFetches: false
+        offColorFetches: false
     });
 
-    /*seEffect(() => {
-        console.log("🚀 cyclesData:", JSON.stringify(cyclesData, null, 2));
-
-        const autoIncluded = [];
-        const consider = [];
-
-        cyclesData.forEach(cycle => {
-            if (cycle.suggestAutoInclude) autoIncluded.push(cycle);
-            else consider.push(cycle);
-        });
-
-        const newCols = { include: autoIncluded, consider, exclude: [] };
-        console.log("🧪 Setting columns to:", newCols);
-
-        setColumns(newCols);
-    }, []);
-
-    useEffect(() => {
-        console.log("🔁 [columns] useEffect triggered");
-        console.log("✅ Updated columns state:", JSON.stringify(columns, null, 2));
-    }, [columns]);*/
 
     const [columns, setColumns] = useState(() => {
         const autoIncluded = [];
@@ -68,6 +45,23 @@ const Page2 = () => {
         };
     });
 
+    const [rankings, setRankings] = useState(() => {
+        const autoIncluded = [];
+        const consider = [];
+
+        cyclesData.forEach((cycle) => {
+            if (cycle.suggestAutoInclude) autoIncluded.push(cycle);
+            else consider.push(cycle);
+        });
+
+        return {
+            include: autoIncluded,
+            consider: consider,
+            exclude: []
+        };
+    });
+
+
     const onDragEnd = result => {
         if (!result.destination) return;
         const { source, destination } = result;
@@ -82,6 +76,7 @@ const Page2 = () => {
             [source.droppableId]: srcList,
             [destination.droppableId]: destList
         };
+
 
         // Uncheck filters if cycle was manually moved
         setFilters(prev => {
@@ -117,6 +112,8 @@ const Page2 = () => {
             ...columns.consider,
             ...columns.exclude
         ];
+
+        console.log(remaining)
         const newExclude = remaining.filter(cycle => cycleMatchesFilter(cycle, filters));
         const newInclude = remaining.filter(
             cycle => cycle.suggestAutoInclude && !cycleMatchesFilter(cycle, filters)
@@ -152,6 +149,8 @@ const Page2 = () => {
             <DragDropContext onDragEnd={onDragEnd}>
                 <div className="columns">
                     {Object.entries(COLUMN_IDS).map(([key, label]) => (
+                        <div>
+                        <h3>{label}</h3>
                         <Droppable droppableId={key} key={key}>
                             {(dropProvided) => (
                                 <div
@@ -159,7 +158,6 @@ const Page2 = () => {
                                     ref={dropProvided.innerRef}
                                     {...dropProvided.droppableProps}
                                 >
-                                    <h3>{label}</h3>
                                     {columns[key]?.map((cycle, index) => (
                                         <Draggable
                                             key={cycle.displayName}
@@ -182,12 +180,14 @@ const Page2 = () => {
                                     {dropProvided.placeholder}
                                 </div>
                             )}
-                        </Droppable>
+                        </Droppable></div>
                     ))}
 
 
                 </div>
             </DragDropContext>
+
+
 
             <div className="filters">
                 <h3>Remove from consideration:</h3>
@@ -197,7 +197,11 @@ const Page2 = () => {
                 </label>
                 <label>
                     <input type="checkbox" name="tappedFetchable" checked={filters.tappedFetchable} onChange={handleFilterChange} />
-                    All lands that are always tapped but are fetchable (eg, Surveil Lands)
+                    All lands that are always tapped even if they're fetchable (eg, Surveil Lands)
+                </label>
+                <label>
+                    <input type="checkbox" name="OffColorFetches" checked={filters.offColorFetches} onChange={handleFilterChange} />
+                    Off-Color Fetches
                 </label>
                 <label>
                     All lands that cost more than
@@ -214,15 +218,12 @@ const Page2 = () => {
                         <option value="GBP">GBP</option>
                     </select>
                 </label>
-                <label>
-                    <input type="checkbox" name="allowOffColorFetches" checked={filters.allowOffColorFetches} onChange={handleFilterChange} />
-                    Allow Off-Color Fetches
-                </label>
             </div>
+
 
             <div className="prioritization">
                 <h3>
-                    Land Prioritization <InfoIcon info="LandFill can only judge lands by how good they are at producing mana..." />
+                    Rank Equivalent Lands
                 </h3>
                 {/* Typed and Untyped Tapland Prioritization blocks would go here */}
                 <div>(Placeholder for ranking lists of taplands with drag-to-rank behavior)</div>
