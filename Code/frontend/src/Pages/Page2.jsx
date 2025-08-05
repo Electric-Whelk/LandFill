@@ -200,10 +200,6 @@ const Page2 = () => {
                     All lands that are always tapped even if they're fetchable (eg, Surveil Lands)
                 </label>
                 <label>
-                    <input type="checkbox" name="OffColorFetches" checked={filters.offColorFetches} onChange={handleFilterChange} />
-                    Off-Color Fetches
-                </label>
-                <label>
                     All lands that cost more than
                     <input
                         type="number"
@@ -218,6 +214,41 @@ const Page2 = () => {
                         <option value="GBP">GBP</option>
                     </select>
                 </label>
+            </div>
+
+            <div className = "preciseSpecs">
+                <label>
+                    <input type="checkbox" name="OffColorFetches" checked={filters.offColorFetches} onChange={handleFilterChange} />
+                    Allow Off-Color Fetches
+                </label>
+
+                <label>
+                Include at least
+                <input
+                    type="number"
+                    name="minBasics"
+                    value={filters.maxPrice}
+                    onChange={handleFilterChange}
+                    placeholder="Amount"
+                /> basic lands.
+                </label>
+
+                <label>
+                    Include at least
+                    <input
+                        type="number"
+                        name="minIndividualBasics"
+                        value={filters.maxPrice}
+                        onChange={handleFilterChange}
+                        placeholder="Amount"
+                    /> of every basic land in these colours.
+                </label>
+
+
+
+
+
+
             </div>
 
 
