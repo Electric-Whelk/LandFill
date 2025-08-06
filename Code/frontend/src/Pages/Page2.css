@@ -1,4 +1,6 @@
 .page2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     padding: 2rem;
     font-family: sans-serif;
 }
@@ -52,12 +54,27 @@
     cursor: grabbing;
 }
 
-
-
+.preferences {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
 
 .filters > label {
     display: block;
 
+}
+
+.preciseSpecs > label {
+    display: block;
+
+}
+
+.ranking {
+    flex: 1;
+    min-height: 300px;
+    border: 2px dashed #999;
+    background-color: #f9f9f9;
+    padding: 1rem;
 }
 
 

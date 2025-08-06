@@ -5,6 +5,8 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import cyclesData from '../Data/cycles';
 import './Page2.css';
 
+
+
 const COLUMN_IDS = {
     include: 'Definitely include these',
     consider: 'Consider these',
@@ -13,21 +15,25 @@ const COLUMN_IDS = {
 
 const RANK_IDS = {
     fetchable: 'Fetchable Taplands',
-    nonfetchable: 'Nonfetchable Taplands'
+    nonFetchable: 'Nonfetchable Taplands'
 }
 
 const Page2 = () => {
 
     const navigate = useNavigate();
 
+    //state setting for toggles
+    const [minBasics, setMinBasics] = useState(0)
+    const [minIndividualBasics, setMinIndividualBasics] = useState(0)
+    const [allowOffColorFetches, setAllowOffColorFetches] = useState(false)
+    const [viewedCycle, setViewedCycle] = useState(null)
+
     const [filters, setFilters] = useState({
         tappedNonfetch: false,
         tappedFetchable: false,
         maxPrice: '',
         currency: 'USD',
-        offColorFetches: false
     });
-
 
     const [columns, setColumns] = useState(() => {
         const autoIncluded = [];
@@ -46,25 +52,30 @@ const Page2 = () => {
     });
 
     const [rankings, setRankings] = useState(() => {
-        const autoIncluded = [];
-        const consider = [];
+        const untypedTaps = []
+        const typedTaps = []
+
 
         cyclesData.forEach((cycle) => {
-            if (cycle.suggestAutoInclude) autoIncluded.push(cycle);
-            else consider.push(cycle);
+            if (cycle.alwaysTapped) {
+                if (cycle.fetchable) typedTaps.push(cycle);
+                else untypedTaps.push(cycle);
+            }
         });
 
         return {
-            include: autoIncluded,
-            consider: consider,
-            exclude: []
+            fetchable: typedTaps,
+            nonFetchable: untypedTaps,
         };
     });
 
+    //behaviour definition for drag and drop columns
 
     const onDragEnd = result => {
         if (!result.destination) return;
         const { source, destination } = result;
+
+        if (source.droppableId === destination.droppableId) return;
 
         const srcList = Array.from(columns[source.droppableId]);
         const [movedItem] = srcList.splice(source.index, 1);
@@ -92,6 +103,29 @@ const Page2 = () => {
         setColumns(newColumns);
     };
 
+    const onReorder = result => {
+        if (!result.destination) return;
+        const { source, destination } = result;
+
+        if (source.index === destination.index) return;
+        if (source.droppableId !== destination.droppableId) return;
+
+
+        const newList = Array.from(rankings[source.droppableId]);
+        //throw new Error("This has been a test of your emergency broadcasting system")
+        const [movedItem] = newList.splice(source.index, 1);
+        newList.splice(destination.index, 0, movedItem)
+
+        setRankings({...rankings,
+            [source.droppableId]: newList
+        })
+
+
+    }
+
+
+    
+
     const cycleMatchesFilter = (cycle, filters) => {
         const { alwaysTapped, fetchable } = cycle;
         const { tappedNonfetch, tappedFetchable, maxPrice, currency } = filters;
@@ -113,7 +147,6 @@ const Page2 = () => {
             ...columns.exclude
         ];
 
-        console.log(remaining)
         const newExclude = remaining.filter(cycle => cycleMatchesFilter(cycle, filters));
         const newInclude = remaining.filter(
             cycle => cycle.suggestAutoInclude && !cycleMatchesFilter(cycle, filters)
@@ -132,9 +165,14 @@ const Page2 = () => {
         setFilters(prev => ({ ...prev, [name]: val }));
     };
 
+
+    //listeners
+
     useEffect(() => {
         applyFilters();
     }, [filters.tappedNonfetch, filters.tappedFetchable, filters.maxPrice, filters.currency]);
+
+
 
     return (
         <div className="page2">
@@ -145,6 +183,8 @@ const Page2 = () => {
                 <FAQ label="How will this optimize my manabase?" content="OPTIMIZATON EXPLANATION HERE" />
                 <FAQ label="How Long Will optimization take?" content="OPTIMIZATION TIME ESTIMATE HERE" />
             </div>
+
+            <CardInfoPanel cycle={viewedCycle}/>
 
             <DragDropContext onDragEnd={onDragEnd}>
                 <div className="columns">
@@ -158,24 +198,10 @@ const Page2 = () => {
                                     ref={dropProvided.innerRef}
                                     {...dropProvided.droppableProps}
                                 >
-                                    {columns[key]?.map((cycle, index) => (
-                                        <Draggable
-                                            key={cycle.displayName}
-                                            draggableId={cycle.displayName}
-                                            index={index}
-                                        >
-                                            {(dragProvided) => (
-                                                <div
-                                                    className="cycle-card"
-                                                    ref={dragProvided.innerRef}
-                                                    {...dragProvided.draggableProps}
-                                                    {...dragProvided.dragHandleProps}
-                                                >
-                                                    <span>{cycle.displayName}</span>
-                                                    <InfoIcon info={cycle.description}/>
-                                                </div>
-                                            )}
-                                        </Draggable>)
+                                    {columns[key]?.map((cycle, index) => (<CyclePanel
+                                        cycle={cycle}
+                                        index={index}
+                                        setViewedCycle={setViewedCycle}/>)
                                     )}
                                     {dropProvided.placeholder}
                                 </div>
@@ -187,8 +213,7 @@ const Page2 = () => {
                 </div>
             </DragDropContext>
 
-
-
+            <div className="preferences">
             <div className="filters">
                 <h3>Remove from consideration:</h3>
                 <label>
@@ -218,7 +243,7 @@ const Page2 = () => {
 
             <div className = "preciseSpecs">
                 <label>
-                    <input type="checkbox" name="OffColorFetches" checked={filters.offColorFetches} onChange={handleFilterChange} />
+                    <input type="checkbox" name="OffColorFetches" checked={allowOffColorFetches} onChange={setAllowOffColorFetches} />
                     Allow Off-Color Fetches
                 </label>
 
@@ -227,9 +252,9 @@ const Page2 = () => {
                 <input
                     type="number"
                     name="minBasics"
-                    value={filters.maxPrice}
-                    onChange={handleFilterChange}
-                    placeholder="Amount"
+                    value={minBasics}
+                    onChange={setMinBasics}
+                    /*placeholder="Amount"*/
                 /> basic lands.
                 </label>
 
@@ -238,17 +263,12 @@ const Page2 = () => {
                     <input
                         type="number"
                         name="minIndividualBasics"
-                        value={filters.maxPrice}
-                        onChange={handleFilterChange}
-                        placeholder="Amount"
-                    /> of every basic land in these colours.
+                        value={minIndividualBasics}
+                        onChange={setMinIndividualBasics}
+                        /*placeholder="Amount"*/
+                    /> of every basic land in the deck's colours.
                 </label>
-
-
-
-
-
-
+            </div>
             </div>
 
 
@@ -256,8 +276,32 @@ const Page2 = () => {
                 <h3>
                     Rank Equivalent Lands
                 </h3>
-                {/* Typed and Untyped Tapland Prioritization blocks would go here */}
-                <div>(Placeholder for ranking lists of taplands with drag-to-rank behavior)</div>
+                <DragDropContext onDragEnd={onReorder}>
+                    <div className="columns">
+                        {Object.entries(RANK_IDS).map(([key, label]) => (
+                            <div>
+                                <h3>{label}</h3>
+                                <Droppable droppableId={key} key={key}>
+                                    {(dropProvided) => (
+                                        <div
+                                            className="ranking"
+                                            ref={dropProvided.innerRef}
+                                            {...dropProvided.droppableProps}
+                                        >
+                                            {rankings[key]?.map((cycle, index) => (<CyclePanel
+                                                cycle={cycle}
+                                                index={index}
+                                                setViewedCycle={setViewedCycle}/>)
+                                            )}
+                                            {dropProvided.placeholder}
+                                        </div>
+                                    )}
+                                </Droppable></div>
+                        ))}
+
+                        <CardInfoPanel cycle={viewedCycle}/>
+                    </div>
+                </DragDropContext>
             </div>
 
             <button onClick={() => navigate('/advanced')}>Advanced Prioritization Settings</button>
@@ -276,8 +320,41 @@ const FAQ = ({ label, content }) => {
     );
 };
 
-const InfoIcon = ({ info }) => (
-    <span className="info-icon" title={info}>❔</span>
+const InfoIcon = ({ cycle }) => {
+
+    return(<span className="info-icon" title={cycle.description}>❔</span>)
+}
+
+const CardInfoPanel = ({ cycle }) => {
+    if (cycle === null) return <div>sploop</div>
+
+    return (
+
+    <div className="card-info-panel">
+        <img src={cycle.image} alt={cycle.description} />
+
+    </div>);
+};
+
+const CyclePanel = ({ cycle, index, setViewedCycle }) => (
+    <Draggable
+        key={cycle.displayName}
+        draggableId={cycle.displayName}
+        index={index}
+    >
+        {(dragProvided) => (
+            <div
+                className="cycle-card"
+                ref={dragProvided.innerRef}
+                {...dragProvided.draggableProps}
+                {...dragProvided.dragHandleProps}
+                onMouseOver={() => setViewedCycle(cycle)}
+            >
+                <span>{cycle.displayName}</span>
+                <InfoIcon cycle={cycle}/>
+            </div>
+        )}
+    </Draggable>
 );
 
 export default Page2;
