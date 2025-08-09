@@ -36,10 +36,11 @@ class MonteCarlo(CardCollection):
         CardCollection.__init__(self)
         #set on creation of the object
         self._deck = deck
-        self._cache = LandPermutationCache()
-        self._colorless_pips = deck.colorless_pips
-        self._pie_slices = self.deck.pie_slices
-        self._categories = [["SearchLand"]]
+
+        #set when the deck is setup
+        self._colorless_pips = None
+        self._pie_slices = None
+        self._categories = None
         self._minbasics = 0
         
         self.halt = False
@@ -191,6 +192,12 @@ class MonteCarlo(CardCollection):
         return [c for c in self.card_list if c.permitted]
 
     #deck attribute setup functions
+    def setup(self):
+        self._colorless_pips = self.deck.colorless_pips
+        self._pie_slices = self.deck.pie_slices
+        self._categories = [["SearchLand"]]
+        self._minbasics = 0
+
     def check_identity(self, card) -> bool:
         if not self.deck.format.color_id:
             return True

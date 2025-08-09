@@ -1,3 +1,5 @@
+import time
+
 from AppFactory import create_app
 from database_management.models.Cycle import Cycle
 from database_management.models.Format import Format
@@ -6,24 +8,56 @@ from flask_caching import Cache
 from simulation_objects.CardCollections.Deck import Deck
 from simulation_objects.CardCollections.MCUsrTest import MCUsrTest
 from simulation_objects.CardCollections.MonteCarlo import MonteCarlo
+from simulation_objects import InputParser
+
+print("You're here!")
 
 app = create_app()
 cache = Cache(app)
 
-deck = Deck()
+Deck = Deck()
+MonteCarlo = MonteCarlo(Deck)
+InputParser = InputParser()
 
-status = "Dev"
+"""status = "Dev"
 match(status):
     case "UserTest":
         print("Set monty as usertest...")
         monty = MCUsrTest(deck)
     case "Dev":
-        monty = MonteCarlo(deck)
+        monty = MonteCarlo(deck)"""
+
+
+@app.route('/api/submit-deck', methods=['POST'])
+def submit_deck():
+    data = request.get_json()
+    print("Received data:", data)
 
 
 
+    decklist = InputParser.parse_decklist(data.get("deckList"))
+    partner = InputParser.parse_partner(data.get("partner"))
+    Deck.setup(decklist, data.get("commander"), partner=partner)
+    MonteCarlo.setup()
+    MonteCarlo.fill_heap()
+    heap = MonteCarlo.export_cycles()
 
-@app.route('/fetch_cycles', methods=['GET'])
+    #actual response
+    return jsonify(heap)
+
+    # Placeholder response
+    """return jsonify({
+        "message": "Received deck",
+        "deckListLength": len(data.get("deckList", "").splitlines()),
+        "commander": data.get("commander", ""),
+        "placeholderCards": [
+            {"displayName": "Shock Land", "description": "Good fixing", "image": "ShockLand.jpg"},
+            {"displayName": "Fetch Land", "description": "Fetches basics", "image": "FetchLand.jpg"}
+        ]
+    })
+        """
+
+"""@app.route('/fetch_cycles', methods=['GET'])
 def fetch_cycles():
     cycles = Cycle.query.filter(Cycle._official == True).all()
     json_cycles = list(map(lambda x: x.to_JSON(), cycles))
@@ -78,7 +112,7 @@ def run():
     #except Exception as e:
         #print(e)
         #return jsonify({"response": "Failed - hey Leah shouldn't you be doing this with headers?"})
-
+"""
 
 
 

@@ -1,3 +1,5 @@
+from currency_converter import CurrencyConverter
+
 from database_management.models.Card import Card
 from database_management.models.Face import Face
 from Extensions import db
@@ -30,8 +32,13 @@ class CardCollection:
         self._cards = []
         self._prioritization = stdprioritization
         self._prioritization_object = LandPrioritization(stdprioritization)
+        self._sample_pound = CurrencyConverter().convert(1, "GBP", "USD")
 
     #getters and setters
+    @property
+    def sample_pound(self):
+        return self._sample_pound
+
     @property
     def prioritization_object(self):
         return self._prioritization_object
@@ -90,7 +97,14 @@ class CardCollection:
 
 
     def get_card_by_name(self, name) -> Card:
-        #print(f"looking up card {name}...")
+        edge_cases = {
+            "Song of Earendil": "Song of Eärendil"
+        }
+        try:
+            name = edge_cases[name]
+        except KeyError:
+            name = name
+
         try:
             face = db.session.query(Face).filter(Face._name == name).first()
             card = db.session.query(Card).filter(Card._id == face.card_id).first()
@@ -199,8 +213,38 @@ class CardCollection:
                 return MiscLand(card, mandatory)
 
     def print_all(self):
+        i = 0
         for card in self.card_list:
-            print(f"{card.name}")
+            print(f"{i}: {card.name} ({card.fetchable})")
+            i += 1
+
+
+    def export_cycles(self):
+        output = {}
+        for card in self.card_list:
+            if isinstance(card, Land):
+                usd = card.usd
+                sp = self.sample_pound
+                card.gbp = usd * sp
+                try:
+                    output[type(card).__name__]["cards"].append(card.to_dict())
+                except KeyError:
+                    output[type(card).__name__] = {
+                        "typeName": type(card).__name__,
+                        "cards": [card.to_dict()],
+                        "displayName": card.cycle_display_name,
+                        "alwaysTapped": card.permatap,
+                        "fetchable": card.fetchable
+                        #"maxPriceInDollars": card.usd,
+                        #"maxPriceInEuros": card.eur,
+                        #"maxPriceInGBP": card.gbp
+                    }
+            true_output = []
+            for key in output:
+                true_output.append(output[key])
+
+
+        return true_output
 
 
 

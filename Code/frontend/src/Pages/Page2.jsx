@@ -1,9 +1,9 @@
 // Page2.js – Dynamic land cycle selector interface
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import cyclesData from '../Data/cycles';
-import './Page2.css';
+import './Pages.css';
 
 
 
@@ -20,7 +20,14 @@ const RANK_IDS = {
 
 const Page2 = () => {
 
+
+    //routing
     const navigate = useNavigate();
+    const location = useLocation();
+
+    //data handling
+    const data = location.state?.data;
+
 
     //state setting for toggles
     const [minBasics, setMinBasics] = useState(0)
@@ -38,10 +45,24 @@ const Page2 = () => {
     const [columns, setColumns] = useState(() => {
         const autoIncluded = [];
         const consider = [];
+        const autoincludeList = ["Shock Lands", "Fetch Lands"];
 
-        cyclesData.forEach((cycle) => {
-            if (cycle.suggestAutoInclude) autoIncluded.push(cycle);
-            else consider.push(cycle);
+
+        data.forEach((cycle) => {
+            console.log(autoincludeList.includes(cycle.displayName))
+
+            if (autoincludeList.includes( cycle.displayName )){
+                autoIncluded.push(cycle);
+                cycle.suggestAutoInclude = true
+            }
+            else {
+                consider.push(cycle);
+                cycle.suggestAutoInclude = false
+            }
+
+
+            console.log(autoIncluded)
+            console.log(consider)
         });
 
         return {
@@ -68,6 +89,20 @@ const Page2 = () => {
             nonFetchable: untypedTaps,
         };
     });
+
+    //listeners
+
+    useEffect(() => {
+        applyFilters();
+    }, [filters.tappedNonfetch, filters.tappedFetchable, filters.maxPrice, filters.currency]);
+
+
+    //handle data from Page 1 (OLD VERSION - has to after react hooks)
+    /*const data = location.state?.data;
+    if (!data) {
+        return <p>No data received. Please go back to Page 1.</p>;
+    }
+    console.log(data)*/
 
     //behaviour definition for drag and drop columns
 
@@ -166,25 +201,78 @@ const Page2 = () => {
     };
 
 
-    //listeners
-
-    useEffect(() => {
-        applyFilters();
-    }, [filters.tappedNonfetch, filters.tappedFetchable, filters.maxPrice, filters.currency]);
-
 
 
     return (
         <div className="page2">
-            <button onClick={() => navigate('/')}>⬅ Back</button>
-            <h1>Land Cycle Preferences</h1>
+        <div className="main-content">
+            <div className="admin">
+                <h1>Land Cycle Preferences</h1>
 
-            <div className="faq-row">
-                <FAQ label="How will this optimize my manabase?" content="OPTIMIZATON EXPLANATION HERE" />
-                <FAQ label="How Long Will optimization take?" content="OPTIMIZATION TIME ESTIMATE HERE" />
+                <div className="faq-row">
+                    <FAQ label="How will this optimize my manabase?" content="OPTIMIZATON EXPLANATION HERE"/>
+                    <FAQ label="How Long Will optimization take?" content="OPTIMIZATION TIME ESTIMATE HERE"/>
+                </div>
+
+                <div className="preferences">
+                    <div className="filters">
+                        <h3>Remove from consideration:</h3>
+                        <label>
+                            <input type="checkbox" name="tappedNonfetch" checked={filters.tappedNonfetch} onChange={handleFilterChange} />
+                            All lands that are always tapped and aren’t fetchable (eg, GuildGates)
+                        </label>
+                        <label>
+                            <input type="checkbox" name="tappedFetchable" checked={filters.tappedFetchable} onChange={handleFilterChange} />
+                            All lands that are always tapped even if they're fetchable (eg, Surveil Lands)
+                        </label>
+                        <label>
+                            All lands that cost more than
+                            <input
+                                type="number"
+                                name="maxPrice"
+                                value={filters.maxPrice}
+                                onChange={handleFilterChange}
+                                placeholder="Amount"
+                            />
+                            <select name="currency" value={filters.currency} onChange={handleFilterChange}>
+                                <option value="USD">USD</option>
+                                <option value="Euros">Euros</option>
+                                <option value="GBP">GBP</option>
+                            </select>
+                        </label>
+                    </div>
+
+                    <div className = "preciseSpecs">
+                        <label>
+                            <input type="checkbox" name="OffColorFetches" checked={allowOffColorFetches} onChange={setAllowOffColorFetches} />
+                            Allow Off-Color Fetches
+                        </label>
+
+                        <label>
+                            Include at least
+                            <input
+                                type="number"
+                                name="minBasics"
+                                value={minBasics}
+                                onChange={setMinBasics}
+                                /*placeholder="Amount"*/
+                            /> basic lands.
+                        </label>
+
+                        <label>
+                            Include at least
+                            <input
+                                type="number"
+                                name="minIndividualBasics"
+                                value={minIndividualBasics}
+                                onChange={setMinIndividualBasics}
+                                /*placeholder="Amount"*/
+                            /> of every basic land in the deck's colours.
+                        </label>
+                    </div>
+                </div>
+
             </div>
-
-            <CardInfoPanel cycle={viewedCycle}/>
 
             <DragDropContext onDragEnd={onDragEnd}>
                 <div className="columns">
@@ -212,64 +300,6 @@ const Page2 = () => {
 
                 </div>
             </DragDropContext>
-
-            <div className="preferences">
-            <div className="filters">
-                <h3>Remove from consideration:</h3>
-                <label>
-                    <input type="checkbox" name="tappedNonfetch" checked={filters.tappedNonfetch} onChange={handleFilterChange} />
-                    All lands that are always tapped and aren’t fetchable (eg, GuildGates)
-                </label>
-                <label>
-                    <input type="checkbox" name="tappedFetchable" checked={filters.tappedFetchable} onChange={handleFilterChange} />
-                    All lands that are always tapped even if they're fetchable (eg, Surveil Lands)
-                </label>
-                <label>
-                    All lands that cost more than
-                    <input
-                        type="number"
-                        name="maxPrice"
-                        value={filters.maxPrice}
-                        onChange={handleFilterChange}
-                        placeholder="Amount"
-                    />
-                    <select name="currency" value={filters.currency} onChange={handleFilterChange}>
-                        <option value="USD">USD</option>
-                        <option value="Euros">Euros</option>
-                        <option value="GBP">GBP</option>
-                    </select>
-                </label>
-            </div>
-
-            <div className = "preciseSpecs">
-                <label>
-                    <input type="checkbox" name="OffColorFetches" checked={allowOffColorFetches} onChange={setAllowOffColorFetches} />
-                    Allow Off-Color Fetches
-                </label>
-
-                <label>
-                Include at least
-                <input
-                    type="number"
-                    name="minBasics"
-                    value={minBasics}
-                    onChange={setMinBasics}
-                    /*placeholder="Amount"*/
-                /> basic lands.
-                </label>
-
-                <label>
-                    Include at least
-                    <input
-                        type="number"
-                        name="minIndividualBasics"
-                        value={minIndividualBasics}
-                        onChange={setMinIndividualBasics}
-                        /*placeholder="Amount"*/
-                    /> of every basic land in the deck's colours.
-                </label>
-            </div>
-            </div>
 
 
             <div className="prioritization">
@@ -299,13 +329,19 @@ const Page2 = () => {
                                 </Droppable></div>
                         ))}
 
-                        <CardInfoPanel cycle={viewedCycle}/>
                     </div>
                 </DragDropContext>
             </div>
+        </div>
 
-            <button onClick={() => navigate('/advanced')}>Advanced Prioritization Settings</button>
-            <button onClick={() => navigate('/results')}>Run Optimizer</button>
+        <div className="side-panel">
+            <CycleInfoPanel cycle={viewedCycle}/>
+
+            <div className="nav-buttons">
+                <button onClick={() => navigate('/page1')}>⬅ Back</button>
+                <button onClick={() => navigate('/page3')}>Run Optimizer</button>
+            </div>
+        </div>
         </div>
     );
 };
@@ -325,13 +361,17 @@ const InfoIcon = ({ cycle }) => {
     return(<span className="info-icon" title={cycle.description}>❔</span>)
 }
 
-const CardInfoPanel = ({ cycle }) => {
-    if (cycle === null) return <div>sploop</div>
+const CycleInfoPanel = ({ cycle }) => {
+    if (cycle === null) return <div className="card-info-panel">sploop</div>
 
     return (
 
     <div className="card-info-panel">
         <img src={cycle.image} alt={cycle.description} />
+        <div className="card-text-info">
+            <p>Name: {cycle.displayName}</p>
+            <p>Lands: [listed by price]</p>
+        </div>
 
     </div>);
 };
@@ -351,7 +391,6 @@ const CyclePanel = ({ cycle, index, setViewedCycle }) => (
                 onMouseOver={() => setViewedCycle(cycle)}
             >
                 <span>{cycle.displayName}</span>
-                <InfoIcon cycle={cycle}/>
             </div>
         )}
     </Draggable>

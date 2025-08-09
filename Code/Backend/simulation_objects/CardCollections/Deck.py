@@ -19,14 +19,16 @@ class Deck(CardCollection):
         CardCollection.__init__(self)
         self._lands_requested = None
 
-    def setup(self, input_cards, format, quantity, commander_name, partner=None):
-        self._format = self.parse_format_from_json(format)
+    #def setup(self, input_cards, format, quantity, commander_name, partner=None):
+
+    def setup(self, input_cards, commander_name, partner=None):
+        #self._format = self.parse_format_from_json(format)
 
         input_as_cards = self.parse_cards_from_json(input_cards)
         self.set_card_list_from_ORM(input_as_cards, mandatory=True)
         self.set_commanders(commander_name, partner=partner)
 
-        self._lands_requested = self.determine_lands_requested_from_json(quantity)
+        self._lands_requested = 100-len(self.card_list) #self.determine_lands_requested_from_json(quantity)
         self._size = self.determine_size()
         self._color_id = self.determine_color_id()
         self._pie_slices = self.slice_the_pie(self._color_id)
@@ -100,6 +102,10 @@ class Deck(CardCollection):
 
 
     def create_commander_gamecard(self, name):
+        for card in self.card_list:
+            if card.name == name:
+                return card
+
         as_card = self.get_card_by_name(name)
         as_gamecard = self.parse_GameCard(as_card, mandatory=True, commander=True)
         self.card_list.append(as_gamecard)

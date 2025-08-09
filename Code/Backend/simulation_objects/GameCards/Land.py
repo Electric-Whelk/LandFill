@@ -25,6 +25,11 @@ class Land(GameCard):
                        "Appearances": 0}
         self._monocolor = False
 
+        #cycle attributes
+        self._fetchable = card.cycle.typed
+        self._cycle_display_name = card.cycle.name
+
+
         #dev attributes
         self.peek = False
 
@@ -55,6 +60,14 @@ class Land(GameCard):
 
 
     #getters and setters
+    @property
+    def cycle_display_name(self):
+        return self._cycle_display_name
+
+    @property
+    def fetchable(self):
+        return self._fetchable
+
     @property
     def none_price(self):
         return self._none_price
@@ -415,6 +428,18 @@ class Land(GameCard):
     def report(self, message):
         with open(f"{self.name}", "a") as file:
             file.write(f"{message}\n")
+
+    def to_dict(self):
+         return {
+            "name": self.name,
+            "usd": self.usd,
+            "eur": self.eur,
+            "gbp": self.gbp,
+            "mandatory": self.mandatory,
+            "permitted": self.permitted,
+            "produced": "".join(self.produced)
+        }
+
 
 
 

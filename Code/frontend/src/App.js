@@ -3,9 +3,13 @@ import MonteCarlo from "./Page_Elements/MonteCarlo"
 import Output from "./Page_Elements/Output"
 import PlayerInput from "./Page_Elements/PlayerInput"
 import React, { useState, useEffect } from "react";
+import { Routes, Route } from 'react-router-dom';
 
 import './App.css';
+import Page1 from './Pages/Page1';
 import Page2 from "./Pages/Page2";
+import Page3 from "./Pages/Page3";
+
 
 
 /*const App = () => {
@@ -119,7 +123,13 @@ import Page2 from "./Pages/Page2";
 }*/
 
 function App() {
-    return <Page2 />;
+    return (
+        <Routes>
+            <Route path="/page1" element={<Page1 />} />
+            <Route path="/page2" element={<Page2 />} />
+            <Route path="/page3" element={<Page3 />} />
+        </Routes>
+    );
 }
 
 export default App;

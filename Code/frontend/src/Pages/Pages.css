@@ -1,11 +1,74 @@
-.page2 {
+.page1 {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    padding: 2rem;
-    font-family: sans-serif;
 }
 
+.page2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    padding: 2rem;
+    height: 100vh;
+    font-family: sans-serif;
+    overflow-y: auto;
+}
+
+.page3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    padding: 2rem;
+    height: 100vh;
+    font-family: sans-serif;
+    overflow-y: auto;
+}
+
+
+.main-content {
+    grid-column: 1 / span 3;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.side-panel {
+    display: flex;
+    position: sticky;
+    grid-column: 4 / span 4;
+    overflow-y: auto;
+    height: 100vh;
+    background-color: #f9f9f9;
+    flex-direction: column;
+    align-items: center;   /* horizontal center */
+    padding: 1rem;
+}
+
+#page3-main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+}
+
+.card-outputs {
+    grid-column: 1 / span 1;
+}
+
+
+img {
+    width: 200px;
+    height: 280px;
+}
+
+nav-buttons {
+    margin: auto;
+}
+
+
+
+.admin {
+    grid-column: 1 / span 2;
+}
+
+
+
 .columns {
+    grid-column: 1 / span 3;
     display: flex;
     gap: 1rem;
     margin-top: 1rem;
@@ -20,13 +83,17 @@
     columns: 2
 }
 
+Droppable > .cycle-card {
+    cursor: grab;
+
+}
+
 .cycle-card {
     padding: 0.5rem;
     margin-bottom: 0.5rem;
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 4px;
-    cursor: grab;
 }
 
 .cycle-card:active {
