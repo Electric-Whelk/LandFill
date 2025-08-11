@@ -430,15 +430,23 @@ class Land(GameCard):
             file.write(f"{message}\n")
 
     def to_dict(self):
-         return {
+        generic = GameCard.to_dict(self)
+        generic["produced"] = "".join(self.produced)
+        generic["entersTapped"] = self.permatap
+        generic["fetchable"] = self.fetchable
+
+        """return {
             "name": self.name,
-            "usd": self.usd,
-            "eur": self.eur,
-            "gbp": self.gbp,
+            "USD": self.usd,
+            "EUR": self.eur,
+            "GBP": self.gbp,
             "mandatory": self.mandatory,
             "permitted": self.permitted,
-            "produced": "".join(self.produced)
-        }
+            "produced": "".join(self.produced),
+            "image": self.image
+        }"""
+
+        return generic
 
 
 

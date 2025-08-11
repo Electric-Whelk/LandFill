@@ -9,6 +9,9 @@ from simulation_objects.CardCollections.Deck import Deck
 from simulation_objects.CardCollections.MCUsrTest import MCUsrTest
 from simulation_objects.CardCollections.MonteCarlo import MonteCarlo
 from simulation_objects import InputParser
+from flask import Flask, send_from_directory
+import os
+import requests
 
 print("You're here!")
 
@@ -18,6 +21,8 @@ cache = Cache(app)
 Deck = Deck()
 MonteCarlo = MonteCarlo(Deck)
 InputParser = InputParser()
+PrevPageOneInput = "DEADVALUE"
+PrevPageTwoInput = "DEADVALUE"
 
 """status = "Dev"
 match(status):
@@ -28,25 +33,73 @@ match(status):
         monty = MonteCarlo(deck)"""
 
 
+@app.route("/card-images/<path:filename>")
+def serve_card_image(filename):
+    """Serve cached card images."""
+    return send_from_directory(MonteCarlo.image_dir, filename)
+
+
 @app.route('/api/submit-deck', methods=['POST'])
 def submit_deck():
     data = request.get_json()
     print("Received data:", data)
-
-
-
-    decklist = InputParser.parse_decklist(data.get("deckList"))
-    partner = InputParser.parse_partner(data.get("partner"))
-    Deck.setup(decklist, data.get("commander"), partner=partner)
-    MonteCarlo.setup()
-    MonteCarlo.fill_heap()
+    global PrevPageOneInput
+    if data != PrevPageOneInput:
+        decklist = InputParser.parse_decklist(data.get("deckList"))
+        partner = InputParser.parse_partner(data.get("partner"))
+        Deck.setup(decklist, data.get("commander"), partner=partner)
+        MonteCarlo.setup()
+        MonteCarlo.fill_heap()
+        PrevPageOneInput= data
     heap = MonteCarlo.export_cycles()
 
-    #actual response
-    return jsonify(heap)
 
-    # Placeholder response
-    """return jsonify({
+    #actual response
+    return jsonify({"currency": data.get("currency"), "heap": heap})
+
+@app.route('/api/test-preferences', methods=['POST'])
+def test_preferences():
+    data = request.get_json()
+    print("Received data:", data)
+    global PrevPageTwoInput
+    if data != PrevPageTwoInput:
+        MonteCarlo.set_rankings(data.get("rankings"))
+        MonteCarlo.set_permissions(mandatory = data.get("mandatory"),
+                                   permitted = data.get("permitted"),
+                                   excluded = data.get("excluded"))
+        PrevPageTwoInput= data
+
+    heap = MonteCarlo.export_cards()
+
+
+    return jsonify({"cards": heap})
+
+
+@app.route('/api/submit-preferences', methods=['POST'])
+def submit_preferences():
+    data = request.get_json()
+    print("Received data:", data)
+    global PrevPageTwoInput
+    if data != PrevPageTwoInput:
+
+        MonteCarlo.set_permissions(mandatory = data.get("mandatory"),
+                                   permitted = data.get("permitted"),
+                                   excluded = data.get("excluded"))
+        MonteCarlo.set_rankings(data.get("rankings"))
+
+        PrevPageTwoInput= data
+
+    heap = MonteCarlo.export_cards()
+
+
+    return jsonify({"cards": heap})
+
+
+
+
+
+
+"""return jsonify({
         "message": "Received deck",
         "deckListLength": len(data.get("deckList", "").splitlines()),
         "commander": data.get("commander", ""),

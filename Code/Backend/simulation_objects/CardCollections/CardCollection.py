@@ -1,3 +1,7 @@
+import time
+
+from urllib.parse import quote_plus
+
 from currency_converter import CurrencyConverter
 
 from database_management.models.Card import Card
@@ -6,12 +10,15 @@ from Extensions import db
 from random import shuffle
 
 from simulation_objects.GameCards import CommandTower, BondLand, DualLand, BattleLand, FastLand, SlowLand, PainLand, \
-    HorizonLand
+    HorizonLand, ArtifactTapLand, BicycleLand, ScryLand, TypedDualLand
+from simulation_objects.GameCards.TappedCycles.SurveilLand import SurveilLand
+
 from simulation_objects.GameCards.BasicLand import BasicLand
 from simulation_objects.GameCards.ChoiceLands import DualFacedLand
 from simulation_objects.GameCards.GameCard import GameCard
 from simulation_objects.GameCards.Land import Land
 from simulation_objects.GameCards.MiscLand import MiscLand
+from simulation_objects.GameCards.PermaUntapped import OGDualLand
 from simulation_objects.GameCards.PermaUntapped.Verge import Verge
 from simulation_objects.GameCards.SearchLands import SearchLand
 from simulation_objects.GameCards.SearchLands.FetchLand import FetchLand
@@ -26,6 +33,10 @@ from simulation_objects.GameCards.UntappableCycles.ShockLand import ShockLand
 from simulation_objects.Misc.ColorPie import landtype_map
 from simulation_objects.Misc.LandPrioritization import stdprioritization, LandPrioritization
 
+import os
+import requests
+from urllib.parse import quote
+
 
 class CardCollection:
     def __init__(self):
@@ -33,8 +44,13 @@ class CardCollection:
         self._prioritization = stdprioritization
         self._prioritization_object = LandPrioritization(stdprioritization)
         self._sample_pound = CurrencyConverter().convert(1, "GBP", "USD")
+        self._image_dir = os.path.expanduser("~/FinalProject/Code/Backend/card-images")
 
     #getters and setters
+    @property
+    def image_dir(self):
+        return self._image_dir
+
     @property
     def sample_pound(self):
         return self._sample_pound
@@ -187,6 +203,19 @@ class CardCollection:
                     return RevealLand(card, mandatory)
                 case "Dual Faced Lands":
                     return DualFacedLand(card, mandatory)
+                case "OG Dual Lands":
+                    return OGDualLand(card, mandatory)
+                case "Surveil Lands":
+                    return SurveilLand(card, mandatory)
+                case "Artifact Taplands":
+                    return ArtifactTapLand(card, mandatory)
+                case "Bicycle Lands":
+                    return BicycleLand(card, mandatory)
+                case "Scry Lands":
+                    return ScryLand(card, mandatory)
+                case "Typed Dual Lands":
+                    return TypedDualLand(card, mandatory)
+
                 #case "Bounce Lands":
                     #return BounceLand(card)
                 case _:
@@ -218,11 +247,15 @@ class CardCollection:
             print(f"{i}: {card.name} ({card.fetchable})")
             i += 1
 
+    def export_cards(self):
+        return [card.to_dict() for card in self.card_list]
 
     def export_cycles(self):
         output = {}
         for card in self.card_list:
             if isinstance(card, Land):
+                if card.image is None:
+                    card.image = self.get_cached_card_image_v2(card.name)
                 usd = card.usd
                 sp = self.sample_pound
                 card.gbp = usd * sp
@@ -234,7 +267,8 @@ class CardCollection:
                         "cards": [card.to_dict()],
                         "displayName": card.cycle_display_name,
                         "alwaysTapped": card.permatap,
-                        "fetchable": card.fetchable
+                        "fetchable": card.fetchable,
+                        "altText": f"EXAMPLE: {card.name} - {card.text}"
                         #"maxPriceInDollars": card.usd,
                         #"maxPriceInEuros": card.eur,
                         #"maxPriceInGBP": card.gbp
@@ -246,7 +280,82 @@ class CardCollection:
 
         return true_output
 
+    def get_cached_card_image_v2(self, card_name):
 
+        #IMAGE_DIR = os.path.expanduser("~/FinalProject/Code/Backend/card-images")
+        IMAGE_DIR = self.image_dir
+        os.makedirs(IMAGE_DIR, exist_ok=True)
+        """Return a URL to the card image, caching it if needed."""
+        safe_name = card_name.replace(" ", "_").replace("/", "_") + ".jpg"
+        file_path = os.path.join(IMAGE_DIR, safe_name)
+
+        # If we don't already have the file, download it
+        time.sleep(0.1)
+        if not os.path.exists(file_path):
+
+            print(f"Downloading image for {card_name} to {file_path}...")
+            scryfall_url = f"https://api.scryfall.com/cards/named?exact={quote_plus(card_name)}"
+            res = requests.get(scryfall_url)
+            if res.status_code == 200:
+                data = res.json()
+                image_url = data.get("image_uris", {}).get("normal")
+                if image_url:
+                    img_res = requests.get(image_url)
+                    if img_res.status_code == 200:
+                        with open(file_path, "wb") as f:
+                            f.write(img_res.content)
+            else:
+                print(f"Failed to get Scryfall data for {card_name}")
+
+        # Return the frontend-friendly URL
+        return f"/card-images/{safe_name}"
+
+
+    def get_cached_card_image(self, card_name):
+        print(f"Getting image for {card_name}")
+        """
+        Fetches a card image from cache if available, otherwise from Scryfall.
+        Saves to ~/FinalProject/Code/Backend/card-images/ and returns the file path.
+        """
+        # Expand the ~ to the absolute home path
+        IMAGE_DIR = os.path.expanduser("~/FinalProject/Code/Backend/card-images")
+
+        # Make sure the directory exists
+        os.makedirs(IMAGE_DIR, exist_ok=True)
+
+        # Make a safe filename
+        safe_name = card_name.replace("/", "-").replace(" ", "_")
+        file_path = os.path.join(IMAGE_DIR, f"{safe_name}.jpg")
+
+        # If file already exists, return it
+        if os.path.exists(file_path):
+            return file_path
+
+        # Fetch from Scryfall API
+        time.sleep(0.1)
+        url = f"https://api.scryfall.com/cards/named?exact={quote(card_name)}"
+        response = requests.get(url)
+        if response.status_code != 200:
+            print(f"⚠️ Could not fetch data for card '{card_name}' (status {response.status_code})")
+            return None
+
+        data = response.json()
+        image_url = data.get("image_uris", {}).get("normal")
+
+        if not image_url:
+            print(f"⚠️ No image URI found for '{card_name}'")
+            return None
+
+        # Download the image
+        img_res = requests.get(image_url)
+        if img_res.status_code == 200:
+            with open(file_path, "wb") as f:
+                f.write(img_res.content)
+            print(f"✅ Saved image for '{card_name}' → {file_path}")
+            return file_path
+        else:
+            print(f"⚠️ Failed to download image for '{card_name}'")
+            return None
 
     def accessible_colours(self, game, exclude=None):
         if exclude == None:
@@ -286,6 +395,45 @@ class CardCollection:
             if isinstance(card, FilterLand):
                 return True
         return False
+
+
+
+
+
+    def set_permissions(self, mandatory=None, permitted=None, excluded=None):
+        checks = [x for x in [mandatory, permitted, excluded] if x is None]
+        if len(checks) != 0:
+            raise Exception("Misuse of set_permissions function")
+
+        def names(input):
+            return [x["name"] for x in input]
+
+        mandatory = names(mandatory)
+        permitted = names(permitted)
+        excluded = names(excluded)
+
+        for card in self.card_list:
+            if card.name in mandatory:
+                card.mandatory = True
+                card.permitted = True
+            elif card.name in permitted:
+                card.permitted = True
+                card.mandatory = False
+            elif card.name in excluded:
+                card.permitted = False
+                card.mandatory = False
+            else:
+                raise Exception(f"{card.name} not in any of the lists")
+
+
+    def permitted_lands(self) -> list:
+        #return self._permitted_lands
+        return [c for c in self.card_list if c.permitted]
+
+
+
+
+
 
 
 

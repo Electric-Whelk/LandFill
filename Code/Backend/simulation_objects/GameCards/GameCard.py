@@ -5,10 +5,13 @@ from currency_converter import CurrencyConverter
 class GameCard(object):
     def __init__(self, card:Card, mandatory=False, permitted = True):
         self._name = card.name
-        self._usd = float(card.usd)
-        self._eur = float(card.eur)
+        self._usd = float(card.usd) / 100
+        self._eur = float(card.eur) / 100
         self._gbp = 0
         self._color_id = list(card._color_identity)
+        self._text = self.parse_text(card)
+        self._image = None
+        self._off_color_fetch = False
 
 
         self._mandatory = mandatory
@@ -21,6 +24,23 @@ class GameCard(object):
 
 
     #getters and setters
+    @property
+    def off_color_fetch(self):
+        return self._off_color_fetch
+    @off_color_fetch.setter
+    def off_color_fetch(self, value):
+        self._off_color_fetch = value
+
+    @property
+    def image(self):
+        return self._image
+    @image.setter
+    def image(self, value):
+        self._image = value
+
+    @property
+    def text(self):
+        return self._text
 
     @property
     def color_id(self) -> list:
@@ -81,12 +101,20 @@ class GameCard(object):
     def to_dict(self):
          return {
             "name": self.name,
-            "usd": self.usd,
-            "eur": self.eur,
-            "gbp": self.gbp,
+            "USD": self.usd,
+            "EUR": self.eur,
+            "GBP": round(self.gbp, 2),
             "mandatory": self.mandatory,
             "permitted": self.permitted,
+            "image": self.image,
+            "offColorFetch": self.off_color_fetch
         }
+
+    def parse_text(self, card) -> str:
+        if len(card.faces) == 1:
+            return card.faces[0].text
+        else:
+            return f"{card.faces[0].text} // {card.faces[1].text}"
 
 
 

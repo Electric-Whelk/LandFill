@@ -187,9 +187,7 @@ class MonteCarlo(CardCollection):
         self._minbasics = value
 
     #pseudosetters
-    def permitted_lands(self) -> list:
-        #return self._permitted_lands
-        return [c for c in self.card_list if c.permitted]
+
 
     #deck attribute setup functions
     def setup(self):
@@ -674,9 +672,15 @@ class MonteCarlo(CardCollection):
 
 
 
-    def get_unique_cards(self) -> list:
+    def get_unique_cards(self, only_permitted=False) -> list:
         cardlist = []
         basicnames = []
+
+        if not only_permitted:
+            selection = self.card_list
+        else:
+            selection = self.permitted_lands()
+
         for card in self.card_list:
             if card.name not in basicnames:
                 cardlist.append(card)
@@ -706,8 +710,10 @@ class MonteCarlo(CardCollection):
             if self.deck.within_color_identity(card):
                 as_GC = self.parse_GameCard(card, mandatory=False)
                 self.prioritization_object.register_land(as_GC)
-                if not isinstance(as_GC, MiscLand) and not self.irrelevant_fetchland(as_GC, exclude_offcolors=True):
+                if not isinstance(as_GC, MiscLand) and not self.irrelevant_fetchland(as_GC, exclude_offcolors=False):
                     self.card_list.append(as_GC)
+                    if self.irrelevant_fetchland(as_GC, exclude_offcolors=True):
+                        as_GC.off_color_fetch = True
 
         for card in self.deck.lands_list():
             self.prioritization_object.register_land(card)
@@ -924,21 +930,19 @@ class MonteCarlo(CardCollection):
                     output.append(card)
         return output
 
-
-
-
-
-
-
-
-
-
     def add_max_basics(self):
         quant = self.deck.lands_requested - 1
         for color in self.deck.colors_needed:
             sought_land = [x for x in self.card_list if x.name == landtype_map[color]][0]
             for _ in range(quant):
                 self.card_list.append(deepcopy(sought_land))
+
+    def set_rankings(self, rankings):
+        for card in self.card_list:
+            if card.permitted:
+                self.prioritization_object.register_land(card)
+
+
 
 
 

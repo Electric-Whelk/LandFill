@@ -1,31 +1,40 @@
 import React, {useState} from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import './Pages.css';
 import cardsData from '../Data/cards';
+import page2 from "./Page2";
 
 const Page3 = () => {
 
     const navigate = useNavigate();
+    const location = useLocation();
 
-    const [outputLands, setOutputLands] = useState(() => {
+
+    //REMEMBER TO READD THE STUFF THAT ALLOWS RANKING BY PERFORMANCE
+    /*const [outputLands, setOutputLands] = useState(() => {
         cardsData.sort((a, b) => b.performance - a.performance);
         return (cardsData);
+    });*/
+
+    const [tmpLands, setTmpLands] = useState(() => {
+
+        const data = location.state?.data
+        data.cards.forEach((card) => {console.log(card.name + ":" + card.permitted)})
+        return data.cards;
     });
 
     const [viewedCard, setViewedCard] = useState(null)
 
-
-
-
-
     return(
         <div className="page3">
-        <div className = "main-content" id="page3-main">
+
+
+            <div className = "main-content" id="page3-main">
             <div className="card-outputs">
                 <h3>Lands We've Added (ranked by performance)</h3>
                 <i>HINT: If you don't like some of these, remove them and hit "re-run optimizer"</i>
 
-                {outputLands.map((land, index) => (
+                {tmpLands.map((land, index) => (
                     <CardRankPanel land={land}
                                    index={index}
                                    setViewedCard={setViewedCard}
@@ -35,7 +44,10 @@ const Page3 = () => {
             </div>
 
 
+
             <div className="admin-outputs">
+
+
             <div>
                 <h3>Metrics</h3>
                 <p>Percentage of wasteless games: 99</p>
@@ -81,7 +93,6 @@ const Page3 = () => {
 }
 
 const CardRankPanel = ({ land, index, setViewedCard }) => {
-
     return (
 
         <div
@@ -90,9 +101,9 @@ const CardRankPanel = ({ land, index, setViewedCard }) => {
             index={index}
             onMouseOver={() => setViewedCard(land)}>
             <Remover hey={"hey"}/>
-            {land.displayName}
+            {land.name} {land.mandatory && <i>MANDATORY</i>} {land.permitted && <i>PERMITTED</i>}
         </div>
-                );
+    );
 };
 
 const Remover = ({ hey }) => {
