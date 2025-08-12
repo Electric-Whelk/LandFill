@@ -1,5 +1,6 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useDeck } from '../DeckContext'
 import './Pages.css';
 import cardsData from '../Data/cards';
 import page2 from "./Page2";
@@ -9,6 +10,8 @@ const Page3 = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
+    const { currency } = useDeck()
+
 
     //REMEMBER TO READD THE STUFF THAT ALLOWS RANKING BY PERFORMANCE
     /*const [outputLands, setOutputLands] = useState(() => {
@@ -16,14 +19,82 @@ const Page3 = () => {
         return (cardsData);
     });*/
 
-    const [tmpLands, setTmpLands] = useState(() => {
+    const [landsString, setLandsString] = useState('')
+    const [nonLandsString, setNonLandsString] = useState('')
+    const [viewedCard, setViewedCard] = useState(null)
+    const [includeNonLands, setIncludeNonLands] = useState(true)
+    const [textContents, setTextContents] = useState("")
+
+    function cardListToString(cardList){
+        let output = cardList[0].name
+        let len = cardList.length
+        for (let i = 1; i < len; i++){
+            output = output + "\n"
+            output = output + cardList[i].name
+        }
+        return output
+    }
+
+
+    const [lands, setLands] = useState(() => {
 
         const data = location.state?.data
-        data.cards.forEach((card) => {console.log(card.name + ":" + card.permitted)})
-        return data.cards;
+        const innerLands = data.lands;
+        setLandsString(cardListToString(innerLands))
+        setTextContents(landsString)
+        return innerLands.sort((a, b) => b.proportions - a.proportions)
     });
 
-    const [viewedCard, setViewedCard] = useState(null)
+    const [nonLands, setNonLands] = useState(() => {
+
+        const data = location.state?.data
+        const innerCards = data.nonLands;
+        setNonLandsString(cardListToString(innerCards))
+        return innerCards
+    });
+
+
+    const [deckScore, setDeckScore] = useState(() => {
+        const data = location.state?.data
+        return data.proportions
+    });
+
+
+
+
+
+    //Effect Hooks
+    //set the default text string on creation not sur why this isn't handled by our setLands useState but w/e
+    useEffect(() => {
+        setTextContents(landsString)
+    }, [landsString])
+
+    //handlefunctions
+    const handleIncludeNonLandTick = (e) => {
+        if(e.target.checked){
+            setTextContents(nonLandsString + landsString)
+        }else{
+            setTextContents(landsString)
+        }
+        console.log(textContents.length)
+    }
+
+    const CardInfoPanel = ({ card }) => {
+
+        if (card === null) return <div className="card-info-panel">sploop</div>
+
+        return (
+
+            <div className="card-info-panel">
+                <img src={card.image} />
+                <div className="card-text-info">
+                    <p>Name: {card.name}</p>
+                    <p>Performance: {card.proportions}</p>
+                    <p>Price: {card[currency]} ({currency})</p>
+                </div>
+
+            </div>);
+    }
 
     return(
         <div className="page3">
@@ -34,7 +105,7 @@ const Page3 = () => {
                 <h3>Lands We've Added (ranked by performance)</h3>
                 <i>HINT: If you don't like some of these, remove them and hit "re-run optimizer"</i>
 
-                {tmpLands.map((land, index) => (
+                {lands.map((land, index) => (
                     <CardRankPanel land={land}
                                    index={index}
                                    setViewedCard={setViewedCard}
@@ -50,16 +121,17 @@ const Page3 = () => {
 
             <div>
                 <h3>Metrics</h3>
-                <p>Percentage of wasteless games: 99</p>
-                <p>Percentage of games where you cast your commander on curve: 99</p>
-                <p>Deck cost: 50</p>
-                <p>Lands cost: 10</p>
+                <p>Percentage of wasteless games: {deckScore}</p>
+                <p>Total manabase price: {lands.reduce((total, land) => total + land[currency], 0).toFixed(2)}</p>
 
             </div>
 
             <div>
                 <h3>Format Output</h3>
-                <textarea cols="40" rows="20"></textarea>
+                <textarea cols="40"
+                          rows="20"
+                          value={textContents}
+                ></textarea>
             </div>
 
                 <div>
@@ -71,7 +143,8 @@ const Page3 = () => {
                     </select>
                 </div>
                 <div>
-                    <input type="checkbox" id="includeNonLands" name="includeNonLands"/>
+                    <input type="checkbox" id="includeNonLands" name="includeNonLands"
+                            onChange={(e) => handleIncludeNonLandTick(e)} />
                     <label htmlFor="includeNonLands"> Include nonlands</label>
                 </div>
 
@@ -101,7 +174,7 @@ const CardRankPanel = ({ land, index, setViewedCard }) => {
             index={index}
             onMouseOver={() => setViewedCard(land)}>
             <Remover hey={"hey"}/>
-            {land.name} {land.mandatory && <i>MANDATORY</i>} {land.permitted && <i>PERMITTED</i>}
+            {land.name} ({land.proportions})
         </div>
     );
 };
@@ -112,20 +185,5 @@ const Remover = ({ hey }) => {
     )
 }
 
-const CardInfoPanel = ({ card }) => {
-
-    if (card === null) return <div className="card-info-panel">sploop</div>
-
-    return (
-
-        <div className="card-info-panel">
-            <img src={card.image} />
-            <div className="card-text-info">
-                <p>Name: {card.displayName}</p>
-                <p>Performance: {card.performance}</p>
-            </div>
-
-        </div>);
-}
 
 export default Page3;

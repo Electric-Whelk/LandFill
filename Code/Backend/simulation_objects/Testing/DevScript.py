@@ -8,8 +8,12 @@ from Extensions import db
 from simulation_objects.CardCollections.Deck import Deck
 from simulation_objects.CardCollections.MonteCarlo import MonteCarlo
 
-with open("XavierSal.json", "r") as file:
+with open("SubmissionLog.json", "r") as file:
     data = json.load(file)
+
+with open("PreferencesLog.json", "r") as file:
+    prefs = json.load(file)
+
 
 app = create_app()
 cache = Cache(app)
@@ -49,9 +53,15 @@ with app.app_context():
         titles = "hoo"
     if montytest:
         deck = Deck()
-        deck.setup(data["Nonlands"], data["Format"], data["Quantity"], data["Commander"])
+        deck.setup(data.get("deckList"), data.get("commander"), partner=data.get("partner"))
         monty = MonteCarlo(deck, close_examine=close_examine, timer=timer, verbose=True)
-        monty.dev_run(min_basics=data["MinBasics"], of_each_basic=data["OfEachBasic"])
+        monty.setup()
+        monty.fill_heap()
+        monty.set_permissions(mandatory = prefs.get("mandatory"),
+                                   permitted = prefs.get("permitted"),
+                                   excluded = prefs.get("excluded"))
+        monty.set_rankings(prefs.get("rankings"))
+        monty.run(min_basics=prefs["minBasics"], of_each_basic=prefs["minIndividualBasics"])
         #monty.simulated_annealing_method()
         #replaced Glen Elendra Archmage with Helm of the Ghastlord
 

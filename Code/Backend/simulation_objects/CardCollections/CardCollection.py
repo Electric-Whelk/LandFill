@@ -31,7 +31,7 @@ from simulation_objects.GameCards.TappedCycles.Triome import Triome
 from simulation_objects.GameCards.UntappableCycles.CheckLand import CheckLand
 from simulation_objects.GameCards.UntappableCycles.ShockLand import ShockLand
 from simulation_objects.Misc.ColorPie import landtype_map
-from simulation_objects.Misc.LandPrioritization import stdprioritization, LandPrioritization
+
 
 import os
 import requests
@@ -41,9 +41,6 @@ from urllib.parse import quote
 class CardCollection:
     def __init__(self):
         self._cards = []
-        self._prioritization = stdprioritization
-        self._prioritization_object = LandPrioritization(stdprioritization)
-        self._sample_pound = CurrencyConverter().convert(1, "GBP", "USD")
         self._image_dir = os.path.expanduser("~/FinalProject/Code/Backend/card-images")
 
     #getters and setters
@@ -51,17 +48,6 @@ class CardCollection:
     def image_dir(self):
         return self._image_dir
 
-    @property
-    def sample_pound(self):
-        return self._sample_pound
-
-    @property
-    def prioritization_object(self):
-        return self._prioritization_object
-
-    @property
-    def prioritization(self):
-        return self._prioritization
     
     @property
     def card_list(self) -> list[GameCard]:
@@ -146,7 +132,7 @@ class CardCollection:
         as_list = cards.split("\n")
         output = []
         for name in as_list:
-            #print(f"Parsing {name}")
+            #print(f"Parsing {name}"
             card = self.get_card_by_name(name)
             output.append(card)
         return output
@@ -243,7 +229,7 @@ class CardCollection:
 
     def print_all(self):
         i = 0
-        for card in self.card_list:
+        for card in self.permitted_lands():
             print(f"{i}: {card.name} ({card.fetchable})")
             i += 1
 
@@ -409,6 +395,7 @@ class CardCollection:
             return [x["name"] for x in input]
 
         mandatory = names(mandatory)
+        print(f"Mandatory: {mandatory}")
         permitted = names(permitted)
         excluded = names(excluded)
 
@@ -426,9 +413,15 @@ class CardCollection:
                 raise Exception(f"{card.name} not in any of the lists")
 
 
+
     def permitted_lands(self) -> list:
         #return self._permitted_lands
         return [c for c in self.card_list if c.permitted]
+
+    def reset_card_score(self):
+        for card in self.card_list:
+            if isinstance(card, Land):
+                card.reset_grade()
 
 
 

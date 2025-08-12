@@ -434,6 +434,7 @@ class Land(GameCard):
         generic["produced"] = "".join(self.produced)
         generic["entersTapped"] = self.permatap
         generic["fetchable"] = self.fetchable
+        generic["proportions"] = self.proportions
 
         """return {
             "name": self.name,

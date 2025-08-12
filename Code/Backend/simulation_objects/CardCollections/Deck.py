@@ -18,6 +18,15 @@ class Deck(CardCollection):
     def __init__(self):
         CardCollection.__init__(self)
         self._lands_requested = None
+        self._size = None
+        self._color_id = None
+        self._pie_slices = None
+        self._pips = None
+        self._colorless_pips = None
+        self._colors_needed = None
+        self._possible_lands = None
+        self._finalscore = 0
+
 
     #def setup(self, input_cards, format, quantity, commander_name, partner=None):
 
@@ -40,6 +49,13 @@ class Deck(CardCollection):
 
     #getters and setters
     @property
+    def finalscore(self):
+        return self._finalscore
+    @finalscore.setter
+    def finalscore(self, value):
+        self._finalscore = value
+
+    @property
     def pie_slices(self):
         return self._pie_slices
 
@@ -54,6 +70,9 @@ class Deck(CardCollection):
     @property
     def lands_requested(self) -> int:
         return self._lands_requested
+    @lands_requested.setter
+    def lands_requested(self, value:int):
+        self._lands_requested = value
 
     @property
     def color_id(self) -> str:
@@ -95,6 +114,8 @@ class Deck(CardCollection):
 
     def set_commanders(self, commander_name, partner=None):
         commander = self.create_commander_gamecard(commander_name)
+        if partner is not None and partner == "":
+            partner = None
         if partner is not None:
             partner = self.create_commander_gamecard(partner)
         self._commander = commander

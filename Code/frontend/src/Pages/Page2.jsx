@@ -486,7 +486,7 @@ const Page2 = () => {
             const response = await fetch('http://127.0.0.1:5000/api/submit-preferences', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ mandatory, permitted, excluded, rankings })
+                body: JSON.stringify({ mandatory, permitted, excluded, rankings, minBasics, minIndividualBasics })
             });
 
             const result = await response.json();
@@ -562,6 +562,29 @@ const Page2 = () => {
                             <input type="checkbox" checked={allowOffColorFetches} onChange={(e) => setAllowOffColorFetches(e.target.checked)} />
                             Allow Off-Color Fetches
                         </label>
+
+                        <label>
+                            Include at least
+                            <input
+                                type="number"
+                                name="minBasics"
+                                value={minBasics}
+                                onChange={(e) => setMinBasics(e)}
+                                /*placeholder="Amount"*/
+                            /> basic lands.
+                        </label>
+
+                        <label>
+                            Include at least
+                            <input
+                                type="number"
+                                name="minIndividualBasics"
+                                value={minIndividualBasics}
+                                onChange={(e) => setMinIndividualBasics}
+                                /*placeholder="Amount"*/
+                            /> of every basic land in the deck's colours.
+                        </label>
+
                     </div>
                 </div>
 

@@ -4,6 +4,7 @@ from copy import deepcopy
 
 import numpy
 import numpy as np
+from currency_converter import CurrencyConverter
 from line_profiler import profile
 from numpy import median
 from numpy.ma.core import set_fill_value
@@ -26,6 +27,7 @@ from simulation_objects.GameCards.SearchLands.FetchLand import FetchLand
 from simulation_objects.GameCards.TappedCycles.GuildGate import GuildGate
 from simulation_objects.GameCards.TappedCycles.Triome import Triome
 from simulation_objects.Misc.ColorPie import colortype_map, landtype_map
+from simulation_objects.Misc.LandPrioritization import stdprioritization, LandPrioritization
 from simulation_objects.Simulations.Test import Test
 from simulation_objects.Misc.LandPermutationCache import LandPermutationCache
 from simulation_objects.Timer import functimer_perturn, functimer_once
@@ -36,6 +38,10 @@ class MonteCarlo(CardCollection):
         CardCollection.__init__(self)
         #set on creation of the object
         self._deck = deck
+        self._prioritization = stdprioritization
+        self._prioritization_object = LandPrioritization(stdprioritization)
+        self._sample_pound = CurrencyConverter().convert(1, "GBP", "USD")
+
 
         #set when the deck is setup
         self._colorless_pips = None
@@ -91,6 +97,18 @@ class MonteCarlo(CardCollection):
 
     #setters and getters
     @property
+    def sample_pound(self):
+        return self._sample_pound
+
+    @property
+    def stdprioritization(self):
+        return self._prioritization
+
+    @property
+    def prioritization_object(self):
+        return self._prioritization_object
+
+    @property
     def minbasics(self):
         return self._minbasics
     @minbasics.setter
@@ -113,9 +131,9 @@ class MonteCarlo(CardCollection):
     def colorless_pips(self):
         return self._colorless_pips
 
-    @property
-    def cache(self):
-        return self._cache
+    #@property
+    #def cache(self):
+        #return self._cache
 
     @property
     def verbose(self):
@@ -320,7 +338,7 @@ class MonteCarlo(CardCollection):
             i += 1
 
         """
-    def run(self) -> dict:
+    def run_CONDEMNED(self) -> dict:
         self.reset_session()
         self.run_tests()
 
@@ -372,11 +390,34 @@ class MonteCarlo(CardCollection):
             self.minbasics = kwargs["min_basics"]
         self.hill_climb()
 
+    def run(self, **kwargs):
+        self.add_mandatory_lands()
+        self.deck.add_initial_lands("equal_basics")
+        # add to the deck an initial set of lands - make this a function so you can try out different initial sets
+        # ponder: what if it was all wastes? That'd certainly make your early interventions much more fiery.
+        self.deck.set_each(kwargs["of_each_basic"])
+        if kwargs["min_basics"] is not None:
+            self.minbasics = kwargs["min_basics"]
+        self.hill_climb()
+
+    def add_mandatory_lands(self):
+        giftbasket = []
+        for card in self.card_list:
+            if isinstance(card, Land) and card.mandatory:
+                giftbasket.append(card)
+        for card in giftbasket:
+            self.give(self.deck, card)
+            self.deck.lands_requested -= 1
+
+
+
 
     @functimer_once
     def hill_climb(self):
         self.halt = False
-        step_output = Test(self.deck, self.cache)
+        step_output = Test(self.deck)
+        print(f"Excluded: {[x.name for x in self.card_list if not x.permitted]}")
+        print(f"Mandatory: {[x.name for x in self.card_list if x.mandatory]}")
         step_output.hill_climb_test()
         self.vprint(f"Starting score: {step_output.game_proportions}")
         scores = []
@@ -392,6 +433,8 @@ class MonteCarlo(CardCollection):
             #halt = self.check_for_halt(scores, step_output)
             if self.halt or iterations > 50:
                 print(f"Halting at step {iterations}")
+
+        self.deck.finalscore = step_output.game_proportions
         self.print_results(step_output)
         self.dev_assess_results()
         print(f"Took {iterations} iterations")
@@ -537,14 +580,13 @@ class MonteCarlo(CardCollection):
     @functimer_once
     def hill_climb_increment(self, prior_test):
         print("")
-        print(f"Cache at length {len(self.cache.cache)}")
         worst_card = prior_test.worst_performing_card
         prev_score = prior_test.game_proportions
         if not isinstance(worst_card, BasicLand):
             self.swapped_out_nonbasics.append(worst_card)
 
 
-        t = Test(self.deck, self.cache)
+        t = Test(self.deck)
         if self.meets_minbasic_criteria(worst_card):
             cards_to_test = self.get_basic_spread()
         else:
@@ -589,10 +631,9 @@ class MonteCarlo(CardCollection):
                 #print("Writing to file!")
                 #file.write(f"{t.game_proportions}\n")
 
-            self.cache.compare()
             if worst_card.name == champ.name:
                 t.like_for_like = True
-        print(f"total of {(time.time() - self.start_time)/60} minutes elapsed")
+        #print(f"total of {(time.time() - self.start_time)/60} minutes elapsed")
         return t
 
     def meets_minbasic_criteria(self, card):
@@ -672,7 +713,7 @@ class MonteCarlo(CardCollection):
 
 
 
-    def get_unique_cards(self, only_permitted=False) -> list:
+    def get_unique_cards(self, only_permitted=True) -> list:
         cardlist = []
         basicnames = []
 
@@ -681,7 +722,7 @@ class MonteCarlo(CardCollection):
         else:
             selection = self.permitted_lands()
 
-        for card in self.card_list:
+        for card in selection:
             if card.name not in basicnames:
                 cardlist.append(card)
             if isinstance(card, BasicLand) and card.name not in basicnames:
@@ -709,22 +750,24 @@ class MonteCarlo(CardCollection):
         for card in all:
             if self.deck.within_color_identity(card):
                 as_GC = self.parse_GameCard(card, mandatory=False)
-                self.prioritization_object.register_land(as_GC)
+                #self.prioritization_object.register_land(as_GC)
                 if not isinstance(as_GC, MiscLand) and not self.irrelevant_fetchland(as_GC, exclude_offcolors=False):
                     self.card_list.append(as_GC)
                     if self.irrelevant_fetchland(as_GC, exclude_offcolors=True):
                         as_GC.off_color_fetch = True
 
-        for card in self.deck.lands_list():
-            self.prioritization_object.register_land(card)
-        self.prioritize_heap()
-
-        self.print_all()
+        #for card in self.deck.lands_list():
+            #self.prioritization_object.register_land(card)
+        #self.prioritize_heap()
 
     def prioritize_heap(self):
-        for land in self.lands_list():
+        permitted = self.permitted_lands()
+        for land in permitted:
+            self.prioritization_object.register_land(land)
+
+        for land in permitted:
             land.superior_lands = self.prioritization_object.cascade_superiors(land, self.deck)
-            print(f"{land} has superiors {land.superior_lands}")
+
 
     def prioritize_heap_CONDEMNED(self, prioritization:dict):
         for land in self.card_list:
@@ -938,9 +981,21 @@ class MonteCarlo(CardCollection):
                 self.card_list.append(deepcopy(sought_land))
 
     def set_rankings(self, rankings):
-        for card in self.card_list:
-            if card.permitted:
-                self.prioritization_object.register_land(card)
+        new_rankings = []
+        for r in rankings:
+            as_list = []
+            cycles = rankings[r]
+            for cycle in cycles:
+                name = cycle["typeName"]
+                as_list.append(name)
+            new_rankings.append(as_list)
+
+        print(f"New rankings: {new_rankings}")
+
+
+
+        self.prioritization_object.apply_player_rankings(new_rankings)
+        self.prioritize_heap()
 
 
 

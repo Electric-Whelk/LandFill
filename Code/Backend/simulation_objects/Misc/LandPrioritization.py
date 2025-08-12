@@ -1,7 +1,9 @@
 from collections import defaultdict, deque
 
 from simulation_objects.GameCards import ShockLand, CommandTower, BondLand, PainLand, DualLand, Triome, TriTap, \
-    BattleLand, SlowLand, FastLand, RevealLand, CheckLand
+    BattleLand, SlowLand, FastLand, RevealLand, CheckLand, SurveilLand, BicycleLand, TypedDualLand, ArtifactTapLand, \
+    ScryLand
+from simulation_objects.GameCards.TappedCycles.GuildGate import GuildGate
 
 stdprioritization = {
     "BasicLand": [],
@@ -13,28 +15,52 @@ stdprioritization = {
     "FastLand": [BondLand],
     "SlowLand": [BondLand],
     "PainLand": [BondLand],
-    "Horizon Lands": [PainLand],
+    "HorizonLand": [PainLand], #"Horizon Lands"
     "ShockLand": [DualLand],
     "Triome": [],
     "TriTap": [Triome],
-    "Guildgate": [TriTap, BattleLand, SlowLand, FastLand, RevealLand, CheckLand], #swap battleland for surveil and stuff when you add these
     "FilterLand": [],
     "Verge": [BondLand],
     "CheckLand": [BondLand],
     "RevealLand": [BondLand],
-    "CommandTower": []
+    "CommandTower": [],
+    "SurveilLand": [BattleLand, Triome],
+    "BicycleLand": [BattleLand, Triome],
+    "TypedDualLand": [BattleLand, Triome],
+
+    "GuildGate": [TriTap, SlowLand, FastLand, RevealLand, CheckLand, SurveilLand, BicycleLand,
+                  TypedDualLand], #Guildgate
+    "ScryLand": [TriTap, SlowLand, FastLand, RevealLand, CheckLand, SurveilLand, BicycleLand,
+                  TypedDualLand],
+    "ArtifactTapLand": [TriTap, SlowLand, FastLand, RevealLand, CheckLand, SurveilLand, BicycleLand,
+                  TypedDualLand]
+
+
 }
 
 class LandPrioritization:
     def __init__(self, base_prioritization):
         # Maps cycle name → list of superior cycle names (strings)
         self.superior_cycles = defaultdict(list, base_prioritization)
+        self.class_registry = {}
 
         # Build reverse graph
         self.inferior_cycles = defaultdict(list)
         for cycle, superiors in base_prioritization.items():
+            self.class_registry[cycle] = base_prioritization.get(cycle, None)
+            print(f"Cycle: {cycle}, superiors: {superiors}")
             for sup in superiors:
                 self.inferior_cycles[sup.__name__].append(cycle)
+                self.class_registry[sup.__name__] = sup
+
+        bottomtier = {
+            "ArtifactTapLand": ArtifactTapLand,
+            "GuildGate": GuildGate,
+            "ScryLand": ScryLand
+        }
+
+        for item in bottomtier:
+            self.class_registry[item] = bottomtier.get(item, None)
 
         # Maps cycle name → list of actual land instances
         self.cycle_to_lands = defaultdict(list)
@@ -106,8 +132,54 @@ class LandPrioritization:
                 l for l in self.cycle_to_lands[land._cycle] if l != land
             ]
 
-    def reprioritize(self, cycle_name, new_superiors):
+    def apply_player_rankings(self, ranking_sets):
         """
-        Dynamically change the superiority chain of a land cycle.
+        Takes a list of rankings (list of lists of cycle names, highest priority first)
+        and rewires superior_cycles & inferior_cycles accordingly,
+        preserving class object references.
         """
-        self.superior_cycles[cycle_name] = [cls.__name__ for cls in new_superiors]
+
+        def resolve_class(cycle_name):
+            """Try to get a class object for this cycle name."""
+            # Check registry
+            cls = self.class_registry.get(cycle_name)
+            if cls:
+                return cls
+            # Check registered lands
+            if self.cycle_to_lands.get(cycle_name):
+                return self.cycle_to_lands[cycle_name][0].__class__
+            # Check globals
+            cls = globals().get(cycle_name)
+            if cls:
+                self.class_registry[cycle_name] = cls  # cache for future
+                return cls
+            # Not found
+            raise ValueError(f"Unknown cycle name '{cycle_name}' in rankings.")
+
+        for ranking in ranking_sets:
+            if not ranking:
+                continue
+
+            # Step 1: preserve original superiors for the top-ranked cycle
+            top_cycle = ranking[0]
+            original_superiors = self.superior_cycles.get(top_cycle, [])
+            self.superior_cycles[top_cycle] = original_superiors[:]  # shallow copy
+
+            # Step 2: rewire all lower-ranked cycles
+            for i in range(1, len(ranking)):
+                above_name = ranking[i - 1]
+                current_name = ranking[i]
+
+                above_cls = resolve_class(above_name)
+                self.superior_cycles[current_name] = [above_cls]
+
+        # Step 3: rebuild inferior_cycles with updated relationships
+        self.inferior_cycles.clear()
+        for cycle, superiors in self.superior_cycles.items():
+            print(f"{cycle}")
+            for sup in superiors:
+                print(f"\t{sup}")
+                sup_name = sup.__name__
+                self.inferior_cycles[sup_name].append(cycle)
+
+

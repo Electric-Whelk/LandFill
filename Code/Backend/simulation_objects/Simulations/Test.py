@@ -19,9 +19,8 @@ from simulation_objects.Timer import functimer_once
 
 
 class Test(Simulation):
-    def __init__(self, deck, cache, turns=7, runs=None, ct_runs=300, close_examine=False, timer=False):
+    def __init__(self, deck, turns=7, runs=None, ct_runs=300, close_examine=False, timer=False):
         Simulation.__init__(self, deck)
-        self._cache = cache
         self._wasteless_turns = 0
         self._wasteless_games = 0
         self._turns = turns
@@ -98,9 +97,6 @@ class Test(Simulation):
     def wasteless_turns(self, value: int):
         self._wasteless_turns = value
 
-    @property
-    def cache(self):
-        return self._cache
 
     @property
     def runs(self):
@@ -188,6 +184,7 @@ class Test(Simulation):
         #self.print_list(ranked, dev_value)
 
     def hill_climb_test(self):
+        self.deck.reset_card_score()
         self.run_tests()
         self.assess_deck_hc()
         self.assess_lands_hc()
@@ -221,12 +218,13 @@ class Test(Simulation):
 
             if isinstance(card, Land):
                 if card.mandatory == True:
-                    card.reset_grade()
+                    #card.reset_grade()
+                    x=3
                 else:
                     if worst == None or card.proportions < worst_score:
                         worst = card
                         worst_score = card.proportions
-                    card.reset_grade()
+                    #card.reset_grade()
         self.worst_performing_card = worst
 
 
@@ -248,6 +246,7 @@ class Test(Simulation):
 
 
     def run_card_test(self, card_in):
+        self.deck.reset_card_score()
         card_in.options = []
         card_in.turns_without_commander = []
         #wasted_per_game = [] #TEST VARIABLE
@@ -297,7 +296,7 @@ class Test(Simulation):
                 case "proportion_of_games":
                     print(f"{i}: {item} -> {item.proportion_of_games()} over {item.appearances()} appearances {self.format_rank_position(item.above_average_wasteless_games)}")
                 case _:
-                    print(f"{i}: {item}")
+                    print(f"{i}: {item} -> {item.proportions}")
                     #raise Exception(f"{criterion} is not a valid criterion for print_list")
             i += 1
 
@@ -327,12 +326,18 @@ class Test(Simulation):
 
     def run_tests(self):
         for i in range(0, self._runs):#SCAFFOLD - currently at 6 seconds per 10,000 games
-            if self._timer and i % 1000 == 0:
-                print(f"{i}...")
+            #if i % 10 == 0:
+                #print(f"{i}...")
+
+            #gamestart = time.time()
             g = Game(self.deck, turns=self.turns, verbose=self._close_examine)
+            #print(f"Game instantiation took {time.time() - gamestart} seconds")
             #pickle.dumps(g)
+            runstart = time.time()
             g.run()
+           # print(f"Game {time.time() - runstart} seconds")
             self.get_game_info(g)
+
 
         #games = Parallel(n_jobs=-1, backend="threading")(delayed(run_tests_exterior)(deepcopy(self.deck), turns=self.turns, verbose=self._close_examine) for _ in range(self._runs))
         #print(f"Completed games!")

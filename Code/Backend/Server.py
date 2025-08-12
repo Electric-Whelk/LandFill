@@ -1,3 +1,4 @@
+import json
 import time
 
 from AppFactory import create_app
@@ -13,13 +14,15 @@ from flask import Flask, send_from_directory
 import os
 import requests
 
+from simulation_objects.GameCards import Land
+
 print("You're here!")
 
 app = create_app()
 cache = Cache(app)
 
 Deck = Deck()
-MonteCarlo = MonteCarlo(Deck)
+MonteCarlo = MonteCarlo(Deck, verbose=True)
 InputParser = InputParser()
 PrevPageOneInput = "DEADVALUE"
 PrevPageTwoInput = "DEADVALUE"
@@ -42,6 +45,9 @@ def serve_card_image(filename):
 @app.route('/api/submit-deck', methods=['POST'])
 def submit_deck():
     data = request.get_json()
+    with open("SubmissionLog.json", "w") as f:
+        print("Writing submission to file!")
+        f.write(json.dumps(data))
     print("Received data:", data)
     global PrevPageOneInput
     if data != PrevPageOneInput:
@@ -63,10 +69,10 @@ def test_preferences():
     print("Received data:", data)
     global PrevPageTwoInput
     if data != PrevPageTwoInput:
-        MonteCarlo.set_rankings(data.get("rankings"))
         MonteCarlo.set_permissions(mandatory = data.get("mandatory"),
                                    permitted = data.get("permitted"),
                                    excluded = data.get("excluded"))
+        MonteCarlo.set_rankings(data.get("rankings")) #NOTE THAT THESE WERE SWAPPED
         PrevPageTwoInput= data
 
     heap = MonteCarlo.export_cards()
@@ -78,9 +84,13 @@ def test_preferences():
 @app.route('/api/submit-preferences', methods=['POST'])
 def submit_preferences():
     data = request.get_json()
+    with open("PreferencesLog.json", "w") as f:
+        print("Writing preferences to file!")
+        f.write(json.dumps(data))
     print("Received data:", data)
     global PrevPageTwoInput
     if data != PrevPageTwoInput:
+
 
         MonteCarlo.set_permissions(mandatory = data.get("mandatory"),
                                    permitted = data.get("permitted"),
@@ -89,10 +99,20 @@ def submit_preferences():
 
         PrevPageTwoInput= data
 
-    heap = MonteCarlo.export_cards()
+    MonteCarlo.run(of_each_basic = data.get("minIndividualBasics"), min_basics = data.get("minBasics"))
+    #lands = [x.to_dict() for x in Deck.card_list if isinstance(x, Land) and x.permitted]
+    lands = []
+    nonLands = []
+    for card in Deck.card_list:
+        if isinstance(card, Land):
+            lands.append(card.to_dict())
+        else:
+            nonLands.append(card.to_dict())
+    output = {"lands": lands, "nonLands": nonLands, "proportions": Deck.finalscore}
+    for key in output:
+        print(output[key])
 
-
-    return jsonify({"cards": heap})
+    return jsonify(output)
 
 
 
