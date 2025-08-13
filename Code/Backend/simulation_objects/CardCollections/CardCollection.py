@@ -132,7 +132,6 @@ class CardCollection:
         as_list = cards.split("\n")
         output = []
         for name in as_list:
-            #print(f"Parsing {name}"
             card = self.get_card_by_name(name)
             output.append(card)
         return output
@@ -395,8 +394,8 @@ class CardCollection:
             return [x["name"] for x in input]
 
         mandatory = names(mandatory)
-        print(f"Mandatory: {mandatory}")
         permitted = names(permitted)
+        print(f"Permitted: {permitted}")
         excluded = names(excluded)
 
         for card in self.card_list:

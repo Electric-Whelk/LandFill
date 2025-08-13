@@ -1,8 +1,8 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.6.18)  12 AUG 2025 12:09
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.8.12)  13 AUG 2025 15:46
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**writeup.tex
+**writeup
 (./writeup.tex
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-22>
@@ -323,26 +323,28 @@ Package: xparse 2023-10-10 L3 Experimental document command parser
 )
 Package: blx-case-expl3 2023/03/05 v3.19 expl3 case changing code for biblatex
 ))
+(/usr/share/texlive/texmf-dist/tex/latex/gensymb/gensymb.sty
+Package: gensymb 2022/10/17 v1.0.2 (KJH)
+)
 \@quotelevel=\count389
 \@quotereset=\count390
-
-(./writeup.aux)
+ (./writeup.aux)
 \openout1 = `writeup.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 11.
-LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
 
 (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -358,4 +360,172 @@ LaTeX Font Info:    ... okay on input line 11.
 \makeMPintoPDFobject=\count396
 \everyMPtoPDFconversion=\toks19
 ) (/usr/share/texlive/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
-Packag
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
+85.
+
+(/usr/share/texlive/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
+e
+))
+Package biblatex Info: Trying to load language 'english'...
+Package biblatex Info: ... file 'english.lbx' found.
+
+(/usr/share/texlive/texmf-dist/tex/latex/biblatex/lbx/english.lbx
+File: english.lbx 2023/03/05 v3.19 biblatex localization (PK/MW)
+)
+Package biblatex Info: Input encoding 'utf8' detected.
+Package biblatex Info: Automatic encoding selection.
+(biblatex)             Assuming data encoding 'utf8'.
+\openout3 = `writeup.bcf'.
+
+Package biblatex Info: Trying to load bibliographic data...
+Package biblatex Info: ... file 'writeup.bbl' not found.
+
+No file writeup.bbl.
+Package biblatex Info: Reference section=0 on input line 12.
+Package biblatex Info: Reference segment=0 on input line 12.
+LaTeX Info: Redefining \celsius on input line 12.
+Package gensymb Info: Faking symbols for \degree and \celsius on input line 12.
+
+
+Package gensymb Warning: Not defining \perthousand.
+
+LaTeX Info: Redefining \ohm on input line 12.
+Package gensymb Info: Using \Omega for \ohm on input line 12.
+
+Package gensymb Warning: Not defining \micro.
+
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 13.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 13.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 13.
+(./writeup.toc)
+\tf@toc=\write4
+\openout4 = `writeup.toc'.
+
+
+
+LaTeX Warning: Citation 'churchill2019magic' on page 1 undefined on input line 
+22.
+
+
+LaTeX Warning: Citation 'KarstenCurve' on page 1 undefined on input line 22.
+
+[1
+
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 34.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 34.
+ [2]
+<card_images/e01-85-nicol-bolas-planeswalker.jpg, id=16, 489.83pt x 682.55pt>
+File: card_images/e01-85-nicol-bolas-planeswalker.jpg Graphic file (type jpg)
+<use card_images/e01-85-nicol-bolas-planeswalker.jpg>
+Package pdftex.def Info: card_images/e01-85-nicol-bolas-planeswalker.jpg  used 
+on input line 40.
+(pdftex.def)             Requested size: 122.4572pt x 170.63708pt.
+ [3 <./card_images/e01-85-nicol-bolas-planeswalker.jpg>]
+<card_images/AzoriusCycles.jpg, id=20, 1054.047pt x 246.156pt>
+File: card_images/AzoriusCycles.jpg Graphic file (type jpg)
+<use card_images/AzoriusCycles.jpg>
+Package pdftex.def Info: card_images/AzoriusCycles.jpg  used on input line 58.
+(pdftex.def)             Requested size: 421.61133pt x 98.46065pt.
+
+Overfull \hbox (76.61133pt too wide) in paragraph at lines 58--59
+ [][] 
+ []
+
+[4 <./card_images/AzoriusCycles.jpg>]
+
+LaTeX Warning: Citation 'ward2009monte' on page 5 undefined on input line 87.
+
+[5]
+
+LaTeX Warning: Citation 'GoldFishing' on page 6 undefined on input line 89.
+
+
+LaTeX Warning: Citation 'metropolis1949monte' on page 6 undefined on input line
+ 102.
+
+[6]
+
+LaTeX Warning: Citation 'silver2004overview' on page 7 undefined on input line 
+106.
+
+[7]
+
+LaTeX Warning: Citation 'ward2009monte' on page 8 undefined on input line 140.
+
+
+LaTeX Warning: Citation 'esche2018mathematical' on page 8 undefined on input li
+ne 140.
+
+
+LaTeX Warning: Citation 'alvin2021toward' on page 8 undefined on input line 140
+.
+
+
+LaTeX Warning: Citation 'alvin2021toward' on page 8 undefined on input line 140
+.
+
+
+Overfull \hbox (105.58932pt too wide) in paragraph at lines 140--141
+\OT1/cmr/m/n/10 and Poker, may be ap-plied to MTG [[]][[]][[]].
+ []
+
+[8]
+
+LaTeX Warning: Citation 'ward2009monte' on page 9 undefined on input line 142.
+
+
+LaTeX Warning: Citation 'alvin2021toward' on page 9 undefined on input line 142
+.
+
+
+LaTeX Warning: Citation 'esche2018mathematical' on page 9 undefined on input li
+ne 142.
+
+
+LaTeX Warning: Citation 'MonteCarloGuide' on page 9 undefined on input line 144
+.
+
+<card_images/KarstenCurve.jpg, id=40, 1855.93375pt x 443.6575pt>
+File: card_images/KarstenCurve.jpg Graphic file (type jpg)
+<use card_images/KarstenCurve.jpg>
+Package pdftex.def Info: card_images/KarstenCurve.jpg  used on input line 148.
+(pdftex.def)             Requested size: 463.9823pt x 110.9141pt.
+
+Overfull \hbox (118.9823pt too wide) in paragraph at lines 148--149
+ [][] 
+ []
+
+
+LaTeX Warning: Citation 'KarstenCurve' on page 9 undefined on input line 149.
+
+
+LaTeX Warning: Citation 'KarstenCurve' on page 9 undefined on input line 149.
+
+
+LaTeX Warning: Citation 'TappedDualsLimited' on page 9 undefined on input line 
+154.
+
+
+LaTeX Warning: Citation 'IxalanManabases' on page 9 undefined on input line 154
+.
+
+[9] [10 <./card_images/KarstenCurve.jpg (PNG copy)>]
+
+LaTeX Warning: Citation 'wright1991use' on page 11 undefined on input line 182.
+
+
+
+LaTeX Warning: Reference `fig:kanoq' on page 11 undefined on input line 188.
+
+[11]
+!pdfTeX error: pdflatex (file ./card_images/kano-model-survey-1.jpg): reading J
+PEG image failed (no JPEG header found)
+ ==> Fatal error occurred, no output PDF file produced!

@@ -1,6 +1,7 @@
 import time
 import random
 from copy import deepcopy
+import matplotlib.pyplot as plt
 
 import numpy
 import numpy as np
@@ -429,15 +430,32 @@ class MonteCarlo(CardCollection):
             step_output = self.hill_climb_increment(step_output)
             #scores.insert(0, step_output.game_proportions)
             scores.append(step_output.game_proportions)
-            self.halt = self.check_rolling_max(scores)
+            #self.halt = self.check_rolling_max(scores)
+            self.halt = iterations >= 50
+            with open("scoreslog.txt", "a") as f:
+                f.write(f"{str(step_output.game_proportions)}\n")
+
             #halt = self.check_for_halt(scores, step_output)
             if self.halt or iterations > 50:
                 print(f"Halting at step {iterations}")
+
+        self.plot(scores)
+
 
         self.deck.finalscore = step_output.game_proportions
         self.print_results(step_output)
         self.dev_assess_results()
         print(f"Took {iterations} iterations")
+
+    def plot(self, values):
+        i = 1
+        axis = []
+        for _ in range(len(values)):
+            axis.append(i)
+            i += 1
+
+        plt.plot(axis, values, 'o-', label="Original_Scores", alpha=0.5)
+        plt.show()
 
     def check_for_plateau(self, scores):
         savgol_window_length = 9
@@ -490,15 +508,15 @@ class MonteCarlo(CardCollection):
 
         return False
 
-    def check_rolling_max(self, scores, window_size=10, improvement_threshold=0.05):
+    def check_rolling_max(self, scores, window_size=3, improvement_threshold=0.01):
         if len(scores) < window_size *2:
             return False
 
         prior_window = scores[len(scores) - 2 * window_size: len(scores) - window_size]
         recent_window = scores[len(scores) - window_size:]
 
-        best_recent = max(recent_window)
-        best_prior = max(prior_window)
+        best_recent = numpy.mean(recent_window)
+        best_prior = numpy.mean(prior_window)
 
         #with open("Rukarumel_Performance", "a") as file:
             #file.write(f"recent: {recent_window} prior: {prior_window}\n")

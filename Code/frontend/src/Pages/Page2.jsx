@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { useDeck } from '../DeckContext'
 import './Pages.css';
+import cycle from "../Page_Elements/Cycle";
 
 const COLUMN_IDS = {
     include: 'Definitely include these',
@@ -27,11 +28,17 @@ const Page2 = () => {
             const newData = location.state.data
             setCycles(newData.heap || []);
             setCurrency(newData.currency || "GBP")
+            for(const cycle of newData.heap){
+                for(const card of cycle.cards){
+                    console.log(card)
+                }
+            }
         }
     }, [location.state, setCycles, setCurrency]);
     /*const data = location.state?.data;
     const cycles = data?.heap || [];
     const currency = data?.currency || "GBP";*/
+
 
     // Filters & toggles
     const [loading, setLoading] = useState(false);
@@ -59,6 +66,14 @@ const Page2 = () => {
         include: [],
         consider: []
     });
+
+    useEffect(() => {
+        console.log(positiveArrays.include)
+    }, [positiveArrays.include])
+
+    useEffect(() => {
+        console.log(positiveArrays.consider)
+    }, [positiveArrays.consider])
 
     // Columns for UI
     const [columns, setColumns] = useState(() => {
@@ -90,6 +105,26 @@ const Page2 = () => {
         });
         return { fetchable: typedTaps, nonFetchable: untypedTaps };
     });
+
+    //load columns
+    useEffect(() => {
+        const autoIncluded = [];
+        const consider = [];
+        const autoincludeList = ["Shock Lands", "Fetch Lands", "OG Dual Lands", "Command Tower"];
+        cycles.forEach(cycle => {
+            if (autoincludeList.includes(cycle.displayName)) {
+                autoIncluded.push(cycle);
+                cycle.suggestAutoInclude = true;
+            } else {
+                consider.push(cycle);
+                cycle.suggestAutoInclude = false;
+            }
+        });
+        setColumns({ include:autoIncluded, consider, exclude: [] });
+    }, [cycles]);
+
+
+
 
     /** ----------------------------
      * UTILITY: membership checks
@@ -371,6 +406,8 @@ const Page2 = () => {
         console.log("excludeArrays now:", excludeArrays);
     }, [excludeArrays]);
 
+
+
     /** ----------------------------
      * DRAG HANDLERS
      ---------------------------- **/
@@ -479,8 +516,14 @@ const Page2 = () => {
 
         for(const card of positiveArrays.include){ if (!cardInAnyExcludeArray(card)){mandatory.push(card)}
             else {excluded.push(card)}};
-        for(const card of positiveArrays.consider){ if (!cardInAnyExcludeArray(card)){permitted.push(card)}
-            else {excluded.push(card)}};
+        for(const card of positiveArrays.consider){
+            if (!cardInAnyExcludeArray(card)){
+                permitted.push(card)
+                console.log(card)
+            }
+            else {
+                excluded.push(card)
+            }};
 
         try {
             const response = await fetch('http://127.0.0.1:5000/api/submit-preferences', {

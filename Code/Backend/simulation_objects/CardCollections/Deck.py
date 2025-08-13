@@ -251,7 +251,10 @@ class Deck(CardCollection):
 
 
     def add_equal_basics(self):
-        landnames = [landtype_map[c] for c in self.colors_needed]
+        landnames = []
+        for color in self.colors_needed:
+            landnames.append(landtype_map[color])
+        #landnames = [landtype_map[c] for c in self.colors_needed]
         l = len(landnames)
         as_string = None
         for i in range(self.lands_requested):

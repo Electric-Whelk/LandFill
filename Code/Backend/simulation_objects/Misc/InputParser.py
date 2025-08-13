@@ -17,6 +17,8 @@ class InputParser:
         match input_format:
             case "TappedOutFront":
                 self.parse_tappedout_front(lines)
+            case "TappedOutBack":
+                self.parse_tappedout_back(lines)
         return self.LandFill_input()
 
     def LandFill_input(self):
@@ -31,9 +33,15 @@ class InputParser:
         return input
 
     def determine_input_format(self, lines:list) -> str:
+        for i in range(len(lines)):
+            if lines[i] != "":
+                break
 
-        if self.is_tappedout_front_label(lines[0]) and lines[1] == "":
+
+        if self.is_tappedout_front_label(lines[i]) and lines[i+1] == "":
             return "TappedOutFront"
+        if self.is_tappedout_back_label(lines[i]) or self.is_tappedout_card_line(lines[i]):
+            return "TappedOutBack"
 
         return "Failure"
 
@@ -48,8 +56,17 @@ class InputParser:
             elif self.is_tappedout_card_line(line):
                 self.categories[category].append(self.parse_tappedout_front_line(line))
 
+    def parse_tappedout_back(self, lines):
+        category = None
+        for line in lines:
+            if self.is_tappedout_back_label(line):
+                category = line
+                self.categories[category] = []
+            elif self.is_tappedout_card_line(line):
+                self.categories[category].append(self.parse_tappedout_front_line(line))
+
     def parse_tappedout_front_line(self, line:str) -> str:
-        badendings = [" *CMDR*", " Flip", "GC"]
+        badendings = [" *CMDR*", " Flip", "GC", "foil", "alteredfoil", " *fetch*", " *oversized*"]
 
         # 1. Remove leading "numberx " (e.g., "3x " or "12x ")
         new_line = re.sub(r"^\s*[0-9]*x\s+", "", line)
@@ -72,4 +89,7 @@ class InputParser:
 
     def is_tappedout_front_commander(self, line:str) -> bool:
         return re.search(r"^Commander: .*", line)
+
+    def is_tappedout_back_label(self, line:str) -> bool:
+        return re.search(r"#.*", line)
 

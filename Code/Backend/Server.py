@@ -45,13 +45,14 @@ def serve_card_image(filename):
 @app.route('/api/submit-deck', methods=['POST'])
 def submit_deck():
     data = request.get_json()
-    with open("SubmissionLog.json", "w") as f:
+    with open("RukaLandsSubs.json", "w") as f:
         print("Writing submission to file!")
         f.write(json.dumps(data))
     print("Received data:", data)
     global PrevPageOneInput
     if data != PrevPageOneInput:
         decklist = InputParser.parse_decklist(data.get("deckList"))
+        print(f"Parsed to decklist {decklist}")
         partner = InputParser.parse_partner(data.get("partner"))
         Deck.setup(decklist, data.get("commander"), partner=partner)
         MonteCarlo.setup()
@@ -84,7 +85,7 @@ def test_preferences():
 @app.route('/api/submit-preferences', methods=['POST'])
 def submit_preferences():
     data = request.get_json()
-    with open("PreferencesLog.json", "w") as f:
+    with open("RukaLandsPrefs.json", "w") as f:
         print("Writing preferences to file!")
         f.write(json.dumps(data))
     print("Received data:", data)
