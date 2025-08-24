@@ -11,6 +11,7 @@ const Page1 = () => {
     const navigate = useNavigate();
 
     const [loading, setLoading] = useState(false);
+    const [removeLands, setRemoveLands] = useState(false);
     //const [currency, setCurrency] = useState('GBP');
 
     const handleSubmit = async () => {
@@ -25,7 +26,7 @@ const Page1 = () => {
             const response = await fetch('http://127.0.0.1:5000/api/submit-deck', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ deckList, commander, partner, currency })
+                body: JSON.stringify({ deckList, commander, partner, currency, removeLands })
             });
 
             const result = await response.json();
@@ -63,6 +64,14 @@ const Page1 = () => {
                 ></textarea>
             </div>
             <div>
+                <label>
+                <input type="checkbox" name="removelands" onChange={(e) => setRemoveLands(e.target.value)}/>
+                Ignore all land cards currently in decklist (ie, remove them and replace them with a totally new manabase)
+                </label>
+
+            </div>
+
+            <div>
                 <p>Commander</p>
                 <textarea id="commander"
                           cols="40"
@@ -82,6 +91,7 @@ const Page1 = () => {
                 ></textarea>
             </div>
 
+            <div>
             <select name="currency"
                     value={currency}
                     onChange= {(e) => {setCurrency(e.target.value)}}>
@@ -89,6 +99,7 @@ const Page1 = () => {
                 <option value="Euros">Euros</option>
                 <option value="GBP">GBP</option>
             </select>
+            </div>
 
             <button onClick={handleSubmit}>Start {loading && <i>Loading... 🌀</i>}</button>
         </div>

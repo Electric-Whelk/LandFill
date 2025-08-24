@@ -62,6 +62,8 @@ nav-buttons {
 
 .admin {
     grid-column: 1 / span 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
 }
 
 

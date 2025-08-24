@@ -21,9 +21,9 @@ print("You're here!")
 app = create_app()
 cache = Cache(app)
 
-Deck = Deck()
-MonteCarlo = MonteCarlo(Deck, verbose=True)
-InputParser = InputParser()
+player_deck = Deck()
+monty = MonteCarlo(player_deck, verbose=True)
+imp = InputParser()
 PrevPageOneInput = "DEADVALUE"
 PrevPageTwoInput = "DEADVALUE"
 
@@ -33,88 +33,112 @@ match(status):
         print("Set monty as usertest...")
         monty = MCUsrTest(deck)
     case "Dev":
-        monty = MonteCarlo(deck)"""
+        monty = monty(deck)"""
 
 
 @app.route("/card-images/<path:filename>")
 def serve_card_image(filename):
     """Serve cached card images."""
-    return send_from_directory(MonteCarlo.image_dir, filename)
+    return send_from_directory(monty.image_dir, filename)
 
 
 @app.route('/api/submit-deck', methods=['POST'])
 def submit_deck():
     data = request.get_json()
-    with open("RukaLandsSubs.json", "w") as f:
-        print("Writing submission to file!")
-        f.write(json.dumps(data))
+    #with open("RukaLandsSubs.json", "w") as f:
+        #print("Writing submission to file!")
+        #f.write(json.dumps(data))
     print("Received data:", data)
+    #with open("output_files/deck_submissions/typical_input.json", "w") as json_file:
+        #json.dump(data, json_file)
     global PrevPageOneInput
     if data != PrevPageOneInput:
-        decklist = InputParser.parse_decklist(data.get("deckList"))
-        print(f"Parsed to decklist {decklist}")
-        partner = InputParser.parse_partner(data.get("partner"))
-        Deck.setup(decklist, data.get("commander"), partner=partner)
-        MonteCarlo.setup()
-        MonteCarlo.fill_heap()
+        imp.refresh_deck_submission()
+        player_deck.scrap_all_cards()
+        monty.scrap_all_cards()
+
+
+        decklist = imp.parse_decklist(data.get("deckList"))
+        partner = imp.parse_partner(data.get("partner"))
+        player_deck.setup(decklist, data.get("commander"), partner=partner, remove_lands = data.get("removeLands"))
+        monty.setup()
+        monty.fill_heap()
         PrevPageOneInput= data
-    heap = MonteCarlo.export_cycles()
+    heap = monty.export_cycles()
 
 
     #actual response
     return jsonify({"currency": data.get("currency"), "heap": heap})
 
-@app.route('/api/test-preferences', methods=['POST'])
+
+@app.route('/api/submit-preferences', methods=['POST'])
+def submit_preferences():
+    data = request.get_json()
+    #with open("RukaLandsPrefs.json", "w") as f:
+        #print("Writing preferences to file!")
+        #f.write(json.dumps(data))
+    print("Received data:", data)
+    global PrevPageTwoInput
+    if data != PrevPageTwoInput:
+        print("RESETTING PREFERENCES")
+        monty.set_permissions(mandatory = data.get("mandatory"),
+                              permitted = data.get("permitted"),
+                              excluded = data.get("excluded"))
+        monty.set_rankings(data.get("rankings"))
+
+        PrevPageTwoInput= data
+
+    monty.run(of_each_basic = data.get("minIndividualBasics"), min_basics = data.get("minBasics"))
+    #lands = [x.to_dict() for x in player_deck.card_list if isinstance(x, Land) and x.permitted]
+    lands = []
+    nonLands = []
+    allCards = []
+    for card in player_deck.card_list:
+        if isinstance(card, Land):
+            lands.append(card.to_dict())
+        else:
+            nonLands.append(card.to_dict())
+        allCards.append(card.to_dict())
+
+
+    imp.decklist_to_categories(player_deck.card_list)
+    moxbox = imp.format_for_moxbox()
+    archidekt = imp.format_for_archidekt()
+    tappedout = imp.format_for_tappedout()
+    moxboxLands = imp.format_moxbox_lands()
+    archidektLands = imp.format_archidekt_lands()
+    tappedoutLands = imp.format_tappedout_lands()
+    output = {"lands": lands,
+              "nonLands": nonLands,
+              "moxbox": moxbox,
+              "archidekt": archidekt,
+              "tappedout": tappedout,
+              "moxboxLands": moxboxLands,
+              "archidektLands": archidektLands,
+              "tappedoutLands": tappedoutLands,
+              "proportions": player_deck.finalscore}
+
+    monty.reset_lands()
+
+    return jsonify(output)
+
+
+"""@app.route('/api/test-preferences', methods=['POST'])
 def test_preferences():
     data = request.get_json()
     print("Received data:", data)
     global PrevPageTwoInput
     if data != PrevPageTwoInput:
-        MonteCarlo.set_permissions(mandatory = data.get("mandatory"),
-                                   permitted = data.get("permitted"),
-                                   excluded = data.get("excluded"))
-        MonteCarlo.set_rankings(data.get("rankings")) #NOTE THAT THESE WERE SWAPPED
+        monty.set_permissions(mandatory = data.get("mandatory"),
+                              permitted = data.get("permitted"),
+                              excluded = data.get("excluded"))
+        monty.set_rankings(data.get("rankings")) #NOTE THAT THESE WERE SWAPPED
         PrevPageTwoInput= data
 
-    heap = MonteCarlo.export_cards()
+    heap = monty.export_cards()
 
 
-    return jsonify({"cards": heap})
-
-
-@app.route('/api/submit-preferences', methods=['POST'])
-def submit_preferences():
-    data = request.get_json()
-    with open("RukaLandsPrefs.json", "w") as f:
-        print("Writing preferences to file!")
-        f.write(json.dumps(data))
-    print("Received data:", data)
-    global PrevPageTwoInput
-    if data != PrevPageTwoInput:
-
-
-        MonteCarlo.set_permissions(mandatory = data.get("mandatory"),
-                                   permitted = data.get("permitted"),
-                                   excluded = data.get("excluded"))
-        MonteCarlo.set_rankings(data.get("rankings"))
-
-        PrevPageTwoInput= data
-
-    MonteCarlo.run(of_each_basic = data.get("minIndividualBasics"), min_basics = data.get("minBasics"))
-    #lands = [x.to_dict() for x in Deck.card_list if isinstance(x, Land) and x.permitted]
-    lands = []
-    nonLands = []
-    for card in Deck.card_list:
-        if isinstance(card, Land):
-            lands.append(card.to_dict())
-        else:
-            nonLands.append(card.to_dict())
-    output = {"lands": lands, "nonLands": nonLands, "proportions": Deck.finalscore}
-    for key in output:
-        print(output[key])
-
-    return jsonify(output)
-
+    return jsonify({"cards": heap})"""
 
 
 
@@ -131,7 +155,7 @@ def submit_preferences():
     })
         """
 
-"""@app.route('/fetch_cycles', methods=['GET'])
+@app.route('/fetch_cycles', methods=['GET'])
 def fetch_cycles():
     cycles = Cycle.query.filter(Cycle._official == True).all()
     json_cycles = list(map(lambda x: x.to_JSON(), cycles))
@@ -152,7 +176,7 @@ def lock():
     format = session["format"] = request.json.get("format")
     quantity = session["quantity"] = request.json.get("requestedQuantity")
 
-    deck.setup(input_cards, format, quantity)
+    player_deck.setup(input_cards, format, quantity)
     monty.fill_heap_CONDEMNED()
 
     return jsonify({"response": "Success - hey Leah shouldn't you be doing this with headers?"})
@@ -186,7 +210,7 @@ def run():
     #except Exception as e:
         #print(e)
         #return jsonify({"response": "Failed - hey Leah shouldn't you be doing this with headers?"})
-"""
+
 
 
 

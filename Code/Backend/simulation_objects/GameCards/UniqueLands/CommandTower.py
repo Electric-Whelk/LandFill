@@ -1,5 +1,5 @@
 from .UniqueLand import UniqueLand
-#from simulation_objects.CardCollections import Deck
+#from simulation_objects.CardCollections import player_deck
 
 
 class CommandTower(UniqueLand):

@@ -49,6 +49,8 @@ class MonteCarlo(CardCollection):
         self._pie_slices = None
         self._categories = None
         self._minbasics = 0
+        self._best_lands = []
+        self._best_score = 0
         
         self.halt = False
 
@@ -97,6 +99,20 @@ class MonteCarlo(CardCollection):
 
 
     #setters and getters
+    @property
+    def best_score(self):
+        return self._best_score
+    @best_score.setter
+    def best_score(self, value):
+        self._best_score = value
+
+    @property
+    def best_lands(self):
+        return self._best_lands
+    @best_lands.setter
+    def best_lands(self, value):
+        self._best_lands = value
+
     @property
     def sample_pound(self):
         return self._sample_pound
@@ -391,15 +407,31 @@ class MonteCarlo(CardCollection):
             self.minbasics = kwargs["min_basics"]
         self.hill_climb()
 
-    def run(self, **kwargs):
+    def run(self, of_each_basic = 0, min_basics = "0", **kwargs):
+        print(f"Deck contains lands: {[c for c in self.deck.card_list if isinstance(c, Land)]}")
         self.add_mandatory_lands()
+        print(f"Now Deck contains lands: {[c for c in self.deck.card_list if isinstance(c, Land)]}")
         self.deck.add_initial_lands("equal_basics")
         # add to the deck an initial set of lands - make this a function so you can try out different initial sets
         # ponder: what if it was all wastes? That'd certainly make your early interventions much more fiery.
-        self.deck.set_each(kwargs["of_each_basic"])
+        self.deck.set_each(of_each_basic)
+        self.minbasics = int(min_basics)
+
+        """if kwargs["of_each_basic"] is not None:
+            self.deck.set_each(kwargs["of_each_basic"])
+        else:
+            self.deck.set_each(0)
         if kwargs["min_basics"] is not None:
-            self.minbasics = kwargs["min_basics"]
+            self.minbasics = int(kwargs["min_basics"])
+        else:
+            self.minbasics = 0"""
         self.hill_climb()
+
+    def reset_lands(self):
+        lands_in_deck = [card for card in self.deck.card_list if isinstance(card, Land)]
+        for l in lands_in_deck:
+            self.deck.give(self, l)
+            self.deck.lands_requested += 1
 
     def add_mandatory_lands(self):
         giftbasket = []
@@ -429,9 +461,11 @@ class MonteCarlo(CardCollection):
             print(f"Iteration {iterations}")
             step_output = self.hill_climb_increment(step_output)
             #scores.insert(0, step_output.game_proportions)
-            scores.append(step_output.game_proportions)
-            #self.halt = self.check_rolling_max(scores)
-            self.halt = iterations >= 50
+            props = step_output.game_proportions
+            self.set_new_highscore(props)
+            scores.append(props)
+            self.halt = self.check_rolling_max(scores)
+            #self.halt = iterations >= 50
             with open("scoreslog.txt", "a") as f:
                 f.write(f"{str(step_output.game_proportions)}\n")
 
@@ -440,12 +474,27 @@ class MonteCarlo(CardCollection):
                 print(f"Halting at step {iterations}")
 
         self.plot(scores)
+        self.handle_highscore()
 
 
         self.deck.finalscore = step_output.game_proportions
         self.print_results(step_output)
         self.dev_assess_results()
         print(f"Took {iterations} iterations")
+
+    def handle_highscore(self):
+        lands_in_deck = [c for c in self.deck.card_list if isinstance(c, Land)]
+        print(f"Reverting to highscore {self.best_score} with lands {self.best_lands}")
+        for l in lands_in_deck:
+            self.deck.give(self, l)
+        for card in self.best_lands:
+            self.give(self.deck, card)
+
+
+    def set_new_highscore(self, props):
+        if props > self.best_score:
+            self.best_score = props
+            self.best_lands = self.deck.lands_list()
 
     def plot(self, values):
         i = 1
@@ -508,7 +557,7 @@ class MonteCarlo(CardCollection):
 
         return False
 
-    def check_rolling_max(self, scores, window_size=3, improvement_threshold=0.01):
+    def check_rolling_max(self, scores, window_size=3, improvement_threshold=0):
         if len(scores) < window_size *2:
             return False
 
@@ -559,6 +608,10 @@ class MonteCarlo(CardCollection):
 
         step_output.print_deck_details("proportion_of_games")
         step_output.print_list(self.deck.lands_list())
+        with open("SmallTest2.txt", "a") as f:
+            for land in self.deck.lands_list():
+                f.write(f"{land.name}\n")
+            f.write("\n")
 
 
     def check_for_halt(self, scores, test) -> bool:
@@ -693,20 +746,14 @@ class MonteCarlo(CardCollection):
     def get_cards_to_test(self) -> list:
         uniques = self.get_unique_cards()
         output = []
+        rejected = []
         for card in uniques:
             if not any(superior not in self.deck.card_list for superior in card.superior_lands):
                 output.append(card)
+            else:
+                rejected.append(card)
 
 
-
-        """output = self.get_unique_cards()
-
-        for slice in self.pie_slices:
-            output = self.enqueue_category(slice, output)
-        for category in self.categories:
-            output = self.enqueue_category(category, output)
-        #print(f"First output: {output}")
-        return output"""
         return output
 
 
@@ -742,10 +789,13 @@ class MonteCarlo(CardCollection):
 
         for card in selection:
             if card.name not in basicnames:
-                cardlist.append(card)
+                if card.name != "Wastes" or not self.colorless_pips:
+                    cardlist.append(card)
             if isinstance(card, BasicLand) and card.name not in basicnames:
-                if card.name != "Wastes" and not self.colorless_pips:
-                    basicnames.append(card.name)
+                basicnames.append(card.name)
+                #if card.name != "Wastes" and not self.colorless_pips:
+                    #basicnames.append(card.name)
+                    #print(f"BASICNAMES: {basicnames}")
         return cardlist
 
     def reset_scores(self, input):
@@ -785,6 +835,11 @@ class MonteCarlo(CardCollection):
 
         for land in permitted:
             land.superior_lands = self.prioritization_object.cascade_superiors(land, self.deck)
+
+        for supland in permitted:
+            for infland in permitted:
+                if supland in infland.superior_lands:
+                    supland.inferior_lands.append(infland)
 
 
     def prioritize_heap_CONDEMNED(self, prioritization:dict):
@@ -1014,6 +1069,8 @@ class MonteCarlo(CardCollection):
 
         self.prioritization_object.apply_player_rankings(new_rankings)
         self.prioritize_heap()
+
+
 
 
 

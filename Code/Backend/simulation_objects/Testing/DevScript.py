@@ -1,6 +1,6 @@
 import json
 from AppFactory import create_app
-from Server import InputParser
+from Server import imp
 from database_management.models.Cycle import Cycle
 from database_management.models.Format import Format
 from flask import jsonify, session, request
@@ -9,10 +9,10 @@ from Extensions import db
 from simulation_objects.CardCollections.Deck import Deck
 from simulation_objects.CardCollections.MonteCarlo import MonteCarlo
 
-with open("RataLandsSubs.json", "r") as file:
+with open("XavNonLandsSubs.json", "r") as file:
     data = json.load(file)
 
-with open("RataLandsPrefs.json", "r") as file:
+with open("XavNonLandsPrefs.json", "r") as file:
     prefs = json.load(file)
 
 
@@ -54,7 +54,7 @@ with app.app_context():
         titles = "hoo"
     if montytest:
         deck = Deck()
-        theImp = InputParser
+        theImp = imp
         decklist = theImp.parse_decklist(data.get("deckList"))
         deck.setup(decklist, data.get("commander"), partner=data.get("partner"))
         monty = MonteCarlo(deck, close_examine=close_examine, timer=timer, verbose=True)

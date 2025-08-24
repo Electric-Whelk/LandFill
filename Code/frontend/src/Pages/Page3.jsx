@@ -22,8 +22,10 @@ const Page3 = () => {
     const [landsString, setLandsString] = useState('')
     const [nonLandsString, setNonLandsString] = useState('')
     const [viewedCard, setViewedCard] = useState(null)
-    const [includeNonLands, setIncludeNonLands] = useState(true)
-    const [textContents, setTextContents] = useState("")
+    const [includeNonLands, setIncludeNonLands] = useState(false)
+    const [outputStyle, setOutputStyle] = useState({});
+    const [textContents, setTextContents] = useState('')
+
 
     function cardListToString(cardList){
         let output = cardList[0].name
@@ -36,12 +38,35 @@ const Page3 = () => {
     }
 
 
+    const [fullContents, setFullContents] = useState(() => {
+        const data = location.state?.data
+        const output = {moxbox:{}, archidekt:{}, tappedout:{}}
+        output.moxbox.cards = data.moxbox
+        output.moxbox.lands = data.moxboxLands
+        output.archidekt.cards = data.archidekt
+        output.archidekt.lands = data.archidektLands
+        output.tappedout.cards = data.tappedout
+        output.tappedout.lands = data.tappedoutLands
+        setOutputStyle(output.moxbox)
+        return output
+    })
+
+    const [landContents, setLandContents] = useState(() => {
+        const data = location.state?.data
+        const output = {}
+        output.moxbox = data.moxboxLands
+        output.archidekt = data.archidektLands
+        output.tappedout = data.tappedoutLands
+        return output
+    })
+
+
+
     const [lands, setLands] = useState(() => {
 
         const data = location.state?.data
         const innerLands = data.lands;
         setLandsString(cardListToString(innerLands))
-        setTextContents(landsString)
         return innerLands.sort((a, b) => b.proportions - a.proportions)
     });
 
@@ -65,18 +90,55 @@ const Page3 = () => {
 
     //Effect Hooks
     //set the default text string on creation not sur why this isn't handled by our setLands useState but w/e
-    useEffect(() => {
-        setTextContents(landsString)
-    }, [landsString])
-
-    //handlefunctions
-    const handleIncludeNonLandTick = (e) => {
-        if(e.target.checked){
-            setTextContents(nonLandsString + landsString)
-        }else{
-            setTextContents(landsString)
+    function formatLandsOrCards(input){
+        switch(outputStyle){
+            case "moxbox":
+                setTextContents(input.moxbox)
+                break;
+            case "archidekt":
+                setTextContents(input.archidekt)
+                break;
+            case "tappedout":
+                setTextContents(input.tappedout)
+                break;
         }
-        console.log(textContents.length)
+    }
+
+    //sort out the contents of the textbox
+    //set it on loading the page
+    useEffect(() => {
+        setTextContents(outputStyle.lands)
+    }, [fullContents])
+
+    useEffect(() => {
+        if(includeNonLands){
+            setTextContents(outputStyle.cards)
+        }else{
+            setTextContents(outputStyle.lands)
+        }
+    }, [outputStyle])
+
+    const handleFormatChange = (e) => {
+        switch(e.target.value){
+            case "moxbox":
+                setOutputStyle(fullContents.moxbox);
+                break;
+            case "archidekt":
+                setOutputStyle(fullContents.archidekt);
+                break;
+            case "tappedout":
+                setOutputStyle(fullContents.tappedout);
+                break;
+        }
+    }
+
+    const handleIncludeNonLandTick = (e) => {
+        setIncludeNonLands(e.target.value)
+        if(e.target.checked){
+            setTextContents(outputStyle.cards)
+        }else{
+            setTextContents(outputStyle.lands)
+        }
     }
 
     const CardInfoPanel = ({ card }) => {
@@ -136,10 +198,10 @@ const Page3 = () => {
 
                 <div>
                     <label htmlFor="outputStyle">Output Style:</label>
-                    <select name="outputStyle" id="outputStyle">
-                        <option value="match input">Match Input</option>
-                        <option value="moxfield">Moxfield</option>
-                        <option value="tappedout">Tappedout</option>
+                    <select name="outputStyle" id="outputStyle" onChange={e => handleFormatChange(e)}>
+                        <option value="moxbox">Moxfield/Deckbox</option>
+                        <option value="tappedout">TappedOut</option>
+                        <option value="archidekt">Archidekt</option>
                     </select>
                 </div>
                 <div>

@@ -1,0 +1,37 @@
+digraph superiority {
+	"Shock Lands" -> "Command Tower"
+	"Shock Lands" -> "Original Dual Lands"
+	"Bond Lands" -> "Command Tower"
+	"Bond Lands" -> "Original Dual Lands"
+	"Three Color Untyped Taplands" -> "Triomes"
+	"Battle Lands" -> "Shock Lands"
+	"Two Color Typed Taplands" -> "Triomes"
+	"Two Color Typed Taplands" -> "Battle Lands"
+	"Verge Lands" -> "Bond Lands"
+	"Verge Lands" -> "Shock Lands"
+	"Pain Lands" -> "Bond Lands"
+	"Pain Lands" -> "Shock Lands"
+	"Slow Lands" -> "Bond Lands"
+	"Slow Lands" -> "Shock Lands"
+	"Check Lands" -> "Bond Lands"
+	"Check Lands" -> "Shock Lands"
+	"Fast Lands" -> "Bond Lands"
+	"Fast Lands" -> "Shock Lands"
+	"Reveal Lands" -> "Bond Lands"
+	"Reveal Lands" -> "Shock Lands"
+	"Two Faced Lands" -> "Bond Lands"
+	"Two Faced Lands" -> "Shock Lands"
+	"Two Color Untyped Taplands" -> "Three Color Untyped Taplands"
+	"Two Color Untyped Taplands" -> "Slow Lands"
+	"Two Color Untyped Taplands" -> "Check Lands"
+	"Two Color Untyped Taplands" -> "Fast Lands"
+	"Two Color Untyped Taplands" -> "Reveal Lands"
+	"Filter Lands"
+	"Fetch Lands"
+
+
+	
+
+
+	
+}

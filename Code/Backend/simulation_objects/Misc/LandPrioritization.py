@@ -176,9 +176,9 @@ class LandPrioritization:
         # Step 3: rebuild inferior_cycles with updated relationships
         self.inferior_cycles.clear()
         for cycle, superiors in self.superior_cycles.items():
-            print(f"{cycle}")
+            #print(f"{cycle}")
             for sup in superiors:
-                print(f"\t{sup}")
+                #print(f"\t{sup}")
                 sup_name = sup.__name__
                 self.inferior_cycles[sup_name].append(cycle)
 

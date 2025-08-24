@@ -59,6 +59,8 @@ class CardCollection:
     def length(self):
         return len(self.card_list)
 
+
+
     #sublists
     def lands_list(self, exclude = None) -> list[Land]:
         if exclude == None:
@@ -238,7 +240,7 @@ class CardCollection:
     def export_cycles(self):
         output = {}
         for card in self.card_list:
-            if isinstance(card, Land):
+            if isinstance(card, Land) and not isinstance(card, BasicLand):
                 if card.image is None:
                     card.image = self.get_cached_card_image_v2(card.name)
                 usd = card.usd
@@ -395,8 +397,10 @@ class CardCollection:
 
         mandatory = names(mandatory)
         permitted = names(permitted)
-        print(f"Permitted: {permitted}")
         excluded = names(excluded)
+        print(f"Permitted: {permitted}")
+        print(f"Mandatory: {mandatory}")
+        print(f"Excluded: {excluded}")
 
         for card in self.card_list:
             if card.name in mandatory:
@@ -408,8 +412,14 @@ class CardCollection:
             elif card.name in excluded:
                 card.permitted = False
                 card.mandatory = False
+            elif isinstance(card, BasicLand):
+                card.permitted = True
+                card.mandatory = False
             else:
-                raise Exception(f"{card.name} not in any of the lists")
+                print(f"Couldn't find {card.name}")
+                card.permitted = True
+                card.mandatory = True
+            #print(f"Set {card.name} to mandatory {card.mandatory} and permmitted {card.permitted}")
 
 
 
@@ -421,6 +431,9 @@ class CardCollection:
         for card in self.card_list:
             if isinstance(card, Land):
                 card.reset_grade()
+
+    def scrap_all_cards(self):
+        self.card_list = []
 
 
 

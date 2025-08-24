@@ -465,6 +465,16 @@ const Page2 = () => {
     };
 
     /** ----------------------------
+     * FAQ Answers
+     ---------------------------- **/
+    const optimizationExplanation = "Goldfishing! LandFill fills your deck with basics and plays a bunch of virtual games with them, where it tries to spend as much mana as possible. It swaps out the worst performing land for a different land, then does the same thing over and over until the deck can cast your spells as reliably as possible."
+
+    const timeEstimate = "About 1 minute per colour of mana in your deck. The more lands that you tell it you definitely want or don't want, the quicker it'll go! "
+
+    const goodMana = "Let's say you've just played your 5th land and you've got a 5 drop in hand. Unfortunately, either because it's a tapland or you're colour screwed, you can't play that 5 drop and have to play a 4 drop. You've wasted mana that turn. LandFill picks lands that maximize the percentage of games you'll play where that never happens."
+
+
+    /** ----------------------------
      * COMPONENTS
      ---------------------------- **/
     const FAQ = ({ label, content }) => {
@@ -531,6 +541,11 @@ const Page2 = () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ mandatory, permitted, excluded, rankings, minBasics, minIndividualBasics })
             });
+            for(const key of Object.keys(response)){
+                for(const item of response[key]){
+                    console.log("Sending " + item.name)
+                }
+            }
 
             const result = await response.json();
 
@@ -580,13 +595,43 @@ const Page2 = () => {
             <div className="main-content">
 
                 <div className="faq-row">
-                    <FAQ label="How will this optimize my manabase?" content="OPTIMIZATON EXPLANATION HERE"/>
-                    <FAQ label="How Long Will optimization take?" content="OPTIMIZATION TIME ESTIMATE HERE"/>
+                    <FAQ label="How will this optimize my manabase?" content={optimizationExplanation}/>
+                    <FAQ label="How Long Will optimization take?" content={timeEstimate}/>
+                    <FAQ label="How does LandFill judge what a good manabase is?" content={goodMana}/>
                 </div>
 
                 <div className="admin">
-                    <h1>Land Cycle Preferences</h1>
+                    <div className="preciseSpecs">
+                        <label>
+                            <input type="checkbox" checked={allowOffColorFetches} onChange={(e) => setAllowOffColorFetches(e.target.checked)} />
+                            Allow Off-Color Fetches
+                        </label>
+
+                        <label>
+                            Include at least
+                            <input
+                                type="number"
+                                name="minBasics"
+                                value={minBasics}
+                                onChange={(e) => setMinBasics(e.target.value)}
+                                /*placeholder="Amount"*/
+                            /> basic lands.
+                        </label>
+
+                        <label>
+                            Include at least
+                            <input
+                                type="number"
+                                name="minIndividualBasics"
+                                value={minIndividualBasics}
+                                onChange={(e) => setMinIndividualBasics(e.target.value)}
+                                /*placeholder="Amount"*/
+                            /> of every basic land in the deck's colours.
+                        </label>
+
+                    </div>
                     <div className="filters">
+                        <h3>Exclude from Consideration...</h3>
                         <label>
                             <input type="checkbox" name="tappedNonfetch" checked={filters.tappedNonfetch} onChange={handleFilterChange} />
                             All lands that are always tapped and aren’t fetchable (eg, GuildGates)
@@ -600,35 +645,10 @@ const Page2 = () => {
                             <input type="number" name="maxPrice" value={filters.maxPrice} onChange={handleFilterChange} placeholder="Amount" /> in {currency}
                         </label>
                     </div>
-                    <div className="preciseSpecs">
-                        <label>
-                            <input type="checkbox" checked={allowOffColorFetches} onChange={(e) => setAllowOffColorFetches(e.target.checked)} />
-                            Allow Off-Color Fetches
-                        </label>
+                </div>
 
-                        <label>
-                            Include at least
-                            <input
-                                type="number"
-                                name="minBasics"
-                                value={minBasics}
-                                onChange={(e) => setMinBasics(e)}
-                                /*placeholder="Amount"*/
-                            /> basic lands.
-                        </label>
-
-                        <label>
-                            Include at least
-                            <input
-                                type="number"
-                                name="minIndividualBasics"
-                                value={minIndividualBasics}
-                                onChange={(e) => setMinIndividualBasics}
-                                /*placeholder="Amount"*/
-                            /> of every basic land in the deck's colours.
-                        </label>
-
-                    </div>
+                <div>
+                    <i className="hint">HINT: The more cycles you leave in the middle column, the longer it'll take me to test them all out! If there are lands you love and lands you hate, let me know!</i>
                 </div>
 
                 <DragDropContext onDragEnd={onDragEnd}>

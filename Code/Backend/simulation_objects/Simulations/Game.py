@@ -293,7 +293,7 @@ class Game(Simulation):
         return False
 
 
-    def run(self, card_to_test=None):
+    def run(self, card_to_test=None, quit=True):
         start = time.time()
         self.seeking_target = card_to_test
 
@@ -318,7 +318,11 @@ class Game(Simulation):
 
             if self.total_theoretical_mana <= self.total_spent_mana: #SCAFFOLD - number of turns
                 self.run_turn()
+            elif not quit:
+                self.run_turn()
             else:
+                if not quit and self.turn < self.total_turns:
+                    print(f"Quitting on turn {self.turn}")
                 break
 
         #if abandoned:

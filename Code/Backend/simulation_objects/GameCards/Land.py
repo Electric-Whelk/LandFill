@@ -2,7 +2,7 @@ from copy import deepcopy
 
 from simulation_objects.GameCards.GameCard import GameCard
 #import simulation_objects.Simulations as Simulations
-#from simulation_objects.CardCollections import Deck
+#from simulation_objects.CardCollections import player_deck
 import numpy
 from scipy.stats import skew, kurtosis
 
@@ -57,9 +57,18 @@ class Land(GameCard):
 
         self._superior_classes = superiorclasses
         self._superior_lands = []
+        self._inferior_lands = []
 
 
     #getters and setters
+    @property
+    def inferior_lands(self):
+        return self._inferior_lands
+    @inferior_lands.setter
+    def inferior_lands(self, value):
+        self._inferior_lands = value
+
+
     @property
     def cycle_display_name(self):
         return self._cycle_display_name

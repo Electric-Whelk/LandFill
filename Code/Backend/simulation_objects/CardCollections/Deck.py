@@ -23,18 +23,19 @@ class Deck(CardCollection):
         self._pie_slices = None
         self._pips = None
         self._colorless_pips = None
-        self._colors_needed = None
+        self._colors_needed = "hoopy frood"
         self._possible_lands = None
         self._finalscore = 0
 
 
     #def setup(self, input_cards, format, quantity, commander_name, partner=None):
 
-    def setup(self, input_cards, commander_name, partner=None):
+    def setup(self, input_cards, commander_name, partner=None, remove_lands = False):
         #self._format = self.parse_format_from_json(format)
 
         input_as_cards = self.parse_cards_from_json(input_cards)
         self.set_card_list_from_ORM(input_as_cards, mandatory=True)
+        self.remove_lands(remove_lands)
         self.set_commanders(commander_name, partner=partner)
 
         self._lands_requested = 100-len(self.card_list) #self.determine_lands_requested_from_json(quantity)
@@ -103,6 +104,10 @@ class Deck(CardCollection):
         return self._partner
 
     #setup functions
+    def remove_lands(self, permission):
+        if permission:
+            self.card_list = [x for x in self.card_list if not isinstance(x, Land)]
+
     def slice_the_pie(self, color_id:list):
         output = []
         for r in range(2, len(color_id) + 1):
@@ -235,12 +240,17 @@ class Deck(CardCollection):
             case "equal_basics":
                 self.add_equal_basics()
             case _:
-                raise Exception("Invalid input to Deck.add_initial_lands()")
+                raise Exception("Invalid input to player_deck.add_initial_lands()")
 
 
     def set_each(self, of_each):
+
+        of_each = int(of_each)
+        print(f"OF EACH: {of_each}")
         landnames = {landtype_map[c]:0 for c in self.colors_needed}
         for card in self.card_list:
+            if isinstance(card, BasicLand):
+                print(f"{card.name}: {landnames[card.name]}")
             if isinstance(card, BasicLand) and landnames[card.name] < of_each:
                 landnames[card.name] += 1
                 card.mandatory = True
@@ -252,6 +262,7 @@ class Deck(CardCollection):
 
     def add_equal_basics(self):
         landnames = []
+        print(f"COLORS NEEDED: {self.colors_needed}")
         for color in self.colors_needed:
             landnames.append(landtype_map[color])
         #landnames = [landtype_map[c] for c in self.colors_needed]

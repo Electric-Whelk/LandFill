@@ -1,11 +1,13 @@
-#from simulation_objects.CardCollections.Deck import Deck
+#from simulation_objects.CardCollections.player_deck import player_deck
 import functools
 import pickle
 from copy import deepcopy
 
 import numpy
 from joblib import delayed, Parallel
+from matplotlib import pyplot as plt
 from scipy.stats import skew, kurtosis
+from statsmodels.distributions.empirical_distribution import ECDF
 
 from simulation_objects.CardCollections.DelayedFunctions import run_tests_exterior
 from simulation_objects.GameCards import BasicLand, Land
@@ -19,10 +21,11 @@ from simulation_objects.Timer import functimer_once
 
 
 class Test(Simulation):
-    def __init__(self, deck, turns=7, runs=None, ct_runs=300, close_examine=False, timer=False):
+    def __init__(self, deck, turns=7, runs=None, ct_runs=100, close_examine=False, timer=False):
         Simulation.__init__(self, deck)
         self._wasteless_turns = 0
         self._wasteless_games = 0
+        self._wasted_mana = []
         self._turns = turns
         self._lands = self.deck.lands_list()
         self._ct_runs = ct_runs
@@ -39,14 +42,28 @@ class Test(Simulation):
         if self._close_examine:
             self._runs = 1
         else:
-            self._runs = 1000 #CHANGE BACK TO ONE THOUSAND
+            self._runs = 1000 #CHANGE BACK TO ONE THOUSAND (and ct is 300)
         if runs != None:
             self._runs = runs
 
-        #3000 vs 300 at first
+        #Initial: 1000 runs, 300 ct runs
+        #Small test: 500 runs, 100 ct runs
+        #NormalTest: 1000 runs, 200 ct runs
+        #Doubletest: 2000 runs, 400 ct runs
+        #BigTest: 10000 runs, 2000 ct runs.
+        #UnevenTest: 300 runs, 1000 ct_runs
+        #TinyTest: 100, 50
+        #TinyRebalance: 100, 100
 
         #variables returned by the test
         self._runtime = 0
+
+    @property
+    def wasted_mana(self):
+        return self._wasted_mana
+    @wasted_mana.setter
+    def wasted_mana(self, value):
+        self._wasted_mana = value
 
     @property
     def worst_performing_card(self) -> Land:
@@ -190,6 +207,12 @@ class Test(Simulation):
         self.assess_lands_hc()
         ranked = [x for x in self.deck.lands_list()]
 
+    def individual_deck_test(self):
+        self.deck.reset_card_score()
+        self.run_tests(quit=False)
+        self.assess_deck_hc()
+        self.assess_lands_hc()
+
     def assess_deck_hc(self):
         self.game_proportions = self.wasteless_games / self.runs
 
@@ -200,8 +223,8 @@ class Test(Simulation):
 
         worst = None
         worst_score = 0
-        for color in self.deck.color_id:
-            self.normalize_basics(landtype_map[color])
+        #for color in self.deck.color_id:
+            #self.normalize_basics(landtype_map[color])
 
 
 
@@ -214,7 +237,8 @@ class Test(Simulation):
         for i in range(len(self.deck.lands_list())):
             print(f"\tCURRENTLY IN DECK {sklorted[i]} -> {sklorted[i].proportions} -> {numpy.median(sklorted[i].options)}")
 
-        for card in self.deck.card_list:
+        candidates = self.get_worst_card_candidates(self.deck.card_list)
+        for card in candidates:
 
             if isinstance(card, Land):
                 if card.mandatory == True:
@@ -225,7 +249,16 @@ class Test(Simulation):
                         worst = card
                         worst_score = card.proportions
                     #card.reset_grade()
+
         self.worst_performing_card = worst
+
+    def get_worst_card_candidates(self, card_list):
+        output = []
+        for card in card_list:
+            if card.mandatory == False:
+                if not any(item in card.inferior_lands for item in card_list):
+                    output.append(card)
+        return output
 
 
 
@@ -324,7 +357,7 @@ class Test(Simulation):
 
 
 
-    def run_tests(self):
+    def run_tests(self, quit=True):
         for i in range(0, self._runs):#SCAFFOLD - currently at 6 seconds per 10,000 games
             #if i % 10 == 0:
                 #print(f"{i}...")
@@ -334,7 +367,7 @@ class Test(Simulation):
             #print(f"Game instantiation took {time.time() - gamestart} seconds")
             #pickle.dumps(g)
             runstart = time.time()
-            g.run()
+            g.run(quit=quit)
            # print(f"Game {time.time() - runstart} seconds")
             self.get_game_info(g)
 
@@ -348,6 +381,7 @@ class Test(Simulation):
     def get_game_info(self, game):
         self.wasteless_turns += game.wasteless_turns
         self.wasteless_games += self.wastelessness(game)
+        self.wasted_mana.append(game.leftover_mana)
 
     def wastelessness(self, game) -> int:
         if game.leftover_mana == 0:
@@ -398,3 +432,35 @@ class Test(Simulation):
 
     #def worst_performing_card(self):
         #return min(self.lands, key=lambda x: x.proportion_of_games())
+
+    def determine_cumulative_distribution(self):
+
+        #numpy.sort(self.wasted_mana)
+        #c = numpy.arange(1, len(self.wasted_mana) + 1) / len(self.wasted_mana)
+        e = ECDF(self.wasted_mana)
+        #area = numpy.trapz(x=e.x, y=e.y)
+
+
+        x = list(e.x[1:])
+        y = list(e.y[1:])
+        x.append(30)
+        y.append(1)
+
+        print("x:", x)
+        print("y:", y)
+        plt.step(x, y, color='green')
+        plt.xlabel('Data Values')
+        plt.ylabel('CDF')
+        plt.title('CDF via ECDF')
+        plt.grid()
+        plt.show()
+
+
+        from scipy.integrate import trapezoid
+
+        area = trapezoid(x=x, y=y)
+
+        #values, counts = numpy.unique(self.wasted_mana, return_counts=True)
+        #cum_counts = numpy.cumsum(counts)
+        #area = numpy.trapz(cum_counts, x=values)
+        return area

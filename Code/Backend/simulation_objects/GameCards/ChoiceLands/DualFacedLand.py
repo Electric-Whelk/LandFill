@@ -8,7 +8,7 @@ class DualFacedLand(ChoiceLand):
         face_one = self.create_face(card, card.faces[0])
         face_two = self.create_face(card, card.faces[1])
         self._sublands = [face_one, face_two]
-        print(f"My name is {self} and I have the following faces:")
+        #print(f"My name is {self} and I have the following faces:")
         for face in self._sublands:
             print(f"{face.name} -> {face.produced}")
 

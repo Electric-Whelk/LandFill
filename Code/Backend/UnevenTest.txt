@@ -1,0 +1,390 @@
+Scalding Tarn
+Flooded Grove
+Forest
+Island
+Watery Grave
+Nurturing Peatland
+Island
+Command Tower
+Forest
+Flooded Strand
+Deathcap Glade
+Breeding Pool
+Verdant Catacombs
+Island
+Misty Rainforest
+Forest
+Forest
+Windswept Heath
+Swamp
+Marsh Flats
+Llanowar Wastes
+Undergrowth Stadium
+Island
+Swamp
+Swamp
+Island
+Twilight Mire
+Island
+Wooded Foothills
+Island
+Polluted Delta
+Overgrown Tomb
+Rejuvenating Springs
+Tropical Island
+Forest
+Forest
+Swamp
+Bloodstained Mire
+
+Windswept Heath
+Misty Rainforest
+Island
+Island
+Nurturing Peatland
+Island
+Marsh Flats
+Yavimaya Coast
+Command Tower
+Swamp
+Llanowar Wastes
+Scalding Tarn
+Swamp
+Watery Grave
+Forest
+Forest
+Swamp
+Forest
+Bloodstained Mire
+Forest
+Waterlogged Grove
+Verdant Catacombs
+Swamp
+Forest
+Wooded Foothills
+Morphic Pool
+Undergrowth Stadium
+Twilight Mire
+Breeding Pool
+Flooded Grove
+Flooded Strand
+Sunken Ruins
+Forest
+Overgrown Tomb
+Tropical Island
+Rejuvenating Springs
+Island
+Polluted Delta
+
+Verdant Catacombs
+Wooded Foothills
+Overgrown Tomb
+Forest
+Flooded Grove
+Forest
+Waterlogged Grove
+Breeding Pool
+Polluted Delta
+Swamp
+Swamp
+Forest
+Swamp
+Forest
+Forest
+Sunken Ruins
+Island
+Underground Sea
+Island
+Misty Rainforest
+Windswept Heath
+Forest
+Command Tower
+Forest
+Flooded Strand
+Island
+Underground River
+Yavimaya Coast
+Scalding Tarn
+Twilight Mire
+Tropical Island
+Zagoth Triome
+Watery Grave
+Undergrowth Stadium
+Morphic Pool
+Swamp
+Bloodstained Mire
+Marsh Flats
+
+Forest
+Flooded Grove
+Bayou
+Island
+Swamp
+Morphic Pool
+Island
+Llanowar Wastes
+Forest
+Forest
+Bloodstained Mire
+Forest
+Rejuvenating Springs
+Wooded Foothills
+Misty Rainforest
+Waterlogged Grove
+Forest
+Flooded Strand
+Yavimaya Coast
+Command Tower
+Shipwreck Marsh
+Woodland Cemetery
+Windswept Heath
+Polluted Delta
+Undergrowth Stadium
+Island
+Sunken Ruins
+Island
+Overgrown Tomb
+Underground River
+Tropical Island
+Breeding Pool
+Watery Grave
+Underground Sea
+Twilight Mire
+Verdant Catacombs
+Scalding Tarn
+Marsh Flats
+
+Flooded Grove
+Twilight Mire
+Misty Rainforest
+Marsh Flats
+Bayou
+Morphic Pool
+Swamp
+Wooded Foothills
+Breeding Pool
+Polluted Delta
+Underground Sea
+Flooded Strand
+Tropical Island
+Forest
+Forest
+Sunken Ruins
+Island
+Swamp
+Windswept Heath
+Command Tower
+Bloodstained Mire
+Rejuvenating Springs
+Verdant Catacombs
+Forest
+Underground River
+Swamp
+Undergrowth Stadium
+Waterlogged Grove
+Island
+Swamp
+Zagoth Triome
+Watery Grave
+Forest
+Forest
+Island
+Forest
+Overgrown Tomb
+Scalding Tarn
+
+Island
+Swamp
+Verdant Catacombs
+Swamp
+Wooded Foothills
+Windswept Heath
+Forest
+Polluted Delta
+Island
+Forest
+Watery Grave
+Forest
+Swamp
+Forest
+Forest
+Island
+Swamp
+Flooded Grove
+Bayou
+Forest
+Twilight Mire
+Overgrown Tomb
+Bloodstained Mire
+Forest
+Island
+Island
+Island
+Flooded Strand
+Marsh Flats
+Breeding Pool
+Command Tower
+Tropical Island
+Island
+Island
+Forest
+Swamp
+Misty Rainforest
+Scalding Tarn
+
+Swamp
+Marsh Flats
+Willowrush Verge
+Undergrowth Stadium
+Forest
+Forest
+Island
+Windswept Heath
+Swamp
+Island
+Flooded Strand
+Tropical Island
+Island
+Forest
+Swamp
+Forest
+Twilight Mire
+Llanowar Wastes
+Bloodstained Mire
+Island
+Forest
+Rejuvenating Springs
+Command Tower
+Misty Rainforest
+Forest
+Polluted Delta
+Sunken Ruins
+Swamp
+Zagoth Triome
+Overgrown Tomb
+Watery Grave
+Breeding Pool
+Island
+Swamp
+Swamp
+Verdant Catacombs
+Wooded Foothills
+Scalding Tarn
+
+Swamp
+Willowrush Verge
+Sunken Ruins
+Polluted Delta
+Swamp
+Island
+Island
+Undergrowth Stadium
+Rejuvenating Springs
+Scalding Tarn
+Verdant Catacombs
+Forest
+Island
+Marsh Flats
+Command Tower
+Forest
+Swamp
+Flooded Strand
+Misty Rainforest
+Dreamroot Cascade
+Twilight Mire
+Island
+Forest
+Bayou
+Breeding Pool
+Swamp
+Tropical Island
+Swamp
+Wooded Foothills
+Zagoth Triome
+Llanowar Wastes
+Yavimaya Coast
+Overgrown Tomb
+Underground Sea
+Forest
+Wastewood Verge
+Windswept Heath
+Bloodstained Mire
+
+Twilight Mire
+Forest
+Misty Rainforest
+Rejuvenating Springs
+Forest
+Windswept Heath
+Wooded Foothills
+Forest
+Yavimaya Coast
+Polluted Delta
+Swamp
+Island
+Underground Sea
+Tropical Island
+Swamp
+Sunken Ruins
+Underground River
+Marsh Flats
+Breeding Pool
+Island
+Zagoth Triome
+Swamp
+Island
+Verdant Catacombs
+Flooded Strand
+Forest
+Woodland Cemetery
+Command Tower
+Scalding Tarn
+Overgrown Tomb
+Bloodstained Mire
+Swamp
+Forest
+Watery Grave
+Flooded Grove
+Undergrowth Stadium
+Bayou
+Waterlogged Grove
+
+Swamp
+Forest
+Swamp
+Forest
+Breeding Pool
+Polluted Delta
+Verdant Catacombs
+Woodland Cemetery
+Tropical Island
+Swamp
+Swamp
+Command Tower
+Rejuvenating Springs
+Island
+Forest
+Sunken Ruins
+Island
+Island
+Flooded Grove
+Forest
+Overgrown Tomb
+Windswept Heath
+Marsh Flats
+Swamp
+Forest
+Island
+Undergrowth Stadium
+Misty Rainforest
+Flooded Strand
+Scalding Tarn
+Deathcap Glade
+Bayou
+Island
+Island
+Island
+Island
+Forest
+Wooded Foothills
+

@@ -18,12 +18,46 @@ class GameCard(object):
         self._permitted = permitted
         self._tapped = False
 
+        self._category = None
+        self._edition = None
+
+        self._added = False
+        self._count = 1
+
 
     def __repr__(self):
         return self._name
 
 
     #getters and setters
+    @property
+    def added(self):
+        return self._added
+    @added.setter
+    def added(self, added):
+        self._added = added
+
+    @property
+    def count(self):
+        return self._count
+    @count.setter
+    def count(self, count):
+        self._count = count
+
+    @property
+    def category(self):
+        return self._category
+    @category.setter
+    def category(self, value):
+        self._category = value
+
+    @property
+    def edition(self):
+        return self._edition
+    @edition.setter
+    def edition(self, value):
+        self._edition = value
+
     @property
     def off_color_fetch(self):
         return self._off_color_fetch
@@ -107,7 +141,11 @@ class GameCard(object):
             "mandatory": self.mandatory,
             "permitted": self.permitted,
             "image": self.image,
-            "offColorFetch": self.off_color_fetch
+            "offColorFetch": self.off_color_fetch,
+            "category": self.category,
+            "edition": self.edition,
+            "added": self.added,
+            "count": self.count
         }
 
     def parse_text(self, card) -> str:

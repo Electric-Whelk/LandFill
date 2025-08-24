@@ -1,0 +1,411 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nty/global//global/global}
+    \entry{alvin2021toward}{inproceedings}{}
+      \name{author}{5}{}{%
+        {{hash=a24a2b5a2e60d61405ed54aa7e17d82b}{%
+           family={Alvin},
+           familyi={A\bibinitperiod},
+           given={Chris},
+           giveni={C\bibinitperiod}}}%
+        {{hash=3318cb7968ff83b0f4b5a04d8f9ec318}{%
+           family={Bowling},
+           familyi={B\bibinitperiod},
+           given={Michael},
+           giveni={M\bibinitperiod}}}%
+        {{hash=244e6b1386d7acd0775173c1baf5ffdd}{%
+           family={Rivers-Green},
+           familyi={R\bibinithyphendelim G\bibinitperiod},
+           given={Shaelyn},
+           giveni={S\bibinitperiod}}}%
+        {{hash=ebeb83f6c110d09e11dcee0d7fc332c2}{%
+           family={Siglin},
+           familyi={S\bibinitperiod},
+           given={Deric},
+           giveni={D\bibinitperiod}}}%
+        {{hash=5f9bff34012f051ebcaa4b6d02ac3992}{%
+           family={Alvin},
+           familyi={A\bibinitperiod},
+           given={Lori},
+           giveni={L\bibinitperiod}}}%
+      }
+      \strng{namehash}{7b116b42bc78543932c0a8fef29c2362}
+      \strng{fullhash}{aaf53cda6064ad311c27f5c6b6791b90}
+      \strng{bibnamehash}{7b116b42bc78543932c0a8fef29c2362}
+      \strng{authorbibnamehash}{7b116b42bc78543932c0a8fef29c2362}
+      \strng{authornamehash}{7b116b42bc78543932c0a8fef29c2362}
+      \strng{authorfullhash}{aaf53cda6064ad311c27f5c6b6791b90}
+      \field{sortinit}{A}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{The International FLAIRS Conference Proceedings}
+      \field{title}{Toward a competitive agent framework for magic: The gathering}
+      \field{volume}{34}
+      \field{year}{2021}
+    \endentry
+    \entry{churchill2019magic}{article}{}
+      \name{author}{3}{}{%
+        {{hash=0db9e87b3b5d3281f5037a61d49e65b5}{%
+           family={Churchill},
+           familyi={C\bibinitperiod},
+           given={Alex},
+           giveni={A\bibinitperiod}}}%
+        {{hash=865b3a07920bcd999406ae3062b413fa}{%
+           family={Biderman},
+           familyi={B\bibinitperiod},
+           given={Stella},
+           giveni={S\bibinitperiod}}}%
+        {{hash=3b95d1e45c734258ead8eae0e6c82a2d}{%
+           family={Herrick},
+           familyi={H\bibinitperiod},
+           given={Austin},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{f06d987ebc747f23cc566f9cf90a5096}
+      \strng{fullhash}{f06d987ebc747f23cc566f9cf90a5096}
+      \strng{bibnamehash}{f06d987ebc747f23cc566f9cf90a5096}
+      \strng{authorbibnamehash}{f06d987ebc747f23cc566f9cf90a5096}
+      \strng{authornamehash}{f06d987ebc747f23cc566f9cf90a5096}
+      \strng{authorfullhash}{f06d987ebc747f23cc566f9cf90a5096}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{arXiv preprint arXiv:1904.09828}
+      \field{title}{Magic: The gathering is Turing complete}
+      \field{year}{2019}
+    \endentry
+    \entry{esche2018mathematical}{book}{}
+      \name{author}{1}{}{%
+        {{hash=f0f59e7266324bf468f4e2e5df2c599a}{%
+           family={Esche},
+           familyi={E\bibinitperiod},
+           given={Alexander},
+           giveni={A\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Northern Illinois University}%
+      }
+      \strng{namehash}{f0f59e7266324bf468f4e2e5df2c599a}
+      \strng{fullhash}{f0f59e7266324bf468f4e2e5df2c599a}
+      \strng{bibnamehash}{f0f59e7266324bf468f4e2e5df2c599a}
+      \strng{authorbibnamehash}{f0f59e7266324bf468f4e2e5df2c599a}
+      \strng{authornamehash}{f0f59e7266324bf468f4e2e5df2c599a}
+      \strng{authorfullhash}{f0f59e7266324bf468f4e2e5df2c599a}
+      \field{sortinit}{E}
+      \field{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Mathematical Programming and Magic: The Gathering{®}}
+      \field{year}{2018}
+    \endentry
+    \entry{IxalanManabases}{online}{}
+      \name{author}{1}{}{%
+        {{hash=3ee38648b05bd921c676eda1fd479916}{%
+           family={Karsten},
+           familyi={K\bibinitperiod},
+           given={Frank},
+           giveni={F\bibinitperiod}}}%
+      }
+      \strng{namehash}{3ee38648b05bd921c676eda1fd479916}
+      \strng{fullhash}{3ee38648b05bd921c676eda1fd479916}
+      \strng{bibnamehash}{3ee38648b05bd921c676eda1fd479916}
+      \strng{authorbibnamehash}{3ee38648b05bd921c676eda1fd479916}
+      \strng{authornamehash}{3ee38648b05bd921c676eda1fd479916}
+      \strng{authorfullhash}{3ee38648b05bd921c676eda1fd479916}
+      \field{extraname}{1}
+      \field{sortinit}{K}
+      \field{sortinithash}{c02bf6bff1c488450c352b40f5d853ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Mana Bases in Ixalan Standard}
+      \field{urlday}{13}
+      \field{urlmonth}{8}
+      \field{urlyear}{2025}
+      \field{year}{2017}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://web.archive.org/web/20200330115445/https:/www.channelfireball.com/articles/mana-bases-in-ixalan-standard/
+      \endverb
+      \verb{url}
+      \verb https://web.archive.org/web/20200330115445/https:/www.channelfireball.com/articles/mana-bases-in-ixalan-standard/
+      \endverb
+    \endentry
+    \entry{TappedDualsLimited}{online}{}
+      \name{author}{1}{}{%
+        {{hash=3ee38648b05bd921c676eda1fd479916}{%
+           family={Karsten},
+           familyi={K\bibinitperiod},
+           given={Frank},
+           giveni={F\bibinitperiod}}}%
+      }
+      \strng{namehash}{3ee38648b05bd921c676eda1fd479916}
+      \strng{fullhash}{3ee38648b05bd921c676eda1fd479916}
+      \strng{bibnamehash}{3ee38648b05bd921c676eda1fd479916}
+      \strng{authorbibnamehash}{3ee38648b05bd921c676eda1fd479916}
+      \strng{authornamehash}{3ee38648b05bd921c676eda1fd479916}
+      \strng{authorfullhash}{3ee38648b05bd921c676eda1fd479916}
+      \field{extraname}{2}
+      \field{sortinit}{K}
+      \field{sortinithash}{c02bf6bff1c488450c352b40f5d853ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Should You Play Tapped Duals in 2-Color Limited Decks?}
+      \field{urlday}{13}
+      \field{urlmonth}{8}
+      \field{urlyear}{2025}
+      \field{year}{2018}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://web.archive.org/web/20201109011137/https:/www.channelfireball.com/articles/should-you-play-tapped-duals-in-2-color-limited-decks/
+      \endverb
+      \verb{url}
+      \verb https://web.archive.org/web/20201109011137/https:/www.channelfireball.com/articles/should-you-play-tapped-duals-in-2-color-limited-decks/
+      \endverb
+    \endentry
+    \entry{KarstenCurve}{online}{}
+      \name{author}{1}{}{%
+        {{hash=3ee38648b05bd921c676eda1fd479916}{%
+           family={Karsten},
+           familyi={K\bibinitperiod},
+           given={Frank},
+           giveni={F\bibinitperiod}}}%
+      }
+      \strng{namehash}{3ee38648b05bd921c676eda1fd479916}
+      \strng{fullhash}{3ee38648b05bd921c676eda1fd479916}
+      \strng{bibnamehash}{3ee38648b05bd921c676eda1fd479916}
+      \strng{authorbibnamehash}{3ee38648b05bd921c676eda1fd479916}
+      \strng{authornamehash}{3ee38648b05bd921c676eda1fd479916}
+      \strng{authorfullhash}{3ee38648b05bd921c676eda1fd479916}
+      \field{extraname}{3}
+      \field{sortinit}{K}
+      \field{sortinithash}{c02bf6bff1c488450c352b40f5d853ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{What's an Optimal Mana Curve and Land/Ramp Count for Commander?}
+      \field{urlday}{12}
+      \field{urlmonth}{8}
+      \field{urlyear}{2025}
+      \field{year}{2025}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.tcgplayer.com/content/article/What-s-an-Optimal-Mana-Curve-and-Land-Ramp-Count-for-Commander/e22caad1-b04b-4f8a-951b-a41e9f08da14/
+      \endverb
+      \verb{url}
+      \verb https://www.tcgplayer.com/content/article/What-s-an-Optimal-Mana-Curve-and-Land-Ramp-Count-for-Commander/e22caad1-b04b-4f8a-951b-a41e9f08da14/
+      \endverb
+    \endentry
+    \entry{metropolis1949monte}{article}{}
+      \name{author}{2}{}{%
+        {{hash=2b73f47a1a84dd52f45fe57c381c3786}{%
+           family={Metropolis},
+           familyi={M\bibinitperiod},
+           given={Nicholas},
+           giveni={N\bibinitperiod}}}%
+        {{hash=3b0d289e925175a0015e128797069d78}{%
+           family={Ulam},
+           familyi={U\bibinitperiod},
+           given={Stanislaw},
+           giveni={S\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Taylor \& Francis}%
+      }
+      \strng{namehash}{c6df3fb3fe23cfe76a11eb13d1beac7a}
+      \strng{fullhash}{c6df3fb3fe23cfe76a11eb13d1beac7a}
+      \strng{bibnamehash}{c6df3fb3fe23cfe76a11eb13d1beac7a}
+      \strng{authorbibnamehash}{c6df3fb3fe23cfe76a11eb13d1beac7a}
+      \strng{authornamehash}{c6df3fb3fe23cfe76a11eb13d1beac7a}
+      \strng{authorfullhash}{c6df3fb3fe23cfe76a11eb13d1beac7a}
+      \field{sortinit}{M}
+      \field{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of the American statistical association}
+      \field{number}{247}
+      \field{title}{The monte carlo method}
+      \field{volume}{44}
+      \field{year}{1949}
+      \field{pages}{335\bibrangedash 341}
+      \range{pages}{7}
+    \endentry
+    \entry{GoldFishing}{online}{}
+      \name{author}{1}{}{%
+        {{hash=aded297441db82c461a0d1bb08d838c2}{%
+           family={Moursund},
+           familyi={M\bibinitperiod},
+           given={Beth},
+           giveni={B\bibinitperiod}}}%
+      }
+      \strng{namehash}{aded297441db82c461a0d1bb08d838c2}
+      \strng{fullhash}{aded297441db82c461a0d1bb08d838c2}
+      \strng{bibnamehash}{aded297441db82c461a0d1bb08d838c2}
+      \strng{authorbibnamehash}{aded297441db82c461a0d1bb08d838c2}
+      \strng{authornamehash}{aded297441db82c461a0d1bb08d838c2}
+      \strng{authorfullhash}{aded297441db82c461a0d1bb08d838c2}
+      \field{sortinit}{M}
+      \field{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Playing Your Pet: Rough-Testing a Magic Deck}
+      \field{urlday}{12}
+      \field{urlmonth}{8}
+      \field{urlyear}{2025}
+      \field{year}{2010}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://web.archive.org/web/20100902160143/http://www.wizards.com:80/Magic/Magazine/Article.aspx?x=mtg/daily/feature/106
+      \endverb
+      \verb{url}
+      \verb https://web.archive.org/web/20100902160143/http://www.wizards.com:80/Magic/Magazine/Article.aspx?x=mtg/daily/feature/106
+      \endverb
+    \endentry
+    \entry{silver2004overview}{article}{}
+      \name{author}{1}{}{%
+        {{hash=82f7d25e9c552dff35055cae0f60f33a}{%
+           family={Silver},
+           familyi={S\bibinitperiod},
+           given={Edward\bibnamedelima Allen},
+           giveni={E\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Taylor \& Francis}%
+      }
+      \strng{namehash}{82f7d25e9c552dff35055cae0f60f33a}
+      \strng{fullhash}{82f7d25e9c552dff35055cae0f60f33a}
+      \strng{bibnamehash}{82f7d25e9c552dff35055cae0f60f33a}
+      \strng{authorbibnamehash}{82f7d25e9c552dff35055cae0f60f33a}
+      \strng{authornamehash}{82f7d25e9c552dff35055cae0f60f33a}
+      \strng{authorfullhash}{82f7d25e9c552dff35055cae0f60f33a}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of the operational research society}
+      \field{number}{9}
+      \field{title}{An overview of heuristic solution methods}
+      \field{volume}{55}
+      \field{year}{2004}
+      \field{pages}{936\bibrangedash 956}
+      \range{pages}{21}
+    \endentry
+    \entry{ward2009monte}{inproceedings}{}
+      \name{author}{2}{}{%
+        {{hash=8317aa1163206ca517774144fe3e782a}{%
+           family={Ward},
+           familyi={W\bibinitperiod},
+           given={Colin\bibnamedelima D},
+           giveni={C\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+        {{hash=0471b1002b0c374cbbed5b49bd7d829c}{%
+           family={Cowling},
+           familyi={C\bibinitperiod},
+           given={Peter\bibnamedelima I},
+           giveni={P\bibinitperiod\bibinitdelim I\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {IEEE}%
+      }
+      \strng{namehash}{75fad43a75d8966890237fdee7d3cd05}
+      \strng{fullhash}{75fad43a75d8966890237fdee7d3cd05}
+      \strng{bibnamehash}{75fad43a75d8966890237fdee7d3cd05}
+      \strng{authorbibnamehash}{75fad43a75d8966890237fdee7d3cd05}
+      \strng{authornamehash}{75fad43a75d8966890237fdee7d3cd05}
+      \strng{authorfullhash}{75fad43a75d8966890237fdee7d3cd05}
+      \field{sortinit}{W}
+      \field{sortinithash}{4315d78024d0cea9b57a0c6f0e35ed0d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2009 IEEE Symposium on Computational Intelligence and Games}
+      \field{title}{Monte Carlo search applied to card selection in Magic: The Gathering}
+      \field{year}{2009}
+      \field{pages}{9\bibrangedash 16}
+      \range{pages}{8}
+    \endentry
+    \entry{wright1991use}{article}{}
+      \name{author}{2}{}{%
+        {{hash=f8ca602f7a8270c13f8dcea6b990a2c0}{%
+           family={Wright},
+           familyi={W\bibinitperiod},
+           given={Peter\bibnamedelima C},
+           giveni={P\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+        {{hash=9cf0ba4997f425467a7a083024491bfb}{%
+           family={Monk},
+           familyi={M\bibinitperiod},
+           given={Andrew\bibnamedelima F},
+           giveni={A\bibinitperiod\bibinitdelim F\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {ACM New York, NY, USA}%
+      }
+      \strng{namehash}{b8c5b00a3c2de8b8cf163b521d45b705}
+      \strng{fullhash}{b8c5b00a3c2de8b8cf163b521d45b705}
+      \strng{bibnamehash}{b8c5b00a3c2de8b8cf163b521d45b705}
+      \strng{authorbibnamehash}{b8c5b00a3c2de8b8cf163b521d45b705}
+      \strng{authornamehash}{b8c5b00a3c2de8b8cf163b521d45b705}
+      \strng{authorfullhash}{b8c5b00a3c2de8b8cf163b521d45b705}
+      \field{sortinit}{W}
+      \field{sortinithash}{4315d78024d0cea9b57a0c6f0e35ed0d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{ACM SIGCHI Bulletin}
+      \field{number}{1}
+      \field{title}{The use of think-aloud evaluation methods in design}
+      \field{volume}{23}
+      \field{year}{1991}
+      \field{pages}{55\bibrangedash 57}
+      \range{pages}{3}
+    \endentry
+    \entry{MonteCarloGuide}{online}{}
+      \name{author}{1}{}{%
+        {{hash=66285072fbebd9ddf3ea9a92d9933f5e}{%
+           family={Wu},
+           familyi={W\bibinitperiod},
+           given={Allen},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{66285072fbebd9ddf3ea9a92d9933f5e}
+      \strng{fullhash}{66285072fbebd9ddf3ea9a92d9933f5e}
+      \strng{bibnamehash}{66285072fbebd9ddf3ea9a92d9933f5e}
+      \strng{authorbibnamehash}{66285072fbebd9ddf3ea9a92d9933f5e}
+      \strng{authornamehash}{66285072fbebd9ddf3ea9a92d9933f5e}
+      \strng{authorfullhash}{66285072fbebd9ddf3ea9a92d9933f5e}
+      \field{sortinit}{W}
+      \field{sortinithash}{4315d78024d0cea9b57a0c6f0e35ed0d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Using Monte Carlo Simulation to Improve Your Manabases}
+      \field{urlday}{13}
+      \field{urlmonth}{8}
+      \field{urlyear}{2025}
+      \field{year}{2018}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://article.hareruyamtg.com/article/article_en_405/?lang=en
+      \endverb
+      \verb{url}
+      \verb https://article.hareruyamtg.com/article/article_en_405/?lang=en
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+
