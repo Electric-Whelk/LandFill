@@ -20,9 +20,20 @@ const RANK_IDS = {
 const Page2 = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { cycles, setCycles, currency, setCurrency } = useDeck()
+    //const { cycles, setCycles, currency, setCurrency } = useDeck()
 
-    useEffect(() =>
+    const {
+        cycles, setCycles,
+        currency, setCurrency,
+        excludeArrays, setExcludeArrays,
+        positiveArrays, setPositiveArrays,
+        filters, setFilters,
+        minBasics, setMinBasics,
+        minIndividualBasics, setMinIndividualBasics,
+        allowOffColorFetches, setAllowOffColorFetches
+    } = useDeck();
+
+    /*useEffect(() =>
     {
         if (location.state?.data) {
             const newData = location.state.data
@@ -39,21 +50,30 @@ const Page2 = () => {
     const cycles = data?.heap || [];
     const currency = data?.currency || "GBP";*/
 
+    useEffect(() => {
+        if (location.state?.data && cycles.length === 0) {
+            const newData = location.state.data;
+            setCycles(newData.heap || []);
+            setCurrency(newData.currency || "GBP");
+            // (optional) reset other states if coming directly from Page1
+        }
+    }, [location.state, cycles, setCycles, setCurrency]);
+
 
     // Filters & toggles
     const [loading, setLoading] = useState(false);
-    const [minBasics, setMinBasics] = useState(0);
+    /*const [minBasics, setMinBasics] = useState(0);
     const [minIndividualBasics, setMinIndividualBasics] = useState(0);
-    const [allowOffColorFetches, setAllowOffColorFetches] = useState(true);
+    const [allowOffColorFetches, setAllowOffColorFetches] = useState(true);*/
     const [viewedCycle, setViewedCycle] = useState(null);
-    const [filters, setFilters] = useState({
+    /*const [filters, setFilters] = useState({
         tappedNonfetch: false,
         tappedFetchable: false,
         maxPrice: ''
-    });
+    });*/
 
     // Core arrays
-    const [excludeArrays, setExcludeArrays] = useState({
+    /*const [excludeArrays, setExcludeArrays] = useState({
         belowMaxPrice: [],
         uncheckedByPlayer: [],
         offColorFetch: [],
@@ -65,14 +85,13 @@ const Page2 = () => {
     const [positiveArrays, setPositiveArrays] = useState({
         include: [],
         consider: []
-    });
+    });*/
 
     useEffect(() => {
-        console.log(positiveArrays.include)
+
     }, [positiveArrays.include])
 
     useEffect(() => {
-        console.log(positiveArrays.consider)
     }, [positiveArrays.consider])
 
     // Columns for UI
@@ -106,11 +125,28 @@ const Page2 = () => {
         return { fetchable: typedTaps, nonFetchable: untypedTaps };
     });
 
+    useEffect(() => {
+        const typedTaps = [];
+        const untypedTaps = [];
+        const nuancedList = ["Triomes", "Bounce Lands", "Tri-Color Taplands"];
+        cycles.forEach(cycle => {
+            if (cycle.alwaysTapped && !nuancedList.includes(cycle.displayName)) {
+                if (cycle.fetchable) typedTaps.push(cycle);
+                else untypedTaps.push(cycle);
+            }
+        });
+        setRankings( { fetchable: typedTaps, nonFetchable: untypedTaps } );
+
+    },[cycles])
+
+
+
     //load columns
     useEffect(() => {
         const autoIncluded = [];
         const consider = [];
         const autoincludeList = ["Shock Lands", "Fetch Lands", "OG Dual Lands", "Command Tower"];
+
         cycles.forEach(cycle => {
             if (autoincludeList.includes(cycle.displayName)) {
                 autoIncluded.push(cycle);
@@ -120,7 +156,14 @@ const Page2 = () => {
                 cycle.suggestAutoInclude = false;
             }
         });
-        setColumns({ include:autoIncluded, consider, exclude: [] });
+        setColumns({ include:autoIncluded, consider, exclude: [] })
+        setPositiveArrays({
+            include: autoIncluded.flatMap(c => c.cards),
+            consider: consider.flatMap(c => c.cards)
+        });
+
+
+
     }, [cycles]);
 
 
@@ -146,6 +189,8 @@ const Page2 = () => {
             console.log("Adding " + card.name + " to " + key + " (" + (prev[key].length + 1) + ")");
             return { ...prev, [key]: newArr };
         });
+        //swap_ranking(card)
+
     };
 
     const removeCardFromExcludeArray = (card, key) => {
@@ -156,6 +201,7 @@ const Page2 = () => {
                 [key]: prev[key].filter(c => c.name !== card.name)
             })
         });
+        //swap_ranking(card)
     };
 
 
@@ -416,6 +462,8 @@ const Page2 = () => {
         const { source, destination } = result;
         if (source.droppableId === destination.droppableId) return;
 
+
+
         const srcList = Array.from(columns[source.droppableId]);
         const [movedCycle] = srcList.splice(source.index, 1);
         const destList = Array.from(columns[destination.droppableId]);
@@ -452,7 +500,7 @@ const Page2 = () => {
         const [movedItem] = newList.splice(source.index, 1);
         newList.splice(destination.index, 0, movedItem);
         setRankings(prev => ({ ...prev, [source.droppableId]: newList }));
-        console.log(newList)
+
     };
 
     /** ----------------------------
@@ -473,6 +521,7 @@ const Page2 = () => {
 
     const goodMana = "Let's say you've just played your 5th land and you've got a 5 drop in hand. Unfortunately, either because it's a tapland or you're colour screwed, you can't play that 5 drop and have to play a 4 drop. You've wasted mana that turn. LandFill picks lands that maximize the percentage of games you'll play where that never happens."
 
+    const rankLands = "Since LandFill can only judge lands by how good they are at colour fixing, it can't tell you whether you'd do better with a Surveil Land or a Cycling Land. You can rank your preferences in the below column."
 
     /** ----------------------------
      * COMPONENTS
@@ -529,7 +578,7 @@ const Page2 = () => {
         for(const card of positiveArrays.consider){
             if (!cardInAnyExcludeArray(card)){
                 permitted.push(card)
-                console.log(card)
+
             }
             else {
                 excluded.push(card)
@@ -543,7 +592,7 @@ const Page2 = () => {
             });
             for(const key of Object.keys(response)){
                 for(const item of response[key]){
-                    console.log("Sending " + item.name)
+
                 }
             }
 
@@ -558,6 +607,48 @@ const Page2 = () => {
             setLoading(false);
         }
     };
+
+    const handleRunV2 = async () => {
+        setLoading(true);
+        const mandatory = []
+        const permitted = []
+        const excluded = []
+
+
+        for(const card of positiveArrays.include){ if (!cardInAnyExcludeArray(card)){mandatory.push(card)}
+        else {excluded.push(card)}};
+        for(const card of positiveArrays.consider){
+            if (!cardInAnyExcludeArray(card)){
+                permitted.push(card)
+                console.log(card)
+            }
+            else {
+                excluded.push(card)
+            }};
+
+
+        try {
+            const response = await fetch('/api/submit-preferencesV2', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ mandatory, permitted, excluded, rankings, minBasics, minIndividualBasics }),
+            });
+
+            console.log("Raw response:", response);
+
+
+            const { task_id } = await response.json();
+
+            // ✅ Now navigate once we have the task_id
+            navigate('/page2p5', { state: { task_id } });
+        } catch (err) {
+            console.error("Error starting simulation:", err);
+            alert("Something went wrong");
+        } finally {
+            setLoading(false);
+        }
+    };
+
 
     const handleRunDev = async () => {
         setLoading(true);
@@ -647,9 +738,6 @@ const Page2 = () => {
                     </div>
                 </div>
 
-                <div>
-                    <i className="hint">HINT: The more cycles you leave in the middle column, the longer it'll take me to test them all out! If there are lands you love and lands you hate, let me know!</i>
-                </div>
 
                 <DragDropContext onDragEnd={onDragEnd}>
                     <div className="columns">
@@ -673,6 +761,7 @@ const Page2 = () => {
 
                 <div className="prioritization">
                     <h3>Rank Equivalent Lands</h3>
+                    <FAQ label="What's this?" content={rankLands}/>
                     <DragDropContext onDragEnd={onReorder}>
                         <div className="columns">
                             {Object.entries(RANK_IDS).map(([key, label]) => (
@@ -699,14 +788,14 @@ const Page2 = () => {
                 <CycleInfoPanel cycle={viewedCycle} />
                 <div className="nav-buttons">
                     <button onClick={() => navigate('/')}>⬅ Back</button>
-                    <button onClick={() => handleRun()}>Run Optimizer {loading && <i>Loading... 🌀</i>}</button>
+                    <button onClick={() => handleRunV2()}>Run {loading && <i>Loading... 🌀</i>}</button>
                 </div>
-                <button onClick={() => handleRunDev()}>RunDev {loading && <i>Loading... 🌀</i>}</button>
 
             </div>
         </div>
     );
 };
+
 
 const CyclePanel = ({ cycle, index, setViewedCycle }) => (
     <Draggable key={cycle.displayName} draggableId={cycle.displayName} index={index}>

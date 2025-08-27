@@ -2969,3 +2969,42 @@ Island
 Forest
 Verdant Catacombs
 
+Verdant Catacombs
+Wooded Foothills
+Island
+Island
+Swamp
+Bayou
+Scalding Tarn
+Misty Rainforest
+Swamp
+Overgrown Tomb
+Watery Grave
+Island
+Island
+Windswept Heath
+Island
+Llanowar Wastes
+Forest
+Woodland Cemetery
+Willowrush Verge
+Rejuvenating Springs
+Undergrowth Stadium
+Forest
+Sunken Ruins
+Wastewood Verge
+Island
+Polluted Delta
+Bloodstained Mire
+Twilight Mire
+Breeding Pool
+Flooded Grove
+Flooded Strand
+Zagoth Triome
+Morphic Pool
+Command Tower
+Underground Sea
+Tropical Island
+Forest
+Marsh Flats
+

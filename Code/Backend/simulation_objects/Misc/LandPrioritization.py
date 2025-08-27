@@ -2,7 +2,7 @@ from collections import defaultdict, deque
 
 from simulation_objects.GameCards import ShockLand, CommandTower, BondLand, PainLand, DualLand, Triome, TriTap, \
     BattleLand, SlowLand, FastLand, RevealLand, CheckLand, SurveilLand, BicycleLand, TypedDualLand, ArtifactTapLand, \
-    ScryLand
+    ScryLand, GainLand
 from simulation_objects.GameCards.TappedCycles.GuildGate import GuildGate
 
 stdprioritization = {
@@ -33,7 +33,9 @@ stdprioritization = {
     "ScryLand": [TriTap, SlowLand, FastLand, RevealLand, CheckLand, SurveilLand, BicycleLand,
                   TypedDualLand],
     "ArtifactTapLand": [TriTap, SlowLand, FastLand, RevealLand, CheckLand, SurveilLand, BicycleLand,
-                  TypedDualLand]
+                  TypedDualLand],
+    "GainLand": [TriTap, SlowLand, FastLand, RevealLand, CheckLand, SurveilLand, BicycleLand,
+                        TypedDualLand]
 
 
 }
@@ -56,7 +58,8 @@ class LandPrioritization:
         bottomtier = {
             "ArtifactTapLand": ArtifactTapLand,
             "GuildGate": GuildGate,
-            "ScryLand": ScryLand
+            "ScryLand": ScryLand,
+            "GainLand": GainLand
         }
 
         for item in bottomtier:
@@ -64,6 +67,12 @@ class LandPrioritization:
 
         # Maps cycle name → list of actual land instances
         self.cycle_to_lands = defaultdict(list)
+
+    def reset(self):
+        self.cycle_to_lands = defaultdict(list)
+
+
+
 
     def register_land(self, land):
         #cycle_name = land.__class__.__name__

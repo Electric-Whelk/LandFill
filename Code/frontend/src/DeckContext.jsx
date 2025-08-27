@@ -12,13 +12,44 @@ export const DeckProvider = ({ children }) => {
     //page2 Details
     const [cycles, setCycles] = useState([]);
 
+    const [excludeArrays, setExcludeArrays] = useState({
+        belowMaxPrice: [],
+        uncheckedByPlayer: [],
+        offColorFetch: [],
+        cycleMovedToExclude: [],
+        addedBecauseNotTappedButFetchable: [],
+        addedBecauseNotTappedAndNotFetchable: []
+    });
+
+    const [positiveArrays, setPositiveArrays] = useState({
+        include: [],
+        consider: []
+    });
+
+    const [filters, setFilters] = useState({
+        tappedNonfetch: false,
+        tappedFetchable: false,
+        maxPrice: ''
+    });
+
+    const [minBasics, setMinBasics] = useState(0);
+    const [minIndividualBasics, setMinIndividualBasics] = useState(0);
+    const [allowOffColorFetches, setAllowOffColorFetches] = useState(true);
+
     return (
         <DeckContext.Provider value={{
             deckList, setDeckList,
             commander, setCommander,
             partner, setPartner,
             currency, setCurrency,
-            cycles, setCycles
+            cycles, setCycles,
+            excludeArrays, setExcludeArrays,
+            positiveArrays, setPositiveArrays,
+            filters, setFilters,
+            minBasics, setMinBasics,
+            minIndividualBasics, setMinIndividualBasics,
+            allowOffColorFetches, setAllowOffColorFetches
+
         }}>
             {children}
         </DeckContext.Provider>

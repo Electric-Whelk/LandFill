@@ -10,7 +10,7 @@ from Extensions import db
 from random import shuffle
 
 from simulation_objects.GameCards import CommandTower, BondLand, DualLand, BattleLand, FastLand, SlowLand, PainLand, \
-    HorizonLand, ArtifactTapLand, BicycleLand, ScryLand, TypedDualLand
+    HorizonLand, ArtifactTapLand, BicycleLand, ScryLand, TypedDualLand, GainLand
 from simulation_objects.GameCards.TappedCycles.SurveilLand import SurveilLand
 
 from simulation_objects.GameCards.BasicLand import BasicLand
@@ -121,7 +121,7 @@ class CardCollection:
         found = []
         output = []
         for card in self.card_list:
-            if isinstance(card, BasicLand) and card.name not in [found]:
+            if isinstance(card, BasicLand) and card.name not in [found] and card.name != self.last_worst:
                 found.append(card.name)
                 output.append(card)
         return output
@@ -202,6 +202,8 @@ class CardCollection:
                     return ScryLand(card, mandatory)
                 case "Typed Dual Lands":
                     return TypedDualLand(card, mandatory)
+                case "Gain Lands":
+                    return GainLand(card, mandatory)
 
                 #case "Bounce Lands":
                     #return BounceLand(card)
@@ -387,39 +389,7 @@ class CardCollection:
 
 
 
-    def set_permissions(self, mandatory=None, permitted=None, excluded=None):
-        checks = [x for x in [mandatory, permitted, excluded] if x is None]
-        if len(checks) != 0:
-            raise Exception("Misuse of set_permissions function")
 
-        def names(input):
-            return [x["name"] for x in input]
-
-        mandatory = names(mandatory)
-        permitted = names(permitted)
-        excluded = names(excluded)
-        print(f"Permitted: {permitted}")
-        print(f"Mandatory: {mandatory}")
-        print(f"Excluded: {excluded}")
-
-        for card in self.card_list:
-            if card.name in mandatory:
-                card.mandatory = True
-                card.permitted = True
-            elif card.name in permitted:
-                card.permitted = True
-                card.mandatory = False
-            elif card.name in excluded:
-                card.permitted = False
-                card.mandatory = False
-            elif isinstance(card, BasicLand):
-                card.permitted = True
-                card.mandatory = False
-            else:
-                print(f"Couldn't find {card.name}")
-                card.permitted = True
-                card.mandatory = True
-            #print(f"Set {card.name} to mandatory {card.mandatory} and permmitted {card.permitted}")
 
 
 

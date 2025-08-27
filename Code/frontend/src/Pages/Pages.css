@@ -67,7 +67,6 @@ nav-buttons {
 }
 
 
-
 .columns {
     grid-column: 1 / span 3;
     display: flex;
@@ -143,6 +142,11 @@ Droppable > .cycle-card {
     border: 2px dashed #999;
     background-color: #f9f9f9;
     padding: 1rem;
+}
+
+.FAQpanel{
+    layout: grid;
+    grid-template-columns: 1fr 1fr 1fr;
 }
 
 

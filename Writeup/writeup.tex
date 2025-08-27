@@ -590,8 +590,9 @@ and $M =$ number of lands in the MonteCarlo with all strict superiors in the dec
 
 \subsubsection{Evolutionary Algorithm}
 \subsubsection{Simulated Annealing}
-Simulated Annealing, like Steepest Ascent Hill Climbing, is a neighbourhood
+Simulated Annealing is a variant of the Neighbourhood Search algorithm that avoids becoming trappedlocal maxima by introducing an element of randomness. At any given increment, the function may return a higher score but decline to accept this as a new value, with the probability of this occurrance dependent on a "temperature" variable that decreases as the search space is traversed. 
 
+As will be demonstrated in \ref{sec:provscum}, within a number of simulated games that can be run in a user-appropriate timeframe, the chance of two decks scoring comparably when there is only one card different between them, in a way that does not reflect which of the two cards is stronger, is non negligible, essentially introducing a stochastic element on its own. One approach which was explored, however, was a Simulated-Annealing inspired method, using the same search structure, ie, starting off open to some suboptimal decisions and gradually becoming less forgiving to them over time. As trialled in LandFill, this algorithm worked by replacing several lands at once, intially swapping a sizeable proportion of the starting basic manabase with each increment, and accepting fewer and fewer lands each time. 
 
 
 
@@ -646,6 +647,7 @@ Examining the histograms of ExpectedDeck and OverDeck's mana wastage clarifies t
 
 
 \subsubsection{Proportion Wasted vs Cumulative Distribution}
+\label{sec:propvscum}
 One potential improvement over \(P\) as a metric would be \(C\), the area under a Cumulative Distribution Function (CDF) of wasted mana per game. In such a metric, a decklist with a lower value of \(P\) would be penalized compared to one with a higher value, but two decks with equivalent values of \(P\) may return different scores depending on their probability of producing significantly sub-optimal games.
 
 To investigate this, two additional decks were prepared: CheckDeck and ShockDeck, both identical to BasicDeck save for the replacement of a single Forest with a UB Check Land or a UB Shock Land (see Figure \ref{fig:cycles}), respectively, representing decks after a first Hill Climb increment. Wheraes OverDeck is unlikely to ever be assembled by LandFill in its normal course of operations, if one metric was better able to distinguish the slight superiority of ShockDeck (which need never have a land enter tapped) to CheckDeck (which, on occasion, will), and distinguish the slight superiority of both to BasicDeck, that would be a stronger metric to use. I conducted 100 Trials of 1000 games each for all decks, summarizing the same data first with \(P\) and second with \(C\). Box plots of the results are shown in \ref{fig:shockvscheck}
@@ -694,26 +696,83 @@ Basic Lands, rather than a random sample of nonbasic lands, are used as the star
 
 
 \section{Frontend Design}
-\subsubsection{Page 1}
-In the initial mockup, player information needed by LandFill was divided into two categories: \textit{deck-intrinsic} information, a change in which would fundamentally re-alter the deck in question (ie, the input cards, the format, the number of lands) and \textit{deck-extrinsic} information, which could be tweaked if a player was not happy with a provided decklist (ie, price, willingness to pay life, cost, selection of land cards). This was a poor dichotomization: with the specialization on the Commander format, most deck-intrinsic information became irrelevant (as the format is alwasy commander, and the number of lands is always 100 - the number of input cards), while many extrinsict factors proved impossible thanks to the knapsack problem. Moreover...
-
-Operation of LandFill is sequenced as follows: a player inputs a decklist of non-land cards, a set of candidate land cards are produced, and the MonteCarlo simulation is run. In the initial mockup, in which all of LandFill was housed on one page, players typically opted to run the simulation before confirming their decklist. In the re-design, therefore
-
-
-In the intial mockup drafted in \ref{sec:initialusertests}, LandFill consisted of a single homepage, and users were generally confused 
-
 \subsection{Parsing Inputs}
 In \ref{sec:initialusertests}, users desired that LandFill support "round trips" (in the words of one subject), in which a list of cards was copied from a Deck database such as Tappedout or MoxField, into LandFill, and could then return the outputs without any additional formatting. For this purpose, I created the InputParser class, of which one is created at the start of each session. Test users mentioned four such databases: TappedOut, Moxfield, Archidekt and Deckbox. since Tappedout and Moxfield both allow for lists to be copied from the deck homepage rather than from the formatted export panel, and Moxfield and Deckbox take inputted cards in the same format, this means that the InputParser has been designed to distinguish between six possible input formats, and return three possible output formats. 
 
 Since Tappedout and Archidekt both support categorization of cards (ie, draw, ramp, win strategy, enemy card removal) with custom lables, the Input Parser stores all cards in a Dict object corresponding to each category, using a default key if none are specified by the user. On completion of the Monte Carlo process, the InputParser a total of six string objects: for each database format (Deckbox and Moxfield being identical), it returns the total decklist, including categories if provided by the player, and the list of provided lands. 
 
-\subsection{Exclusion/Inclusion Criteria}
+\section{App Layout}
+In the intial mockup drafted in \ref{sec:initialusertests}, LandFill consisted of a single homepage. Users in the think-aloud evaluation generally did not understand the difference between the button that confirmed their nonland inputs and the button which commenced the MonteCarlo. On redrafting, I split the design into four pages, with purposes broadly outlined accordingly:
+
+\begin{enumerate}
+\item Deck Input - allows user to list details kept constant throughout the session, ie, cards inputted by the user, and the currency in which the session is to list card prices.
+\item Preferences - allows user to list candidate land cards for LandFill to recommend, and prioritization thereof.
+\item Progress - accepts no user input, but updates at each hill climb increment what is being swapped for what.
+\item Output - lists the new decklist, including performance of the manabase and the cards therein.
+\end{enumerate}
+
+Screenshots of each are set out in the below sections, with commentary.
+
+
+\subsubsection{Deck Input}
+See figure \ref{fig:deckinput}. The option to overwrite inputted lands with a new manabase was added in response to users in the Think-Aloud evalution who instantly copied a completed deck from a database into LandFill and manually removed lands from the list. 
+
+\begin{figure}
+    \centering
+  \includegraphics[scale=0.25]{card_images/frontendpageone.jpg}
+  \caption{Deck Input page. }
+  \label{fig:deckinput}
+\end{figure}
+
+\subsubsection{Preferences}
+See Figure \ref{fig:preferences}. The Preferences Page allows users to customize the lands trialled by LandFill depending on their preferences and card availabilty. The initial mockup had allowed players to exclude lands or whole cycles via a series of tickboxes, but during the Think-Aloud evaluation, users had found this both overwhelming, given the sheer quantity of lands, and unintuitive, as they did not always know what a given cycle did. Moreover, given that LandFill in its current form takes a non-negligable amount of time to run, I felt it prudent to encourage the player to mark favoured cards as mandatory for inclusion, rather than placing the burden of them to list mandatory lands as part of the deck input. This required me to replace the binary input of a land being unchecked (excluded from consideration) or not with a three-way system, by which players could mark cycles as mandatory, possible or forbidden. I addressed all of these issues via a trio of drag-and-drop boxes from the React-Beautiful-DND library, while also adding a side-panel element which would show a sample card and card list from a draggable cycle object on mouseover. 
+
+Since some lands may behave identically as manabase components but may have additional mechanics that a player may prefer, I created two additional drag and drop boxes, each of which corresponds to a category of identical lands. The frontend does not support dragging between these boxes; rather, they are used to prioritize these lands accordign to thhe user's preference. Information from this input is passed to the backend LandPrioritization object. As depicted in \ref{fig:preferences}, LandFill will only trial a Bicycle Land if the Typed Dual Land of its colours is either already in the deck or is excluded from consideration.
+
+The panel of preferences still set via tickboxes and numerical inputs above the drag-and-drop column are based on comments made by users during the initial mockup testing: players were keen to set a minimum quantity of basic lands, as many non-land cards synergise with these, and price was a concern for most players in manabase construction. Several initial testers also expressed disdain towards running "off-colour fetches", especially in Commander: this might mean, for example, running a fetch land capable of finding an Island or a Mountain along with a suite of shock lands in a BUG deck, which although potentially a strategically sound decision, was felt by many players to be fundamentally unaesthetic. 
+
+Given the complexity of the interface, it is worth touching on the underlying logic. A common theme among test subjects in pre-development evaluation was a lack of a single consistent plan or criterion, with players generally expressing a range of broad preferences often caveatted by circumstance - price, for example, not being a factor if a player already owned an expensive land, even if they were not interested in buying more from the cycle. As another example, a player who expressed considerable hostility to any land which only ever enters tapped admitted a fondness for the "Surveil Land" cycle due to its utility effect. I felt it necessary, consequently, to always give players an override option. Individual cards can be added to consideration despite the status of the cycle as a whole via the tickboxes in the side panel, while use of any of the "Exclude from Consideration" Filters, which moves drag-and-drop objects to the "Exclude" column, does not prevent any individual items from being removed from that column. Since this means that a cycle or individual card may be categorized either by dragging and dropping or via a filter or override method, the state of any given land is always mapped to one of two "positiveArrays", positiveArrays.include or positiveArrays.consider. If it is excluded via any method, it is put in one of several "excludeArrays", corresponding to the frontend input used to exclude it. When the simulation is run, all lands in any excludeArray are marked as excluded, and all others are marked as either mandatory or possible, depending on which positiveArray they are in. 
+
+
+
+
+\begin{figure}
+    \centering
+  \includegraphics[scale=0.25]{card_images/frontendpagetwo.jpg}
+  \caption{Preferences page, zoomed out to show all content; the rankings panels would normally be offscreen. The side-panel remains stationary as the user scrolls.}
+  \label{fig:preferences}
+\end{figure}
+
+
+
+\subsubsection{Progress}
+See Fig \ref{fig.progress}. Although initial drafts replaced the "run" button on the Preferences page with the word "Loading", I felt that this was inappropriate for a longer optimization time - I did not wawnt the users to think that the program had simply crashed. Moreover, during mockup testing, several users expressed a desire to see the logic being used by the backend, as this would allow them to trust the results better. Although the Preferences Page contains a contextual explanation of the Hill Climbing algorithm, the use of a Progress page allows for this to be more clearly demonstrated: each step in the Hill Climb increment is printed to screen. At the conclusion of the Hill Climb algorithm, the Output page loads automatically. 
+
+\begin{figure}
+    \centering
+  \includegraphics[scale=0.25]{card_images/frontendpagetwopfive.jpg}
+  \caption{Progress page}
+  \label{fig:progress}
+\end{figure}
+
+\subsubsection{Output}
+See Fig \ref{fig:output}. The core feature of the Output Page is the textarea which shows the recommended decklist, which can display either the lands added to the deck or the entire decklist for easy export. When the entire decklist is displayed, if the input format included custom card categorizations (ie, from TappedOut or ArchiDekt), these are re-added here, with new lands being added either under a new category, "Lands", or under an existing category if one was detected that contained other land cards at input. 
+
+The left hand panel allows users to use the same mousever interface as was employed on the Preferences Page to examine the cards added to their decklist. One user, during initial testing, asked to see the lands ranked by performance, as this would inform both their choice of ramp spells and tell them what lands they should replace on the printing of a new cycle. Moreover, as will be discussed in \ref{sec:patternsindeckoptimization}, the relative performances of lands within a given deck can yield worthwhile information even if the user does not take the outputted land list as totally prescriptive. 
+\begin{figure}
+    \centering
+  \includegraphics[scale=0.25]{card_images/frontendpagefour.jpg}
+  \caption{Output Page}
+  \label{fig:output}
+\end{figure}
 
 \section{Post-Development User Tests}
 
 
 \section{Conclusion}
 \subsection{Findings and Product Viability}
+\subsubsection{Patterns in Deck Optimization}
+\label{sec:patternsindeckoptimization}
 \subsection{Future Development}
 \subsubsection{User Choice}
 \label{sec:userchoice}

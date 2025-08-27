@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.8.12)  23 AUG 2025 11:07
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.8.12)  26 AUG 2025 18:06
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -448,7 +448,7 @@ Package gensymb Warning: Not defining \micro.
 \openout4 = `writeup.toc'.
 
  [3] [4]
-<card_images/e01-85-nicol-bolas-planeswalker.jpg, id=22, 489.83pt x 682.55pt>
+<card_images/e01-85-nicol-bolas-planeswalker.jpg, id=21, 489.83pt x 682.55pt>
 File: card_images/e01-85-nicol-bolas-planeswalker.jpg Graphic file (type jpg)
 <use card_images/e01-85-nicol-bolas-planeswalker.jpg>
 Package pdftex.def Info: card_images/e01-85-nicol-bolas-planeswalker.jpg  used on input line 51.
@@ -475,11 +475,11 @@ File: card_images/KarstenCurve.jpg Graphic file (type jpg)
 <use card_images/KarstenCurve.jpg>
 Package pdftex.def Info: card_images/KarstenCurve.jpg  used on input line 169.
 (pdftex.def)             Requested size: 240.89941pt x 56.8372pt.
- [12 <./card_images/KarstenCurve.jpg>]
+ [12 <./card_images/KarstenCurve.jpg>] [13]
 
-LaTeX Warning: Reference `WhyNottoUseSqlalchemy' on page 13 undefined on input line 190.
+LaTeX Warning: Reference `WhyNottoUseSqlalchemy' on page 14 undefined on input line 190.
 
-[13] [14]
+[14]
 <card_images/MockupFrontend.jpg, id=61, 963.6pt x 529.98pt>
 File: card_images/MockupFrontend.jpg Graphic file (type jpg)
 <use card_images/MockupFrontend.jpg>
@@ -491,13 +491,13 @@ File: card_images/KanoSurvey.jpg Graphic file (type jpg)
 <use card_images/KanoSurvey.jpg>
 Package pdftex.def Info: card_images/KanoSurvey.jpg  used on input line 255.
 (pdftex.def)             Requested size: 240.89941pt x 72.26982pt.
- [16 <./card_images/KanoSurvey.jpg>] [17] [18] [19] [20]
+ [16] [17 <./card_images/KanoSurvey.jpg>] [18] [19] [20]
 <card_images/mtg2.jpg, id=82, 625.33624pt x 411.5375pt>
 File: card_images/mtg2.jpg Graphic file (type jpg)
 <use card_images/mtg2.jpg>
 Package pdftex.def Info: card_images/mtg2.jpg  used on input line 339.
 (pdftex.def)             Requested size: 312.66736pt x 205.76825pt.
- [21 <./card_images/mtg2.jpg>] [22]
+ [21] [22 <./card_images/mtg2.jpg>]
 
 LaTeX Warning: Citation 'CommanderMythBusters' on page 23 undefined on input line 367.
 
@@ -520,29 +520,29 @@ File: card_images/checkcode.jpg Graphic file (type jpg)
 <use card_images/checkcode.jpg>
 Package pdftex.def Info: card_images/checkcode.jpg  used on input line 388.
 (pdftex.def)             Requested size: 240.89941pt x 103.88786pt.
- [24 <./card_images/vergecode.jpg> <./card_images/checkcode.jpg>]
+ [24 <./card_images/vergecode.jpg>]
 
 LaTeX Warning: Reference `sec:thecommanderformat' on page 25 undefined on input line 412.
 
 
 LaTeX Warning: Reference `sec:mulliganheuristics' on page 25 undefined on input line 412.
 
-[25] [26]
+[25 <./card_images/checkcode.jpg>] [26]
 <card_images/CanonicallyIdentical.jpg, id=107, 445.665pt x 428.145pt>
 File: card_images/CanonicallyIdentical.jpg Graphic file (type jpg)
 <use card_images/CanonicallyIdentical.jpg>
 Package pdftex.def Info: card_images/CanonicallyIdentical.jpg  used on input line 453.
 (pdftex.def)             Requested size: 111.41597pt x 107.03598pt.
+ [27]
 
+LaTeX Warning: Citation 'koopmans1957assignment' on page 28 undefined on input line 460.
 
-LaTeX Warning: Citation 'koopmans1957assignment' on page 27 undefined on input line 460.
-
-[27 <./card_images/CanonicallyIdentical.jpg>]
+[28 <./card_images/CanonicallyIdentical.jpg>]
 Overfull \hbox (7.67697pt too wide) in paragraph at lines 478--479
 [] \OT1/cmtt/m/n/10 filtered[]by[]most[]produced = self.filter[]by[]most[]produced(filtered
  []
 
-[28]
+
 Overfull \hbox (2.77834pt too wide) in paragraph at lines 494--495
 \OT1/cmr/m/n/10 there are sev-eral more com-plex game-play el-e-ments which are in the-ory modellable
  []
@@ -553,47 +553,79 @@ File: card_images/superiority.jpg Graphic file (type jpg)
 <use card_images/superiority.jpg>
 Package pdftex.def Info: card_images/superiority.jpg  used on input line 571.
 (pdftex.def)             Requested size: 240.89941pt x 30.86522pt.
- [33 <./card_images/superiority.jpg>] [34]
+ [33 <./card_images/superiority.jpg>]
 
-LaTeX Warning: Citation 'BounceLands' on page 35 undefined on input line 623.
+LaTeX Warning: Reference `sec:provscum' on page 34 undefined on input line 595.
 
-<card_images/WastedOutputs.jpg, id=134, 634.62094pt x 161.10187pt>
+[34]
+
+LaTeX Warning: Citation 'BounceLands' on page 35 undefined on input line 624.
+
+[35]
+<card_images/WastedOutputs.jpg, id=137, 634.62094pt x 161.10187pt>
 File: card_images/WastedOutputs.jpg Graphic file (type jpg)
 <use card_images/WastedOutputs.jpg>
-Package pdftex.def Info: card_images/WastedOutputs.jpg  used on input line 629.
+Package pdftex.def Info: card_images/WastedOutputs.jpg  used on input line 630.
 (pdftex.def)             Requested size: 158.65485pt x 40.27536pt.
-<card_images/Histograms.jpg, id=135, 544.872pt x 402.084pt>
+<card_images/Histograms.jpg, id=138, 544.872pt x 402.084pt>
 File: card_images/Histograms.jpg Graphic file (type jpg)
 <use card_images/Histograms.jpg>
-Package pdftex.def Info: card_images/Histograms.jpg  used on input line 639.
+Package pdftex.def Info: card_images/Histograms.jpg  used on input line 640.
 (pdftex.def)             Requested size: 136.21767pt x 100.52075pt.
-[35 <./card_images/WastedOutputs.jpg>]
-<card_images/shockvscheck.jpg, id=139, 696.42pt x 254.916pt>
+ [36 <./card_images/WastedOutputs.jpg>]
+<card_images/shockvscheck.jpg, id=142, 696.42pt x 254.916pt>
 File: card_images/shockvscheck.jpg Graphic file (type jpg)
 <use card_images/shockvscheck.jpg>
-Package pdftex.def Info: card_images/shockvscheck.jpg  used on input line 655.
+Package pdftex.def Info: card_images/shockvscheck.jpg  used on input line 657.
 (pdftex.def)             Requested size: 174.10457pt x 63.72884pt.
- [36 <./card_images/Histograms.jpg>]
-Overfull \hbox (1.69447pt too wide) in paragraph at lines 681--681
-[]|\OT1/cmr/m/n/10 MonteCarlo| 
- []
-
-
+ [37 <./card_images/Histograms.jpg> <./card_images/shockvscheck.jpg>]
 Overfull \hbox (1.69447pt too wide) in paragraph at lines 683--683
 []|\OT1/cmr/m/n/10 MonteCarlo| 
  []
 
 
-Overfull \hbox (41.80052pt too wide) in paragraph at lines 671--686
+Overfull \hbox (1.69447pt too wide) in paragraph at lines 685--685
+[]|\OT1/cmr/m/n/10 MonteCarlo| 
+ []
+
+
+Overfull \hbox (41.80052pt too wide) in paragraph at lines 673--688
  [] 
  []
 
-[37 <./card_images/shockvscheck.jpg>] [38] [39]
-Overfull \hbox (14.74834pt too wide) in paragraph at lines 748--748
+[38] [39]
+<card_images/frontendpageone.jpg, id=153, 907.89188pt x 542.025pt>
+File: card_images/frontendpageone.jpg Graphic file (type jpg)
+<use card_images/frontendpageone.jpg>
+Package pdftex.def Info: card_images/frontendpageone.jpg  used on input line 722.
+(pdftex.def)             Requested size: 226.97241pt x 135.5059pt.
+ [40 <./card_images/frontendpageone.jpg>]
+<card_images/frontendpagetwo.jpg, id=157, 963.6pt x 474.27188pt>
+File: card_images/frontendpagetwo.jpg Graphic file (type jpg)
+<use card_images/frontendpagetwo.jpg>
+Package pdftex.def Info: card_images/frontendpagetwo.jpg  used on input line 741.
+(pdftex.def)             Requested size: 240.89941pt x 118.56767pt.
+
+
+LaTeX Warning: Reference `fig.progress' on page 41 undefined on input line 749.
+
+<card_images/frontendpagetwopfive.jpg, id=158, 304.88907pt x 216.05719pt>
+File: card_images/frontendpagetwopfive.jpg Graphic file (type jpg)
+<use card_images/frontendpagetwopfive.jpg>
+Package pdftex.def Info: card_images/frontendpagetwopfive.jpg  used on input line 753.
+(pdftex.def)             Requested size: 76.22208pt x 54.01416pt.
+[41]
+<card_images/frontendpagefour.jpg, id=162, 963.6pt x 472.76625pt>
+File: card_images/frontendpagefour.jpg Graphic file (type jpg)
+<use card_images/frontendpagefour.jpg>
+Package pdftex.def Info: card_images/frontendpagefour.jpg  used on input line 764.
+(pdftex.def)             Requested size: 240.89941pt x 118.19127pt.
+ [42 <./card_images/frontendpagetwo.jpg> <./card_images/frontendpagetwopfive.jpg>] [43 <./card_images/frontendpagefour.jpg>]
+Overfull \hbox (14.74834pt too wide) in paragraph at lines 807--807
 \OT1/cmtt/m/n/10 com / articles / mana -[] bases -[] in -[] ixalan -[] standard/$ \OT1/cmr/m/n/10 (vis-ited on 08/13/2025). 
  []
 
-[40] [41] (./writeup.aux)
+[44] [45] (./writeup.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-22>
@@ -615,18 +647,18 @@ Package logreq Info: Writing requests to 'writeup.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 10483 strings out of 476182
- 199119 string characters out of 5795595
+ 10521 strings out of 476182
+ 200416 string characters out of 5795595
  1938975 words of memory out of 5000000
- 32392 multiletter control sequences out of 15000+600000
+ 32430 multiletter control sequences out of 15000+600000
  564979 words of font info for 60 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  66i,9n,81p,1799b,1326s stack positions out of 10000i,1000n,20000p,200000b,200000s
  </home/electricwhelk/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/tcti1000.600pk> </home/electricwhelk/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1000.600pk></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on writeup.pdf (41 pages, 4698717 bytes).
+Output written on writeup.pdf (45 pages, 5081820 bytes).
 PDF statistics:
- 231 PDF objects out of 1000 (max. 8388607)
- 143 compressed objects within 2 object streams
+ 248 PDF objects out of 1000 (max. 8388607)
+ 152 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
- 66 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 86 words of extra memory for PDF output out of 10000 (max. 10000000)
 

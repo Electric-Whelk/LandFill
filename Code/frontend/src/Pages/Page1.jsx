@@ -47,14 +47,13 @@ const Page1 = () => {
                 <h1>LandFill</h1>
 
                 <p>LandFill is an automatic manabase generator for EDH decks.</p>
-                <p>Start by pasting in the nonland cards from your deck, plus any utility lands. You can copy+paste direct from TappedOut</p>
+                <p>Start by pasting in the nonland cards from your deck. You can copy+paste direct from TappedOut, Deckbox, Moxfield or Archidekt</p>
             </div>
 
             <div>
-                <p>DeckList</p>
                 <div>
                     <i className="hint">HINT: LandFill only gives you lands that'll help you with color fixing. If you've got utility lands,
-                req towers, etc, add them now.</i>
+                req towers, etc, add them too.</i>
                 </div>
                 <textarea id="decklist"
                           cols="40"
@@ -82,7 +81,7 @@ const Page1 = () => {
             </div>
 
             <div>
-                <p>Partner</p>
+                <p>Partner (leave blank if none)</p>
                 <textarea id="partner"
                           cols="40"
                           rows="1"
@@ -92,6 +91,7 @@ const Page1 = () => {
             </div>
 
             <div>
+                <label>Display card prices in: </label>
             <select name="currency"
                     value={currency}
                     onChange= {(e) => {setCurrency(e.target.value)}}>
@@ -100,8 +100,9 @@ const Page1 = () => {
                 <option value="GBP">GBP</option>
             </select>
             </div>
+        <div>                <button id="pageOneStart" onClick={handleSubmit}>Start {loading && <i>Loading... 🌀</i>}</button>
+        </div>
 
-            <button onClick={handleSubmit}>Start {loading && <i>Loading... 🌀</i>}</button>
         </div>
     );
 };

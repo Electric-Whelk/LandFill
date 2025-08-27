@@ -165,8 +165,6 @@ const Page3 = () => {
             <div className = "main-content" id="page3-main">
             <div className="card-outputs">
                 <h3>Lands We've Added (ranked by performance)</h3>
-                <i>HINT: If you don't like some of these, remove them and hit "re-run optimizer"</i>
-
                 {lands.map((land, index) => (
                     <CardRankPanel land={land}
                                    index={index}
@@ -220,7 +218,7 @@ const Page3 = () => {
 
             <div className="nav-buttons">
                 <button onClick={() => navigate('/page2')}>⬅ Back to Cycles</button>
-                <button onClick={() => navigate('/page3')}>Re-Run Optimizer</button>
+
             </div>
         </div>
         </div>
@@ -235,7 +233,6 @@ const CardRankPanel = ({ land, index, setViewedCard }) => {
             land={land}
             index={index}
             onMouseOver={() => setViewedCard(land)}>
-            <Remover hey={"hey"}/>
             {land.name} ({land.proportions})
         </div>
     );

@@ -7,7 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 import secrets
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder="frontend/build")
     CORS(app=app, supports_credentials=True)
     app.secret_key = secrets.token_urlsafe(32)
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mtg.db'

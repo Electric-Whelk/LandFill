@@ -61,6 +61,7 @@ def submit_deck():
         decklist = imp.parse_decklist(data.get("deckList"))
         partner = imp.parse_partner(data.get("partner"))
         player_deck.setup(decklist, data.get("commander"), partner=partner, remove_lands = data.get("removeLands"))
+        q = player_deck
         monty.setup()
         monty.fill_heap()
         PrevPageOneInput= data
@@ -212,6 +213,101 @@ def run():
         #return jsonify({"response": "Failed - hey Leah shouldn't you be doing this with headers?"})
 
 
+#PROGRESS UPDATE REFACTOR
+import threading, uuid
+
+tasks = {}  # global store: {task_id: {"status": "running", "result": None}}
+
+import threading, uuid
+
+tasks = {}
+
+@app.route('/api/submit-preferencesV2', methods=['POST'])
+def submit_preferences_V2():
+    data = request.get_json()
+    task_id = str(uuid.uuid4())
+
+    # Create empty task entry
+    tasks[task_id] = {
+        "status": "running",
+        "logs": [],
+        "result": None,
+    }
+
+    # Background worker
+    def run_job(task_id, data):
+        with app.app_context():
+            print(f"EXCLUDED: {[x["name"] for x in data.get("excluded")]}")
+            print("Running")
+            monty.set_permissions(mandatory=data.get("mandatory"),
+                                  permitted=data.get("permitted"),
+                                  excluded=data.get("excluded"))
+            monty.set_rankings(data.get("rankings"))
+            try:
+                for update in monty.run_stream(
+                    of_each_basic=data.get("minIndividualBasics"),
+                    min_basics=data.get("minBasics")
+                ):
+                    tasks[task_id]["logs"].append(update)
+
+                # Final output
+                tasks[task_id]["result"] = build_output(player_deck, imp)
+                tasks[task_id]["status"] = "done"
+            except Exception as e:
+                tasks[task_id]["logs"].append(f"Error: {e}")
+                tasks[task_id]["status"] = "error"
+
+    # Spawn worker thread
+    thread = threading.Thread(target=run_job, args=(task_id, data))
+    thread.start()
+
+    # ✅ Return immediately
+    response = jsonify({"task_id": task_id})
+    print(response)
+    return response
+
+
+@app.route("/api/status/<task_id>")
+def task_status(task_id):
+    task = tasks.get(task_id)
+    if not task:
+        return jsonify({"error": "Invalid task_id"}), 404
+
+    return jsonify({
+        "status": task["status"],
+        "logs": task.get("logs", []),   # return progress messages
+    })
+
+@app.route("/api/result/<task_id>")
+def task_result(task_id):
+    task = tasks.get(task_id)
+    if not task:
+        return jsonify({"error": "Invalid task id"}), 404
+    if task["status"] != "done":
+        return jsonify({"error": "Task not complete"}), 400
+    return jsonify(task["result"])
+
+def build_output(player_deck, imp):
+    lands, nonLands, allCards = [], [], []
+    for card in player_deck.card_list:
+        if isinstance(card, Land):
+            lands.append(card.to_dict())
+        else:
+            nonLands.append(card.to_dict())
+        allCards.append(card.to_dict())
+
+    imp.decklist_to_categories(player_deck.card_list)
+    return {
+        "lands": lands,
+        "nonLands": nonLands,
+        "moxbox": imp.format_for_moxbox(),
+        "archidekt": imp.format_for_archidekt(),
+        "tappedout": imp.format_for_tappedout(),
+        "moxboxLands": imp.format_moxbox_lands(),
+        "archidektLands": imp.format_archidekt_lands(),
+        "tappedoutLands": imp.format_tappedout_lands(),
+        "proportions": player_deck.finalscore
+    }
 
 
 

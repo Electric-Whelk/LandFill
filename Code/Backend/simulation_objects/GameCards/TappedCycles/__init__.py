@@ -5,4 +5,5 @@ from .BicycleLand import BicycleLand
 from .ScryLand import ScryLand
 from .TypedDualLand import TypedDualLand
 from .SurveilLand import SurveilLand
+from .GainLand import GainLand
 #from .TappedCycle import TappedCycle

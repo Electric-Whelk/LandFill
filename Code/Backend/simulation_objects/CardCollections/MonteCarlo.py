@@ -43,6 +43,10 @@ class MonteCarlo(CardCollection):
         self._prioritization_object = LandPrioritization(stdprioritization)
         self._sample_pound = CurrencyConverter().convert(1, "GBP", "USD")
 
+        #globals used in user updating
+        self._last_worst = ""
+        self._last_best = ""
+
 
         #set when the deck is setup
         self._colorless_pips = None
@@ -99,6 +103,21 @@ class MonteCarlo(CardCollection):
 
 
     #setters and getters
+    @property
+    def last_worst(self):
+        return self._last_worst
+    @last_worst.setter
+    def last_worst(self, value):
+        self._last_worst = value
+
+    @property
+    def last_best(self):
+        return self._last_best
+    @last_best.setter
+    def last_best(self, value):
+        self._last_best = value
+
+
     @property
     def best_score(self):
         return self._best_score
@@ -416,6 +435,7 @@ class MonteCarlo(CardCollection):
         # ponder: what if it was all wastes? That'd certainly make your early interventions much more fiery.
         self.deck.set_each(of_each_basic)
         self.minbasics = int(min_basics)
+        print("minbasics set")
 
         """if kwargs["of_each_basic"] is not None:
             self.deck.set_each(kwargs["of_each_basic"])
@@ -652,6 +672,7 @@ class MonteCarlo(CardCollection):
     def hill_climb_increment(self, prior_test):
         print("")
         worst_card = prior_test.worst_performing_card
+        self.last_worst = worst_card.name
         prev_score = prior_test.game_proportions
         if not isinstance(worst_card, BasicLand):
             self.swapped_out_nonbasics.append(worst_card)
@@ -662,6 +683,8 @@ class MonteCarlo(CardCollection):
             cards_to_test = self.get_basic_spread()
         else:
             cards_to_test = self.get_cards_to_test()
+        if isinstance(worst_card, BasicLand):
+            cards_to_test = [x for x in cards_to_test if x.name != worst_card.name]
         self.deck.give(self, worst_card)
 
         champ = None
@@ -687,6 +710,7 @@ class MonteCarlo(CardCollection):
             print(f"\t{c} -> {c.card_test_score} ({median(c.options)})")
 
         champ = self.break_tie(tiebreaker_candidates)
+        self.last_best = champ.name
         #champ = self.break_tie_median(tiebreaker_candidates)
 
         #if champ.card_test_score < prev_score:
@@ -745,15 +769,17 @@ class MonteCarlo(CardCollection):
 
     def get_cards_to_test(self) -> list:
         uniques = self.get_unique_cards()
+        print(f"Unique cards: {len(uniques)}")
         output = []
         rejected = []
         for card in uniques:
+            print(f"{card} has superiors {card.superior_lands}")
             if not any(superior not in self.deck.card_list for superior in card.superior_lands):
                 output.append(card)
             else:
                 rejected.append(card)
 
-
+        print(f"output length: {len(output)}")
         return output
 
 
@@ -786,6 +812,8 @@ class MonteCarlo(CardCollection):
             selection = self.card_list
         else:
             selection = self.permitted_lands()
+
+        print(f"Selection: {len(selection)}")
 
         for card in selection:
             if card.name not in basicnames:
@@ -820,17 +848,21 @@ class MonteCarlo(CardCollection):
                 as_GC = self.parse_GameCard(card, mandatory=False)
                 #self.prioritization_object.register_land(as_GC)
                 if not isinstance(as_GC, MiscLand) and not self.irrelevant_fetchland(as_GC, exclude_offcolors=False):
-                    self.card_list.append(as_GC)
-                    if self.irrelevant_fetchland(as_GC, exclude_offcolors=True):
-                        as_GC.off_color_fetch = True
+                    if as_GC.name != "Wastes" or self.colorless_pips:
+                        self.card_list.append(as_GC)
+                        if self.irrelevant_fetchland(as_GC, exclude_offcolors=True):
+                            as_GC.off_color_fetch = True
 
         #for card in self.deck.lands_list():
             #self.prioritization_object.register_land(card)
         #self.prioritize_heap()
 
     def prioritize_heap(self):
+        self.prioritization_object.reset()
         permitted = self.permitted_lands()
         for land in permitted:
+            land.superior_lands = []
+            land.inferior_lands = []
             self.prioritization_object.register_land(land)
 
         for land in permitted:
@@ -853,7 +885,6 @@ class MonteCarlo(CardCollection):
             for candidate in all_except:
                 if any(isinstance(candidate, cls) for cls in land.superior_classes):
                     land.superior_lands.append(candidate)
-            print(f"{land} has superiors {land.superior_lands}")
         self.card_list = [x for x in heap if x.name != "Wastes" and not self.colorless_pips]
 
 
@@ -1054,6 +1085,7 @@ class MonteCarlo(CardCollection):
                 self.card_list.append(deepcopy(sought_land))
 
     def set_rankings(self, rankings):
+        print("-----------SETTING RANKINGS----------")
         new_rankings = []
         for r in rankings:
             as_list = []
@@ -1069,8 +1101,94 @@ class MonteCarlo(CardCollection):
 
         self.prioritization_object.apply_player_rankings(new_rankings)
         self.prioritize_heap()
+        for land in self.card_list:
+            if isinstance(land, Land) and land.permitted:
+                print(land)
+                for sup in land.superior_lands:
+                    print(f"\tsup: {sup}")
+                for inf in land.inferior_lands:
+                    print(f"\tinf: {inf}")
 
 
+    #PROGRESS UPDATE REFACTOR
+
+    def run_stream(self, of_each_basic=0, min_basics="0"):
+        # setup deck just like your run()
+        yield "Setting up deck..."
+
+        #yield f"Deck initialized with {len(lands_in_deck)} lands."
+        yield f"Deck contains {len([x for x in self.card_list if isinstance(x, Land) and x.mandatory])} lands"
+        self.add_mandatory_lands()
+        self.deck.add_initial_lands("equal_basics")
+        yield f"Basic lands added to deck..."
+        self.deck.set_each(of_each_basic)
+        self.minbasics = int(min_basics)
+
+        # now do the hill climb, yielding progress
+        yield from self.hill_climb_stream()
+
+    def hill_climb_stream(self):
+        self.halt = False
+        step_output = Test(self.deck)
+        step_output.hill_climb_test()
+        self.last_worst = step_output.worst_performing_card.name
+        yield f"Starting score: {step_output.game_proportions}"
+        scores = [step_output.game_proportions]
+        iterations = 0
+
+        while not self.halt:
+            iterations += 1
+            step_output = self.hill_climb_increment(step_output)
+            yield f"Replaced {self.last_worst} with {self.last_best} ({step_output.game_proportions})"
+            props = step_output.game_proportions
+            self.set_new_highscore(props)
+            scores.append(props)
+            self.halt = self.check_rolling_max(scores)
+
+            if self.halt or iterations > 50:
+                yield f"Halting at step {iterations}"
+
+        self.deck.finalscore = step_output.game_proportions
+        yield f"Final score: {self.deck.finalscore}"
+
+    def set_permissions(self, mandatory=None, permitted=None, excluded=None):
+        checks = [x for x in [mandatory, permitted, excluded] if x is None]
+        if len(checks) != 0:
+            raise Exception("Misuse of set_permissions function")
+
+        def names(input):
+            return [x["name"] for x in input]
+
+        lands_in_deck = [c for c in self.deck.card_list if isinstance(c, Land)]
+        for l in lands_in_deck:
+            self.deck.give(self, l)
+            #self.deck.lands_requested += 1
+
+        mandatory = names(mandatory)
+        permitted = names(permitted)
+        excluded = names(excluded)
+        print(f"Permitted: {permitted}")
+        print(f"Mandatory: {mandatory}")
+        print(f"Excluded: {excluded}")
+
+        for card in self.card_list:
+            if card.name in mandatory:
+                card.mandatory = True
+                card.permitted = True
+            elif card.name in permitted:
+                card.permitted = True
+                card.mandatory = False
+            elif card.name in excluded:
+                card.permitted = False
+                card.mandatory = False
+            elif isinstance(card, BasicLand):
+                card.permitted = True
+                card.mandatory = False
+            else:
+                print(f"Couldn't find {card.name}")
+                card.permitted = True
+                card.mandatory = True
+            # print(f"Set {card.name} to mandatory {card.mandatory} and permmitted {card.permitted}")
 
 
 

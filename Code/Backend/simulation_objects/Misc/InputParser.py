@@ -297,7 +297,11 @@ class InputParser:
     def LandFill_input(self):
         output = []
         for key in self.categories:
-            output.extend(self.categories[key])
+            for card in self.categories[key]:
+                if len(card) != 0:
+                    output.append(card)
+
+            #output.extend(self.categories[key])
         return "\n".join(output)
 
     def parse_partner(self, input:str):
@@ -360,10 +364,11 @@ class InputParser:
             if line == "Sideboard:":
                 pass
             else:
+                line = line.strip()
+                line = line.split(" // ")[0]
                 tokenized = line.split(" ")
-                title = tokenized[1:len(tokenized)-1]
-                title = title.split(" // ")[0]
-                self.categories
+                title = tokenized[1:len(tokenized)]
+                self.categories[self.default].append(" ".join(title))
 
 
 
@@ -433,6 +438,6 @@ class InputParser:
         return re.search(r"^[0-9]x .* \(.*\) .* \[.*\]", line)
 
     def is_deckbox_export_label(self, line:str) -> bool:
-        return re.search(r"^[0-9] .*", line)
+        return re.search(r"^\s*[0-9] .*", line)
 
 
