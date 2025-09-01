@@ -163,7 +163,7 @@ class Lump:
     #VERSION 2
     #@profile
     def set_playability(self, lands, game, filter_subversion = False):
-        playstart = time.time()
+        #playstart = time.time()
         if not filter_subversion:
             if self.cmc > len(lands):
                 return False
@@ -177,6 +177,9 @@ class Lump:
         #weightstart = time.time()
         #weighted = np.array([[land.set_price(game, m) for m in mana_required] for land in lands])
         weighted = [[land.set_price(game, m) for m in mana_required] for land in lands]
+        #for item in weighted:
+            #print(item)
+        #print("")
 
 
         #weightrun = time.time() - weightstart

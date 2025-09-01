@@ -2390,13 +2390,17 @@
     <bcf:citekey order="27" intorder="1">IxalanManabases</bcf:citekey>
     <bcf:citekey order="28" intorder="1">wright1991use</bcf:citekey>
     <bcf:citekey order="29" intorder="1">martello1990knapsack</bcf:citekey>
-    <bcf:citekey order="30" intorder="1">PropertyTesting</bcf:citekey>
-    <bcf:citekey order="31" intorder="1">PropertyTesting</bcf:citekey>
-    <bcf:citekey order="32" intorder="1">CommanderMythBusters</bcf:citekey>
-    <bcf:citekey order="33" intorder="1">koopmans1957assignment</bcf:citekey>
-    <bcf:citekey order="34" intorder="1">salhi2019neighbourhood</bcf:citekey>
-    <bcf:citekey order="35" intorder="1">KarstenCurve</bcf:citekey>
-    <bcf:citekey order="36" intorder="1">BounceLands</bcf:citekey>
+    <bcf:citekey order="30" intorder="1">mtgjson</bcf:citekey>
+    <bcf:citekey order="31" intorder="1">databasenormalization</bcf:citekey>
+    <bcf:citekey order="32" intorder="1">PropertyTesting</bcf:citekey>
+    <bcf:citekey order="33" intorder="1">PropertyTesting</bcf:citekey>
+    <bcf:citekey order="34" intorder="1">CommanderMythBusters</bcf:citekey>
+    <bcf:citekey order="35" intorder="1">commandermulligans</bcf:citekey>
+    <bcf:citekey order="36" intorder="1">whatismemoization</bcf:citekey>
+    <bcf:citekey order="37" intorder="1">koopmans1957assignment</bcf:citekey>
+    <bcf:citekey order="38" intorder="1">salhi2019neighbourhood</bcf:citekey>
+    <bcf:citekey order="39" intorder="1">KarstenCurve</bcf:citekey>
+    <bcf:citekey order="40" intorder="1">BounceLands</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">
