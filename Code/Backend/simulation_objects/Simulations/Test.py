@@ -235,7 +235,19 @@ class Test(Simulation):
         #swampcount = len([x for x in self.deck.lands_list() if x.name == "Swamp"])
         #print(f"Low performers ({forestcount} forests, {islandcount} islands, {swampcount} swamps)")
         for i in range(len(self.deck.lands_list())):
-            print(f"\tCURRENTLY IN DECK {sklorted[i]} -> {sklorted[i].proportions} -> {numpy.median(sklorted[i].options)}")
+            rank = len(self.deck.lands_list()) - i
+            print(f"\t {rank}: {sklorted[i]} -> {sklorted[i].proportions} -> {numpy.median(sklorted[i].options)}")
+
+        """nb_sighted = False
+        basiccount = 0
+        nbcount = 0
+        for land in sklorted:
+            if not isinstance(land, BasicLand):
+                nbcount += 1
+            if nbcount > 0 and isinstance(land, BasicLand):
+                basiccount += 1
+        with open("output_files/ahead_of_worst_nb", "a") as f:
+            f.write(f"{nbcount}:{basiccount}\n")"""
 
         candidates = self.get_worst_card_candidates(self.deck.card_list)
         for card in candidates:

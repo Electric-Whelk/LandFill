@@ -62,6 +62,37 @@
       \field{volume}{34}
       \field{year}{2021}
     \endentry
+    \entry{iterativedevelopment}{online}{}
+      \name{author}{1}{}{%
+        {{hash=7bbef90440b39193b04feafd21ea6a10}{%
+           family={Awati},
+           familyi={A\bibinitperiod},
+           given={Rahul},
+           giveni={R\bibinitperiod}}}%
+      }
+      \strng{namehash}{7bbef90440b39193b04feafd21ea6a10}
+      \strng{fullhash}{7bbef90440b39193b04feafd21ea6a10}
+      \strng{bibnamehash}{7bbef90440b39193b04feafd21ea6a10}
+      \strng{authorbibnamehash}{7bbef90440b39193b04feafd21ea6a10}
+      \strng{authornamehash}{7bbef90440b39193b04feafd21ea6a10}
+      \strng{authorfullhash}{7bbef90440b39193b04feafd21ea6a10}
+      \field{sortinit}{A}
+      \field{sortinithash}{2f401846e2029bad6b3ecc16d50031e2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Iterative Development}
+      \field{urlday}{30}
+      \field{urlmonth}{8}
+      \field{urlyear}{2025}
+      \field{year}{2023}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.techtarget.com/searchsoftwarequality/definition/iterative-development
+      \endverb
+      \verb{url}
+      \verb https://www.techtarget.com/searchsoftwarequality/definition/iterative-development
+      \endverb
+    \endentry
     \entry{churchill2019magic}{article}{}
       \name{author}{3}{}{%
         {{hash=0db9e87b3b5d3281f5037a61d49e65b5}{%
@@ -117,6 +148,99 @@
       \field{labeltitlesource}{title}
       \field{title}{Mathematical Programming and Magic: The Gathering{®}}
       \field{year}{2018}
+    \endentry
+    \entry{StrictlyBetter}{online}{}
+      \name{author}{1}{}{%
+        {{hash=67a122d8b0c3710db8527e98c02fd1e1}{%
+           family={Furtado},
+           familyi={F\bibinitperiod},
+           given={Pedro},
+           giveni={P\bibinitperiod}}}%
+      }
+      \strng{namehash}{67a122d8b0c3710db8527e98c02fd1e1}
+      \strng{fullhash}{67a122d8b0c3710db8527e98c02fd1e1}
+      \strng{bibnamehash}{67a122d8b0c3710db8527e98c02fd1e1}
+      \strng{authorbibnamehash}{67a122d8b0c3710db8527e98c02fd1e1}
+      \strng{authornamehash}{67a122d8b0c3710db8527e98c02fd1e1}
+      \strng{authorfullhash}{67a122d8b0c3710db8527e98c02fd1e1}
+      \field{sortinit}{F}
+      \field{sortinithash}{2638baaa20439f1b5a8f80c6c08a13b4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{What Does Strictly Better Mean in MTG?}
+      \field{urlday}{30}
+      \field{urlmonth}{8}
+      \field{urlyear}{2025}
+      \field{year}{2024}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://draftsim.com/mtg-strictly-better/
+      \endverb
+      \verb{url}
+      \verb https://draftsim.com/mtg-strictly-better/
+      \endverb
+    \endentry
+    \entry{CommanderFormatOverview}{online}{}
+      \name{author}{1}{}{%
+        {{hash=6be97bc54723930f1b81cd5917bf20e6}{%
+           family={Hall},
+           familyi={H\bibinitperiod},
+           given={Charlie},
+           giveni={C\bibinitperiod}}}%
+      }
+      \strng{namehash}{6be97bc54723930f1b81cd5917bf20e6}
+      \strng{fullhash}{6be97bc54723930f1b81cd5917bf20e6}
+      \strng{bibnamehash}{6be97bc54723930f1b81cd5917bf20e6}
+      \strng{authorbibnamehash}{6be97bc54723930f1b81cd5917bf20e6}
+      \strng{authornamehash}{6be97bc54723930f1b81cd5917bf20e6}
+      \strng{authorfullhash}{6be97bc54723930f1b81cd5917bf20e6}
+      \field{sortinit}{H}
+      \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Commander: The definitive history of Magic’s most popular format}
+      \field{urlday}{30}
+      \field{urlmonth}{8}
+      \field{urlyear}{2025}
+      \field{year}{2020}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.polygon.com/2020/5/28/21266763/magic-the-gathering-commander-origins-elder-dragon-highlander-alaska-menery/
+      \endverb
+      \verb{url}
+      \verb https://www.polygon.com/2020/5/28/21266763/magic-the-gathering-commander-origins-elder-dragon-highlander-alaska-menery/
+      \endverb
+    \endentry
+    \entry{CommanderMythBusters}{online}{}
+      \name{author}{1}{}{%
+        {{hash=43dd18b364490a5b28a8e4a353669839}{%
+           family={Jimmy\bibnamedelima Wong},
+           familyi={J\bibinitperiod\bibinitdelim W\bibinitperiod},
+           given={Josh\bibnamedelimb Lee\bibnamedelima Kwai},
+           giveni={J\bibinitperiod\bibinitdelim L\bibinitperiod\bibinitdelim K\bibinitperiod}}}%
+      }
+      \strng{namehash}{43dd18b364490a5b28a8e4a353669839}
+      \strng{fullhash}{43dd18b364490a5b28a8e4a353669839}
+      \strng{bibnamehash}{43dd18b364490a5b28a8e4a353669839}
+      \strng{authorbibnamehash}{43dd18b364490a5b28a8e4a353669839}
+      \strng{authornamehash}{43dd18b364490a5b28a8e4a353669839}
+      \strng{authorfullhash}{43dd18b364490a5b28a8e4a353669839}
+      \field{sortinit}{J}
+      \field{sortinithash}{b2f54a9081ace9966a7cb9413811edb4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Commander Mythbusters | The command Zone 335 | Magic: The Gathering Commander}
+      \field{urlday}{14}
+      \field{urlmonth}{8}
+      \field{urlyear}{2025}
+      \field{year}{2020}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.youtube.com/watch?v=Pr91Crzl7DI
+      \endverb
+      \verb{url}
+      \verb https://www.youtube.com/watch?v=Pr91Crzl7DI
+      \endverb
     \endentry
     \entry{IxalanManabases}{online}{}
       \name{author}{1}{}{%
@@ -214,6 +338,38 @@
       \verb https://www.tcgplayer.com/content/article/What-s-an-Optimal-Mana-Curve-and-Land-Ramp-Count-for-Commander/e22caad1-b04b-4f8a-951b-a41e9f08da14/
       \endverb
     \endentry
+    \entry{koopmans1957assignment}{article}{}
+      \name{author}{2}{}{%
+        {{hash=09bfd0da2c5d8b6dd48efaac35786d25}{%
+           family={Koopmans},
+           familyi={K\bibinitperiod},
+           given={Tjalling\bibnamedelima C},
+           giveni={T\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+        {{hash=dcc69497b5484086501fea46b39d2e87}{%
+           family={Beckmann},
+           familyi={B\bibinitperiod},
+           given={Martin},
+           giveni={M\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {JSTOR}%
+      }
+      \strng{namehash}{e749e50dca8d73df07fb8d7273463cf8}
+      \strng{fullhash}{e749e50dca8d73df07fb8d7273463cf8}
+      \strng{bibnamehash}{e749e50dca8d73df07fb8d7273463cf8}
+      \strng{authorbibnamehash}{e749e50dca8d73df07fb8d7273463cf8}
+      \strng{authornamehash}{e749e50dca8d73df07fb8d7273463cf8}
+      \strng{authorfullhash}{e749e50dca8d73df07fb8d7273463cf8}
+      \field{sortinit}{K}
+      \field{sortinithash}{c02bf6bff1c488450c352b40f5d853ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Econometrica: journal of the Econometric Society}
+      \field{title}{Assignment problems and the location of economic activities}
+      \field{year}{1957}
+      \field{pages}{53\bibrangedash 76}
+      \range{pages}{24}
+    \endentry
     \entry{metropolis1949monte}{article}{}
       \name{author}{2}{}{%
         {{hash=2b73f47a1a84dd52f45fe57c381c3786}{%
@@ -279,6 +435,131 @@
       \verb https://web.archive.org/web/20100902160143/http://www.wizards.com:80/Magic/Magazine/Article.aspx?x=mtg/daily/feature/106
       \endverb
     \endentry
+    \entry{BounceLands}{online}{}
+      \name{author}{1}{}{%
+        {{hash=231bd9be559db3e44b6d20d1c1c10f81}{%
+           family={Roach},
+           familyi={R\bibinitperiod},
+           given={Dana},
+           giveni={D\bibinitperiod}}}%
+      }
+      \strng{namehash}{231bd9be559db3e44b6d20d1c1c10f81}
+      \strng{fullhash}{231bd9be559db3e44b6d20d1c1c10f81}
+      \strng{bibnamehash}{231bd9be559db3e44b6d20d1c1c10f81}
+      \strng{authorbibnamehash}{231bd9be559db3e44b6d20d1c1c10f81}
+      \strng{authornamehash}{231bd9be559db3e44b6d20d1c1c10f81}
+      \strng{authorfullhash}{231bd9be559db3e44b6d20d1c1c10f81}
+      \field{sortinit}{R}
+      \field{sortinithash}{5e1c39a9d46ffb6bebd8f801023a9486}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Superior Numbers - Let's Bounce!}
+      \field{urlday}{19}
+      \field{urlmonth}{8}
+      \field{urlyear}{2025}
+      \field{year}{2022}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://edhrec.com/articles/superior-numbers-lets-bounce
+      \endverb
+      \verb{url}
+      \verb https://edhrec.com/articles/superior-numbers-lets-bounce
+      \endverb
+    \endentry
+    \entry{PropertyTesting}{online}{}
+      \name{author}{1}{}{%
+        {{hash=077b0aa4c0b7c560c26f3915e51627ff}{%
+           family={Robert},
+           familyi={R\bibinitperiod},
+           given={Alex},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{077b0aa4c0b7c560c26f3915e51627ff}
+      \strng{fullhash}{077b0aa4c0b7c560c26f3915e51627ff}
+      \strng{bibnamehash}{077b0aa4c0b7c560c26f3915e51627ff}
+      \strng{authorbibnamehash}{077b0aa4c0b7c560c26f3915e51627ff}
+      \strng{authornamehash}{077b0aa4c0b7c560c26f3915e51627ff}
+      \strng{authorfullhash}{077b0aa4c0b7c560c26f3915e51627ff}
+      \field{sortinit}{R}
+      \field{sortinithash}{5e1c39a9d46ffb6bebd8f801023a9486}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{What is Property-based Testing?}
+      \field{urlday}{31}
+      \field{urlmonth}{8}
+      \field{urlyear}{2025}
+      \field{year}{2021}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.mayhem.security/blog/what-is-property-based-testing
+      \endverb
+      \verb{url}
+      \verb https://www.mayhem.security/blog/what-is-property-based-testing
+      \endverb
+    \endentry
+    \entry{GetReadyToDual}{online}{}
+      \name{author}{1}{}{%
+        {{hash=23bfb9d26a4794a5ec86b691e9a4f626}{%
+           family={Rosewater},
+           familyi={R\bibinitperiod},
+           given={Mark},
+           giveni={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{23bfb9d26a4794a5ec86b691e9a4f626}
+      \strng{fullhash}{23bfb9d26a4794a5ec86b691e9a4f626}
+      \strng{bibnamehash}{23bfb9d26a4794a5ec86b691e9a4f626}
+      \strng{authorbibnamehash}{23bfb9d26a4794a5ec86b691e9a4f626}
+      \strng{authornamehash}{23bfb9d26a4794a5ec86b691e9a4f626}
+      \strng{authorfullhash}{23bfb9d26a4794a5ec86b691e9a4f626}
+      \field{sortinit}{R}
+      \field{sortinithash}{5e1c39a9d46ffb6bebd8f801023a9486}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Get Ready to Dual}
+      \field{urlday}{30}
+      \field{urlmonth}{8}
+      \field{urlyear}{2025}
+      \field{year}{2017}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://magic.wizards.com/en/news/making-magic/get-ready-dual-2017-02-27
+      \endverb
+      \verb{url}
+      \verb https://magic.wizards.com/en/news/making-magic/get-ready-dual-2017-02-27
+      \endverb
+    \endentry
+    \entry{salhi2019neighbourhood}{incollection}{}
+      \name{author}{2}{}{%
+        {{hash=bb472bc934c769446bb42b36f2290908}{%
+           family={Salhi},
+           familyi={S\bibinitperiod},
+           given={Said},
+           giveni={S\bibinitperiod}}}%
+        {{hash=c3b0c8354b1b1641e5e7e73d091048f2}{%
+           family={Brimberg},
+           familyi={B\bibinitperiod},
+           given={Jack},
+           giveni={J\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{713a28f4f4448de2869ebfddd1483edc}
+      \strng{fullhash}{713a28f4f4448de2869ebfddd1483edc}
+      \strng{bibnamehash}{713a28f4f4448de2869ebfddd1483edc}
+      \strng{authorbibnamehash}{713a28f4f4448de2869ebfddd1483edc}
+      \strng{authornamehash}{713a28f4f4448de2869ebfddd1483edc}
+      \strng{authorfullhash}{713a28f4f4448de2869ebfddd1483edc}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Contributions to Location Analysis: In Honor of Zvi Drezner’s 75th Birthday}
+      \field{title}{Neighbourhood Reduction in Global and Combinatorial Optimization: The Case of the p-Centre Problem}
+      \field{year}{2019}
+      \field{pages}{195\bibrangedash 220}
+      \range{pages}{26}
+    \endentry
     \entry{silver2004overview}{article}{}
       \name{author}{1}{}{%
         {{hash=82f7d25e9c552dff35055cae0f60f33a}{%
@@ -307,6 +588,37 @@
       \field{year}{2004}
       \field{pages}{936\bibrangedash 956}
       \range{pages}{21}
+    \endentry
+    \entry{verificationandvalidation}{online}{}
+      \name{author}{1}{}{%
+        {{hash=ebbc247abc12b8e770d40008618ffc04}{%
+           family={Team},
+           familyi={T\bibinitperiod},
+           given={Editorial},
+           giveni={E\bibinitperiod}}}%
+      }
+      \strng{namehash}{ebbc247abc12b8e770d40008618ffc04}
+      \strng{fullhash}{ebbc247abc12b8e770d40008618ffc04}
+      \strng{bibnamehash}{ebbc247abc12b8e770d40008618ffc04}
+      \strng{authorbibnamehash}{ebbc247abc12b8e770d40008618ffc04}
+      \strng{authornamehash}{ebbc247abc12b8e770d40008618ffc04}
+      \strng{authorfullhash}{ebbc247abc12b8e770d40008618ffc04}
+      \field{sortinit}{T}
+      \field{sortinithash}{9af77f0292593c26bde9a56e688eaee9}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Verification and Validation in Software Testing}
+      \field{urlday}{30}
+      \field{urlmonth}{8}
+      \field{urlyear}{2025}
+      \field{year}{2025}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.browserstack.com/guide/verification-and-validation-in-testing
+      \endverb
+      \verb{url}
+      \verb https://www.browserstack.com/guide/verification-and-validation-in-testing
+      \endverb
     \endentry
     \entry{ward2009monte}{inproceedings}{}
       \name{author}{2}{}{%
@@ -404,6 +716,40 @@
       \verb{url}
       \verb https://article.hareruyamtg.com/article/article_en_405/?lang=en
       \endverb
+    \endentry
+    \entry{zanakis1981heuristic}{article}{}
+      \name{author}{2}{}{%
+        {{hash=7632c2ebfa2b2dcf728f73ebabd619ed}{%
+           family={Zanakis},
+           familyi={Z\bibinitperiod},
+           given={Stelios\bibnamedelima H},
+           giveni={S\bibinitperiod\bibinitdelim H\bibinitperiod}}}%
+        {{hash=80f2d6eed8440eb3add9ba47e25d2b67}{%
+           family={Evans},
+           familyi={E\bibinitperiod},
+           given={James\bibnamedelima R},
+           giveni={J\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {INFORMS}%
+      }
+      \strng{namehash}{8071a60c0e70a71093ceaa91b7e82518}
+      \strng{fullhash}{8071a60c0e70a71093ceaa91b7e82518}
+      \strng{bibnamehash}{8071a60c0e70a71093ceaa91b7e82518}
+      \strng{authorbibnamehash}{8071a60c0e70a71093ceaa91b7e82518}
+      \strng{authornamehash}{8071a60c0e70a71093ceaa91b7e82518}
+      \strng{authorfullhash}{8071a60c0e70a71093ceaa91b7e82518}
+      \field{sortinit}{Z}
+      \field{sortinithash}{96892c0b0a36bb8557c40c49813d48b3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Interfaces}
+      \field{number}{5}
+      \field{title}{Heuristic “optimization”: Why, when, and how to use it}
+      \field{volume}{11}
+      \field{year}{1981}
+      \field{pages}{84\bibrangedash 91}
+      \range{pages}{8}
     \endentry
   \enddatalist
 \endrefsection

@@ -18,13 +18,16 @@ const Page1 = () => {
         /*const deckList = document.getElementById('decklist').value;
         const commander = document.getElementById('commander').value;
         const partner = document.getElementById('partner').value;*/
+        const host = "http://127.0.0.1:5000";
+        const url = "/submit-deck"
 
 
         setLoading(true);
 
         try {
-            const response = await fetch('http://127.0.0.1:5000/api/submit-deck', {
+            const response = await fetch('/submit-deck', {
                 method: 'POST',
+                credentials: "include",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ deckList, commander, partner, currency, removeLands })
             });

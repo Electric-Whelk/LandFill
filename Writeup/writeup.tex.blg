@@ -1,5 +1,5 @@
 [0] Config.pm:307> INFO - This is Biber 2.19
 [0] Config.pm:310> INFO - Logfile is 'writeup.tex.blg'
-[50] biber:340> INFO - === Wed Aug 13, 2025, 15:40:15
-[87] Utils.pm:399> ERROR - Cannot find 'writeup.tex.bcf'!
-[87] Biber.pm:136> INFO - ERRORS: 1
+[54] biber:340> INFO - === Sun Aug 31, 2025, 18:36:53
+[104] Utils.pm:399> ERROR - Cannot find 'writeup.tex.bcf'!
+[105] Biber.pm:136> INFO - ERRORS: 1

@@ -484,10 +484,9 @@ class MonteCarlo(CardCollection):
             props = step_output.game_proportions
             self.set_new_highscore(props)
             scores.append(props)
-            self.halt = self.check_rolling_max(scores)
-            #self.halt = iterations >= 50
-            with open("scoreslog.txt", "a") as f:
-                f.write(f"{str(step_output.game_proportions)}\n")
+            #self.halt = self.check_rolling_max(scores)
+            self.halt = self.check_for_plateau(scores)
+
 
             #halt = self.check_for_halt(scores, step_output)
             if self.halt or iterations > 50:
@@ -527,6 +526,10 @@ class MonteCarlo(CardCollection):
         plt.show()
 
     def check_for_plateau(self, scores):
+        #backstop while testing
+        if len(scores) > 50:
+            return True
+
         savgol_window_length = 9
         window_length = 7
         minimum = max(window_length, savgol_window_length)
@@ -536,18 +539,14 @@ class MonteCarlo(CardCollection):
 
         smoothed = savgol_filter(scores, window_length=savgol_window_length, polyorder=3)
         derivative = np.gradient(smoothed)
-        threshold = 0.001
-        min_fraction = 0.45
-        for i in range(window_length, len(derivative)):
-            window = derivative[i-window_length + 1:i+1]
-            flat_num = sum(abs(d) < threshold for d in window)
-            flat_frac = flat_num / window_length
-            with open("Rukarumel_Derivatves", "a") as file:
-                file.write(f"{flat_frac}\n")
-            if flat_frac >= min_fraction:
-                return True
 
+        if len(derivative) > 1:
+            #with open("output_files/halt_criteria_testing/derivatives", "a") as f:
+                #f.write(f"{derivative[-1]}\n")
+                if derivative[-1] < 0:
+                    return True
         return False
+
 
     def check_for_plateau_v2(self, scores, threshold=0.001, window_length=7, min_fraction=0.7):
         savgol_window_length = 9
@@ -721,7 +720,7 @@ class MonteCarlo(CardCollection):
             self.give(self.deck, champ)
             self.reset_scores(cards_to_test)
             t.hill_climb_test()
-            self.vprint(f"Swapped {worst_card} for {champ} ({t.game_proportions})")
+            self.vprint(f"Swapped {worst_card} for {champ} ({t.game_proportions}) ({len(self.deck.card_list)})")
             #with open("another rukarumeeel", "a") as file:
                 #print("Writing to file!")
                 #file.write(f"{t.game_proportions}\n")
@@ -773,7 +772,7 @@ class MonteCarlo(CardCollection):
         output = []
         rejected = []
         for card in uniques:
-            print(f"{card} has superiors {card.superior_lands}")
+            #print(f"{card} has superiors {card.superior_lands}")
             if not any(superior not in self.deck.card_list for superior in card.superior_lands):
                 output.append(card)
             else:
@@ -1143,6 +1142,8 @@ class MonteCarlo(CardCollection):
             props = step_output.game_proportions
             self.set_new_highscore(props)
             scores.append(props)
+            #with open("output_files/halt_criteria_testing/xav_typical_input", "a") as f:
+                #f.write(f"{props}\n")
             self.halt = self.check_rolling_max(scores)
 
             if self.halt or iterations > 50:

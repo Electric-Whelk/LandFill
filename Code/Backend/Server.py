@@ -42,7 +42,7 @@ def serve_card_image(filename):
     return send_from_directory(monty.image_dir, filename)
 
 
-@app.route('/api/submit-deck', methods=['POST'])
+@app.route('/submit-deck', methods=['POST'])
 def submit_deck():
     data = request.get_json()
     #with open("RukaLandsSubs.json", "w") as f:
@@ -60,6 +60,7 @@ def submit_deck():
 
         decklist = imp.parse_decklist(data.get("deckList"))
         partner = imp.parse_partner(data.get("partner"))
+        print(decklist)
         player_deck.setup(decklist, data.get("commander"), partner=partner, remove_lands = data.get("removeLands"))
         q = player_deck
         monty.setup()
@@ -222,7 +223,7 @@ import threading, uuid
 
 tasks = {}
 
-@app.route('/api/submit-preferencesV2', methods=['POST'])
+@app.route('/submit-preferencesV2', methods=['POST'])
 def submit_preferences_V2():
     data = request.get_json()
     task_id = str(uuid.uuid4())
@@ -262,12 +263,13 @@ def submit_preferences_V2():
     thread.start()
 
     # ✅ Return immediately
+    print(f"Concluded with deck length {len(player_deck.card_list)}")
     response = jsonify({"task_id": task_id})
     print(response)
     return response
 
 
-@app.route("/api/status/<task_id>")
+@app.route("/status/<task_id>")
 def task_status(task_id):
     task = tasks.get(task_id)
     if not task:
@@ -278,7 +280,7 @@ def task_status(task_id):
         "logs": task.get("logs", []),   # return progress messages
     })
 
-@app.route("/api/result/<task_id>")
+@app.route("/result/<task_id>")
 def task_result(task_id):
     task = tasks.get(task_id)
     if not task:

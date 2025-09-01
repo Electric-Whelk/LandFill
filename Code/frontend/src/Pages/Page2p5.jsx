@@ -13,7 +13,7 @@ const Page2p5 = () => {
 
         const interval = setInterval(async () => {
             try {
-                const res = await fetch(`http://127.0.0.1:5000/api/status/${task_id}`);
+                const res = await fetch(`/status/${task_id}`);
                 const { status, logs } = await res.json();
 
                 setLogs(logs || []);   // keep frontend logs in sync
@@ -21,7 +21,7 @@ const Page2p5 = () => {
 
                 if (status === "done") {
                     clearInterval(interval);
-                    const resultRes = await fetch(`http://127.0.0.1:5000/api/result/${task_id}`);
+                    const resultRes = await fetch(`/result/${task_id}`);
                     const result = await resultRes.json();
                     navigate("/page3", { state: { data: result } });
                 }

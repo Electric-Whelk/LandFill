@@ -142,10 +142,6 @@ class CardCollection:
         self.card_list = [self.parse_GameCard(x, mandatory) for x in cards]
 
 
-
-
-
-
     def parse_GameCard(self, card:Card, mandatory=False, commander=False):
         if not card.overall_land:
             return Spell(card, mandatory, commander=commander)

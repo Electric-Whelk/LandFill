@@ -39,6 +39,9 @@ class Deck(CardCollection):
         self.set_commanders(commander_name, partner=partner)
 
         self._lands_requested = 100-len(self.card_list) #self.determine_lands_requested_from_json(quantity)
+        for i in range(len(self.card_list)):
+            print(f"{i}: {self.card_list[i]}")
+        print(self._lands_requested)
         self._size = self.determine_size()
         self._color_id = self.determine_color_id()
         self._pie_slices = self.slice_the_pie(self._color_id)
@@ -268,11 +271,12 @@ class Deck(CardCollection):
         #landnames = [landtype_map[c] for c in self.colors_needed]
         l = len(landnames)
         as_string = None
-        for i in range(self.lands_requested):
+        requested = 100-len(self.card_list)-1
+        for i in range(requested):
             if as_string is None:
                 as_string = f"{landnames[i % l]}\n"
 
-            if i == self.lands_requested - 1:
+            if i == requested - 1:
                 as_string = as_string + f"{landnames[i % l]}"
             else:
                 as_string = as_string + f"{landnames[i % l]}\n"

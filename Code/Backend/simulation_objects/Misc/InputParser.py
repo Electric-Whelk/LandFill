@@ -341,7 +341,8 @@ class InputParser:
                 self.categories[category].append(self.parse_tappedout_front_line(line))
 
     def parse_tappedout_back(self, lines):
-        category = None
+        category = self.default
+        self.categories[self.default] = []
         for line in lines:
             if self.is_tappedout_back_label(line):
                 category = re.sub(r"#", "", line)
@@ -395,7 +396,7 @@ class InputParser:
         self.categories[self.default] = []
         for line in lines:
             tokenized = line.split(" ")
-            title = tokenized[1:-3]
+            title = tokenized[1:-2]
             title = " ".join(title)
             title = title.split(" // ")[0]
             self.editions[title] = tokenized[-2]

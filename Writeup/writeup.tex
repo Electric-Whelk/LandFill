@@ -25,26 +25,25 @@
 
 \section{Introduction}
 \subsection{Overview}
-Magic: The Gathering (MTG) is a Trading Card Game (TCG) designed by Wizards of the Coast (WOTC). Players take the role of a wizard, whose deck is a library of spells with which they battle one or more similarly equipped opponents. Pursuit of the hobby thus involves mastery of both gameplay and deck construction. While tournament-level participation relies on "netdecking" - copying a decklist with a history of competitive success - the hobby is intended to have a signifciant creative component, with the unranked Commander format gaining popularity in recent years through its focus on unique and personal decks.
+Magic: The Gathering (MTG) is a Trading Card Game (TCG) designed by Wizards of the Coast (WOTC). Players take the role of a wizard, whose deck is a library of spells with which they battle one or more similarly equipped opponents. Pursuit of the hobby thus involves mastery of both gameplay and deck construction. While tournament-level participation relies on ``netdecking'' - copying a decklist with a history of competitive success - the hobby is intended to have a significant creative component, with the unranked Commander format gaining popularity in recent years through its focus on unique and personal decks \cite{CommanderFormatOverview}.
 
-In addition to spell cards, decks also contain "land" cards, which generate "mana", a resource expended to cast spells. Mana comes in five colours: White, Blue, Black, Red and Green (abbreviated respectively to W, U, B, R and G, or WUBRG collectively) - with spells requring specific colours, and lands producing one or more colours. A deck whose lands - the "manabase" of the deck - produces more colours gives the deck access to more spells, but also runs a higher risk of "color-screwing" the deck, in which a player, needing a certain colour, only draws lands of a different colour. Whereas selecting a list of spells is a stimulating ceative pursuit, choosing a deck's manabase is less so: within a set budget, and notwithstanding the minority of lands which come with effects outside mana provision, there are objectively lists of lands that will maximize a player's chances of being able to play their cards. 
+In addition to spell cards, decks also contain ``land'' cards, which generate ``mana'', a resource expended to cast spells. A deck's lands collectively form its ``manabase''. Mana comes in five colours: White, Blue, Black, Red and Green (abbreviated respectively to W, U, B, R and G, or WUBRG collectively). Spells require specific colours, and lands produce one or more colours. A deck including spells of many colours has access to more spells, but runs an increased risk of a ``colour screw'', in which the player does not draw lands of the colours they need. Whereas selecting a list of spells is a stimulating creative pursuit, choosing a deck's manabase is less so: within a set budget, and notwithstanding the minority of lands which come with effects outside mana provision, there are objectively lists of lands that will maximize a player's chances of being able to play their spells. 
 
-LandFill is a webapp that automates this aspect of deck building. Users input a list of spell cards, select some broad preferences for their manabase, and are provided with a manabase that has been optimized within those preferences to facilitate reliable casting of their spells. This optimization is necessarily approximate: Churchill \textit{et al} have demonstrated that, as it is possible to construct within an MTG game a Turing Machine whose halting is the necessary condition for a player's victory, a deck's winning strategy is undecidable \cite{churchill2019magic}; consequently, there is no way to judge which colours are necessary to play a deck's most decisive spells. Nevertheless, the heuristic that a winning MTG player is typically the one who spends the most mana over the course of the game \cite{KarstenCurve} provides an opening for the issue to be appraoched via Monte Carlo methods. Using a stripped-down MTG simulator, in which the simulated player aims only to spend as much mana as possible each turn, LandFill estimates over iterated games how effective a given manabase is. It then produces successively optimized manabases via a Hill Climbing Algorithm. While LandFill may never rival the experienced eye of a seasoned competitive deckbuilder, it is nevertheless my contention that an app that provides a list of lands of demonstrated efficacy, via a click of a button, would pay dividends for casual players in ease of deckbuilding and satisfaction of games. 
+LandFill is a webapp that automates this aspect of deck building. Users input a list of spell cards, select some broad preferences for their manabase, and are provided with a manabase that has been optimized within those preferences to facilitate reliable casting of their spells. This optimization is necessarily approximate: Churchill \textit{et al} have demonstrated that, as it is possible to construct within an MTG game a Turing Machine whose halting is the necessary condition for a player's victory, a deck's winning strategy is undecidable \cite{churchill2019magic}, meaning that it is beyond LandFill's capacity to determine what lands support the most decisive plays. Nevertheless, the heuristic that the winning MTG player is typically the one who spends the most mana over the course of the game \cite{KarstenCurve} provides an opening for approximating the optimum via Monte Carlo methods. Using a stripped-down MTG simulator, in which the simulated player aims only to spend as much mana as possible each turn, LandFill estimates over iterated games how effective a given manabase is. It then produces successively optimized manabases via a Hill Climbing Algorithm. While LandFill may never rival the experienced eye of a seasoned competitive deckbuilder, it is nevertheless my contention that an app that provides a list of lands of demonstrated efficiency, via a click of a button, would pay dividends for casual players in ease of deckbuilding and satisfaction of games. 
 
 \subsection{Thesis Layout}
-
-
+My writeup here documents the development and testing of LandFill. I will begin by outlining relevant MTG rules and design trends, and the difficulties these introduce for optimization, followed by an overview of how LandFill will approach these. I will then outline my initial consultations with MTG players, and the features they require from a manabase optimization app. Dividing LandFill into four components - a MTG card database, an MTG game simulator, an optimization algorithm implementer, and a user interface - I will then outline its structure, and justify the decisions made during development. I will then summarize a second round of user-testing, and outline the value added by LandFill. I will conclude with an evaluation of the strengths and limitations of the app, and areas for future development.
 
 \section{Problems and Proposed Solutions to MTG Manabase Optimization}
 This section will provide an overview of MTG's rules and design practices insofar as they relate to manabase optimization, and the challenges which emerge form this. It then outlines the algorithmic responses to these challenges that will be used by LandFill. It will then touch on how incorporation of this into a deployable consumer product will be tested and developed. Finally, it will situate LandFill within existing scholarship on MTG automation and optimization.
 
 \subsection{Gameplay Concepts and Terminology}
 \subsubsection{Overview}
-MTG can be played in several “Formats”, with different deckbulding stipulations but largely identical rules, an overview of which is provided here. 
+MTG can be played in several ``Formats'', with different deckbulding stipulations but largely identical rules, an overview of which is provided here. 
 
-At the start of an MTG game, each player shuffles their deck and draws a "hand" of seven cards. A player may "mulligan" a poor hand, shuffling back into the deck and drawing a replacement one, and typically incurring an increasing penalty for each mulligan performed (with exact details varying). One additional card is drawn at the start of each turn. Cards in hand may be played onto the "battlefield". Each turn, a player may play one land card, which they may use once per turn by "tapping" it (turning it 90\degree). All lands untap at the start of each turn; contingent on drawing sufficient land cards, a player should therefore have access to one mana on their first turn, two mana on their second turn, and so forth. Spell cards which supplement mana at a higher rate than this are called "ramp" spells. The spread of CMCs across a deck's spell cards is called its "curve".  
+At the start of an MTG game, each player shuffles their deck (sometimes referred to as a ``library'') and draws a ``hand'' of seven cards. A player may ``mulligan'' a poor hand, shuffling it back into the deck and drawing a fresh one. While mulligan rules vary, players typically incur an increasing penalty for each mulligan performed. One additional card is drawn at the start of each turn. Cards in hand may be played onto the ``battlefield''. Each turn, a player may play one land card, which they may use once per turn by ``tapping'' it (turning it 90\degree). All lands untap at the start of each turn. A player, if they draw sufficient land cards, should therefore have access to one mana on their first turn, two mana on their second turn, and so forth. Spell cards which increase the amount of mana available per turn at a higher rate than this are called ``ramp'' spells. 
 
-The "mana cost" of most spells includes a generic cost, payable by any mana, and any number of "pips", representing a single required colour. Figure \ref{fig:card1} shows a card requiring two black mana, one red mana, one blue mana, and four generic mana. It would thus be said to have a "cost" of UBBR4, and a "converted mana cost" (CMC) of eight. 
+The ``mana cost'' of most spells includes a generic cost, payable by any mana, and any number of ``pips'', each representing a single required colour. Figure \ref{fig:card1} shows a card requiring two black mana, one red mana, one blue mana, and four generic mana. It would thus be said to have a "cost" of UBBR4, and a "converted mana cost" (CMC) of eight. The spread of CMCs across a deck's spell cards is called its ``curve''.  
 
 \begin{figure}
     \centering
@@ -53,26 +52,28 @@ The "mana cost" of most spells includes a generic cost, payable by any mana, and
   \label{fig:card1}
 \end{figure}
 
-Each colour is produced by a "basic land: Plains (W), Island (U), Swamp (B), Mountain (R), Forest (G).  Whereas no deck may contain more than four copies of the same card (sometimes one copy, in “singleton” formats), any deck may contain any number of basic lands. In addition to the type "land", a land card may have subtypes, providing opportunities for synergy. Confusingly within the context of mana discussion, the five basic lands, in addition to being named cards, are also card subtypes – collectively called the five “basic subtypes”. Tropical Island, for example, is a non-basic land which has the subtypes Island and Forest. Any card, therefore, which references “an island” or “a forest” could have that criteria met by Tropical Island, by a Forest or by an Island. Within MTG player parlance, which will be used in this text, saying “a Forest” may refer to any card with the Forest subtype, while saying “a Basic Forest” refers to the specific card named Forest (Basic Forest, helpfully, also has the Forest subtype). 
+Each colour is produced by a ``basic land'': Plains (W), Island (U), Swamp (B), Mountain (R) and Forest (G).  Whereas no deck may contain more than four copies of the same card (sometimes one copy, in ``singleton'' formats), any deck may contain any number of basic lands. In addition to the type "land", a land card may have subtypes, providing opportunities for synergy. Confusingly, the five basic lands, in addition to being named cards, are also card subtypes, collectively called the five ``basic landtypes''. Tropical Island, for example, is a non-basic land which has the subtypes Island and Forest. Any card, therefore, which references ``an island'' or ``a forest'' could have that criteria met by Tropical Island, a Basic Forest or a Basic Island. Within MTG player parlance, which will be used in this text, saying ``a Forest'' may refer to any card with the Forest subtype, while saying ``a Basic Forest'' refers to the specific card named Forest (Basic Forest, helpfully, also has the Forest subtype). 
 
-Any card with one of these subtypes taps for the corresponding colour of mana by default. However, not every card that taps for that colour of mana has that subtype. Tropical Island, for example, taps for both G and U, as does Hinterland Harbour, which is neither a Forest nor an Island. 
+Any card with a basic landtype taps for the corresponding colour of mana by default. However, not every card that taps for that colour of mana has that subtype. Tropical Island, for example, taps for both G and U, as does Hinterland Harbour, which is neither a Forest nor an Island. 
 
-Although a small minority of lands produce more than one mana when tapped, this is exceptionally rare. A land which “taps for BUG”, taps for Black, Blue \textit{or} Green. Lands that produce two colours are called Dual Lands, while lands that produce three are called Tri Lands; the small subsect of lands that can produce all five colours are called WUBRG lands. Some lands can produce colourless mana, “C”, which is only useful in generic costs. Since 2015, WOTC have printed some spells which require specifically colourless mana, but this is rare. 
+Although a small minority of lands produce more than one mana per tap, this is exceptionally rare. A land which ``taps for BUG'', taps for Black, Blue \textit{or} Green. Lands that produce two colours are called Dual Lands, while lands that produce three are called Tri Lands; the small subsect of lands that can produce all five colours are called WUBRG lands. Some lands can produce colourless mana (C), which is only useful in generic costs. Since 2015, WOTC have printed some spells which require specifically colourless mana, but this is rare. 
 
-Lands which provide an ability outside mana production are called "utility lands," and are irrelevant to LandFill's calculations.
+Lands which provide an ability outside mana production are called ``utility lands,'' and are irrelevant to LandFill's calculations.
 
-\subsubsection{Land Balncing and Cycles}
+\subsubsection{Land Balancing and Cycles}
 \label{sec:balancinglands}
-If a card is superior to another in any context, it is considered "strictly better". Tropical Island, tapping for UG, is strictly better than both Basic Island and Basic Forest. This reflects a bygone design philosophy: WOTC have, since early sets, generally avoided printing land cards which are strictly better than basic land cards. Virtually all land cards which produce \(>1\) colours of mana are either "balanced" (given a downside), or produce mana via a more complex mechanism. Breeding Pool, for example, which is identical to Tropical Island save that it enters already tapped (and thus unusable on the turn it is played) unless the player pays 2 life when playing it. Lands are typically printed in cycles, which share a common balancing mechanism but refer to different colours. Stomping Ground, for example, has the same stipulation as Breeding Pool, but produces RG instead of UG. Cycles usually carry informal names within the community: Breeding Pool and Stomping Ground are both “shock lands.” The prevalence of cycles such as Check and Fetch lands (see Figure \ref{fig:cycles}), additionally means that a cycle with subtypes may be considered strictly better than an identical cycle without.
+Within WOTC design principles, ff card A is better than card B in at least one way, and worse in no ways, A is considered ``strictly better'' than B \cite{StrictlyBetter}. Tropical Island, tapping for UG, is strictly better than both Basic Island and Basic Forest. Since early sets, however, WOTC have generally avoided printing land cards which are strictly better than basic land cards \cite{GetReadyToDual}. Virtually all land cards which produce more than one colour of mana are either ``balanced'' (given a downside), or produce mana via a more complex mechanism. Breeding Pool, for example, is identical to Tropical Island save that it enters already tapped (and thus unusable on the turn it is played) unless the player pays 2 life when playing it. Lands are typically printed in cycles, which share a common balancing mechanism but produce different colours. Stomping Ground, for example, has the same stipulation as Breeding Pool, but produces RG instead of UG. Cycles usually carry informal names within the community: Breeding Pool and Stomping Ground are both ``Shock Lands.'' The prevalence of cycles such as Check and Fetch lands (see Figure \ref{fig:cycles}), additionally means that a cycle with basic landtypes may be considered strictly better than an identical cycle without. 
 
 \begin{figure}
     \centering
   \includegraphics[scale=0.4]{card_images/TwoCycles.jpg}
-  \caption{UW and RG lands of different cycles. Left to right: "Battle", "Shock", "Check", "Fetch", "Filter" and "Slow" Lands. Notice the "hybrid" mana cost of the filter land's second ability, meaning that requires a mana of either of its colours to activate, and the diamond marker in the output of its first ability, meaning that the first only produces colorless mana}
+  \caption{UW and RG lands of different cycles. Left to right: ``Battle'', ``Shock'', ``Check'', ``Fetch'', ``Filter'' and ``Slow'' Lands. Notice the ``hybrid'' mana cost of the filter land's second ability, meaning that requires a mana of either of its colours to activate, and the diamond marker in the output of its first ability, meaning that said ability only produces colourless mana}
   \label{fig:cycles}
 \end{figure}
 
-To illustrate the complexity of optimization in this context, consider as an example the lands Prairie Stream and Deserted Beach, both referenced in \ref{fig:cycles}. Since any situation in which Prairie Stream would enter untapped would also allow Deserted Beach to enter untapped, but the same is not true vice-versa, Deserted Beach is, taken in isolation, a stronger land. Consider, however, the following situation (in which all land cards are depicted in \ref{fig:cycles}). Two players play two identical UW decks with identical UW manabases consting of Flooded Strand, Hallowed Fountain, and multipled Basic Plains and Basic Island cards. The only difference is that one includes a Prairie Stream, and the other includes a Deserted Beach.
+
+
+To illustrate the complexity this introduces to optimization, consider as an example the lands Prairie Stream and Deserted Beach, both referenced in Figure \ref{fig:cycles}. Since any situation in which Prairie Stream would enter untapped would also allow Deserted Beach to enter untapped, but the same is not true vice-versa, Deserted Beach is, taken in isolation, a stronger land. Consider, however, the following situation (in which all land cards are depicted in Fig \ref{fig:cycles}). Two players play two identical UW decks with identical UW manabases consting of Flooded Strand, Hallowed Fountain, and multiple Basic Plains and Basic Island cards. The only difference is that one includes a Prairie Stream, and the other includes a Deserted Beach.
 
 Both decks draw the below opening hand:
 
@@ -85,63 +86,85 @@ Both decks draw the below opening hand:
 
 Since the player needs copious amounts of both U and W mana, it behoves them to use the Flooded Strand to search their library for a non-basic Plains or Island capable of producing UW. Since this hand contains no spells of CMC=1, there is no disadvantage to playing a tapped land on their first turn. The Prairie Stream player may then go and fetch the Prairie Stream at no downside. However, the Deserted Beach player has to fetch the Hallowed Fountain, leaving Deserted Beach in their library. Consider, then, that when each player shuffles for the Flooded Strand's effect, the UW land remaining in their respective library (Deserted Beach for the Deserted Beach player, and Hallowed Fountain for the Prairie Stream player) is placed on top. Since the Hallowed Fountain can come in untapped for a trivial life point investment, the Prarie Stream player therefore has the option of playing the spell that costs UU, whereas the Deserted Beach player - able to play only a tapped Deserted Beach or a Basic Plains, which produces only W - cannot do so. 
 
-Therefore, the appropriateness of Prairie Stream vs Deserted Beach to a given manabase depends on, among other factors:
+Therefore, the appropriateness of playing a Prairie Stream vs a Deserted Beach in a given manabase depends on, in addition to other considerations such as the presence of Check Lands:
 \begin{itemize}
-\item The probability of a player beginning a turn with N lands on the battlefield in which N is greater than 1 and at least two lands are basic. 
-\item The probability of a player beginning a turn with N lands on the battlefield, a fetch land in hand, and no possible set of spells to play with a mana cost of N+1
+\item The probability of a player beginning a turn with \(N\) lands on the battlefield in which \(N\) is greater than 1 and at least two lands are basic. 
+\item The probability of a player beginning a turn with \(N\) lands on the battlefield, a fetch land in hand, and no possible set of spells to play with combined CMC of \(N+1\)
 \end{itemize}
 
-This means that manbases can only be assessed in toto, and thus any lands's exclusion based on its price and availability may impact the performance of other otherwise high-performing lands in the manabase. Optimization, therefore, is not simply a matter of choosing competitively-storied lands for a player's deck. Instead, it can be thought of as a simultaneous two-part process:
+Optimization, therefore, may be thought of as a simultaneous two-part process:
 
 \begin{itemize}
-\item Replacing Basic Land cards with multicolor lands that improve colour access, until a point at which the accumulated balancing downsides of those lands start to outweigh the diminishing returns from that improved access\dots
-\item ...while choosing the multicolor lands whose downsides are the most significantly ameliorated by the specific spread of CMC and cost values of the spells in the deck, and by the interactions between those lands and other lands in the manabase. 
+\item Replacing Basic Land cards with multicolour lands that improve \(P\), until a point is reached at which the accumulated downsides of those lands start to outweigh the diminishing returns from that improved access\dots
+\item ...while choosing the multicolour lands whose downsides are the most significantly ameliorated by the specific spread of CMC and cost values of the spells in the deck, and by the interactions between those lands and other lands in the manabase. 
 \end{itemize}
+
+This makes manabase generation a Combinatorial Optimization problem. If a deck requires a manabase of \(M\) land cards, and operates with a performance of \(P\) for any given manabase (assigning a single performance metric for a deck is complicated; see \ref{sec:choiceofobjectivefunction}), the question is what combination of \(M\) cards from the set of all lands that produce one or more of the deck's colours maximizes the value of \(P\). 
+
+There are therefore two problems to solve. The first is to find a method for determining \(P\) from a particular deck. The second is inherent to most Combinatorial Optimization problems: given that these typically deal with more candidate solutions than can be feasibly investigated seperately, it is necessary to find a method of optimization that will traverse only a relevant subsection of the total search space. 
 
 \subsection{Simulation and Optimization}
-LandFill approaches this problem via the implementation of two algorithms: an internal algorithm, which simulates MTG games, and an external one, which provides the internal one with a series of increasingly optimized decks to test. These will be referred to as the “simulator” and the “optimizer”, and the broad structure of both, and the relationship between them, will be introduced below.
+LandFill approaches this problem via the implementation of two algorithms: an internal algorithm, which simulates MTG games and assesses the performance of a given manabase, and an external one, which provides the internal one with a series of increasingly optimized decks to test. These will be referred to as the ``Simulator'' and the ``Optimizer'', and the broad structure of both, and the relationship between them, will be introduced below.
 
 \subsubsection{LandFill Simulation}
 \label{sec:simulationoverview}
-The difficulty of creating an automated MTG player, as will be discussed further in section 2.7, rests on MTG's status as a game of imperfect information, with this imperfection, as highlighted by Ward and Cowling, stemming from two sources: first, the random shuffle of the deck, and second, the unknowable contents of the opposing players' hands \cite{ward2009monte}. Handily, both of these are irrelevant to automated play insofar as the goal of the player is to maximize mana expenditure, as doing so concerns only the cards already drawn into the player's own hand. 
+In MTG parlance, ``Goldfishing'' refers to testing out a deck by taking repeated turns against no opponent, and assessing the performance of the cards in the absence of opposing disruption \cite{GoldFishing}. Simulating all possible spell card interactions is an unfeasible undertaking here, and not necessarily a helpful one: Churchill \textit{et al} have demonstrated that, as it is possible to construct within an MTG game a Turing Machine whose halting is the necessary condition for a player's victory, even a deck able to model all spell interactions would not be able to interpret and execute any deck strategy\cite{churchill2019magic}. However, since our concern is only with the ability of a manabase to deploy spell cards, there is a useful heuristic to fall back on: in a game, the winning player is typically the one who spends the most mana \cite{KarstenCurve}. The simulator, therefore, need only try to spend as much mana as possible each turn. Broken down into constituent steps, the algorithm for a simulated game is as follows:
 
-This brings the Simulator into the realm of “goldfishing”, an informal term for the practice of testing out a deck by taking repeated turns against no opponent, where the issue under test is the ability of the deck to deploy its relevant cards \cite{GoldFishing}. While a comprehensive goldfishing simulator would mandate the ability to effectively encode any deck’s winning strategy – a NP-complete problem well beyond the scope of this work – encoding greater complexity in this way may incur diminishing returns regardless, as it would only reflect the deck’s performance against an opponent that did not disrupt a player’s ideal strategy. Given the heuristic (see Introduction) that a deck should aim to spend as much mana as possible, the simulator algorithm must do the following:
-
-\begin{itemize}
+\begin{enumerate}
 \item Draw an initial hand of 7 cards.
 \item Mulligan as necessary.
+\item Draw an additional card at the beginning of each turn.
 \item Identify which playable land will allow the expenditure of M mana, where M is the maximum that may be spent that turn.
 \item Play that land.
-\item Play a combination of spells with total CMC M. 
-\end{itemize}
+\item Play a combination of spells with total CMC \(C\). 
+\item Repeat steps 3-6 for each turn of the simulated game.
+\end{enumerate}
 
-While, within our heuristics, we may safely choose a combination of spells at cost M at random – since we have no way of telling which would be relevant in any given game, and can only estimate their value as an efficient use of mana – complexity is introduced by situations in which multiple lands allow for the spending of M mana, such as in the sample hand drawn in the previous section illustrating the appropriateness of Slow Lands vs Battle Lands: in the absence of any spells of CMC=1, playing either the Basic Plains or the Flooded Strand yelds M=0. The simulator, therefore, must have some capability of assessing which lands maximize expenditure on future turns. 
+Within our heuristics, we may safely choose a combination of spells at cost \(C\) at random,  since we have no way of telling which would be relevant in any given game, and can only estimate their value as an efficient use of mana. However complexity is introduced by situations in which multiple lands allow for the spending of \(C\) mana, such as in the sample hand drawn in the previous section illustrating the appropriateness of Slow Lands vs Battle Lands: in the absence of any spells of CMC=1, playing either the Basic Plains or the Flooded Strand yelds \(C=0\). The simulator, therefore, must have some capability of assessing which lands maximize expenditure on future turns. 
 
 \subsubsection{LandFill Optimization}
 \label{sec:optimizationoverview}
-In a Monte Carlo search, solution space is explored by taking the random outputs of stochastic processes, and sampling the resulting distribution to appproximate the typical values of that process \cite{metropolis1949monte}. Assuming correct function of the aforementioned simulator, a Monte Carlo assessement of a manabase would be conducted by giving it a deck, running a large number of games with it, and recording the deck's average performance. From there, LandFall can generate an optimized manabase by testing many manabase combinations and returning the highest performing one.
+In a Monte Carlo search, solution space is explored by taking the random outputs of stochastic processes, and sampling the resulting distribution to approximate the typical values of that process \cite{metropolis1949monte}. Assuming correct function of the aforementioned simulator, a Monte Carlo assessement of a manabase would be conducted by giving it a deck, running a large number of games with it, and recording the deck's average performance. The performance of a deck fed into a large number of games becomes \(P\) the objective function for the combinatorial optimization problem outlined at the end of \ref{sec:balancinglands}. 
 
-As is typical of combinatorial optimization, the search space here is vast. As will be discussed later, it was decided early in development to restrict LandFill to the singleton Commander Format, meaning that no manabases containing duplicate non-basic lands ever needs be examined; even then, however, possible combinations for a manabase of 20-40 land cards (typical for the format) number in the trillions. 
+LandFill's search space is \(L\)-dimensional, where \(L\) is the number of lands required by the deck, in which each dimension represents the quantity of a given land in the manabase (limited, in the Commander format, to values 0 or 1 for all non-basic lands). LandFill uses a variant of Hill Climbing optimization, also known as Neighbourhood Search. In Hill Climbing optimization, once an initial solution $\underline{x}_c$ is determined, all solutions in its neighbourhood $N(\underline{x}_c)$ - ie, all solutions which differ from by some simple transformation $\underline{x}_c$ - are examined. The first solution to return a higher value is adopted as the new $\underline{x}_c$ \cite{silver2004overview}.  In the context of manabase optimization, the iterations are as follows:
 
-Fortunately, approaches abound to narrow such a search space. LandFill's search space is \(L\) dimensional, where \(L\) is the number of lands required by the deck, in which each dimension represents the quantity of a given land in the manabase (limited, in the Commander format, to values 0 or 1 for all non-basic lands). As will be detailed in later sections, LandFill uses a variant of the Hill Climbing Technique, also known as Neighbourhood Search. In Hill Climbing optimization, once an initial solution $\underline{x}_c$ is determined, all solutions in its neighbourhood $N(\underline{x}_c)$ - ie, all solutions obtainable by some simple transformation, such as, in this case, the substition of one card for another - are examined, where the first higher performing value is adopted as the new $\underline{x}_c$ \cite{silver2004overview}.  In the context of manabase optimization, the iterations are as follows:
-
-\begin{itemize}
+\begin{enumerate}
 \item Generate an initial manabase, $\underline{x}_c$, for the input deck. 
-\item Conduct many simulations and determine the average performance, $F(\underline{x}_c)$ , of the deck with this manabase.
+\item Conduct many simulations and determine the sample average performance, $F(\underline{x}_c)$ , of the deck. By the law of large numbers, this can be treated as an approximation for the true average performance.
 \item Exchange a land in the deck for a different one, creating a new manabase, $\underline{x}_t$. 
 \item If $F(\underline{x}_t)$ \(>\) $F(\underline{x}_c)$, adopt $\underline{x}_t$ as the new value of $\underline{x}_c$, and return to step 2. 
 \item If not, return the original land to the manabase and return to step 2, this time making a different, previously unexplored substitution. 
 \item If all lands in the deck have been systematically replaced with every candidate land that could replace them, and no value has exceeded $F(\underline{x}_c$), return $\underline{x}_c$ as an optimized manabase.
-\end{itemize}
+\end{enumerate}
 
-A key weakness of the hill climbing approach is that it is vulnerable to local maxima. While approaches that are less susceptible to local maxima, such as genetic algorithms and simulated annealing, do exist, they are not appropriate in this context for reasons that will be discussed in later sections. However, as LandFill is designed for casual use, this is a forgivable flaw. In practice, a truly optimized manabase would account for the interactions of spell cards with the manabase, and the relative importance of particular spells at particular moments, which as stated is a NP-complete problem. Within that restriction, LandFill needs only to be able to create a more reliable manabase than a human player could in a comparable length of time to add value. 
+Since Hill Climbing is a ``greedy'' optimization algorithm, it searches for \textit{local} rather than \textit{global} maxima. There exist viable optimization algorithms, such as Simulated Annealing, which are less susceptible to this\cite{silver2004overview}. However, given that the simulator itself can only loosely approximate the decision-making process of an actual MTG Game, LandFill falls into the category of optimization problem for which ``the optimal solution'', as described by Zanakis and Evans, ``[is] 5'' \cite{zanakis1981heuristic}. To be a valuable product, LandFill needs only to be able to create a more reliable manabase than a human player could in a comparable length of time.
 
 \subsection{Development and Testing Methodologies}
-That LandFill can offer only rough approximations can be forgiven only insofar as it offers a useful service. To that end, the wider development project exists within wider Human Computer Interaction (HCI) constraints: LandFill must be flexible enough to fit easily into a range of different deck construction strategies and accommodating of non-gameplay manabase restrictions such as price, availabilty and personal preference. Indeed, the quality of LandFill’s output relates to the ease of input. Any opportunity a player has to specify a personal preference narrows the search space. 
+In software development, ``Verification'' testing tests code functionality according to designer specifications, while ``Validation'' testing tests whether the code meets user needs \cite{verificationandvalidation}.  The schedule for each of these is detailed below
 
-Moreover, LandFall is necessarily an incomplete project. While updating its databases with new cards is trivial via Cron, new cycles of dual and tri lands are printed regularly, and each one, to be incorporated in the Simulator, must be individually coded. This means that LandFall lends itself naturally to an Iterative Development approach, as continued Iteration after launch is inevitable. Accepting this means that the launch date of LandFill does not mark the end of development, and, therefore, pre-launch development must, in addition to focussing on development of the Optimizer and the Simulator as a minimum viable product, prioritize user features so as to ensure that, on launch, it has included the ones most likely to attract repeat customers.
+\subsubsection{Verification Testing}
+My schedule for verification testing was couched within an ``Iterative'' development process, whereby each feature was independently designed and tested before being added to the core product\cite{iterativedevelopment}. The Simulator and Optimizer are two of four component subsystems to LandFill, arranged like so:
 
-User testing of LandFill has therefore been divided into two stages, pre-development and pre-launch, with the former identifying unavoidable features, and the second gauging consumer satisfaction with the product. The pre-development stage consists of the following:
+\begin{enumerate}
+\item The \textit{Database} - stores information about MTG cards. 
+\item The \textit{Simulator} - simulates games using information from the database.
+\item The \textit{Optimizer} - assessess decks using performance data from the simulator. 
+\item The \textit{Interface} - allows for use of the optimizer by a lay customer.
+\end{enumerate}
+
+Since each component utilizes the one before it,, LandFill naturally lends itself to an Iterative Development process. The classic alternative of ``Waterfall Development'', in which all testing is withheld until product completion \cite{iterativedevelopment}, would in this case forbid me from factoring in shortcomings of a given component into the design of the component superceding it if those shortcomings were not discovered until after development. Moreover, iterative development puts LandFill in good stead for its anticipated lifecycle. Since WOTC regularly print new cards, and each new mechanically distinct land must be individually coded, LandFill will always need to be able to accept new additions to its codebase. 
+
+Since verification testing is to be conducted on each component seperately, testing approaches for each component will be outlined in the section of this thesis that deal with that component.
+
+\subsubsection{Validation Testing}
+Since LandFill's viability ultimately rests on its comparison to a human deckbuilder and not in its ability to find a consistent global optimum, it must:
+
+\begin{itemize}
+\item Be flexible enough to fit easily into a range of different deck construction strategies.
+\item Accommodate, via user input, game-extrinsic manabase restrictions such as price, availabilty and personal preference. 
+\end{itemize}
+
+To ensure this, in addition to validation testing conducted after development of the initial product, I conducted user research prior to development, to ensure that user needs were accounted for throughout the design process. User research consisted of the following:
 
 \begin{itemize}
 \item A series of Semi Structured Interviews, which gauge the way prospective users create MTG decks and the manabases thereof. 
@@ -149,20 +172,36 @@ User testing of LandFill has therefore been divided into two stages, pre-develop
 \item A Kano Questionnaire, the questions of which are based on results of the previous evaluations, in order to guide development priorities. 
 \end{itemize}
 
-The post-development stage consists of the following:
+Validation tests, conducted after the development, consisted of the following steps.
 
 \begin{itemize}
-\item A TLX questionnaire assessing ease of use.
-\item An additional set of semi-structured interviews, to determine whether the manabase proposed by the software is one the player will use.
+\item Two seperate deckbuilding exercises, one of which allowed use of LandFill, and one of which did not.
+\item Two Task-Load Index (TLX) questionnaires, to determine the relative difficulty of each. 
+\item A semi-structured interview to assess the testee's opinion of the software, and their suggestions for future developments.
 \end{itemize}
 
-\subsection{Relevance to Existing Scholarship}
+\subsection{Relevance to Existing Material}
 \label{sec:relevancetoexistingscholarship}
-Much modern academic interest in MTG, from a computer science perspective, rests on Ward and Cowling’s landmark 2009 paper, “Monte Carlo Search Applied to Card Selection in Magic: The Gathering”, which hypothesizes that methods used to automate other imperfect information games, such as Bridge and Poker, may be applied to MTG \cite{ward2009monte}\cite{esche2018mathematical}\cite{alvin2021toward}. A decade hence, interest in this problem has resurged thanks to the rollout of WOTC’s virtual MTG venue, MTG:Arena, which, although primarily a player-vs-player (PvP) engine, features an AI opponent, nicknamed Sparky, who, although useful in gameplay tutorials, presents no challenge to experienced players\cite{alvin2021toward}. 
+LandFill engages with three areas of prior research:
 
-As mentioned, the disengagement of LandFill's simulator component with MTG's status as a game of imperfect information puts it somewhat outside the realm of scholarship inaugurated by Ward and Cowling. Insofar as MTG is studied from a computer science perspective, analyses are chiefely concerned with how to encode strategic thinking in MTG AI insofar as that pertains to relationships between sequences of castable spells. Ward and Cowling's research focusses on algorithimic approaches to initiating combat between creature spells once cast \cite{ward2009monte}, while Alvin \textit{et al}, for example, explore graphical representation of card synergies \cite{alvin2021toward}; in both cases, effective use of lands to play spells is trivial, as the deciding factor in which spell to cast is based on the exigencies of the game state. Indeed, Esche's 2018 research into simulation eschews casting any multicolour spells, testing his virtual player only on a mono-red deck \cite{esche2018mathematical}. Since the question of whether a given set of spells comprising between them pips of multiple colours can be played the mana proeduce by a set of multicolour lands proved nontrivial, LandFill helps fill a small gap in the existing literature.
+\begin{itemize}
+\item Academic interest in MTG automation. 
+\item Use of computer models in manabase analysis within the MTG player community.
+\item Existing deckbuilding apps.
+\end{itemize}
 
-Much more significant, however, is LandFill's extension of the often non-academic scholarship conducted around MTG deck optimization by players and writers. Guides exist on how to write basic scripts in order to use montecarlo techniques to analyse a given deck \cite{MonteCarloGuide}. A central figure in this practice is Frank Karsten, who has written extensively on how to determine a manabase for a multicoloured deck. In his seminal series of articles, \textit{How Many Sources Do You Need to Consistently Cast Your Spells?} Karsten eschews analysis of individual spells in favour of probabalistic analysis of hypothetical spells of a given mana cost (including both generic and coloured pips), using the hypergeometric formula to assess how many lands capable of producing color C are required in a deck in order to guarantee a roughly ninety percent change that a player is able to cast the most color-intensive spell in their deck of CMC M on the turn that their Mth land is played. Karsten's results are plotted in a grid, shown in \ref{fig:KarstenCurve}.
+I will outline its engagement with these areas below.
+
+\subsubsection{Academic Interest in MTG Automation}
+Much modern academic interest in MTG, from a computer science perspective, rests on Ward and Cowling’s landmark 2009 paper, “Monte Carlo Search Applied to Card Selection in Magic: The Gathering”. Ward and Cowling hypothesize argue that methods used to automate other imperfect information games, such as Bridge and Poker, may be applied to MTG \cite{ward2009monte}\cite{esche2018mathematical}\cite{alvin2021toward}. A decade hence, interest in this problem has resurged thanks to the rollout of WOTC’s virtual MTG venue, MTG:Arena, which, although primarily a player-vs-player (PvP) engine, features an AI opponent, nicknamed Sparky, who, although useful in gameplay tutorials, presents no challenge to experienced players\cite{alvin2021toward}. 
+
+Ward and Cowling point to the inherent difficulty of automating games of imperfect information: strategic thinking in MTG is confounded by the unknowability of both the opponent's hand and the next card to draw. Since LandFill's goal is simply to spend as much mana as possible each turn, these concerns are both rendered irrelevant: the hand is simply a set of resources to be allocated as efficiently as possible. This puts it somewhat outside the realm of scholarship inaugurated by Ward and Cowling, which is chiefely concerned with how to encode strategy given the complexity of gameplay and the limited information. Drawing on methods used in other imperfect information games, such as Go and Poker, Ward and Cowling's automated players use Monte Carlo analysis to examine possible outcomes of combat between creature spells once cast \cite{ward2009monte}, while Alvin \textit{et al} explore graphical representation of card synergies \cite{alvin2021toward}; in both cases, effective use of lands to play spells is trivial, as the deciding factor in which spell to cast is based on the exigencies of the game state. Indeed, Esche's 2018 research into optimal MTG strategy eschews casting any multicolour spells, testing his virtual player only on a mono-red deck \cite{esche2018mathematical}. LandFill's simulator represents a small engagement with this line of research, as it offers a fast method of determining optimal mana usage.
+
+Automation of deckbuilding, rather than of play, is more relevant to LandFill but less well studied. Sverre Johann Bj{\o}rke and Knut Aron Fludel explore the use of a genetic algorithm to generate decks out of a set card pool (as is done by human players in the ``Limited'' format); however, their results are inconclusive. As their work relied on a full automated AI player - which, as established, still underperform compared to human players - their generated decks only performed well against other decks also played by the same automated player, and faltered against human opponents. LandFill represents a narrowing of the ambitions of Bj{\o}rke and Fludel's work. From a purer mathematics perspective, Riccardo Fazio and Salvatore Iacono have conducted some research into how to quantify the mana requirements of a deck; however, their work is limited only to assessing the quantity of each colour required, and not how these quantities are spread across mechanically distinct lands.
+
+\subsubsection{Manabase Analysis within the Player Community}
+Guides exist on how to write basic scripts in order to use Monte Carlo techniques to analyse a given deck \cite{MonteCarloGuide}. A central figure in this practice is Frank Karsten, who has written extensively on how to determine a manabase for a multicoloured deck. His seminal series of articles, \textit{How Many Sources Do You Need to Consistently Cast Your Spells?}, use Monte Carlo search to produce a grid (see Figure \ref{fig:KarstenCurve}) outlining how many lands of colour \(C\) you need depending on the most demanding spell requiring colour \(C\) in your deck. Rather than simulate gameplay, Karsten draws random hands for each possible spell (abstracted to just its mana cost), to determine the number of lands of the spell's colour that would need to be included in the deck in order to reliably cast it on the turn when the \(M'th\) land is played, where \(M\) is the spell's CMC.
+
 
 \begin{figure}
     \centering
@@ -172,15 +211,42 @@ Much more significant, however, is LandFill's extension of the often non-academi
 \end{figure}
 
 
-While this article engages broadly with the issue of how many multicolour lands are necessary in a deck before they incur diminishing returns in deck playability, the second key optimization question, concerning the severity of the downsides of different land cards in the context of different decks and manabases, is beyond this. While it is possible to use hypergeometric analysis to determine the probability of drawing a colored land at a helpful time, supplementing this by analysis of whether that land will be able to use its full productive capacities on the turn it is drawn requires an understanding of lands have already been drawn, and how they have been played, which depends on the cards drawn in subsequent hands before the one where the spell of cost M is played. This is where Monte Carlo methods prove their utility. Karsten has used Monte Carlo methods to analyse manabase choices in the context of the Limited format (which features small decks and a heavily restricted set of lands to choose from)\cite{TappedDualsLimited} and the Standard format around the release of the Ixalan Set\cite{IxalanManabases}, using a similar methodology to LandFill's: creating a basic mana-spending gameplay algorithm and using it to run a high number of simulations. Since, however, these simulations only cover the lands avalable in these formats, data returned only hints at deckbuilding principles, and cannot spontaneously generate a manabase by application of those principles. LandFill, therefore, may be seen as an attempt to take the methodologies used by Karsten for these specific contexts, and generalize them into a widely applicable deckbuilding tool in the vein of his grid. 
+While this article engages broadly with the issue of how many multicolour lands are necessary in a deck before they begin to incur diminishing returns, it cannot assess when these diminishing returns become a greater handicap than expanded colour access. To understand whether that land will be able to use its full productive capacities when played as the \(M\)'th land requires an understanding not just of the coloured lands drawn previously, but the behaviour of these lands in a state of play. This is where I believe the implementation of a stripped down play simulator will pay dividends. 
 
-It is also worth comparing LandFill's approach to those used by existing deck construction webapps, of which there are three that have comparable functionality. 
+This approach has been used by Karsten elsewhere, to analyse manabase choices in the context of the Limited format (which features small decks and a heavily restricted set of lands to choose from)\cite{TappedDualsLimited} and the Standard format around the release of the Ixalan Set\cite{IxalanManabases}. In the latter article, Karsten's engagement is limited to one nonbasic land cycle - Check Lands - and only to their probability of entering tapped, not the probability that their entering tapped incurs a gameplay downside in the context of a given deck. In the former article, Karsten engages explicitly with the question of at what point the disadvantages of dual lands outweigh the advantages of greater colour access, making this work a natural precursor to LandFill. Karsten's simulator is likely to converge on a more reliable performance estimate for a given manabase, running orders of magnitude more times than LandFill does. However, in addition to lacking deck construction functionality, its simplified game simulation model only uses one type of nonbasic land, and utilizes a much more straightforward decision making process. Ultimately, this restricts this analysis into simply a matter of deck-building best-practices. LandFill, therefore, may be seen as an attempt to adapt Karsten's methodology for this area of his research into into a widely applicable deckbuilding tool in the vein of his grid. 
 
-The first is MTG: Arena, which is capable of automatically filling a deck with an appropriate proportion of each basic land in accordance with the deck's colours. While this is relevant for the Standard and Limited formats largely played on Arena, the deckbuilding restrictions of which only offer few nonbasic lands, it is less appropriate for other formats, in which a sizeable proportion of a manabase will be nonbasic; it is also only accessable to decks constructable via the limited set of cards available on MTG Arena. 
+\subsubsection{Existing Deckbuilding Apps}
+I have identified three pieces of software which support the same phase of deck-building as LandFill, and will examine their functionality below. 
 
-The second is ManaGathering, a database of nonbasic lands sorted by colour. Players input the colours of their deck and are given a list of nonbasics within those colours, sorted by cycle. Although ManaGathering has no optimization or manabase generation facility, it fulfills a similar role in the deck building process as LandFill, facilitating the choice of generically strong mana-producing lands once utility lands or lands fulfilling a niche strategic concern of the deck have been chosen. A broad success metric for LandFill is that it should return a better result than a player using ManaGathering could in a comparable time.
+The first is MTG: Arena (screenshot in Figure \ref{fig:arenascreenshot}), which is capable of automatically filling a deck with an appropriate proportion of each basic land in accordance with the deck's colours. While this is relevant for the Standard and Limited formats largely played on Arena, the deckbuilding restrictions of which only offer few nonbasic lands, it is less appropriate for other formats, in which a sizeable proportion of a manabase will be nonbasic; it is also only accessable to decks constructable via the limited set of cards available on MTG Arena. 
 
-Most sophisticated of these is Archidekt, which combines a basic-land allocator \textit{a la} MTG: Arena with a communal "Package" system. Players create "packages" of lands which are saved publically on the site, and may be imported by other players. For example, a player may get a list of colour-appropriate lands of a reasonable price by importing a given manabase package and then automatically generating a list of basic lands. The question of whether LandFill or ArchiDekt are capable of producing more reliable manabases is unlikely to be answered in the timeframe of this investigation, but LandFill represents an alternative approach; morever, as Archidekt's functionality is limited to decks that are stored within its database, it offers a more flexible service to deckbuilders who may prefer other collection-trackingd databases such as TappedOut or Moxfield.
+\begin{figure}
+    \centering
+  \includegraphics[scale=0.25]{card_images/MTGArenaScreenshot.jpg}
+  \caption{A screenshot of a deck under partial construction in Arena, with the decklist on the right-hand side column. Basic Plains and Basic Islands are automatically added as white and blue spells are.}
+  \label{fig:arenascreenshot}
+\end{figure}
+
+The second is the website ManaGathering (screenshot in Figure \ref{fig:managathering}), a database of nonbasic lands sorted by colour. Players input the colours of their deck and are given a list of nonbasics within those colours, sorted by cycle. Although ManaGathering has no optimization or manabase generation facility, it fulfills a similar role in the deck building process as LandFill, facilitating the choice of generically strong mana-producing lands once utility lands or lands fulfilling a niche strategic concern of the deck have been chosen. A broad success metric for LandFill is that it should return a better result than a player using ManaGathering could in a comparable time.
+
+\begin{figure}
+    \centering
+  \includegraphics[scale=0.25]{card_images/ManaGathering.jpg}
+  \caption{A zoomed-out screenshot of an excerpt from the ManaGathering page for a WUB deck. Note the WU, UB and BW lands arranged by cycle.}
+  \label{fig:managathering}
+\end{figure}
+
+Finally, the website Archidekt (screenshot in Figure \ref{fig:archidekt}) combines a basic-land allocator \textit{a la} MTG: Arena with a communal "package" system. Players create "packages" of lands which are saved publically on the site, and may be imported by other players. For example, a player may get a list of colour-appropriate lands of a reasonable price by importing a given manabase package and then automatically generating a list of basic lands. The question of whether LandFill or ArchiDekt are capable of producing more reliable manabases is unlikely to be answered in the timeframe of this investigation, but LandFill represents an alternative approach; morever, as Archidekt's functionality is limited to decks that are stored within its database, it offers a more flexible service to deckbuilders who may prefer other collection-tracking databases such as TappedOut or Moxfield.
+
+\begin{figure}
+    \centering
+  \includegraphics[scale=0.25]{card_images/ArchidektScreenshot.jpg}
+  \caption{A screenshot of community created land packages on Archidekt, categorized by, among other things, price and color. These can be imported into a decklist.}
+  \label{fig:archidekt}
+\end{figure}
+
+It is worth noting that while Archidekt is the only card database to offer this feature, it is not the only card database. Others include Moxfield, TappedOut and DeckBox, all of which allow the player to upload a decklist to be stored and visually displayed. Although providing very different value to LandFill, they will be referenced throughout this writeup, as, as will be covered in \ref{sec:initialusertests}, decklists both entered into and extracted from LandFill will often likely be moving to and from such databases.
+
 
 \subsection{Library/Language Choices}
 My choices of language and libraries were informed by two main priorities. Due to my short turnaround time, it was important that I use libraries and langauges with substantial community support for web development. Meanwhile, as a usable app, LandFill benefits from high performance so as to maximize the number of simulations it can run, but does not need to offer a complex user interface nor store user data, prompting me to favour high-performance tools over complex and scalable ones.
@@ -199,25 +265,25 @@ With both the inherent challenges of manabase optimization and the set of potent
 \item The Web Interface - a user-friendly web interface designed according to the priorities set out in \ref{sec:initialusertests}
 \end{itemize}
 
-\section{Pre-Development User Testing Output}
+\section{Pre-Development User Research}
 \label{sec:initialusertests}
 \subsection{Overview}
-I began development by holding one-on-one user testing sessions with eight MTG players. The sessions were divided into two parts, a Semi-Structured Interview and a Think-Aloud Mockup Test, with an additional Kano Questionnaire circulated to users afterwards. 
-\subsubsection{Semi-Structured Interview}
+I began development by holding one-on-one user research sessions with eight MTG players. The sessions were divided into two parts, a Semi-Structured Interview and a Think-Aloud Mockup Test, with an additional Kano Questionnaire circulated to users afterwards. 
 
-As LandFill needs to be incorporable into a players' deck construction processes, I was interested in expanding my understanding of how players went about creating manabases moreso than I was interested in specific feedback about potential features of the product. In recognition of this, I chose to lead with a semi-structured interview, a data-gathering method in which the interviewer treats a series of pre-prepared questions as broad discussion prompts. My questions were as follows:
+\subsubsection{Semi-Structured Interview}
+In addition to specific feedback on possible features, I was interested in understanding more about how players typically create manabases. I therefore chose to lead with a Semi-Structured Interview. This is a data-gathering method in which the interviewer stays flexible on how and in what sequence questions are asked, to allow unexpected themes and topics to emerge \ref{manuel2004sage}. My questions were as follows:
 
 \begin{itemize}
 \item How do you approach selecting lands for a deck, and how does this vary across formats you play?
 \item How do you approach acquiring lands for a deck (eg, do you assemble a list of cards to purchase, do you assemble a list of cards you already have - and if so, do you have a good knowledge of what lands you own)?
-\item What role does existing deckbuilding support apps, such as Moxfield and Tappedout, play in your process?
+\item What role do existing deckbuilding support apps, such as Moxfield and TappedOut, play in your process?
 \item Do you factor the strategy of your deck into land choices in terms of pure mana production (ie, not including utility lands).
-\item How do you mulligan? How does this varya cross formats that  you play?  
+\item How do you mulligan? How does this vary across formats that  you play?  
 \end{itemize}
 
 \subsubsection{Think-Aloud Mockup Testing}
 
-In a "Think-Aloud Evaluation", users are asked to narrate aloud their thoughts and opinions while attempting to use a system \cite{wright1991use}. This is an appropriate method for early development since it can be conducted on a "mockup", ie, an aesthetically versimillitudinous but non-functional representation of the planned interface. Users are occasionally prompted for input, and may be given solutions to problems if necessary, but are largely expected to use the product unassisted. 
+In a ``Think-Aloud Evaluation'', users are asked to narrate aloud their thoughts and opinions while attempting to use a system \cite{wright1991use}. This is an appropriate method for early development since it can be conducted on a ``mockup'', an aesthetically versimillitudinous but non-functional representation of the planned interface. Users are occasionally prompted for input, and may be given solutions to problems if necessary, but are largely expected to use the product unassisted. The LandFill mockup presented to users is displayed in Figure \ref{fig:mockup}. 
 
 \begin{figure}
     \centering
@@ -227,27 +293,26 @@ In a "Think-Aloud Evaluation", users are asked to narrate aloud their thoughts a
 \end{figure}
 
 
-The LandFill mockup presented to users is displayed in figure \ref{fig:mockup}. Since the mockup did not include contextual hints, users were told when they moved their mouse over the Pain Threshold input that this represented the amount of life users were willing to lose to lands such as Shock Lands which require a life point investment.
 
 \subsubsection{Kano Questionnaire}
-
-Kano Analysis is an approach to user evaluation that questions the emotioanl response of a prospective user to the presence or absence of a given feature.  Questionnaire questions were developed after analysis of the intial user testing results, so as to prioritize which features, suggested by individual testers, were reflexive of widespead demand and warrented focus within LandFill's limited development timeframe. A generic Kano template is displayed in \ref{fig:kanoq}. This approach was applied to the following proposed features for LandFill:
+\label{kanoquestionnaire}
+Kano Analysis is an approach to user evaluation that examines the emotional response of a prospective user to the presence or absence of a given feature. I developed a Kano Questionnaire after analysis of the Interview and Think-Aloud data, so as to prioritize which features, suggested by individual testers, were reflective of more widespread demand. A generic Kano template is displayed in Figure \ref{fig:kanoq}. My questionnaire listed the following proposed features:
 
 \begin{itemize}
   \item The option to exclude from consideration all lands which always enter tapped.
   \item The option to exclude from consideration all lands above a certain price. 
   \item The option to exclude any individual land or cycle from consideration via the player's own preference. 
   \item The option to mark some lands as mandatory for LandFill to include.
-  \item The option to "weight" lands, so that LandFill prioritizes a player's preferred cycles in its evaluation.
-  \item The option to input a list of lands as well as a list of nonlands and have LandFill choose the best of these. 
-  \item The option to tell LandFill not to recommend "Off-Color Fetches" - ie, a Fetch Land that can search for an Island or Plains in a UR deck, as fetching Islands is still useful for that deck.
+  \item The option to ``weight'' lands, so that LandFill prioritizes a player's preferred cycles in its evaluation.
+  \item The option to input a list of lands as well as a list of nonlands and have LandFill choose the best of these, rather than explore all possible lands.
+  \item The option to tell LandFill not to recommend ``Off-colour Fetches''. For example, a Fetch Land that can search for an Island or Plains can still fetch Islands in a UR deck. This was considered distasteful by one test subject.
   \item The abiilty to see an image and description of any suggested land/cycle.
-  \item The ability to view performance metrics from a deck with a given manabase.
+  \item The ability to view performance metrics for the deck after manabase generation.
   \item A FAQ explaining how LandFill determines lands.
   \item The ability to specify how much life a player is comfortable to lose to land cycles that require a life point investment, ie, Shock Lands.
   \item The ability to view low-performing lands in a given deckilst, to inform a player's choice of supplemental mana generation spells, or what to replace on the release of new cycles. 
   \item The ability to generate manabases for, respectively, the Commander, Modern, Legacy, Pauper and Limited formats.
-  \item The ability to copy a decklist into and out of LandFill with minimal reformatting from, respectively, the following Deck database apps: TappedOut, Archidekt, Moxfield, Deckbox. 
+  \item The ability to copy a decklist into and out of LandFill with minimal reformatting from, respectively, the following database apps: TappedOut, Archidekt, Moxfield, DeckBox. 
 \end{itemize}
 
 \begin{figure}
@@ -258,33 +323,45 @@ Kano Analysis is an approach to user evaluation that questions the emotioanl res
 \end{figure}
 
 \subsection{Emerging Themes}
-While initial user-testing yielded multiple small design considerations, and will be cited as various development decisions are outlined throughout this writeup, key themes are outlined below:
+While initial user-testing yielded multiple small design considerations, and will be cited as various development decisions are outlined throughout this writeup, key themes are outlined below.
 
 \subsubsection{Commander/Casual Preference}
-Commander, Limited and Pauper were the three most popular formats among interviewees. Of these three, a plurality of respondents openly acknowledged that Commander would be the only format for which they would consider using LandFill. Limited players felt that, since the format is played using cards assigned to the player at random immediately before a game, deck construction is restricted largely to basics, and there is rarely time to upload a decklist to an online service, especially on a mobile device. In Pauper, which restricts decks to only common and cheap cards, use of utility lands, or lands with specific synergistic qualities, is so normalized that manabase strategies prioritize this over consistent mana generation. While fewer interviewees had much experience with more competitive formats such as Standard, Legacy and Modern, they raised doubts as to the ability of any spontaneous manabase generator to gain traction within those scenes, as players in those formats habitually use existing deck archetypes, and attach to them manabases with proven competitive credentials. In responses to the Kano Questionnaire, most respondents expressed that they would like/be netural on the support for non-Commander formats, but only one respondent identified any format other than Commander as a minimum expectation. 
+Commander, Limited and Pauper were the three most popular formats among interviewees. Of these three, a plurality of interviewees acknowledged that Commander would be the only format for which they would consider using LandFill. The other two were disqualified by users in general on the following grounds:
 
-It was decided, therefore, to make the initial launch of LandFill solely a Commander product. Commander's deckbuilding restrictions are markedly different from othe formats, and will be discussed at length in my outline of the Simulator; given this distinctiveness, I deemed it more important to make a product that worked seamlessly for Commander decks, rather than one that attempted to accommodate potential decks across a wider range of formats. 
+\begin{itemize}
+\item Limited - in this format, cards are assigned to a player at random immediately before a game. Decklists are therefore not generally uploaded to any databases, and inputting all cards into LandFill, especially on a mobile device, would be impractical.
+\item Pauper - this format restricts decks to only common and cheap cards. In Pauper, use of utility lands, or lands with specific synergistic qualities, is so normalized that manabase strategies prioritize this over consistent mana generation.
+\end{itemize}
 
-\subsubsection{Preference over Strategy}
+While fewer interviewees had much experience with more competitive formats such as Standard, Legacy and Modern, several interviewees raised doubts as to the ability of any spontaneous manabase generator to gain traction within those scenes, as players in those formats habitually use existing deck archetypes, and attach to them manabases with proven competitive credentials. In responses to the Kano Questionnaire, most respondents expressed that they would like/be neutral on support for non-Commander formats, but only one respondent identified any format other than Commander as a minimum expectation. 
+
+I therefore decided that I would restrict LandFill to being solely a Commander product for initial development. Commander's deckbuilding restrictions are markedly different from other formats, and will be discussed at length in my outline of the Simulator (see \ref{sec:thecommanderformat}). I therefore deemed it more important to make a product that worked seamlessly for Commander decks, rather than one that attempted to accommodate potential decks across a wider range of formats. 
+
+\subsubsection{Lack of Strategic Thinking but Strong Preferences}
 \label{sec:nostrategy}
-When asked about how the strategy of a given deck informed the choice of lands, nearly all players said that it did so, but almost solely in regards to the ancillary effects of certain cycles – ie, Gain Lands (tapped dual lands that give one life on entry) being popular in decks that trigger from gaining life. Only one said that they would actively choose slower but more colour-diverse lands for slower decks. However, when presented with the Mockup outlined in \ref{fig:mockup}, all users swiftly devoted themselves to using the tickboxes to remove lands or cycles that they did not want to have included in the deck, despite having been told to imagine this mockup returning a fully optimized list of lands. Several users also expressed a desire for a weighting functionality, so that they may specify lands which they prefer. 
+When asked about how the strategy of a given deck informed their choice of lands, nearly all test subjects said that it did so, but almost solely in regards to the ancillary effects of certain cycles – ie, Gain Lands (tapped dual lands that increase the player's life point total by 1 on entry) being popular in decks that trigger from gaining life. Only one said that they would actively choose slower but more colour-diverse lands for slower decks. 
 
-Players also expressed a dislike of certain categories of lands, including dual lands which invariably enter tapped and off-color fetches (see \ref{sec:personas}). 
+However, when presented with the Mockup outlined in \ref{fig:mockup}, all users swiftly devoted themselves to using the tickboxes to remove lands or cycles that they did not want to have included in the deck, despite having been told to imagine this mockup returning a fully optimized list of lands. Several users also expressed a desire for a weighting functionality, so that they may specify lands which they prefer. 
 
-The lack of interest in strategic decisions in manabase assembly validates LandFill's use-case, as it suggests that, by testing lands against the needs of the deck, LandFill is definitionally putting more consideration into land selection than a player. However, player input needs to include both a positive component - in which players insist on the inclusion of suboptimal lands such as Gain Lands because of the strategies they facilitate - and a negative component, in which players are given extensive leeway to remove lands from consideration. 
+Some testees also expressed a dislike of certain categories of lands or cycles, ie, any cycle of dual land that only ever enters the battlefield tapped, or any off-colour Fetch Land (see the relevant listed feature in \ref{sec:kanoquestionnaire}).
 
-Additionally, the minority of players who did factor strategy into their manabase choices did so by accepting a greater risk of lacking the necessary colors to play spells in exchange for a minimal risk of nonbasic lands entering tapped in decks that wanted to win on earlier turns, reflecting a high-risk/high-reward strategy. For this reason, it is important that LandFill allow players to specify how many turns they wanted a simulated game to run for. 
+The lack of strategic decision-making in manabase assembly validates LandFill's use-case, as it suggests that, by testing lands against the needs of the deck, LandFill is putting more consideration into land selection than a typical player. However, it is clear that player input needs to include both:
+
+\begin{itemize}
+\item A positive component, in which players can force inclusion of potentially suboptimal lands such as Gain Lands due to deck strategy.
+\item A negative component, in which players are given extensive leeway to remove lands from consideration. 
+\end{itemize}
 
 \subsubsection{Deckbuilder Personas}
 \label{sec:personas}
-Interviewees broadly designed manabases in one of two ways, embodied in the below personas:
+Testees broadly designed manabases in one of two ways, embodied in the below personas:
 
 \begin{itemize}
-\item Persona A, who possesses a large collection of land cards and, on creation of a new deck, selects from this collection a selection of lands they like in these colours.
-\item Persona B, who develops a new deck including lands and then orders these land cards for it.
+\item Persona A, who possesses a large collection of land cards and, on creation of a new deck, selects lands in the approrpiate colours from this collection.
+\item Persona B, who develops a new deck and chooses lands based on abstract preference, and then orders those lands.
 \end{itemize}
 
-This prompted me to ask interviewees which of the following two models of LandFill they would prefer:
+This prompted me to ask testees which of the following two models of LandFill they would prefer:
 
 \begin{itemize}
 \item Model 1 - LandFill, in addition to taking a decklist of nonland cards, also takes a list of land cards that the player might have found in their collection, and returns the optimum subsection of these.
@@ -296,39 +373,56 @@ I expected a preference towards Model 1 to be strongly associated with Persona A
 While this was a majority consensus, and all Kano respondents said they would be able tolerate the absence of Model 1 functionality, some users did express a desire for Model 1 functionality, making it a viable route for future development of LandFill. However, the initial design covered in this writeup will adhere to Model 2. 
 
 \subsubsection{Flexible Input Parsing}
-All users polled made use of at least one online database (a plurality used TappedOut, with Moxfield and Deckbox also being poopular). In the Think-Aloud evaluation, they copy pasted decklists from these sources into LandFill, and said they would return the list of outputted lands there. Interestingly, many copied not from the inbuilt export feature of these sites, but instead by simply copying the homepage. 
+All users polled made use of at least one online database (a plurality used TappedOut, with Moxfield and DeckBox also being popular). In the Think-Aloud evaluation, they copy pasted decklists from these sources into LandFill, and said they would return the list of outputted lands there. Interestingly, many copied not from the inbuilt export feature of these sites, but instead by simply copying the decklist as it is displayed on the page.
 
-This suggests LandFill would benefit from a flexible input parsing device that can accept a decklist presented in the formats corresponding to both exported lists and copy+pasted front pages of these sites. Moreover, TappedOut allows for categorization of cards into custom types, which are included in the decklist when copied. The parser, therefore, must be able to recognise these custom types and parse them not as cards but as keys to a dict object which contains the list of cards corresponding to that category, so that, on output, the deck can be re-formatted and pasted back in.
+This suggests LandFill would benefit from a flexible input parsing device. LandFill should be able to accept a decklist pasted in from both the export features and front pages of all these databases, and format its outputs so as to be input into these services. Moreover, TappedOut and Archidekt allows for categorization of cards into custom types, which are included in the decklist when copied. The parser, therefore, must be able to recognise these custom types and parse them not as cards but as keys to a dict object which contains the list of cards corresponding to that category, and then display accordingly on output. This avoids players losing their custom categories when they utilize LandFill.
 
 \subsubsection{Mulligans}
 \label{sec:mulliganheuristic}
-Players were not able to describe any consistent rules on which they based their decision to mulligan; all subjects said the decision would be based not just on the castability of spells in the hand with the lands drawn, but also the strategy enactable via those cards. It is not, therefore, my priority to provide a means to assess a given LandFill user's mulligan preferences. For the initial design, the mulligan heuristic will be built into the simulator. 
+No testee was able to describe any consistent principles on which they based their decision to mulligan. All testees said the decision would be based not just on the castability of spells in the hand, but also the strategy enactable via those cards. It is not, therefore, my priority to provide a means to replicate a given LandFill user's mulligan preferences. For the initial design, the mulligan heuristic will be built into the simulator. 
 
 \subsubsection{Life Loss, Cost, and the Knapsack Problem}
 \label{sec:knapsack}
-Because user testing was conducted before the development of the Hill Climbing algorithm, it included two proposed features which provied unimplementable: total cost, referring to the total cost of the manabase, and pain threshold (see 3.1.2). In theory, these could be adhered to simply by discounting any manabase that exceeded these values. In the context of Hill Climbing, however, this runs afoul of the NP complete "Knapsack Problem" inasmuch as no algorithm exists that can restrict the search space to only these combinations while providing a neighbourhood to any input value that is also guaranteed to fit within this criteria; the algorithm may, for example, refuse to accept a manabase of a set price and thus never become the neighbour of a cheaper maximum. 
+Because user testing was conducted before the development of the Optimizer, I suggested two proposed features which provied unimplementable:
 
-In the absence of these features as defined, it is worth considering how the principles they embody may be embedded in LandFill's design. The "Max Price per Card" input in Figure \ref{fig:mockup} serves as a proxy for "price" and allows players to request a cheaper overall deck. Since, however, the accumulated price of the deck will not be known until completion of the simulation, this highlights the necessity of a post-completion "re-run" feature, by which players may remove individual expensive cards from consideration and then re-run the optimizer without having to return to an earlier stage in the input process.
+\begin{itemize}
+\item Total manabase cost.
+\item The maximum amount of life a player was happy to lose to lands, such as Pain Lands and Shock Lands, which require a life point investment (this value is set via the "Pain Threshold" input on \ref{fig:mockup}; that testees unanimously found this wording confusing is ultimately irrelevant, as the feature was not included). 
+\end{itemize}
 
-Life Loss, interestingly, proved to be a negligible concern among Kano respondents, and playtesters during the think aloud did not cite the pain threshold feature as important to them. This surprised me, as life loss is a common way of balancing otherwise strictly superior lands. Rather than a player input, during development, the life penalty of a given land was considered instead a tie-breaker development - ie, a land requiring life investment would not be favored over a comparably designed land without a life penalty. The implementation of this is discussed in \ref{sec:landprioritization}.
+These are theoretically easy to determine for any decklist. Manabase cost can be determined from the sum price of each card, data which can be easily included in the Database. While tracking life expenditure would be more difficult, as it would require the Simulator to try and minimize life point expenditure in a situation where there are multiple ways to spend the same amount of mana, it would also be possible to return the average life point penalty incurred over a Monte Carlo search along with the general performance metric. However, these are both examples of the 0-1 Knapsack Problem, itself a NP-hard combinatorial optimization problem, in which a subsection of weighted items must be chosen from a larger set that minimize the total weight (with weight, in this case, representing respective average life damage and card cost)\cite{martello1990knapsack}. Since this would involve simultaneously optimizing multiple areas of deck design, it would represent a sizeable increase in computational complexity for LandFill.
+
+Surprisingly, subjects were broadly ambivalent on both of these features. During the Think Aloud evaluation, no subjects attempted to make use of either. Kano data introduces some more nuance. The ability to specify an upper limit of life loss was something all but one respondant would consider desirable, although none considered it a minimum requirement, nor its absence to be something they would "dislike". The ability to specify price limits performed similarly, save that one respondent did indeed consider it a minimum requirement. This suggests that, while it is not worthwhile to simultaneously attempt to optimize these metrics while optimizing mana production, these features are not useless, and it is worth finding some approximate representation of them in design. My approach to the issue of life loss is covered in \ref{sec:landprioritization}. My approach to price consideration is covered in \ref{sec:preferences}.
 
 \section{The Database}
 \subsection{Database Requirements}
-The database in which LandFill stores card objects will need regular updating by the site owner. This is for two reasons. First WOTC regularly releases sets of new MTG cards. Second, since LandFill allows users to request cards below a certain price, the database must keep track of the fluctuating price of MTG cards. 
+The database in which LandFill stores card objects will need regular updating by the site owner. This is for two reasons:
 
-In a given session, the database will be queried at two points: first, to determine the mana costs of the input cards, and second, to identfiy a list of candidate lands for the manabase. Since the first of these points necessarily must be a series of individual queries, response time is a factor. This means that the database must be stored locally: an early prototype used the Scrython API (to be discussed in \ref{sec:databasesource}) to fetch requested cards from an existing online MTG database, and took several minutes to retrieve a list of 50 nonland cards due to a combination of connection latency and the need to avoid overwhelming the server. 
+\begin{itemize}
+\item WOTC regularly releaseses new sets of MTG cards.
+\item Since LandFill will factor price consideration into its choices, the database must reflect the up-to-date price of a given card.
+\end{itemize}
 
-To accommodate both constraints, the database therefore must be able to regularly update itself from an online database while storing the information locally. 
+In a given session, the database will be queried at two points:
+
+\begin{itemize}
+\item When a user's decklist is added, to determine the mana costs of nonland cards.
+\item To identify a list of candidate lands for the manabase.
+\end{itemize}
+
+This creates two constraints for the database: it must be up-to-date, and have reasonable response times over multiple queries for individual objects. An early prototype used the Scrython API (see \ref{sec:databasesource}) to fetch requested cards from an existing online MTG database. While this guaranteed up-to-date information, it more than ten minutes to retrieve a list of 50 nonland cards due to a combination of connection latency and the need to avoid overwhelming the server. 
+
+To accommodate both constraints, the database must store information locally, but be easily updatable. 
 
 \subsection{Choice of Online Database - ScryFall/Scrython}
 \label{sec:databasesource}
-Although several projects exist that offer MTG card data for downloading, these are maintained by for the comparatively small and undemanding market of MTG programmers, and not the much larger community of MTG players. As a result, they suffer from slow updates– mtgio API, for example, is several sets out of date at time of writing. Others, like mtg.json, include large amounts of extraneous data on card reprints to parse through. 
+I explored several possible sources of MTG card data to download. Mtg.json, a json representation of all printed cards, is thorough but lists reprinted cards seperately, creating large amounts of extranious data. Mtgio API is more streamlined, but is at time of writing several sets out of date.  
 
-Fortunately, there is a comprehensive and player-focussed database of MTG cards, “Scryfall”, which offers an API for code integration, for which a python library, “Scrython” has already been developed. Scrython accepts card queries using the format of ScryFall's advanced search option, and returns a list of dict objects listing card attributes, referred to within LandFill's code and this writeup as SCOs (Scrython Card Objects). LandFill's database, thererefore, is a translation of these SCOs to SQLAlchemy's ORM format. Allowing for small pauses to prevent server overuse, downloading all ~30,000 cards (at time of writing) takes around one hour, and could easily be run weekly, or in response to new sets and notable fluctuations (typically prompted by the announcement of card reprints or the banning/unbanning of cards in certain formats).
+I ultimately chose to use the database “Scryfall”, which is predomenantly used by players rather than programmers; I felt that this wider userbase would ensure more up-to-date information. ScryFall offers an API for code integration, for which a python library, “Scrython” has already been developed. Scrython accepts card queries using the format of ScryFall's advanced search option, and returns a list of dict objects listing card attributes, referred to within LandFill's code and this writeup as ``SCOs'' (Scrython Card Objects). LandFill's database, thererefore, is a translation of these SCOs to SQLAlchemy's ORM format. Allowing for small pauses to prevent server overuse, downloading all ~30,000 cards (at time of writing) takes around one hour, and could easily be run weekly, or in response to new sets and notable fluctuations (typically prompted by the announcement of card reprints or the banning/unbanning of cards in certain formats).
 
 In addition to ease of access ScryFall has the advantage of listing the colours produced by a given land card, eliminating the need to parse this from the card text. Its most significant shortcomings pertain to price data: it only offers a price in EUR and USD and not GBP, and it fails to list the price for a small minority of cards. As a simple fix for the former, LandFill uses the CurrencyConverter library to determine the price in GBP from the price in EUR. The latter would require a more complex code fix to scrape an alternate database on download if a price is not found on ScryFall, which is considered out of scope for the initial release. Given the small number of cards affected, it is acceptable at the current stage to enter these prices manually. 
 
-ScryFall also has the advantage of listing, as an attribute for a given land card, what colors of mana that land is capable of producing. 
+ScryFall also has the advantage of listing, as an attribute for a given land card, what colours of mana that land is capable of producing. 
 
 
 \subsection{Database Layout}
@@ -345,6 +439,11 @@ The two upper rows of tables in \ref{fig:databaselayout} map the many-to-many re
 
 Although not every attribute of a SCO is embodied in a model, in this initial development stage, LandFill errs in favour of storing too much data rather than too little, meaning that some card attributes, including \texttt{card.\allowbreak\_silver\allowbreak\_bordered} and \texttt{card.\allowbreak\_last\allowbreak\_printing}, are not relevant to this writeup. Attributes will be explained as they become relevant. 
 
+\subsection{Database Management}
+I developed a class, DatabaseManager, which contains simple methods that bulk-transfer card information from Scryfall to the Database via Scrython. Within my codebase, a single instance of DatabaseManager is created in one script, \texttt{manage\allowbreak\_database.py}. Simply running this script will fully update the database with all existing cards. Pauses are built into the script using Python's \texttt{time} module to avoid overburdening ScryFall's servers. 
+
+To facilitate debugging during development, ScryFall is never queried for \texttt{all} cards. Instead, a for-loop is used to systematically acquire cards in order of mana cost, and add them to the database only after all have been downloaded. This means that, when errors occurred during download, I could resume the download from midway through the loop rather than starting from the beginning.
+
 \subsection{Representing Multiple-Faced Cards}
 Some cards have two faces, each of which may be considered two different cards with their own text and mana cost. Although most cards have only one face, to keep within the strictures of 1st Normal Form, faces are considered to have a many-to-one relationship with cards. Broadly, the Face object has attributes used to determine its interaction with a given game state: ie, its casting cost and potential Basic Land types (stored in the \texttt{faces.\allowbreak\_typeline} attribute), while the Card object holds attributes relating to the viability of a card within a deck and a given user's preferences (IE, what colours of mana it produces, the cost of the card).
 
@@ -356,6 +455,13 @@ Some cards are a spell card on one side and a land card on another. A card is co
 Recall that land cards within the same cycle are mechanically identical but refer to different colours in their text. For this reason, each cycle has a string attribute, \texttt{cycle.\allowbreak\_regex}, consisting of a Regular Expression. If DBManager matches the regex of a cycle to a card, that card is connected to that cycle via Foreign Key. Since some cycles are mechanically identical to each other but are distinguished by the presence of basic land types or whether the constituent cards have the “snow” card type, these are both also stored as Boolean cycle attributes, to distinguish matching cards.
 
 Although some spell cards are arranged into cycles - mechanically similar cards where each costs a different colour or set thereof - this is irrelevant to LandFill, and the cycles table therefore stores only land cycles. 
+
+\subsection{Database Verification Testing}
+A secondary script, \texttt{test\allowbreak\_db.py}, conducts both Unit Tests and Property Tests on the database. 
+
+In Unit Testing, the output of code is compared to a pre-computed result \cite{PropertyTesting}. In this case, Unit Tests check that there are an expected number of total cards and an expected number of total lands in each cycle. Unit testing cycles is important in ongoing maintenance, to ensure that any new regex patterns added for new cycles does not accidentally capture existing ones. 
+
+In Property Testing, random inputs are generated for code, and outputs are checked to ensure they fall within broad parameters \cite{PropertyTesting}. In this case, the Property tests randomly selects a sample of database entries and checks that none have more than two faces, and that none have two faces with the same text. This is more expedient than testing all cards, and allows reasonable confidence that the database is populated as expected.
 
 
 
@@ -444,7 +550,7 @@ An option explored fairly comprehensively during development was to determine al
 
 In this case, thera are \(3 * 3 * 2 * 2 * 2 * 2 * 2 * 1 * 1 = 288\) combinations, which must be re-calculated on every played land. While this can be done lazily, this does not save signficant time, as any half-completed lazy calculations must be needlessly re-commenced if another lump is played before a new land is played. Several methods were trialled to circumvent this problem.
 
- One initial solution, to save recalculating combinations each turn, was to store the list of combinations as an attribute of the Battlefield Object. Whenever a new land, producing C colours, its first colour would be added to all existing copies, and then C-1 shallow copies of all pre-existing would be made. Even without new combination generation, however, simply iterating through the existing combinations to update them proved a debilitating bottleneck. Moreover, it greatly problematized removing lands from the battlefield, something necessary both due to gameplay stipulations (ie, the "Bounce Lands", which generate two mana per tap but require an already-played land to be returned to the player's hand) and computational shortcuts. Some lands, such as Verge Lands and Filter Lands (see \ref{fig:cycles} in \ref{sec:balancinglands}), produce different colors of mana depending on what other lands on the battlefield. This means that, when determining what land to play, the simulator must account for not only what mana that land can produce, but what mana it facilites pre-played lands to produce. The easiest way to simulate this is to "play" each land, assess lump playability with it played, and then return it so that th enext land can be tested.  
+ One initial solution, to save recalculating combinations each turn, was to store the list of combinations as an attribute of the Battlefield Object. Whenever a new land, producing C colours, its first colour would be added to all existing copies, and then C-1 shallow copies of all pre-existing would be made. Even without new combination generation, however, simply iterating through the existing combinations to update them proved a debilitating bottleneck. Moreover, it greatly problematized removing lands from the battlefield, something necessary both due to gameplay stipulations (ie, the "Bounce Lands", which generate two mana per tap but require an already-played land to be returned to the player's hand) and computational shortcuts. Some lands, such as Verge Lands and Filter Lands (see \ref{fig:cycles} in \ref{sec:balancinglands}), produce different colours of mana depending on what other lands on the battlefield. This means that, when determining what land to play, the simulator must account for not only what mana that land can produce, but what mana it facilites pre-played lands to produce. The easiest way to simulate this is to "play" each land, assess lump playability with it played, and then return it so that th enext land can be tested.  
  
  A more promising solution was to Memoize the land inputs. Because any two untapped UB (for example) lands are identical, the number of combinations to Memoize appears at first comparatively small, as each land can be canonicalized only as its colours; moreover, basic lands do not need to be canonicalized, and simply reattached to each permutation afterwards (see \ref{fig:canonicallyidentical})
 
@@ -455,7 +561,7 @@ In this case, thera are \(3 * 3 * 2 * 2 * 2 * 2 * 2 * 1 * 1 = 288\) combinations
   \label{fig:canonicallyidentical}
 \end{figure}
 
-This functioned acceptably for a 3-color deck. Memoization via Python's pickle module produced a .pkl file of around 1000 megabytes. However, the trialling a 5 color deck instantly multiplied this size 100-fold, and caused hill climb increments that took upwards of 40 minutes even with a ratio of only around 1 cache miss for every 50 hits. 
+This functioned acceptably for a 3-colour deck. Memoization via Python's pickle module produced a .pkl file of around 1000 megabytes. However, the trialling a 5 colour deck instantly multiplied this size 100-fold, and caused hill climb increments that took upwards of 40 minutes even with a ratio of only around 1 cache miss for every 50 hits. 
 
 Ultimately, I settled on modelling the question as a Linear Assignment Problem using SciPy’s \texttt{linear\allowbreak\_assingment} function. Using the layman's terms example used by Koopmans and Beckman, \cite{koopmans1957assignment}, a Linear Assignment algorithm assesses how to use a set of plots of land to place a equally-sized set of factories, by mapping out the cost of each factory were it to be placed in a given plot as a 2D matrix, and identifying the set of plot-factory pairs incurring the lowest overall cost. 
 
@@ -508,7 +614,7 @@ Since the BW land removes more colours of mana from the hand, it would be played
 Some land cycles required significantly more complex simulation logic, outlined below. For sample card text for the respective cycles, see \ref{fig:cycles}. HEY GIRL ADD DOUBLEFACED LANDS TO YOUR CYCLES. 
 
 \subsubsection{Fetch Lands}
-During assessment of lump castability, a Fetch Land is considered to produce mana of color C mana if the deck currently contains a land for which it can search that can produce C, and that searchable land would return \texttt{land.enters\allowbreak\_untapped(game) = True} for the current game state. The search itself happens is set when the fetch land is tapped for mana, at which point the land is moved to the graveyard, and calls the \texttt{game.filter\allowbreak\_by\allowbreak\_most\allowbreak\_produced()} method from the current game object to narrow down the lands it is capable of fetching, adding an extra argument to specify that it the method must also account for pips in the hand currently accounted for by additional lands in the \textit{hand}, rather than just on the battlefield. This encourages the searchland to make new colours of mana available. 
+During assessment of lump castability, a Fetch Land is considered to produce mana of colour C mana if the deck currently contains a land for which it can search that can produce C, and that searchable land would return \texttt{land.enters\allowbreak\_untapped(game) = True} for the current game state. The search itself happens is set when the fetch land is tapped for mana, at which point the land is moved to the graveyard, and calls the \texttt{game.filter\allowbreak\_by\allowbreak\_most\allowbreak\_produced()} method from the current game object to narrow down the lands it is capable of fetching, adding an extra argument to specify that it the method must also account for pips in the hand currently accounted for by additional lands in the \textit{hand}, rather than just on the battlefield. This encourages the searchland to make new colours of mana available. 
 
 While production of WUBRG by a Fetch Land has the standard cost of 2 in the Linear Assignment, production of "Gen" is weighted at cost 1, and "None" has cost 0, forcing the Lump to map its pips from toher lands if possible. This This prevents the SearchLand from being forced to search for a colour it does not need to in order to pay a generic cost, and allows it to, as much as possible, find the best land for the current hand rather than just for the spell.
 
@@ -519,23 +625,26 @@ To ensure that the Fetch Land searched a land even on a turn when no lump is pla
 Such lands are given, at substantiation, two "SubLand" objects, each of which is a Land child class, attributes of which are set via intiatialization parameters rather than a passed ORM model. A Land is replaced with its SubLands prior to its inclusion in a Linear Assignment calculation.
 
 \subsubsection{Filter Lands}
-A Filter Lands produces C and has two sublands, each of which may produce either of its colors. In order to account for a situation in which multiple filter lands may pay for the abilities of others, the following recursive algorithm is used:
+A Filter Lands produces C and has two sublands, each of which may produce either of its colours. In order to account for a situation in which multiple filter lands may pay for the abilities of others, the following recursive algorithm is used:
 
 \begin{itemize}
 \item If a Lump is castable on a battlefield in which Filter Lands are tapped for C, it is cast.
 \item If not, filterlands are placed into a new list, $\underline{L}_f$. A permutation of this list is lazily generated via \texttt{itertools.permutations()}, from first Filter Land \(F(1)\) to nth Filter Land \(F(n)\). 
 \item A new list, $\underline{L}_nf$, containing all non-Filter Lands is generated, including the subset of lands capable of paying \(F(1)\)'s cost, \(P(1)\) to \(P(n)\). \(P(1)\) is removed from $\underline{L}_nf$, and the sublands of \(F(1)\) are added. 
-\item Repeat steps 2 and 3, starting with $\underline{L}_nf$ each time, until all Filter Lands have been either replaced with their sublands, or tap for colorless if there is no land capable of paying for them, with \(F(n)\) being the final one so replaced.
+\item Repeat steps 2 and 3, starting with $\underline{L}_nf$ each time, until all Filter Lands have been either replaced with their sublands, or tap for colourless if there is no land capable of paying for them, with \(F(n)\) being the final one so replaced.
 \item If the Lump is castable with the resulting list of lands and sublands, cast it. 
-\item If it is not, return the land \(P(1)\) that had been removed at the recursion level when the sublands of \(F(n)\) had been added, and remove \(P(2)\). Assess the castability of the Lump again, casting it if possible.
-\item If no lands \(P(1)\)-\(P(n)\) in the list at the recursion level of \(F(n)\) allow for the lump to be played, return to step six for the list at the recursion level of \(F(n-1)\). 
-\item If the recursion level of \(F(1)\) is reached, generate a new permutation with new values of \(F(1)\) and \(F(n)\)
+\item If it is not, return the land \(P(1)\) that had been removed at the recursion depth when the sublands of \(F(n)\) had been added, and remove \(P(2)\). Assess the castability of the Lump again, casting it if possible.
+\item If no lands \(P(1)\)-\(P(n)\) in the list at the recursion depth of \(F(n)\) allow for the lump to be played, return to step six for the list at the recursion depth of \(F(n-1)\). 
+\item If the recursion depth of \(F(1)\) is reached, generate a new permutation with new values of \(F(1)\) and \(F(n)\)
 \end{itemize}
 
 Although this requires testing a large number of permutations if a lump is not castable, it does not provide a significant performance bottleneck. 
 
 \subsubsection{Dual-Faced Lands}
-A Dual-Faced Land is given two sublands, and an attribute, \texttt{land.committed}, initialized to None. When tapped for "Gen" or "None", if \texttt{land.committed = None}, a subland is selected via \texttt(game.filter\allowbreak\_by\allowbreak\_most\allowbreak\_produced()) in a similar manner to Fetch Lands. When tapped for colored mana, \texttt{land.committed} is set to the subland capable of producing tha tcolour. If \texttt{land.committed != None}, the land is tapped as though it were the subland assigned to that attribute. The Battlefield object sets \texttt{land.committed} to None when it gives the land to another cardCollection. Like Fetch Lands, a Double Faced Land has a lower weighting to tap for non-Generic during linear assignment.
+A Dual-Faced Land is given two sublands, and an attribute, \texttt{land.committed}, initialized to None. When tapped for "Gen" or "None", if \texttt{land.committed = None}, a subland is selected via \texttt(game.filter\allowbreak\_by\allowbreak\_most\allowbreak\_produced()) in a similar manner to Fetch Lands. When tapped for coloured mana, \texttt{land.committed} is set to the subland capable of producing tha tcolour. If \texttt{land.committed != None}, the land is tapped as though it were the subland assigned to that attribute. The Battlefield object sets \texttt{land.committed} to None when it gives the land to another cardCollection. Like Fetch Lands, a Double Faced Land has a lower weighting to tap for non-Generic during linear assignment.
+
+\subsection{Simulator Verification Testing}
+Testing of the Simulator was done via optional \texttt{samplehand = []} and \texttt{sampletopdeck = []}arguments passed to \texttt{Game.run()}. Both are arrays of card names as strings, which, if included, are extracted from the deck and placed either in the hand or at the front of the deck object after it is shuffled. This allowed me to run Unit Tests on the Battlefield and Hand objects at each turn following the setting of a sample hand, to ensure play behaviour was as expected. 
 
 \section{The Optimizer}
 \subsection{Constituent Classes}
@@ -554,7 +663,7 @@ The LandPrioritization class simultaneously ameliorates three problems in the de
 
 It is useful, therefore, to encode "strict betterness" in such a way that a land is never tested against a strict superior capable of producing its colours at any hill climb increment, and that equivalent lands that differ only in life point commitment are considered strict superiors/inferiors to each other. 
 
-MonteCarlo is therefore given a LandPrioritization object, which maps out strict superiority/inferiority relationship. Land A is considered  is considered strictly better than Land B if it is capable of producing all colors that Land B does and either:
+MonteCarlo is therefore given a LandPrioritization object, which maps out strict superiority/inferiority relationship. Land A is considered  is considered strictly better than Land B if it is capable of producing all colours that Land B does and either:
 
 \begin{itemize}
 \item Never enters tapped, while Land B sometimes does.
@@ -575,29 +684,30 @@ Strict Betterness is mapped in \ref{fig:strictbetterness}
 
 Land objects belonging to the MonteCarlo are "registered" with the LandPrioritization. After all have been registered, each land is assigned its strict betters according to its cycle. While this was initially modelled as a simple dict object comparing a given cycle to its superiors, a more complex class was deemed necessary to accommodate situations in which a player requested a cycle with both inferiors and superiors be removed from consideration; in such cases, LandPrioritization "cascades" through, applying the superiors of the removed land to its inferiors. 
 
-\subsection{Choice of Optimization Algorithm}
-(EG hill climb, simulated annealing)
-During development, the use of an Evolutionary Algorithm, a Simulated Annealing algorithm, and Steepest-Ascent Hill Climbing algorithm were all considered, with the latter being ultimately chosen. This subsection will go through each of these methods and outline reasons for their inclusion/exclusion.
+\subsection{Optimization Algorithm}
 
-\subsubsection{Steepest Ascent Hill Climbing - Chosen}
-LandFill improves on the "Simple" Hill Climb algorithm set out in \ref{sec:optimizationoverview} by implementing instead a "Steepest Ascent" Hill Climb, also known as "method descent." At every increment, rather than adopting as a new value for $\underline{x}_c$ the first input in its neighbourhood $N(\underline{x}_c)$ to return a higher value, as in Simple Hill Climbing,, it examines all inputs in the neighbourhood and chooses the one that offers the greatest improvement over the current value $\underline{x}_c$. In the context of LandFill, this means that at every increment, all possible combinations of lands to remove and all possible combinations of lands with which to replace it are explored.
+\subsubsection{Outline of Steepest Ascent Hill Climbing Algorithm}
+\label{sec:steepestascentoutline}
+LandFill improves on the "Simple" Hill Climb algorithm set out in \ref{sec:optimizationoverview} by implementing instead a "Steepest Ascent" Hill Climb, also known as "method descent." At every increment, rather than adopting as a new value for $\underline{x}_c$ the first input in its neighbourhood $N(\underline{x}_c)$ to return a higher value, as in Simple Hill Climbing,, it examines all inputs in the neighbourhood and chooses the one that representing the highest rate of improvement. Since all lands must be entered into the deck in discrete quantities, this can be calculated easily by modelling all exchanges and selecting the one offering the highest improvement. This is, however, time consuming to calculate, adding a search space of \[N \times M\] to each increment, where $N =$ is the number non-mandatory lands in the deck and $M =$ number of lands in the MonteCarlo with all strict superiors in the deck, so that all possible exchanges can be tested. 
 
-The size of the search space at each increment is equal to \[
-N \times M
-\]
-where $N =$ number of non-mandatory lands in the deck, 
-and $M =$ number of lands in the MonteCarlo with all strict superiors in the deck.
+Heuristically this can be divided into two steps: first, identifying the worst land in the deck, and second, identifying the best land to replace it with. The manner in which LandFill does this is outlined in \ref{sec:eachincrement}. This divison offers Steepest Ascent Hill Climbing a key advantage over other optimization methods such as Simulated Annealing, Evolutionary Algorithms, or even Simple Hill Climbing: "LandFill repeatedly swaps out the worst land in your deck for the best land that could replace it" is an intuitive summary of the process. Since LandFill makes decisions in place of a human user at a level of statistical/algorithmic abstraction beyond what could be readily offered to them for customization, it needs to operate at what THE SUMBARINE GUYS described as a high level of automation, which, as has become a topic of considerable interest given the rise of recommendation and advertising algorithms, raises issues of trust. See \& Lee's 2004 examination of the topic is instructive here: 
 
-\subsubsection{Evolutionary Algorithm}
-\subsubsection{Simulated Annealing}
+"Trustworthy automation is automation that performs efficiently and reliably. Achieving this performance sometimes requires very complex algorithms that can be extremely hard to understand. To the extent that system performance depends on appropriate trust, there may be some circumstances in which making automation simpler but less capable outweighs the benefits of making it more complex and trustworthy but less trustable"
+
+How this informs frontend design is covered in \ref{sec:progress}.
+
+
+\subsubsection{Other Options}
 Simulated Annealing is a variant of the Neighbourhood Search algorithm that avoids becoming trappedlocal maxima by introducing an element of randomness. At any given increment, the function may return a higher score but decline to accept this as a new value, with the probability of this occurrance dependent on a "temperature" variable that decreases as the search space is traversed. 
 
-As will be demonstrated in \ref{sec:provscum}, within a number of simulated games that can be run in a user-appropriate timeframe, the chance of two decks scoring comparably when there is only one card different between them, in a way that does not reflect which of the two cards is stronger, is non negligible, essentially introducing a stochastic element on its own. One approach which was explored, however, was a Simulated-Annealing inspired method, using the same search structure, ie, starting off open to some suboptimal decisions and gradually becoming less forgiving to them over time. As trialled in LandFill, this algorithm worked by replacing several lands at once, intially swapping a sizeable proportion of the starting basic manabase with each increment, and accepting fewer and fewer lands each time. 
+As will be demonstrated in \ref{sec:propvscum}, within a number of simulated games that can be run in a user-appropriate timeframe, the chance of two decks scoring comparably when there is only one card different between them, in a way that does not reflect which of the two cards is stronger, is non negligible, essentially introducing a stochastic element on its own. 
 
+One approach I did trial, however, applied the "temperature" concept from Simulated Annealing to a Neighborhood Reduction schema. In Neighborhood Reduction, moves that are unlikely to lead to an optimal solution are discarded, saving processing time. Recall that the main synergy by which lands improve each other involves synergy between basic lands or lands with basic land types, and that the algorithm starts with a manabase consisting entirely of basic lands. As will be seen in \ref{sec:propvscum}, a Check Land is functionally identical to a Shock Land when they are the only nonbasic cards in a manabase, which prompts the question as to whether it is worthwhile to check all lands at every decrement of the number of basic lands in the deck. In later iterations, however, when the deck contained fewer basic lands, the performance of Shock Lands in the deck diminished rapidly. To take advantage of this, I trialled an algorithm in which a declining temperature governed the number of lands swapped out of the deck at each increment: initial steps swapped out the worst \(N\) lands in the deck for the best performing \(N\) lands tested individually. As the value of \(N\) decreased, each swap became smaller, and thus each land when subjected to cardtrial was tested against a more accurate representation of the decklist in the form to which it would be introduced. This meant, essentially, that while initial iterations largely tested lands on general quality, later iterations took more time to test lands on their synergy with the existing manabase. While this did offer runtime improvements, it was ultimately not chosen, given that Neighborhood Reduction methods carry some inherent risk of suboptimality \cite{salhi2019neighbourhood}, and the same runtime improvement could ultimately be achieved more simply, and with greater user consent, by simply advising them to automatically mark high performing cycles such as Shocklands and Fetchlands for mandatory inclusion. 
 
 
 
 \subsection{Choice of Performance Metrics}
+\label{sec:choiceofobjectivefunction}
 \subsubsection{Overview}
 \label{sec:performancemetricsoverview}
 To test different performance metrics, four sample decks containing the same nonland cards in colours BUG were submitted to Trial objects outside the context of the Hill Climbing algorithm:
@@ -664,7 +774,6 @@ Disappointingly, neither of these methods prove more able to capture subtle perf
 Given this, it is worth noting that \(P\) presents several design advantages. First, it is faster: given that any value of wasted mana greater than 0 is equally discrediting, games can be abandoned the second any mana is wasted. Secondly, it is a simpler metric. While this will be discussed in more depth in \ref{sec:userchoice}, this investigation thus far has been carried out under the assumption that, as these metrics are done at a level of statistical abstraction that does not translate neatly into MTG strategy, the criterion is built into the code and not customizable by the user. Accepting this, it is important to nonetheless explain to the user the criterion, and a user should not be expected to have an understanding of Cumulative Frequency Analysis in order to understand by what metric the produced decklist is considered "optimized". That a deck has been found to have a certain probability of wasting zero mana in a game is much more comprehensible. 
 
 
-
 \subsection{The Hill Climbing Algorithm}
 \subsubsection{Setup}
 Once the user has selected preferences, the Deck and MonteCarlo objects are instantiated. Since both are CardCollection objects, GameCards are assigned to each accordingly:
@@ -690,18 +799,113 @@ Once the user has selected preferences, the Deck and MonteCarlo objects are inst
 Basic Lands, rather than a random sample of nonbasic lands, are used as the starting input thanks to the principle of diminishing returns set out in \ref{sec:balancinglands}.
 
 \subsubsection{Each Increment}
+\label{eachincrement}
+With a new manabase added, MonteCarlo creates a new Trial object for the deck. \texttt{trial.run()} simulates a set number $\underline{G}_r$ of games, and, for each, appends to attribute \texttt{trial.wasted\allowbreak\_games} a boolean value representing whether any mana was wasted this game. GameCard objects also contain a \texttt{GameCard.wasted\allowbreak\_games} array, and this is updated with the same value as the Game on every Land object for which \texttt{GameCard.mandatory = False} and which was drawn during the game. Every land to which the simulated player has access, essentially, takes responsibility for the success or failure of the Game. The Trial then uses this information to rank all cards in the deck by performance, and then resets all values of \texttt{GameCard.wasted\allowbreak\_games} to empty arrays. The lowest ranking card is set as \texttt{Trial.worst\allowbreak\_performing\allowbreak\_card}. 
+
+With the worst card so established, as outlined in \ref{sec:steepestascentoutline}, the next step is to identify the strongest card to replace it. This is more complicated, given the small performance differences between two decks that differ only on one card - especially since, as each candidate replacement card must be tested at each increment, it is not practical to run as many simulations as was used in \texttt{trial.run()}.Instaed, for each candidate card, MonteCarlo calls a new method: \texttt{Trial.card\allowbreak\_test(Land)}. This runs as follows for input land \(L\), where \(T\) refers to the number of turns for the simulated game plus the number of cards (7) in an opening hand, and $\underline{G}_c$ is the number of games simulated by the function:
+
+\begin{enumerate}
+\item \texttt{Trial.worst\allowbreak\_performing\allowbreak\_card} is removed from the deck and replaced with \(L\).
+\item A simulation is run.
+\item If \(L\) or any lands capable of searching the library for \(L\) are in the top \(T\) cards of the deck, the game is run as normal.
+\item If not, \(L\) is randomly added to some position within the top \(T\) cards of the deck.
+\item If a mulligan occurs, steps 3 and 4 are repeated.
+\item The game is run. 
+\item Steps 2-5 are repeated $\underline{G}_c$ times. 
+\item \(L\) is removed from the deck and replaced with \texttt{Trial.worst\allowbreak\_performing\allowbreak\_card}.
+\end{enumerate}
+
+The reason for the division of step 3 and 4 is because for any reasonable size of \(T\), the chance of drawing \(L\) in the opening hand, or before any lands capable of searching for it, is extremely significant, and once a land is in the player's hand, it becomes an invalid target for a Fetch Land. The importance of this is best illistrated with the Triome cycle, which are basic-landtyped taplands which tap for three colours. A deck forced to draw a tapland every game incurs a significant penalty which may overcome its need for colours; however, a deck with many Fetch Lands may benefit from those Fetch Lands being given the option of Fetching a three-colour land on a turn when extra mana is not needed. 
+
+ \texttt{Trial.card\allowbreak\_test(Land)} retuns to MonteCarlo the percentage of games for which zero mana was wasted with the specified substitution, and MonteCarlo replaces texttt{Trial.worst\allowbreak\_performing\allowbreak\_card} with the land that returns the highest percentage. 
+
+ I assessed possible values for $\underline{G}_r$ and $\underline{G}_c$ based on their ability to produce similar manabases when a MonteCarlo was run ten times using the same initial deck. I judged this by calculating the mean of the Jaccard Indices for each combination of two manabases within each set of ten. This produced the below data:
+
+ \begin{center}
+\begin{tabular}{| m{5em} m{5em} m{10em} m{10em} |} 
+ \hline
+ $\underline{G}_r$ & $\underline{G}_c$ & Average Jaccard Index & Runtime  \\ [0.5ex] 
+ \hline\hline
+ 100 & 50 & 0.678 & 13 seconds \\ 
+ \hline
+ 100 & 100 & 0.693 & 16 seconds \\
+ \hline
+ 500 & 100 & 0.717 & 36 seconds \\
+ \hline
+ 1000 & 200 & 0.697 & 1m 23 seconds \\
+ \hline
+ 500 & 1000 & 0.705 & 5m 31 seconds \\
+ \hline
+ 2000 & 400 & 0.710 & 4m 46 seconds \\
+ \hline
+ 10000 & 2000 & 0.815 & 21m 32 seconds\\ [1ex] 
+ \hline
+\end{tabular}
+\end{center}
+
+While the Jaccard Index broadly increases with higher values of $\underline{G}_r$ and $\underline{G}_c$, small alterations in these values do not produce striking differences; even the above data includes clear outliers, and is unlikely to be reliable. A substantial improvement requires a tenfold increase in the number of simulated games, which brings with it a disqualifying runtime loss (it should also be noted here that this this test was done with a three-colour deck; in a five-colour deck, with many more candidate land to be tested at each increment, the runtime penalty would be even greater). For the initial version, I used a value of 1000 $\underline{G}_r$ and 200 for $\underline{G}_c$. 
 
 
-\subsection{Limitations}
+
+\subsubsection{Halting}
+Figure \ref{fig:rateofimprovement} shows the rate of improvement of a deck at each step of the algorithm. The displayed pattern of a steep initial improvement that gradually shallows, with multiple small local maxima along the way, is indicative of most decks tested. Repeated application of the algorithm to an identical deck suggests that these local maxima are random performance outliers, and not true local maxima within the combinatorial optimization. 
+
+\begin{figure}
+    \centering
+  \includegraphics[scale=0.25]{card_images/xavsalsampleimprovement.jpg}
+  \caption{Rate of improvement in percentage of wasteless games for a BUG deck, where the X axis represents Hill Climb increments and the Y axis shows percentage of wateless games.}
+  \label{fig:rateofimprovement}
+\end{figure}
+
+This means that rather then halting when a maxima is reached, the halting criterion must trigger when the rate of improvement drops below a certain threshold - for the data in figure \ref{fig:rateofimprovement}, this would be around the 33rd-40th increment. This requires smoothing of the data, to avoid triggering the hatling criterion during the descent after a local maxima. I trialled two filtering methods:
+
+\begin{itemize}
+\item Smoothing the line with a Savitsky-Golay filter to remove the data noise causing the local maxima, and then halting when the derivative of the resulting line reduced below zero.
+\item Calculating the mean result across window length \(W\) from the most recent score generated, and comparing it with the mean result from the window of the same length before that. The system would halt when the mean of the prior window subtracted from the mean of the current window fell below zero. 
+\end{itemize}
+
+While the Savitsky-Golay method is the more sophisticated of the two, trialling both found it to require a much larger window, as is demonstrated in \ref{fig:savolvsroll}. Whereas a Savitsky-Golay derivative can fall below zero, and thus trigger halting, at around the same time as the rolling average does if the Savitsky-Golay window is significantly larger, if the windows are of comparable size, the Savitsky-Golay filter retains too much data noise and triggers too soon. The window-size of the halting algorithm represents a lower limit of how many iterations LandFill requires, and allowing a smaller window-size allows players who use large numbers of utility lands or who clearly specify their own preferential mandatory cycles to be rewarded with lower optimization times. 
+
+\begin{figure}
+    \centering
+  \includegraphics[scale=0.25]{card_images/savgolvsrollingav.jpg}
+  \caption{Outputs of the rolling average and the Savitsky-Golay derivative halting functions when applied to the data shown in Figure \ref{fig:rateofimprovement}; in both cases, the rolling average used a window size of 3, while the Savitsky-Golay filter window was set respectively at 3 (left) and 11 (right)}
+  \label{fig:savgolvsroll}
+\end{figure}
+
+\subsection{Optimizer Verification Testing}
+\label{optimizervertest}
+Verification Testing of the optimizer is difficult, it is impractical to assess a manabase's performance over real Commander games. For this reason, its outputs are predomenantly tested as part of validation testing, in terms of user satisfaction. However, there are two indicators that can measure the degree to which the algorithm is converging on a useful value. 
+
+The first is consistency, and has been largely covered in \ref{sec:eachincrement}. Given my chosen number of simulations per increment, we can say that LandFill has a consistency of around 70\%, and that this can be increased at a cost to runtime; however, it would take a debilitating runtime penalty to make a meaningful improvement. 
+
+The second is the degree to which the provided manabase reflects unique properties of the deck in question beyond its colours. This is not strictly necessary for a useful product, but the prospect of a bespoke manabase offers a meaningful addition of value over resources such as those published by Frank Karsten.  I tested two decks, one BUG and one WUG, which have mana curves depicted in \ref{fig:bugwug}. Note that for the BUG deck, many hands will contain no spells playable on the first or second turn of the game, while this is not true for the WUG deck. 
+
+\begin{figure}
+    \centering
+  \includegraphics[scale=0.25]{card_images/bugwugcurves.jpg}
+  \caption{Mana curves as visualized using the TappedOut card database for a WUG and BUG deck respectively.}
+  \label{fig:bugwug}
+\end{figure}
+
+On an initial run, LandFill favoured similar cycles for both decks. However, I then re-tested, removing from consideration all cycles that are: 
+
+\begin{itemize}
+\item Strictly better than basic lands except for penalties that do not relate to mana generation (ie, Shock Lands).
+\item Strictly better than basic lands but lacking basic landtypes (ie, Verge Lands).
+\end{itemize}
+
+On this rerun, the difference was striking: BUG received all three candidate Slow Lands and two out of three candidate Check Lands, both of which are cycles that improve if other lands are played before them in the battlefield. WUG received all three candidate Fast Lands and one out of three candidate Reveal Lands, both of which are cycles that improve if played early in the game before other lands. 
 
 
 \section{Frontend Design}
+
 \subsection{Parsing Inputs}
 In \ref{sec:initialusertests}, users desired that LandFill support "round trips" (in the words of one subject), in which a list of cards was copied from a Deck database such as Tappedout or MoxField, into LandFill, and could then return the outputs without any additional formatting. For this purpose, I created the InputParser class, of which one is created at the start of each session. Test users mentioned four such databases: TappedOut, Moxfield, Archidekt and Deckbox. since Tappedout and Moxfield both allow for lists to be copied from the deck homepage rather than from the formatted export panel, and Moxfield and Deckbox take inputted cards in the same format, this means that the InputParser has been designed to distinguish between six possible input formats, and return three possible output formats. 
 
 Since Tappedout and Archidekt both support categorization of cards (ie, draw, ramp, win strategy, enemy card removal) with custom lables, the Input Parser stores all cards in a Dict object corresponding to each category, using a default key if none are specified by the user. On completion of the Monte Carlo process, the InputParser a total of six string objects: for each database format (Deckbox and Moxfield being identical), it returns the total decklist, including categories if provided by the player, and the list of provided lands. 
 
-\section{App Layout}
+\subsection{App Layout}
 In the intial mockup drafted in \ref{sec:initialusertests}, LandFill consisted of a single homepage. Users in the think-aloud evaluation generally did not understand the difference between the button that confirmed their nonland inputs and the button which commenced the MonteCarlo. On redrafting, I split the design into four pages, with purposes broadly outlined accordingly:
 
 \begin{enumerate}
@@ -725,15 +929,16 @@ See figure \ref{fig:deckinput}. The option to overwrite inputted lands with a ne
 \end{figure}
 
 \subsubsection{Preferences}
+\label{sec:preferences}
 See Figure \ref{fig:preferences}. The Preferences Page allows users to customize the lands trialled by LandFill depending on their preferences and card availabilty. The initial mockup had allowed players to exclude lands or whole cycles via a series of tickboxes, but during the Think-Aloud evaluation, users had found this both overwhelming, given the sheer quantity of lands, and unintuitive, as they did not always know what a given cycle did. Moreover, given that LandFill in its current form takes a non-negligable amount of time to run, I felt it prudent to encourage the player to mark favoured cards as mandatory for inclusion, rather than placing the burden of them to list mandatory lands as part of the deck input. This required me to replace the binary input of a land being unchecked (excluded from consideration) or not with a three-way system, by which players could mark cycles as mandatory, possible or forbidden. I addressed all of these issues via a trio of drag-and-drop boxes from the React-Beautiful-DND library, while also adding a side-panel element which would show a sample card and card list from a draggable cycle object on mouseover. 
 
 Since some lands may behave identically as manabase components but may have additional mechanics that a player may prefer, I created two additional drag and drop boxes, each of which corresponds to a category of identical lands. The frontend does not support dragging between these boxes; rather, they are used to prioritize these lands accordign to thhe user's preference. Information from this input is passed to the backend LandPrioritization object. As depicted in \ref{fig:preferences}, LandFill will only trial a Bicycle Land if the Typed Dual Land of its colours is either already in the deck or is excluded from consideration.
 
 The panel of preferences still set via tickboxes and numerical inputs above the drag-and-drop column are based on comments made by users during the initial mockup testing: players were keen to set a minimum quantity of basic lands, as many non-land cards synergise with these, and price was a concern for most players in manabase construction. Several initial testers also expressed disdain towards running "off-colour fetches", especially in Commander: this might mean, for example, running a fetch land capable of finding an Island or a Mountain along with a suite of shock lands in a BUG deck, which although potentially a strategically sound decision, was felt by many players to be fundamentally unaesthetic. 
 
+Recall from \ref{sec:knapsack} that players did want to factor price considerations into their choices. While it is impractical, as detailed, to allow the player to set a maximum price for the manabase, LandFill gives players the option to exclude all land cards above a certain price. I consider this to be a reasonable, if imperfect, proxy.
+
 Given the complexity of the interface, it is worth touching on the underlying logic. A common theme among test subjects in pre-development evaluation was a lack of a single consistent plan or criterion, with players generally expressing a range of broad preferences often caveatted by circumstance - price, for example, not being a factor if a player already owned an expensive land, even if they were not interested in buying more from the cycle. As another example, a player who expressed considerable hostility to any land which only ever enters tapped admitted a fondness for the "Surveil Land" cycle due to its utility effect. I felt it necessary, consequently, to always give players an override option. Individual cards can be added to consideration despite the status of the cycle as a whole via the tickboxes in the side panel, while use of any of the "Exclude from Consideration" Filters, which moves drag-and-drop objects to the "Exclude" column, does not prevent any individual items from being removed from that column. Since this means that a cycle or individual card may be categorized either by dragging and dropping or via a filter or override method, the state of any given land is always mapped to one of two "positiveArrays", positiveArrays.include or positiveArrays.consider. If it is excluded via any method, it is put in one of several "excludeArrays", corresponding to the frontend input used to exclude it. When the simulation is run, all lands in any excludeArray are marked as excluded, and all others are marked as either mandatory or possible, depending on which positiveArray they are in. 
-
-
 
 
 \begin{figure}
@@ -746,7 +951,8 @@ Given the complexity of the interface, it is worth touching on the underlying lo
 
 
 \subsubsection{Progress}
-See Fig \ref{fig.progress}. Although initial drafts replaced the "run" button on the Preferences page with the word "Loading", I felt that this was inappropriate for a longer optimization time - I did not wawnt the users to think that the program had simply crashed. Moreover, during mockup testing, several users expressed a desire to see the logic being used by the backend, as this would allow them to trust the results better. Although the Preferences Page contains a contextual explanation of the Hill Climbing algorithm, the use of a Progress page allows for this to be more clearly demonstrated: each step in the Hill Climb increment is printed to screen. At the conclusion of the Hill Climb algorithm, the Output page loads automatically. 
+\label{sec:progress}
+See Fig \ref{fig.progress}. Although initial drafts replaced the "run" button on the Preferences page with the word "Loading", I felt that this was inappropriate for a longer optimization time - I did not want the users to think that the program had simply crashed. Moreover, during mockup testing, several users expressed a desire to see the logic being used by the backend, as this would allow them to trust the results better. Although the Preferences Page contains a contextual explanation of the Hill Climbing algorithm, the use of a Progress page allows for this to be more clearly demonstrated: each step in the Hill Climb increment is printed to screen. At the conclusion of the Hill Climb algorithm, the Output page loads automatically. 
 
 \begin{figure}
     \centering
@@ -758,7 +964,8 @@ See Fig \ref{fig.progress}. Although initial drafts replaced the "run" button on
 \subsubsection{Output}
 See Fig \ref{fig:output}. The core feature of the Output Page is the textarea which shows the recommended decklist, which can display either the lands added to the deck or the entire decklist for easy export. When the entire decklist is displayed, if the input format included custom card categorizations (ie, from TappedOut or ArchiDekt), these are re-added here, with new lands being added either under a new category, "Lands", or under an existing category if one was detected that contained other land cards at input. 
 
-The left hand panel allows users to use the same mousever interface as was employed on the Preferences Page to examine the cards added to their decklist. One user, during initial testing, asked to see the lands ranked by performance, as this would inform both their choice of ramp spells and tell them what lands they should replace on the printing of a new cycle. Moreover, as will be discussed in \ref{sec:patternsindeckoptimization}, the relative performances of lands within a given deck can yield worthwhile information even if the user does not take the outputted land list as totally prescriptive. 
+The left hand panel allows users to use the same mousever interface as was employed on the Preferences Page to examine the cards added to their decklist. One user, during initial testing, asked to see the lands ranked by performance, as this would inform both their choice of ramp spells and tell them what lands they should replace on the printing of a new cycle.  
+
 \begin{figure}
     \centering
   \includegraphics[scale=0.25]{card_images/frontendpagefour.jpg}
@@ -767,29 +974,43 @@ The left hand panel allows users to use the same mousever interface as was emplo
 \end{figure}
 
 \section{Post-Development User Tests}
-
+\subsection{Areas for Improvement}
+\subsubsection{Persistant Preference Storage and Links with Existing Databases}
+\label{sec:persistantstorage}
+Storage of user data between sessions was determined early in development to be wholly outside the scope of the prototype. It was, however, identified unaninimously by testers as the feature they would most like to see added to the current form. More specifically, all users felt that LandFill would benefit from the ability to either upload a list of land cards the player owns, or link to a user's account on a pre-existing card library database, so that lands could be excluded if the player did not currently own a copy. 
 
 \section{Conclusion}
 \subsection{Findings and Product Viability}
-\subsubsection{Patterns in Deck Optimization}
-\label{sec:patternsindeckoptimization}
+\subsubsection{Utility}
+LandFill earned positive user feedback. Users did not feel like the suggestions it made contradicted their own instincts as deckbuilders, and insofar as it made suggestions they may not have thought of, they considered this to be a positive addition and cause for thought. Recall that the initial role of LandFill was to produce a deck that is comparable to what a player can put together in an equivalent timeframe; to this end, it is a successful product. My broad initial hypothesis, that a goldfishing engine that cut out all elements of play strategy except the maximisation of mana expenditure would be a sufficient venue in which to test the viability of specific land cards, was correct.
+
+In respect of the realities that, first, a consistently optimum build is not producable within a usable timeframe and, second, there is no immediately intuitive objective function for what constitutes an "optimized" deck, I designed the frontend to support uses other than the intended one, a design philosophy called "appropriation." One issue I remained mindful of through development was that even if a LandFill user did not consider a full deck optimization worthwhile, the software should still be an efficient formatting tool. A user who simply chose to list all cycles as either mandatory or excluded can still benefit from having these cycles input automatically without needing to look up individual cards on ManaGathering and input them one at a time. The use of a halting metric that only requires a minimum of 6 iterations means that such users - who will only benefit from optimization of their basic lands - will be able to use the system much more quickly. Furthermore, while it was not possible on this timeframe to synchronize LandFill with a user's card database, as widely requested in post-development testing, recall that this reflects a desire to deckbuild using only cards that they already own. Since LandFill ranks all cards in the deck by performance in the output, simply inputting a decklist with an existing manabase can inform you about which lands perform worse or better within it, and thus can be removed and used in a new deck instead. 
+
+Recall from \ref{optimizervertest} that, while there is room for LandFill to be made more consistent, it makes meaningful decisions about what lands are best for a specific deck in a situation where widely acclaimed lands such as Shock Lands are not available. Given that Shock Lands are expensive, this means that, while the concept of a "deck optimizer" implies a degree of competitiveness, in practice, LandFill's algorithm may prove most relevant for players working on a budget. 
+
+While a full investigation of this is outside the scope of this project, one interesting and very consistent observation throughout design and testing of LandFill is that Filter Lands are significantly stronger and more versatile than perceived. Conventional wisdom holds that Filter Lands are best utilized in 2 and 3 colour decks; in higher colour combinations, the risk of failing to draw a land able to use in their ability is too great \ref{FilterLands}. In my initial research, players generally criticized the cycle. However, LandFill added Filter Lands to decks of many color combination. It should be noted here that Filter Lands were by far the most complex land to encode, and this perhaps reflects a general difficulty in assessing their performance via experiments such as those ran by Frank Karsten. While I did not test this specific point thoroughly, it points to the relevance of LandFill's backend in the context of professional game analysis, were runtime not a consideration. 
+
+\subsubsection{Limitations}
+Recall from \ref{sec:eachincrement} that, measured by average Jaccard Index, MonteCarlo runs that took less than ten minutes for a three-colour deck only shared around 70\% of lands in common. This suggests that, with use of the simulator as outlined here, a single optimum - even a local maximum - cannot be reliably reached in a usable timeframe. However, the increase in Jaccard Index when longer timeframes were permitted suggests that structurally, LandFill works broadly as intended. Given that code profiling was conducted repeatedly through development via the \texttt{line\allowbreak\_profiler} library, overcoming this would have likely required a total rebuild. This could involve translating the backend into a higher performance language such as C++; however, given Python's reliability as a backend programming language, an intermediate solution may be to refactor around a piplining library such as Joblib to allow multiple games to be run simultaneously. While I did explore a joblib-based implementation, the required deepcopying of deck and card objects immediately counteracted any runtime improvements; if it is feasible, it would need to inform the structure of the objects at a much earlier stage of development. 
+
+Given the extent of research necessary to determine an appropriate objective function, halting criterion and simulation count per increment for the optimizer, one area did remain underexplored - the choice of Steepest Ascent Hill Climbing itself. While I did touch on other Neighbourhood Search variations, one possibility that I did not have time to explore was the use of an Evolutionary Algorithm. In such an algorithm, pairs of high-performing manabases would be randomly shuffled together with small mutations at each increment \ref{bjorke2017deckbuilding}. Since I did not trial this algorithm, I do not know if it would have reached a more consistent result in a comparable time. Ultimately, given the intuitiveness of Steepest-Ascent Hill Climbing, I believe my decision to focus on rigorous testing of various adaptations of this base algorithm was an effective use of my development time; however, this would be an immediate route for further experimentation, especially if a more time-optimized refactor of the simulator as outlined above still fails to produce a consistent optimum.
+
+
 \subsection{Future Development}
-\subsubsection{User Choice}
-\label{sec:userchoice}
-this is the HCI stuff you've asked Chatgpt about, look into the papers it's mentioned. 
-\subsubsection{Maintenance and additional cycles}
-\subsubsection{Relevant one-off lands}
+In addition to the developments requested in post-development testing, it is worth touching on some features that were consciously left out due to timeframe requirements and may be introduced in future iterations.
+
 \subsubsection{Ramp and Draw identification}
 \label{sec:rampanddrawidentification}
-Spells that ramp and draw are significant in Commander, and their lack of presence in LandFill represents a significant deviation between the Simulator and gameplay. The impact that this has on manabase decisions is  non-trivial: many ramp spells reward disproportionate investment in Forests, while draw spells reduce the chance of drawing a suboptimal land at any time. Thoroughly modelling ramp and draw cards is essentially impossible: even aside from the number of extant spells, and the sequencing difficulties outlined in \ref{sec:rampanddrawidentification} , exact draw mechanisms are complex - consdier, for example, "Rhystic Study", one of the most popular draw spells in commander, which draws cards contingent on spells cast by the opponent.
+Spells that ramp and draw are significant in Commander, and their lack of presence in LandFill represents a significant deviation between the Simulator and gameplay. The impact that this has on manabase decisions is  non-trivial: many ramp spells reward disproportionate inclusion of Forest cards, while draw spells reduce the chance of drawing a suboptimal land at any time. Thoroughly modelling ramp and draw cards is essentially impossible: even aside from the number of extant spells, and the sequencing difficulties outlined in \ref{sec:rampanddrawidentification} , exact draw mechanisms often require modelling opponent behaviour - consider, for example, "Rhystic Study", one of the most popular draw spells in commander, which draws cards contingent on spells cast by the opponent.
 
-One way to introduce ramp and draw would be to have the player identify ramp and draw spells in their deck, and give them a set of options, ie: "X card draws (1/2/3/...) cards (When played/at the start of turn/whenever you cast another spell). While this would not address the sequencing issues, it may lead to more deck-specific manabase assessments. Such an approach could also be a viable way to model other strategic considerations: IE, "counterspells" (cast in response to an opponent casting a spell) could be marked as such to suggest that the deck may have no reason to cast them on an early turn, when threats are small. However, this would introduce significant frontend complexity, and given that LandFill's optimization algorithm returns a viable automatic manabase rather than a consistently optimal one, I consider incorporation of strategic minutiaie like that to be non-essential for the initial launch. 
-\subsubsection{Accounting for Ramplands/Bounce Lands}
-\subsubsection{Simplification}
-This could be a more precise interface that allows players to suggest cycles they like and store them, while including a basic land optimizer; it could ALSO be used in "diminishing returns" 
+One way to introduce ramp and draw would be to have the player identify ramp and draw spells in their deck, and give them a set of options, ie: "X card draws (1/2/3/...) cards (When played/at the start of turn/whenever you cast another spell), with the opening for the user to approximate how many cards they would expect to draw from this spell. While this would not address the sequencing issues, it may lead to more deck-specific manabase assessments. Such an approach could also be a viable way to model other strategic considerations: IE, "counterspells" (cast in response to an opponent casting a spell) could be marked as such to suggest that the deck may have no reason to cast them on an early turn, when threats are small. However, this would introduce significant frontend complexity, and given that LandFill's optimization algorithm returns a viable automatic manabase rather than a consistently optimal one, I consider incorporation of strategic minutiaie like that to be non-essential for the initial launch. 
 
+\subsubsection{Queueing Lumps}
+Recall that the Simulator does not plan lumps to be played on future turns, and in some cases, this may lead it to make suboptimal plays. One potential solution here would be to, rather than generating lumps each turn, generate from the opening hand a queue of consecutive land plays and lump plays designed to maximize mana over forthcoming turns, recalculating this queue with the addition of each new card drawn.
 
-\subsection{Evaluation}
+\subsubsection{Tiebreaker Metrics}
+While the LandPrioritization allows some crude tie-breaking between, for example, lands that require a life payment versus lands that do not, one way to ensure a more consistent manabase optimum for a particular deck would be to identify lands that perform within a margin of error of one another, and introduce a tie-breaker variable. This was attempted in an early model: each turn, every land was scored according to the number of playable lumps that turn, regardless of their size, and a land that facilitated the playing of a wider range of lumps could sometimes be chosen ahead of one that wasted slightly less mana if the difference was marginal. I did not implement this in the final version of the project, as exhaustively testing this after a new land was played increased runtime notably; however, it as a metric is less significant for future consideration as the general tie-breaker structure. Some Tie-Breakers - ie, the likelihood of being able to cast a commander of cost \(N\) when \(N\) lands are drawn, or something as simple as card price - could be ranked by the user in terms of preference. Others could be used to expand LandFill's sensitivity to the advantages of specific builds. As mentioned in SECTION, LandFill does not reward lands that ramp the player; yet this is on occasion very relevant, and would become moreso if ramp spells were included in the manner modelled above (in which, for example, the average mana expenditure of a land may increase significantly if it facilitates early playing of ramp spells). A future version may revert to mana expenditure as an initial objective function with the understanding that this will be typically tied, and then use wasted mana as a tie-breaker from there. 
+
 
 
 
