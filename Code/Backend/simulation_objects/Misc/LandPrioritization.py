@@ -88,10 +88,6 @@ class LandPrioritization:
         self.cycle_to_lands[cycle_name].append(land)
 
     def cascade_superiors(self, land, deck):
-        """
-        Given a land instance, return all *actual* land cards that are strict superiors,
-        including cascading through missing intermediate cycles.
-        """
         visited = set()
         resolved_superiors = set()
         queue = deque()
@@ -118,38 +114,27 @@ class LandPrioritization:
         return list(resolved_superiors)
 
     def _is_strict_superior(self, inferior, superior, deck):
-        """
-        Returns True if the superior land produces all colors the inferior does (or more).
-        """
         inf_colors = set(inferior.heap_prod(deck))  # You may need to pass deck here
         sup_colors = set(superior.heap_prod(deck))
         return inf_colors.issubset(sup_colors)
 
     def remove_cycle(self, cycle_name):
-        """
-        Forbid an entire land cycle (e.g., 'Bond Lands'), useful for user customization.
-        """
+
         if cycle_name in self.cycle_to_lands:
             del self.cycle_to_lands[cycle_name]
 
     def remove_land(self, land):
-        """
-        Remove an individual land instance from its cycle.
-        """
+
         if land._cycle in self.cycle_to_lands:
             self.cycle_to_lands[land._cycle] = [
                 l for l in self.cycle_to_lands[land._cycle] if l != land
             ]
 
     def apply_player_rankings(self, ranking_sets):
-        """
-        Takes a list of rankings (list of lists of cycle names, highest priority first)
-        and rewires superior_cycles & inferior_cycles accordingly,
-        preserving class object references.
-        """
+
 
         def resolve_class(cycle_name):
-            """Try to get a class object for this cycle name."""
+
             # Check registry
             cls = self.class_registry.get(cycle_name)
             if cls:

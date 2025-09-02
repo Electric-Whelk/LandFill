@@ -2398,9 +2398,12 @@
     <bcf:citekey order="35" intorder="1">commandermulligans</bcf:citekey>
     <bcf:citekey order="36" intorder="1">whatismemoization</bcf:citekey>
     <bcf:citekey order="37" intorder="1">koopmans1957assignment</bcf:citekey>
-    <bcf:citekey order="38" intorder="1">salhi2019neighbourhood</bcf:citekey>
-    <bcf:citekey order="39" intorder="1">KarstenCurve</bcf:citekey>
-    <bcf:citekey order="40" intorder="1">BounceLands</bcf:citekey>
+    <bcf:citekey order="38" intorder="1">silver2004overview</bcf:citekey>
+    <bcf:citekey order="39" intorder="1">silver2004overview</bcf:citekey>
+    <bcf:citekey order="40" intorder="1">salhi2019neighbourhood</bcf:citekey>
+    <bcf:citekey order="41" intorder="1">KarstenCurve</bcf:citekey>
+    <bcf:citekey order="42" intorder="1">BounceLands</bcf:citekey>
+    <bcf:citekey order="43" intorder="1">SerendipityRecSys</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">

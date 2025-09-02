@@ -255,10 +255,7 @@ class Lump:
         yield from ncopy
 
     def assign_filter_combinations_v2(self, filters, normals, game):
-        """
-        Lazily yields all possible land configurations resulting from resolving the filters in order,
-        replacing activating lands with sublands, and adding colorless-only if not activated.
-        """
+
 
         def _recurse(filters_left, current_lands):
             if not filters_left:

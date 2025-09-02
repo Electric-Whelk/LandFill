@@ -1,4 +1,8 @@
 digraph superiority {
+	edge [splines=true]
+	graph [rankdir=TB, ranksep=3, nodesep=0.2]
+	graph [newrank=true]
+
 	"Shock Lands" -> "Command Tower"
 	"Shock Lands" -> "Original Dual Lands"
 	"Bond Lands" -> "Command Tower"
@@ -19,18 +23,14 @@ digraph superiority {
 	"Fast Lands" -> "Shock Lands"
 	"Reveal Lands" -> "Bond Lands"
 	"Reveal Lands" -> "Shock Lands"
-	"Two Faced Lands" -> "Bond Lands"
-	"Two Faced Lands" -> "Shock Lands"
+	"Dual-Faced Lands" -> "Bond Lands"
+	"Dual-Faced Lands" -> "Shock Lands"
 	"Two Color Untyped Taplands" -> "Three Color Untyped Taplands"
 	"Two Color Untyped Taplands" -> "Slow Lands"
 	"Two Color Untyped Taplands" -> "Check Lands"
 	"Two Color Untyped Taplands" -> "Fast Lands"
 	"Two Color Untyped Taplands" -> "Reveal Lands"
-	"Filter Lands"
-	"Fetch Lands"
 
-
-	
 
 
 	
