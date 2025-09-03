@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.8.12)  2 SEP 2025 19:36
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.8.12)  3 SEP 2025 14:17
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -552,15 +552,7 @@ File: card_images/ArchidektScreenshot.jpg Graphic file (type jpg)
 <use card_images/ArchidektScreenshot.jpg>
 Package pdftex.def Info: card_images/ArchidektScreenshot.jpg  used on input line 259.
 (pdftex.def)             Requested size: 240.89941pt x 114.80362pt.
- [14 <./card_images/MTGArenaScreenshot.jpg> <./card_images/ManaGathering.jpg>]
-
-LaTeX Warning: Reference `WhyNottoUseSqlalchemy' on page 15 undefined on input line 272.
-
-[15 <./card_images/ArchidektScreenshot.jpg>]
-
-LaTeX Warning: Reference `manuel2004sage' on page 16 undefined on input line 292.
-
-[16]
+ [14 <./card_images/MTGArenaScreenshot.jpg> <./card_images/ManaGathering.jpg>] [15 <./card_images/ArchidektScreenshot.jpg>] [16]
 <card_images/MockupFrontend.jpg, id=70, 963.6pt x 529.98pt>
 File: card_images/MockupFrontend.jpg Graphic file (type jpg)
 <use card_images/MockupFrontend.jpg>
@@ -572,20 +564,17 @@ File: card_images/KanoSurvey.jpg Graphic file (type jpg)
 <use card_images/KanoSurvey.jpg>
 Package pdftex.def Info: card_images/KanoSurvey.jpg  used on input line 338.
 (pdftex.def)             Requested size: 240.89941pt x 72.26982pt.
- [18 <./card_images/KanoSurvey.jpg>]
+ [18 <./card_images/KanoSurvey.jpg>] [19] [20] [21]
+Overfull \hbox (0.68137pt too wide) in paragraph at lines 443--444
+\OT1/cmr/m/n/10 Flask-SQLAlchemy ex-ten-sion [17]. This means that each mapped class ex-tends Flask-SQLAlchemy's
+ []
 
-LaTeX Warning: Reference `sec:thecommanderformat' on page 19 undefined on input line 356.
-
-
-LaTeX Warning: Reference `sec:kanoquestionnaire' on page 19 undefined on input line 364.
-
-[19] [20] [21]
 <card_images/mtg2.jpg, id=88, 625.33624pt x 411.5375pt>
 File: card_images/mtg2.jpg Graphic file (type jpg)
 <use card_images/mtg2.jpg>
 Package pdftex.def Info: card_images/mtg2.jpg  used on input line 447.
 (pdftex.def)             Requested size: 312.66736pt x 205.76825pt.
- [22] [23 <./card_images/mtg2.jpg>] [24]
+[22] [23 <./card_images/mtg2.jpg>] [24]
 LaTeX Font Info:    Trying to load font information for OMS+cmtt on input line 513.
 LaTeX Font Info:    No file OMScmtt.fd. on input line 513.
 
@@ -597,20 +586,20 @@ LaTeX Font Warning: Font shape `OMS/cmtt/m/n' undefined
 <card_images/vergecode.jpg, id=99, 963.6pt x 447.17062pt>
 File: card_images/vergecode.jpg Graphic file (type jpg)
 <use card_images/vergecode.jpg>
-Package pdftex.def Info: card_images/vergecode.jpg  used on input line 519.
+Package pdftex.def Info: card_images/vergecode.jpg  used on input line 521.
 (pdftex.def)             Requested size: 240.89941pt x 111.79237pt.
 <card_images/checkcode.jpg, id=100, 963.6pt x 415.5525pt>
 File: card_images/checkcode.jpg Graphic file (type jpg)
 <use card_images/checkcode.jpg>
-Package pdftex.def Info: card_images/checkcode.jpg  used on input line 526.
+Package pdftex.def Info: card_images/checkcode.jpg  used on input line 528.
 (pdftex.def)             Requested size: 240.89941pt x 103.88786pt.
 [25] [26 <./card_images/vergecode.jpg> <./card_images/checkcode.jpg>]
-Overfull \hbox (122.99562pt too wide) in paragraph at lines 542--543
+Overfull \hbox (122.99562pt too wide) in paragraph at lines 544--545
 []\OT1/cmr/m/n/10 CardCollections con-tain a list at-tribute, \OT1/cmtt/m/n/10 CardCollection.card[]list\OT1/cmr/m/n/10 , and the spe-cial-ized \OT1/cmtt/m/n/10 CardCollection.give(GameCard,
  []
 
 [27] [28]
-Overfull \hbox (17.73186pt too wide) in paragraph at lines 616--617
+Overfull \hbox (17.73186pt too wide) in paragraph at lines 618--619
 []\OT1/cmtt/m/n/10 filtered[]by[]most[]produced = self.filter[]by[]most[]produced(filtered[]as[]taplands) 
  []
 
@@ -618,30 +607,30 @@ Overfull \hbox (17.73186pt too wide) in paragraph at lines 616--617
 <card_images/CanonicallyIdentical.jpg, id=119, 445.665pt x 428.145pt>
 File: card_images/CanonicallyIdentical.jpg Graphic file (type jpg)
 <use card_images/CanonicallyIdentical.jpg>
-Package pdftex.def Info: card_images/CanonicallyIdentical.jpg  used on input line 651.
+Package pdftex.def Info: card_images/CanonicallyIdentical.jpg  used on input line 653.
 (pdftex.def)             Requested size: 111.41597pt x 107.03598pt.
  [30]
-Underfull \hbox (badness 10000) in paragraph at lines 671--671
-[]|\OT1/cmr/m/n/10 A Land for which
- []
-
-
 Underfull \hbox (badness 10000) in paragraph at lines 673--673
 []|\OT1/cmr/m/n/10 A Land for which
  []
 
 
-Overfull \hbox (72.39601pt too wide) in paragraph at lines 665--676
+Underfull \hbox (badness 10000) in paragraph at lines 675--675
+[]|\OT1/cmr/m/n/10 A Land for which
+ []
+
+
+Overfull \hbox (72.39601pt too wide) in paragraph at lines 667--678
  [] 
  []
 
 [31 <./card_images/CanonicallyIdentical.jpg>] [32] [33]
-Overfull \hbox (17.07722pt too wide) in paragraph at lines 747--748
+Overfull \hbox (17.07722pt too wide) in paragraph at lines 750--751
 \OT1/cmtt/m/n/10 DualFacedLand.committed = None\OT1/cmr/m/n/10 , one of the Du-al-Faced-Land's Sub-Lands is se-lected via \OT1/cmtt/m/n/10 Game.filter
  []
 
 
-Overfull \hbox (8.46658pt too wide) in paragraph at lines 750--751
+Overfull \hbox (8.46658pt too wide) in paragraph at lines 753--754
 \OT1/cmr/m/n/10 Testing of the Sim-u-la-tor was done via op-tional \OT1/cmtt/m/n/10 samplehand = [] \OT1/cmr/m/n/10 and \OT1/cmtt/m/n/10 sampletopdeck = []\OT1/cmr/m/n/10 arguments
  []
 
@@ -649,129 +638,103 @@ Overfull \hbox (8.46658pt too wide) in paragraph at lines 750--751
 <card_images/superiority.jpg, id=139, 963.6pt x 465.23813pt>
 File: card_images/superiority.jpg Graphic file (type jpg)
 <use card_images/superiority.jpg>
-Package pdftex.def Info: card_images/superiority.jpg  used on input line 782.
+Package pdftex.def Info: card_images/superiority.jpg  used on input line 785.
 (pdftex.def)             Requested size: 529.98164pt x 255.88176pt.
 
-Overfull \hbox (83.16302pt too wide) in paragraph at lines 787--788
+Overfull \hbox (83.16302pt too wide) in paragraph at lines 790--791
 []\OT1/cmtt/m/n/10 land() \OT1/cmr/m/n/10 and stored within the Land-Pri-or-i-ti-za-tion. Af-ter all Land ob-jects are reg-is-tered, \OT1/cmtt/m/n/10 LandPrioritization.cascade
  []
 
-[36 <./card_images/superiority.jpg>]
-
-LaTeX Warning: Reference `sec:eachincrement' on page 37 undefined on input line 802.
-
-[37] [38]
+[36 <./card_images/superiority.jpg>] [37] [38]
 <card_images/WastedOutputs.jpg, id=150, 634.62094pt x 161.10187pt>
 File: card_images/WastedOutputs.jpg Graphic file (type jpg)
 <use card_images/WastedOutputs.jpg>
-Package pdftex.def Info: card_images/WastedOutputs.jpg  used on input line 842.
-(pdftex.def)             Requested size: 158.65485pt x 40.27536pt.
+Package pdftex.def Info: card_images/WastedOutputs.jpg  used on input line 854.
+(pdftex.def)             Requested size: 317.3097pt x 80.55074pt.
 <card_images/Histograms.jpg, id=151, 544.872pt x 402.084pt>
 File: card_images/Histograms.jpg Graphic file (type jpg)
 <use card_images/Histograms.jpg>
-Package pdftex.def Info: card_images/Histograms.jpg  used on input line 852.
-(pdftex.def)             Requested size: 136.21767pt x 100.52075pt.
- [39 <./card_images/WastedOutputs.jpg> <./card_images/Histograms.jpg>]
+Package pdftex.def Info: card_images/Histograms.jpg  used on input line 872.
+(pdftex.def)             Requested size: 272.43533pt x 201.0415pt.
+ [39 <./card_images/WastedOutputs.jpg>]
 <card_images/shockvscheck.jpg, id=155, 696.42pt x 254.916pt>
 File: card_images/shockvscheck.jpg Graphic file (type jpg)
 <use card_images/shockvscheck.jpg>
-Package pdftex.def Info: card_images/shockvscheck.jpg  used on input line 869.
-(pdftex.def)             Requested size: 174.10457pt x 63.72884pt.
-
-
-LaTeX Warning: Reference `sec:userchoice' on page 40 undefined on input line 876.
-
-[40 <./card_images/shockvscheck.jpg>]
-Overfull \hbox (1.69447pt too wide) in paragraph at lines 894--894
+Package pdftex.def Info: card_images/shockvscheck.jpg  used on input line 889.
+(pdftex.def)             Requested size: 383.03218pt x 140.20422pt.
+ [40 <./card_images/Histograms.jpg>]
+Overfull \hbox (1.69447pt too wide) in paragraph at lines 920--920
 []|\OT1/cmr/m/n/10 MonteCarlo| 
  []
 
 
-Overfull \hbox (1.69447pt too wide) in paragraph at lines 896--896
+Overfull \hbox (1.69447pt too wide) in paragraph at lines 922--922
 []|\OT1/cmr/m/n/10 MonteCarlo| 
  []
 
-[41]
-<card_images/xavsalsampleimprovement.jpg, id=162, 360.59718pt x 270.25969pt>
+[41 <./card_images/shockvscheck.jpg>] [42]
+<card_images/xavsalsampleimprovement.jpg, id=165, 360.59718pt x 270.25969pt>
 File: card_images/xavsalsampleimprovement.jpg Graphic file (type jpg)
 <use card_images/xavsalsampleimprovement.jpg>
-Package pdftex.def Info: card_images/xavsalsampleimprovement.jpg  used on input line 957.
-(pdftex.def)             Requested size: 90.14906pt x 67.56474pt.
- [42]
-
-LaTeX Warning: Reference `fig:savolvsroll' on page 43 undefined on input line 969.
-
-<card_images/savgolvsrollingav.jpg, id=166, 928.998pt x 361.35pt>
+Package pdftex.def Info: card_images/xavsalsampleimprovement.jpg  used on input line 983.
+(pdftex.def)             Requested size: 198.32906pt x 148.64328pt.
+ [43]
+<card_images/savgolvsrollingav.jpg, id=170, 928.998pt x 361.35pt>
 File: card_images/savgolvsrollingav.jpg Graphic file (type jpg)
 <use card_images/savgolvsrollingav.jpg>
-Package pdftex.def Info: card_images/savgolvsrollingav.jpg  used on input line 973.
-(pdftex.def)             Requested size: 232.24893pt x 90.33728pt.
-[43 <./card_images/xavsalsampleimprovement.jpg> <./card_images/savgolvsrollingav.jpg>]
+Package pdftex.def Info: card_images/savgolvsrollingav.jpg  used on input line 999.
+(pdftex.def)             Requested size: 510.95049pt x 198.74312pt.
 
-LaTeX Warning: Reference `sec:eachincrement' on page 44 undefined on input line 982.
+Overfull \hbox (80.94586pt too wide) in paragraph at lines 999--1000
+ [][] 
+ []
 
-<card_images/bugwugcurves.jpg, id=171, 877.971pt x 489.246pt>
+[44 <./card_images/xavsalsampleimprovement.jpg>]
+<card_images/bugwugcurves.jpg, id=174, 877.971pt x 489.246pt>
 File: card_images/bugwugcurves.jpg Graphic file (type jpg)
 <use card_images/bugwugcurves.jpg>
-Package pdftex.def Info: card_images/bugwugcurves.jpg  used on input line 988.
+Package pdftex.def Info: card_images/bugwugcurves.jpg  used on input line 1014.
 (pdftex.def)             Requested size: 219.4922pt x 122.31119pt.
-[44 <./card_images/bugwugcurves.jpg>]
-<card_images/frontendpageone.jpg, id=175, 907.89188pt x 542.025pt>
+ [45 <./card_images/savgolvsrollingav.jpg>]
+<card_images/frontendpageone.jpg, id=178, 907.89188pt x 542.025pt>
 File: card_images/frontendpageone.jpg Graphic file (type jpg)
 <use card_images/frontendpageone.jpg>
-Package pdftex.def Info: card_images/frontendpageone.jpg  used on input line 1028.
-(pdftex.def)             Requested size: 226.97241pt x 135.5059pt.
- [45] [46 <./card_images/frontendpageone.jpg>]
-<card_images/frontendpagetwo.jpg, id=182, 963.6pt x 474.27188pt>
+Package pdftex.def Info: card_images/frontendpageone.jpg  used on input line 1038.
+(pdftex.def)             Requested size: 317.76692pt x 189.71158pt.
+ [46 <./card_images/bugwugcurves.jpg>] [47 <./card_images/frontendpageone.jpg>]
+<card_images/frontendpagetwo.jpg, id=185, 963.6pt x 474.27188pt>
 File: card_images/frontendpagetwo.jpg Graphic file (type jpg)
 <use card_images/frontendpagetwo.jpg>
-Package pdftex.def Info: card_images/frontendpagetwo.jpg  used on input line 1048.
-(pdftex.def)             Requested size: 240.89941pt x 118.56767pt.
-
-
-LaTeX Warning: Reference `fig.progress' on page 47 undefined on input line 1057.
-
-<card_images/frontendpagetwopfive.jpg, id=183, 304.88907pt x 216.05719pt>
+Package pdftex.def Info: card_images/frontendpagetwo.jpg  used on input line 1058.
+(pdftex.def)             Requested size: 337.26506pt x 165.99763pt.
+<card_images/frontendpagetwopfive.jpg, id=186, 304.88907pt x 216.05719pt>
 File: card_images/frontendpagetwopfive.jpg Graphic file (type jpg)
 <use card_images/frontendpagetwopfive.jpg>
-Package pdftex.def Info: card_images/frontendpagetwopfive.jpg  used on input line 1061.
-(pdftex.def)             Requested size: 76.22208pt x 54.01416pt.
-[47 <./card_images/frontendpagetwo.jpg>]
-<card_images/frontendpagefour.jpg, id=187, 963.6pt x 472.76625pt>
+Package pdftex.def Info: card_images/frontendpagetwopfive.jpg  used on input line 1071.
+(pdftex.def)             Requested size: 167.6895pt x 118.8318pt.
+ [48 <./card_images/frontendpagetwo.jpg>]
+<card_images/frontendpagefour.jpg, id=190, 963.6pt x 472.76625pt>
 File: card_images/frontendpagefour.jpg Graphic file (type jpg)
 <use card_images/frontendpagefour.jpg>
-Package pdftex.def Info: card_images/frontendpagefour.jpg  used on input line 1073.
-(pdftex.def)             Requested size: 240.89941pt x 118.19127pt.
- [48 <./card_images/frontendpagetwopfive.jpg> <./card_images/frontendpagefour.jpg>]
-
-LaTeX Warning: Reference `sec:personae' on page 49 undefined on input line 1101.
-
-[49]
-
-LaTeX Warning: Citation 'SerendipityRecSys' on page 50 undefined on input line 1113.
-
-<card_images/TLX_scores.jpg, id=195, 666.99188pt x 542.025pt>
+Package pdftex.def Info: card_images/frontendpagefour.jpg  used on input line 1085.
+(pdftex.def)             Requested size: 337.26506pt x 165.47066pt.
+ [49 <./card_images/frontendpagetwopfive.jpg> <./card_images/frontendpagefour.jpg>] [50]
+<card_images/TLX_scores.jpg, id=198, 666.99188pt x 542.025pt>
 File: card_images/TLX_scores.jpg Graphic file (type jpg)
 <use card_images/TLX_scores.jpg>
-Package pdftex.def Info: card_images/TLX_scores.jpg  used on input line 1128.
-(pdftex.def)             Requested size: 166.74756pt x 135.5059pt.
-[50 <./card_images/TLX_scores.jpg>] [51] [52]
-
-LaTeX Warning: Reference `FilterLands' on page 53 undefined on input line 1188.
-
-[53]
-
-LaTeX Warning: Reference `sec:eachincrement' on page 54 undefined on input line 1191.
-
-
-LaTeX Warning: Reference `bjorke2017deckbuilding' on page 54 undefined on input line 1193.
-
-[54]
-Overfull \hbox (59.0069pt too wide) in paragraph at lines 1225--1225
+Package pdftex.def Info: card_images/TLX_scores.jpg  used on input line 1140.
+(pdftex.def)             Requested size: 300.14357pt x 243.90898pt.
+ [51] [52 <./card_images/TLX_scores.jpg>] [53] [54] [55] [56] [57]
+Overfull \hbox (59.0069pt too wide) in paragraph at lines 1248--1248
 []\OT1/cmr/m/n/10 Rahul Awati. \OT1/cmr/m/it/10 It-er-a-tive De-vel-op-ment\OT1/cmr/m/n/10 . 2023. \OT1/cmr/m/sc/10 url\OT1/cmr/m/n/10 : $\OT1/cmtt/m/n/10 https : / / www . techtarget . com / searchsoftwarequality /
  []
 
-[55] [56] [57] (./writeup.aux)
+[58]
+Overfull \hbox (8.91107pt too wide) in paragraph at lines 1248--1248
+[]\OT1/cmr/m/it/10 line-profiler 5.0.0\OT1/cmr/m/n/10 . \OT1/cmr/m/sc/10 url\OT1/cmr/m/n/10 : $\OT1/cmtt/m/n/10 https : / / pypi . org / project / line -[] profiler/$ \OT1/cmr/m/n/10 (vis-ited on 09/03/2025). 
+ []
+
+[59] [60] (./writeup.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-22>
@@ -780,34 +743,23 @@ L3 programming layer <2024-01-22>
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-
-LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
-
-Package biblatex Warning: Please (re)run Biber on the file:
-(biblatex)                writeup
-(biblatex)                and rerun LaTeX afterwards.
-
 Package logreq Info: Writing requests to 'writeup.run.xml'.
 \openout1 = `writeup.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 12601 strings out of 476182
- 232736 string characters out of 5795595
+ 12685 strings out of 476182
+ 236539 string characters out of 5795595
  1939975 words of memory out of 5000000
- 34499 multiletter control sequences out of 15000+600000
+ 34583 multiletter control sequences out of 15000+600000
  564979 words of font info for 60 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 66i,16n,81p,2158b,1326s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 66i,16n,81p,1945b,1326s stack positions out of 10000i,1000n,20000p,200000b,200000s
  </home/electricwhelk/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/tcti1000.600pk> </home/electricwhelk/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1000.600pk></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on writeup.pdf (57 pages, 6866322 bytes).
+Output written on writeup.pdf (60 pages, 6874464 bytes).
 PDF statistics:
- 293 PDF objects out of 1000 (max. 8388607)
- 178 compressed objects within 2 object streams
+ 302 PDF objects out of 1000 (max. 8388607)
+ 184 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
  121 words of extra memory for PDF output out of 10000 (max. 10000000)
 
