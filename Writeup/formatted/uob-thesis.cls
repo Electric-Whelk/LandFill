@@ -52,7 +52,7 @@
 
 \setkomafont{disposition}{\bfseries}
 \addtokomafont{title}{\Huge}
-\linespread{1.5} % some extra spacing
+\linespread{1.5} % some extra spacing 1.5 vs 1.2
 
 
 %% Set page style and recalculate type area

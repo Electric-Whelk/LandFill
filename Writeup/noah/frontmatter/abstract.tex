@@ -1,0 +1,18 @@
+%
+% File: abstract.tex
+% Author: V?ctor Bre?a-Medina
+% Description: Contains the text for thesis abstract
+%
+% UoB guidelines:
+%
+% Each copy must include an abstract or summary of the dissertation in not
+% more than 300 words, on one side of A4, which should be single-spaced in a
+% font size in the range 10 to 12. If the dissertation is in a language other
+% than English, an abstract in that language and an abstract in English must
+% be included.
+
+\chapter*{Executive Summary}
+\begin{SingleSpace}
+This report documents the development of LandFill, a website for use by players of a deck-building trading card game called Magic: The Gathering (MTG). LandFill automates the selection of resource-providing ``land'' cards, used to play resource-demanding ``spell'' cards; the resource in question is called ``mana''. Over 1000 land cards have been printed, only around 38 of which can be included in any given deck. If inputted a decklist with no land cards, it selects land cards for it. Some land cards produce multiple type of mana but incur a gameplay penalty when played that limits the speed or flexibility with which these mana types can be accessed. Other lands can only produce one type of mana but incur no such penalties. Selecting appropriate lands is therefore a combinatorial optimization contigent on both the distribution of how cards in the deck require mana of different types, and how well the deck is able to accommodate the penalties of different land cards. While many players select lands based on intuition and preference, some best-practices in Land Selection have been determined by professional MTG player and Mathematics Ph.D Frank Karsten, whose work has been based on experiments run using Monte Carlo search. LandFill adapts this approach into a flexible and user-friendly application that can assess cards for a specific deck. Beginning with Karsten's heuristic that a victorious MTG player is usually the one who spends the most total mana, LandFill implements an extemely simple MTG player AI who attepts to allocate land cards efficiently to spend as much mana as possible. Over many simulated games, it determines an approximate performance score for the deck. Using this performance score, LandFill is able to implement a Steepest-Ascent Hill Climbing algorithm to identify a list of high performing lands. While tests of output consistency show that LandFill is not capable of establishing a definitive optimum, user tests found it to be capable of assembling a comparable or better list of lands than they would themselves in less time and with reduced effort. 
+\end{SingleSpace}
+\clearpage

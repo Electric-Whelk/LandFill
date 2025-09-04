@@ -63,48 +63,32 @@
 \contentsline {subsubsection}{\numberline {5.7.3}Dual-Faced Lands}{34}{}%
 \contentsline {subsection}{\numberline {5.8}Simulator Verification Testing}{35}{}%
 \contentsline {section}{\numberline {6}The Optimizer}{35}{}%
-\contentsline {subsection}{\numberline {6.1}Constituent Classes}{35}{}%
-\contentsline {subsubsection}{\numberline {6.1.1}MonteCarlo and Trial}{35}{}%
-\contentsline {subsubsection}{\numberline {6.1.2}LandPrioritization}{35}{}%
-\contentsline {subsection}{\numberline {6.2}Optimization Algorithm}{37}{}%
-\contentsline {subsubsection}{\numberline {6.2.1}Outline of Steepest Ascent Hill Climbing Algorithm}{37}{}%
-\contentsline {subsubsection}{\numberline {6.2.2}Other Options}{37}{}%
-\contentsline {subsection}{\numberline {6.3}Choice of Performance Metrics}{38}{}%
-\contentsline {subsubsection}{\numberline {6.3.1}Overview}{38}{}%
-\contentsline {subsubsection}{\numberline {6.3.2}Use of ``Wasted Mana''}{38}{}%
-\contentsline {subsubsection}{\numberline {6.3.3}Initial Analysis}{39}{}%
-\contentsline {subsubsection}{\numberline {6.3.4}Proportion Wasted vs Cumulative Distribution}{40}{}%
-\contentsline {subsection}{\numberline {6.4}The Hill Climbing Algorithm}{41}{}%
-\contentsline {subsubsection}{\numberline {6.4.1}Setup}{41}{}%
-\contentsline {subsubsection}{\numberline {6.4.2}Each Increment}{42}{}%
-\contentsline {subsubsection}{\numberline {6.4.3}Halting}{43}{}%
-\contentsline {subsection}{\numberline {6.5}Optimizer Verification Testing}{44}{}%
-\contentsline {section}{\numberline {7}The Web Interface}{45}{}%
-\contentsline {subsection}{\numberline {7.1}The Input Parser}{45}{}%
-\contentsline {subsection}{\numberline {7.2}App Layout}{46}{}%
-\contentsline {subsubsection}{\numberline {7.2.1}Deck Input (Fig. \ref {fig:deckinput})}{46}{}%
-\contentsline {subsubsection}{\numberline {7.2.2}Preferences (Fig. \ref {fig:preferences})}{46}{}%
-\contentsline {subsubsection}{\numberline {7.2.3}Progress (Fig.\ref {fig:progress})}{48}{}%
-\contentsline {subsubsection}{\numberline {7.2.4}Output (Fig.\ref {fig:output})}{49}{}%
-\contentsline {section}{\numberline {8}Validation Testing}{50}{}%
-\contentsline {subsection}{\numberline {8.1}Methodology}{50}{}%
-\contentsline {subsubsection}{\numberline {8.1.1}Effort Testing via TLX}{50}{}%
-\contentsline {subsubsection}{\numberline {8.1.2}Serendipity Testing}{50}{}%
-\contentsline {subsubsection}{\numberline {8.1.3}Semi-Structured Interview}{51}{}%
-\contentsline {subsection}{\numberline {8.2}Results}{51}{}%
-\contentsline {subsubsection}{\numberline {8.2.1}TLX Data Analysis}{51}{}%
-\contentsline {subsubsection}{\numberline {8.2.2}Serendipity Test Analysis}{52}{}%
-\contentsline {subsubsection}{\numberline {8.2.3}Semi Structured Interview Response Analysis}{53}{}%
-\contentsline {subsection}{\numberline {8.3}Additional Features}{54}{}%
-\contentsline {subsubsection}{\numberline {8.3.1}Persistant Preference Storage and Links with Existing Databases}{54}{}%
-\contentsline {subsubsection}{\numberline {8.3.2}Flexible Runtimes and Accuracy}{54}{}%
-\contentsline {subsubsection}{\numberline {8.3.3}Additional Formats and MTG: Arena Support}{54}{}%
-\contentsline {subsubsection}{\numberline {8.3.4}Frontend Formatting Improvements}{55}{}%
-\contentsline {section}{\numberline {9}Conclusion}{55}{}%
-\contentsline {subsection}{\numberline {9.1}Summary}{55}{}%
-\contentsline {subsection}{\numberline {9.2}Self Assessment}{56}{}%
-\contentsline {subsubsection}{\numberline {9.2.1}Use of Python as Backend}{56}{}%
-\contentsline {subsubsection}{\numberline {9.2.2}Use of Hill Climbing Algorithm}{56}{}%
-\contentsline {subsubsection}{\numberline {9.2.3}Mid-Development Validation and Verification Tests}{56}{}%
-\contentsline {subsubsection}{\numberline {9.2.4}Time Management During Development}{57}{}%
-\contentsline {subsection}{\numberline {9.3}Final Thoughts}{57}{}%
+\contentsline {section}{\numberline {7}The Interface}{35}{}%
+\contentsline {subsection}{\numberline {7.1}The Input Parser}{35}{}%
+\contentsline {subsection}{\numberline {7.2}App Layout}{35}{}%
+\contentsline {subsubsection}{\numberline {7.2.1}Deck Input (Fig. \ref {fig:deckinput})}{35}{}%
+\contentsline {subsubsection}{\numberline {7.2.2}Preferences (Fig. \ref {fig:preferences})}{36}{}%
+\contentsline {subsubsection}{\numberline {7.2.3}Progress (Fig.\ref {fig:progress})}{37}{}%
+\contentsline {subsubsection}{\numberline {7.2.4}Output (Fig.\ref {fig:output})}{38}{}%
+\contentsline {section}{\numberline {8}Validation Testing}{38}{}%
+\contentsline {subsection}{\numberline {8.1}Methodology}{38}{}%
+\contentsline {subsubsection}{\numberline {8.1.1}Effort Testing via TLX}{38}{}%
+\contentsline {subsubsection}{\numberline {8.1.2}Serendipity Testing}{40}{}%
+\contentsline {subsubsection}{\numberline {8.1.3}Semi-Structured Interview}{40}{}%
+\contentsline {subsection}{\numberline {8.2}Results}{40}{}%
+\contentsline {subsubsection}{\numberline {8.2.1}TLX Data Analysis}{40}{}%
+\contentsline {subsubsection}{\numberline {8.2.2}Serendipity Test Analysis}{41}{}%
+\contentsline {subsubsection}{\numberline {8.2.3}Semi Structured Interview Response Analysis}{42}{}%
+\contentsline {subsection}{\numberline {8.3}Additional Features}{43}{}%
+\contentsline {subsubsection}{\numberline {8.3.1}Persistant Preference Storage and Links with Existing Databases}{43}{}%
+\contentsline {subsubsection}{\numberline {8.3.2}Flexible Runtimes and Accuracy}{43}{}%
+\contentsline {subsubsection}{\numberline {8.3.3}Additional Formats and MTG: Arena Support}{43}{}%
+\contentsline {subsubsection}{\numberline {8.3.4}Frontend Formatting Improvements}{44}{}%
+\contentsline {section}{\numberline {9}Conclusion}{44}{}%
+\contentsline {subsection}{\numberline {9.1}Summary}{44}{}%
+\contentsline {subsection}{\numberline {9.2}Self Assessment}{45}{}%
+\contentsline {subsubsection}{\numberline {9.2.1}Use of Python as Backend}{45}{}%
+\contentsline {subsubsection}{\numberline {9.2.2}Use of Hill Climbing Algorithm}{45}{}%
+\contentsline {subsubsection}{\numberline {9.2.3}Mid-Development Validation and Verification Tests}{45}{}%
+\contentsline {subsubsection}{\numberline {9.2.4}Time Management During Development}{46}{}%
+\contentsline {subsection}{\numberline {9.3}Final Thoughts}{46}{}%

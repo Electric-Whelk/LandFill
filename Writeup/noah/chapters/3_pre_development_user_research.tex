@@ -1,0 +1,119 @@
+\chapter{Pre-Development User Research}
+\label{chapter:predevelopmentuserresearch}
+\section{Overview}
+\label{sec:initialusertests}
+I began development by holding one-on-one user research sessions with eight MTG players. The sessions were divided into two parts, a Semi-Structured Interview and a Think-Aloud Mockup Test, with an additional Kano Questionnaire circulated to users afterwards. 
+
+\subsection{Semi-Structured Interview}
+In addition to specific feedback on possible features, I was interested in understanding more about how players typically create manabases. I therefore chose to lead with a Semi-Structured Interview. This is a data-gathering method in which the interviewer stays flexible on how and in what sequence questions are asked, to allow unexpected themes and topics to emerge~\cite{manuel2004sage}. My questions were as follows:
+
+\begin{itemize}
+\item How do you approach selecting lands for a deck, and how does this vary across formats you play?
+\item How do you approach acquiring lands for a deck (eg, do you assemble a list of cards to purchase, do you assemble a list of cards you already have~---~and if so, do you have a good knowledge of what lands you own)?
+\item What role do existing deckbuilding support apps, such as Moxfield and TappedOut, play in your process?
+\item Do you factor the strategy of your deck into land choices in terms of pure mana production (i.e.,~not including utility lands).
+\item How do you mulligan? How does this vary across formats that  you play?  
+\end{itemize}
+
+\subsection{Think-Aloud Mockup Testing}
+
+In a ``Think-Aloud Evaluation'', users are asked to narrate aloud their thoughts and opinions while attempting to use a system~\cite{wright1991use}. This is an appropriate method for early development since it can be conducted on a ``mockup'', an aesthetically versimillitudinous but non-functional representation of the planned interface. Users are occasionally prompted for input, and may be given solutions to problems if necessary, but are largely expected to use the product unassisted. The LandFill mockup presented to users is displayed in Fig.~\ref{fig:mockup}. 
+
+
+\myfig{MockupFrontend.jpg}{Draft front-end used for mockup testing.}{mockup}
+
+\subsection{Kano Questionnaire}
+\label{sec:kanoquestionnaire}
+Kano Analysis is an approach to user evaluation that examines the emotional response of a prospective user to the presence or absence of a given feature. I developed a Kano Questionnaire after analysis of the Interview and Think-Aloud data, so as to prioritize which features, suggested by individual testers, were reflective of more widespread demand. A generic Kano template is displayed in Fig.~\ref{fig:kanoq}. My questionnaire listed the following proposed features:
+
+\begin{itemize}
+  \item The option to exclude from consideration all lands which always enter tapped.
+  \item The option to exclude from consideration all lands above a certain price. 
+  \item The option to exclude any individual land or cycle from consideration via the player's own preference. 
+  \item The option to mark some lands as mandatory for LandFill to include.
+  \item The option to ``weight'' lands, so that LandFill prioritizes a player's preferred cycles in its evaluation.
+  \item The option to input a list of lands as well as a list of nonlands and have LandFill choose the best of these, rather than explore all possible lands.
+  \item The option to tell LandFill not to recommend ``Off-colour Fetches''. For example, a Fetch Land that can search for an Island or Plains can still fetch Islands in a UR deck. This was considered distasteful by one test subject.
+  \item The abiilty to see an image and description of any suggested land/cycle.
+  \item The ability to view performance metrics for the deck after manabase generation.
+  \item A FAQ explaining how LandFill determines lands.
+  \item The ability to specify how much life a player is comfortable to lose to land cycles that require a life point investment, i.e.,~Shock Lands.
+  \item The ability to view low-performing lands in a given deckilst, to inform a player's choice of supplemental mana generation spells, or what to replace on the release of new cycles. 
+  \item The ability to generate manabases for, respectively, the Commander, Modern, Legacy, Pauper and Limited formats.
+  \item The ability to copy a decklist into and out of LandFill with minimal reformatting from, respectively, the following database apps: TappedOut, Archidekt, Moxfield, Deckbox. 
+\end{itemize}
+
+
+\myfig{KanoSurvey.jpg}{A question in a generic Kano questionnaire}{kanoq}
+
+\section{Emerging Themes}
+While initial user-testing yielded multiple small design considerations, and will be cited as various development decisions are outlined throughout this writeup, key themes are outlined below.
+
+\subsection{Commander/Casual Preference}
+Commander, Limited and Pauper were the three most popular formats among interviewees. Of these three, a plurality of interviewees acknowledged that Commander would be the only format for which they would consider using LandFill. The other two were disqualified by users in general on the following grounds:
+
+\begin{itemize}
+\item Limited~---~in this format, cards are assigned to a player at random immediately before a game. Decklists are therefore not generally uploaded to any databases, and inputting all cards into LandFill, especially on a mobile device, would be impractical.
+\item Pauper~---~this format restricts decks to only common and cheap cards. In Pauper, use of utility lands, or lands with specific synergistic qualities, is so normalized that manabase strategies prioritize this over consistent mana generation.
+\end{itemize}
+
+While fewer interviewees had much experience with more competitive formats such as Standard, Legacy and Modern, several interviewees raised doubts as to the ability of any spontaneous manabase generator to gain traction within those scenes, as players in those formats habitually use existing deck archetypes, and attach to them manabases with proven competitive credentials. In responses to the Kano Questionnaire, most respondents expressed that they would like/be neutral on support for non-Commander formats, but only one respondent identified any format other than Commander as a minimum expectation. 
+
+I therefore decided that I would restrict LandFill to being solely a Commander product for initial development. Commander's deckbuilding restrictions are markedly different from other formats, and will be discussed at length in my outline of the Simulator (see \ref{sec:thecommanderformat}). I therefore deemed it more important to make a product that worked seamlessly for Commander decks, rather than one that attempted to accommodate potential decks across a wider range of formats. 
+
+\subsection{Lack of Strategic Thinking but Strong Preferences}
+\label{sec:nostrategy}
+When asked about how the strategy of a given deck informed their choice of lands, nearly all test subjects said that it did so, but almost solely in regards to the ancillary effects of certain cycles – i.e.,~Gain Lands (tapped dual lands that increase the player's life point total by 1 on entry) being popular in decks that trigger from gaining life. Only one said that they would actively choose slower but more colour-diverse lands for slower decks. 
+
+However, when presented with the Mockup outlined in \ref{fig:mockup}, all users swiftly devoted themselves to using the tickboxes to remove lands or cycles that they did not want to have included in the deck, despite having been told to imagine this mockup returning a fully optimized list of lands. Several users also expressed a desire for a weighting functionality, so that they may specify lands which they prefer. 
+
+Some testees also expressed a dislike of certain categories of lands or cycles, i.e.,~any cycle of dual land that only ever enters the battlefield tapped, or any off-colour Fetch Land (see the relevant listed feature in \ref{sec:kanoquestionnaire}).
+
+The lack of strategic decision-making in manabase assembly validates LandFill's use-case, as it suggests that, by testing lands against the needs of the deck, LandFill is putting more consideration into land selection than a typical player. However, it is clear that player input needs to include both:
+
+\begin{itemize}
+\item A positive component, in which players can force inclusion of potentially suboptimal lands such as Gain Lands due to deck strategy.
+\item A negative component, in which players are given extensive leeway to remove lands from consideration. 
+\end{itemize}
+
+\subsection{Deckbuilder Personas}
+\label{sec:personas}
+Testees broadly designed manabases in one of two ways, embodied in the below personas:
+
+\begin{itemize}
+\item Persona A, who possesses a large collection of land cards and, on creation of a new deck, selects lands in the approrpiate colours from this collection.
+\item Persona B, who develops a new deck and chooses lands based on abstract preference, and then orders those lands.
+\end{itemize}
+
+This prompted me to ask testees which of the following two models of LandFill they would prefer:
+
+\begin{itemize}
+\item Model 1~---~LandFill, in addition to taking a decklist of nonland cards, also takes a list of land cards that the player might have found in their collection, and returns the optimum subsection of these.
+\item Model 2~---~LandFill takes a decklist of nonland cards and asks the user only to specify what lands they do not want, generating an optimized list from the remaining options.
+\end{itemize}
+
+I expected a preference towards Model 1 to be strongly associated with Persona A deckbuilders and vice versa, but to my surprise, a majority of deckbuilders across the personae preferred Model 2. Several Persona A deckbuiders preferred it because they were enthused by the prospect of being recommended lands they had not heard of before. 
+
+While this was a majority consensus, and all Kano respondents said they would be able tolerate the absence of Model 1 functionality, some users did express a desire for Model 1 functionality, making it a viable route for future development of LandFill. However, the initial design covered in this writeup will adhere to Model 2. 
+
+\subsection{Flexible Input Parsing}
+All users polled made use of at least one online database (a plurality used TappedOut, with Moxfield and Deckbox also being popular). In the Think-Aloud evaluation, they copy pasted decklists from these sources into LandFill, and said they would return the list of outputted lands there. Interestingly, many copied not from the inbuilt export feature of these sites, but instead by simply copying the decklist as it is displayed on the page.
+
+This suggests LandFill would benefit from a flexible input parsing device. LandFill should be able to accept a decklist pasted in from both the export features and front pages of all these databases, and format its outputs so as to be input into these services. Moreover, TappedOut and Archidekt allows for categorization of cards into custom types, which are included in the decklist when copied. The parser, therefore, must be able to recognise these custom types and parse them not as cards but as keys to a dict object which contains the list of cards corresponding to that category, and then display accordingly on output. This avoids players losing their custom categories when they utilize LandFill.
+
+\subsection{Mulligans}
+\label{sec:mulliganheuristic}
+No testee was able to describe any consistent principles on which they based their decision to mulligan. All testees said the decision would be based not just on the castability of spells in the hand, but also the strategy enactable via those cards. It is not, therefore, my priority to provide a means to replicate a given LandFill user's mulligan preferences. For the initial design, the mulligan heuristic will be built into the simulator. 
+
+\subsection{Life Loss, Cost, and the Knapsack Problem}
+\label{sec:knapsack}
+Because user testing was conducted before the development of the Optimizer, I suggested two proposed features which provied unimplementable:
+
+\begin{itemize}
+\item Total manabase cost.
+\item The maximum amount of life a player was happy to lose to lands, such as Pain Lands and Shock Lands, which require a life point investment (this value is set via the ``Pain Threshold'' input on \ref{fig:mockup}; that testees unanimously found this wording confusing is ultimately irrelevant, as the feature was not included). 
+\end{itemize}
+
+These are theoretically easy to determine for any decklist. Manabase cost can be determined from the sum price of each card, data which can be easily included in the Database. While tracking life expenditure would be more difficult, as it would require the Simulator to try and minimize life point expenditure in a situation where there are multiple ways to spend the same amount of mana, it would also be possible to return the average life point penalty incurred over a Monte Carlo search along with the general performance metric. However, these are both examples of the 0---1 Knapsack Problem, itself a NP-hard combinatorial optimization problem, in which a subsection of weighted items must be chosen from a larger set that minimize the total weight (with weight, in this case, representing respective average life damage and card cost)\cite{martello1990knapsack}. Since this would involve simultaneously optimizing multiple areas of deck design, it would represent a sizeable increase in computational complexity for LandFill.
+
+Surprisingly, subjects were broadly ambivalent on both of these features. During the Think Aloud evaluation, no subjects attempted to make use of either. Kano data introduces some more nuance. The ability to specify an upper limit of life loss was something all but one respondant would consider desirable, although none considered it a minimum requirement, nor its absence to be something they would ``dislike''. The ability to specify price limits performed similarly, save that one respondent did indeed consider it a minimum requirement. This suggests that, while it is not worthwhile to simultaneously attempt to optimize these metrics while optimizing mana production, these features are not useless, and it is worth finding some approximate representation of them in design. My approach to the issue of life loss is covered in \secref{sec:landprioritization}. My approach to price consideration is covered in \secref{sec:preferences}.

@@ -221,121 +221,68 @@
 \newlabel{sec:fetchlands}{{5.7.1}{33}{}{}{}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {5.7.2}Filter Lands}{34}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {5.7.3}Dual-Faced Lands}{34}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.8}Simulator Verification Testing}{35}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6}The Optimizer}{35}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Constituent Classes}{35}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.1.1}MonteCarlo and Trial}{35}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.1.2}LandPrioritization}{35}{}\protected@file@percent }
-\newlabel{sec:landprioritization}{{6.1.2}{35}{}{}{}}
-\abx@aux@cite{0}{silver2004overview}
-\abx@aux@segm{0}{0}{silver2004overview}
-\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces Digraph of strict betterness relationhips between all cycles currently handled by LandFill, where each arrow points to the superior land. Note that some labels (ie, Three Colour Untyped Taplands) refer not to single cycles but to groups of mechanically equivalent cycles which differ in ways that do not pertain to mana generation.}}{36}{}\protected@file@percent }
-\newlabel{fig:strictbetterness}{{13}{36}{}{}{}}
-\abx@aux@cite{0}{silver2004overview}
-\abx@aux@segm{0}{0}{silver2004overview}
-\abx@aux@cite{0}{salhi2019neighbourhood}
-\abx@aux@segm{0}{0}{salhi2019neighbourhood}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Optimization Algorithm}{37}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.2.1}Outline of Steepest Ascent Hill Climbing Algorithm}{37}{}\protected@file@percent }
-\newlabel{sec:steepestascentoutline}{{6.2.1}{37}{}{}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.2.2}Other Options}{37}{}\protected@file@percent }
-\abx@aux@cite{0}{KarstenCurve}
-\abx@aux@segm{0}{0}{KarstenCurve}
-\abx@aux@cite{0}{BounceLands}
-\abx@aux@segm{0}{0}{BounceLands}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Choice of Performance Metrics}{38}{}\protected@file@percent }
-\newlabel{sec:choiceofobjectivefunction}{{6.3}{38}{}{}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.3.1}Overview}{38}{}\protected@file@percent }
-\newlabel{sec:performancemetricsoverview}{{6.3.1}{38}{}{}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.3.2}Use of ``Wasted Mana''}{38}{}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces Outputs in terms of wasted mana for each deck}}{39}{}\protected@file@percent }
-\newlabel{fig:wastedoutputs}{{14}{39}{}{}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.3.3}Initial Analysis}{39}{}\protected@file@percent }
-\newlabel{sec:initialanalysis}{{6.3.3}{39}{}{}{}}
-\abx@aux@cite{0}{lee2004trust}
-\abx@aux@segm{0}{0}{lee2004trust}
-\@writefile{lof}{\contentsline {figure}{\numberline {15}{\ignorespaces Histograms of the mana wasted by each deck: clockwise from top left: BasicDeck, PartialDeck, OverDeck, ExpectedDeck}}{40}{}\protected@file@percent }
-\newlabel{fig:wastedhistograms}{{15}{40}{}{}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.3.4}Proportion Wasted vs Cumulative Distribution}{40}{}\protected@file@percent }
-\newlabel{sec:propvscum}{{6.3.4}{40}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {16}{\ignorespaces Box Plots representing the same Trial output data as (left to right): proportion of games in which zero mana is wasted, and area under a CMF of mana wasted.}}{41}{}\protected@file@percent }
-\newlabel{fig:shockvscheck}{{16}{41}{}{}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}The Hill Climbing Algorithm}{41}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.4.1}Setup}{41}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.4.2}Each Increment}{42}{}\protected@file@percent }
-\newlabel{sec:eachincrement}{{6.4.2}{42}{}{}{}}
-\abx@aux@cite{0}{costa2021further}
-\abx@aux@segm{0}{0}{costa2021further}
-\abx@aux@cite{0}{candan2014unified}
-\abx@aux@segm{0}{0}{candan2014unified}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.4.3}Halting}{43}{}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {17}{\ignorespaces Rate of improvement in percentage of wasteless games for a BUG deck, where the X axis represents Hill Climb increments and the Y axis shows percentage of wateless games.}}{44}{}\protected@file@percent }
-\newlabel{fig:rateofimprovement}{{17}{44}{}{}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.5}Optimizer Verification Testing}{44}{}\protected@file@percent }
-\newlabel{optimizervertest}{{6.5}{44}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {18}{\ignorespaces Outputs of the rolling average and the Savitsky-Golay derivative halting functions when applied to the data shown in Fig. \ref {fig:rateofimprovement}; in both cases, the rolling average used a window size of 3, while the Savitsky-Golay filter window was set respectively at 3 (left) and 11 (right)}}{45}{}\protected@file@percent }
-\newlabel{fig:savgolvsroll}{{18}{45}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {7}The Web Interface}{45}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}The Input Parser}{45}{}\protected@file@percent }
 \abx@aux@cite{0}{reactbeautifuldnd}
 \abx@aux@segm{0}{0}{reactbeautifuldnd}
-\@writefile{lof}{\contentsline {figure}{\numberline {19}{\ignorespaces Mana curves as visualized using the TappedOut card database for a WUG and BUG deck respectively.}}{46}{}\protected@file@percent }
-\newlabel{fig:bugwug}{{19}{46}{}{}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}App Layout}{46}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {7.2.1}Deck Input (Fig. \ref {fig:deckinput})}{46}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {7.2.2}Preferences (Fig. \ref {fig:preferences})}{46}{}\protected@file@percent }
-\newlabel{sec:preferences}{{7.2.2}{46}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {20}{\ignorespaces Deck Input page. }}{47}{}\protected@file@percent }
-\newlabel{fig:deckinput}{{20}{47}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {21}{\ignorespaces Preferences page, zoomed out to show all content; the rankings panels would normally be offscreen. The side-panel remains stationary as the user scrolls.}}{48}{}\protected@file@percent }
-\newlabel{fig:preferences}{{21}{48}{}{}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {7.2.3}Progress (Fig.\ref {fig:progress})}{48}{}\protected@file@percent }
-\newlabel{sec:progress}{{7.2.3}{48}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {22}{\ignorespaces Progress page}}{49}{}\protected@file@percent }
-\newlabel{fig:progress}{{22}{49}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {23}{\ignorespaces Output Page}}{49}{}\protected@file@percent }
-\newlabel{fig:output}{{23}{49}{}{}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {7.2.4}Output (Fig.\ref {fig:output})}{49}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.8}Simulator Verification Testing}{35}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}The Optimizer}{35}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7}The Interface}{35}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}The Input Parser}{35}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}App Layout}{35}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {7.2.1}Deck Input (Fig. \ref {fig:deckinput})}{35}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces Deck Input page. }}{36}{}\protected@file@percent }
+\newlabel{fig:deckinput}{{13}{36}{}{}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {7.2.2}Preferences (Fig. \ref {fig:preferences})}{36}{}\protected@file@percent }
+\newlabel{sec:preferences}{{7.2.2}{36}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces Preferences page, zoomed out to show all content; the rankings panels would normally be offscreen. The side-panel remains stationary as the user scrolls.}}{37}{}\protected@file@percent }
+\newlabel{fig:preferences}{{14}{37}{}{}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {7.2.3}Progress (Fig.\ref {fig:progress})}{37}{}\protected@file@percent }
+\newlabel{sec:progress}{{7.2.3}{37}{}{}{}}
 \abx@aux@cite{0}{bustamante2008measurement}
 \abx@aux@segm{0}{0}{bustamante2008measurement}
 \abx@aux@cite{0}{nasatlxhomepage}
 \abx@aux@segm{0}{0}{nasatlxhomepage}
+\@writefile{lof}{\contentsline {figure}{\numberline {15}{\ignorespaces Progress page}}{38}{}\protected@file@percent }
+\newlabel{fig:progress}{{15}{38}{}{}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {7.2.4}Output (Fig.\ref {fig:output})}{38}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8}Validation Testing}{38}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1}Methodology}{38}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {8.1.1}Effort Testing via TLX}{38}{}\protected@file@percent }
 \abx@aux@cite{0}{bustamante2008measurement}
 \abx@aux@segm{0}{0}{bustamante2008measurement}
-\@writefile{toc}{\contentsline {section}{\numberline {8}Validation Testing}{50}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {8.1}Methodology}{50}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {8.1.1}Effort Testing via TLX}{50}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {8.1.2}Serendipity Testing}{50}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {16}{\ignorespaces Output Page}}{39}{}\protected@file@percent }
+\newlabel{fig:output}{{16}{39}{}{}{}}
 \abx@aux@cite{0}{SerendipityRecSys}
 \abx@aux@segm{0}{0}{SerendipityRecSys}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {8.1.3}Semi-Structured Interview}{51}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {8.2}Results}{51}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {8.2.1}TLX Data Analysis}{51}{}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {24}{\ignorespaces Scores and timings from the two TLX analyses, and the differences between these values.}}{52}{}\protected@file@percent }
-\newlabel{fig:tlxdata}{{24}{52}{}{}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {8.2.2}Serendipity Test Analysis}{52}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {8.2.3}Semi Structured Interview Response Analysis}{53}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {8.3}Additional Features}{54}{}\protected@file@percent }
-\newlabel{sec:areasforimprovement}{{8.3}{54}{}{}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {8.3.1}Persistant Preference Storage and Links with Existing Databases}{54}{}\protected@file@percent }
-\newlabel{sec:persistantstorage}{{8.3.1}{54}{}{}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {8.3.2}Flexible Runtimes and Accuracy}{54}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {8.3.3}Additional Formats and MTG: Arena Support}{54}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {8.3.4}Frontend Formatting Improvements}{55}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {9}Conclusion}{55}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {9.1}Summary}{55}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {8.1.2}Serendipity Testing}{40}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {8.1.3}Semi-Structured Interview}{40}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.2}Results}{40}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {8.2.1}TLX Data Analysis}{40}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {17}{\ignorespaces Scores and timings from the two TLX analyses, and the differences between these values.}}{41}{}\protected@file@percent }
+\newlabel{fig:tlxdata}{{17}{41}{}{}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {8.2.2}Serendipity Test Analysis}{41}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {8.2.3}Semi Structured Interview Response Analysis}{42}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.3}Additional Features}{43}{}\protected@file@percent }
+\newlabel{sec:areasforimprovement}{{8.3}{43}{}{}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {8.3.1}Persistant Preference Storage and Links with Existing Databases}{43}{}\protected@file@percent }
+\newlabel{sec:persistantstorage}{{8.3.1}{43}{}{}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {8.3.2}Flexible Runtimes and Accuracy}{43}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {8.3.3}Additional Formats and MTG: Arena Support}{43}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {8.3.4}Frontend Formatting Improvements}{44}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {9}Conclusion}{44}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.1}Summary}{44}{}\protected@file@percent }
 \abx@aux@cite{0}{joblib}
 \abx@aux@segm{0}{0}{joblib}
 \abx@aux@cite{0}{bjorke2017deckbuilding}
 \abx@aux@segm{0}{0}{bjorke2017deckbuilding}
-\@writefile{toc}{\contentsline {subsection}{\numberline {9.2}Self Assessment}{56}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {9.2.1}Use of Python as Backend}{56}{}\protected@file@percent }
-\newlabel{sec:python}{{9.2.1}{56}{}{}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {9.2.2}Use of Hill Climbing Algorithm}{56}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {9.2.3}Mid-Development Validation and Verification Tests}{56}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {9.2.4}Time Management During Development}{57}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {9.3}Final Thoughts}{57}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.2}Self Assessment}{45}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {9.2.1}Use of Python as Backend}{45}{}\protected@file@percent }
+\newlabel{sec:python}{{9.2.1}{45}{}{}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {9.2.2}Use of Hill Climbing Algorithm}{45}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {9.2.3}Mid-Development Validation and Verification Tests}{45}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {9.2.4}Time Management During Development}{46}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.3}Final Thoughts}{46}{}\protected@file@percent }
 \abx@aux@read@bbl@mdfivesum{48594510C1FBF77C81C5960812769818}
+\abx@aux@read@bblrerun
 \abx@aux@defaultrefcontext{0}{alvin2021toward}{nty/global//global/global}
 \abx@aux@defaultrefcontext{0}{archidekt}{nty/global//global/global}
 \abx@aux@defaultrefcontext{0}{iterativedevelopment}{nty/global//global/global}
@@ -394,4 +341,4 @@
 \abx@aux@defaultrefcontext{0}{MonteCarloGuide}{nty/global//global/global}
 \abx@aux@defaultrefcontext{0}{SerendipityRecSys}{nty/global//global/global}
 \abx@aux@defaultrefcontext{0}{zanakis1981heuristic}{nty/global//global/global}
-\gdef \@abspage@last{60}
+\gdef \@abspage@last{49}

@@ -1,0 +1,114 @@
+\babel@toc {english}{}\relax 
+\par \nobreak \mbox {}\hfill {\bfseries Page}\par \nobreak 
+\contentsline {chapter}{List of Tables}{xi}{section*.5}%
+\contentsline {chapter}{List of Figures}{xiii}{section*.6}%
+\contentsline {chapter}{\chapternumberline {1}Introduction}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Overview}{1}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Thesis Layout}{2}{section.1.2}%
+\contentsline {chapter}{\chapternumberline {2}Problems and Proposed Solutions to MTG Manabase Optimization}{3}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Gameplay Concepts and Terminology}{3}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Overview}{3}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}Land Balancing and Cycles}{5}{subsection.2.1.2}%
+\contentsline {section}{\numberline {2.2}Simulation and Optimization}{7}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}LandFill Simulation}{8}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}LandFill Optimization}{9}{subsection.2.2.2}%
+\contentsline {section}{\numberline {2.3}Development and Testing Methodologies}{10}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Verification Testing}{10}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}Validation Testing and User Research}{11}{subsection.2.3.2}%
+\contentsline {section}{\numberline {2.4}Relevance to Existing Material}{11}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}Academic Interest in MTG Automation}{11}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}Manabase Analysis within the Player Community}{12}{subsection.2.4.2}%
+\contentsline {subsection}{\numberline {2.4.3}Existing Deckbuilding Apps}{14}{subsection.2.4.3}%
+\contentsline {section}{\numberline {2.5}Library/Language Choices}{16}{section.2.5}%
+\contentsline {chapter}{\chapternumberline {3}Pre-Development User Research}{19}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Overview}{19}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}Semi-Structured Interview}{19}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.2}Think-Aloud Mockup Testing}{20}{subsection.3.1.2}%
+\contentsline {subsection}{\numberline {3.1.3}Kano Questionnaire}{20}{subsection.3.1.3}%
+\contentsline {section}{\numberline {3.2}Emerging Themes}{22}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Commander/Casual Preference}{22}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}Lack of Strategic Thinking but Strong Preferences}{23}{subsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.2.3}Deckbuilder Personas}{24}{subsection.3.2.3}%
+\contentsline {subsection}{\numberline {3.2.4}Flexible Input Parsing}{24}{subsection.3.2.4}%
+\contentsline {subsection}{\numberline {3.2.5}Mulligans}{25}{subsection.3.2.5}%
+\contentsline {subsection}{\numberline {3.2.6}Life Loss, Cost, and the Knapsack Problem}{25}{subsection.3.2.6}%
+\contentsline {chapter}{\chapternumberline {4}The Database}{27}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Database Requirements}{27}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Choice of Online Database~---~ScryFall/Scrython}{28}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Database Layout}{28}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Database Management}{29}{section.4.4}%
+\contentsline {section}{\numberline {4.5}Representing Multiple-Faced Cards}{29}{section.4.5}%
+\contentsline {section}{\numberline {4.6}Cycles}{30}{section.4.6}%
+\contentsline {section}{\numberline {4.7}Database Verification Testing}{30}{section.4.7}%
+\contentsline {chapter}{\chapternumberline {5}The Simulator}{33}{chapter.5}%
+\contentsline {section}{\numberline {5.1}The Commander Format}{33}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Classes}{33}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}GameCard and subclasses}{33}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {5.2.2}CardCollection and Subclasses}{35}{subsection.5.2.2}%
+\contentsline {subsection}{\numberline {5.2.3}Simulation and Subclasses}{36}{subsection.5.2.3}%
+\contentsline {subsection}{\numberline {5.2.4}``Lump''}{36}{subsection.5.2.4}%
+\contentsline {section}{\numberline {5.3}Initiating a Game}{37}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Running a Turn}{37}{section.5.4}%
+\contentsline {subsection}{\numberline {5.4.1}Untap and Draw}{37}{subsection.5.4.1}%
+\contentsline {subsection}{\numberline {5.4.2}Determining Lumps}{37}{subsection.5.4.2}%
+\contentsline {subsection}{\numberline {5.4.3}Playing a Land and a Lump}{38}{subsection.5.4.3}%
+\contentsline {subsection}{\numberline {5.4.4}Assessing Lump Playability}{39}{subsection.5.4.4}%
+\contentsline {section}{\numberline {5.5}Concluding a Game}{42}{section.5.5}%
+\contentsline {section}{\numberline {5.6}Heuristics}{42}{section.5.6}%
+\contentsline {subsection}{\numberline {5.6.1}Multiple-Faced Cards and Alternate Casting Costs}{42}{subsection.5.6.1}%
+\contentsline {subsection}{\numberline {5.6.2}Spells with X in their Mana Cost}{42}{subsection.5.6.2}%
+\contentsline {subsection}{\numberline {5.6.3}Strategies for Future Turns}{43}{subsection.5.6.3}%
+\contentsline {subsection}{\numberline {5.6.4}Ramp and Draw Spells}{43}{subsection.5.6.4}%
+\contentsline {subsection}{\numberline {5.6.5}Bond Lands}{43}{subsection.5.6.5}%
+\contentsline {section}{\numberline {5.7}More Complex Lands}{44}{section.5.7}%
+\contentsline {subsection}{\numberline {5.7.1}Fetch Lands}{44}{subsection.5.7.1}%
+\contentsline {subsection}{\numberline {5.7.2}Filter Lands}{44}{subsection.5.7.2}%
+\contentsline {subsection}{\numberline {5.7.3}Dual-Faced Lands}{45}{subsection.5.7.3}%
+\contentsline {section}{\numberline {5.8}Simulator Verification Testing}{46}{section.5.8}%
+\contentsline {chapter}{\chapternumberline {6}The Optimizer}{47}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Constituent Classes}{47}{section.6.1}%
+\contentsline {subsection}{\numberline {6.1.1}MonteCarlo and Trial}{47}{subsection.6.1.1}%
+\contentsline {subsection}{\numberline {6.1.2}LandPrioritization}{47}{subsection.6.1.2}%
+\contentsline {section}{\numberline {6.2}Optimization Algorithm}{49}{section.6.2}%
+\contentsline {subsection}{\numberline {6.2.1}Outline of Steepest Ascent Hill Climbing Algorithm}{49}{subsection.6.2.1}%
+\contentsline {subsection}{\numberline {6.2.2}Other Options}{50}{subsection.6.2.2}%
+\contentsline {section}{\numberline {6.3}Choice of Performance Metrics}{51}{section.6.3}%
+\contentsline {subsection}{\numberline {6.3.1}Overview}{51}{subsection.6.3.1}%
+\contentsline {subsection}{\numberline {6.3.2}Use of ``Wasted Mana''}{51}{subsection.6.3.2}%
+\contentsline {subsection}{\numberline {6.3.3}Initial Analysis}{52}{subsection.6.3.3}%
+\contentsline {subsection}{\numberline {6.3.4}Proportion Wasted vs Cumulative Distribution}{53}{subsection.6.3.4}%
+\contentsline {section}{\numberline {6.4}The Hill Climbing Algorithm}{55}{section.6.4}%
+\contentsline {subsection}{\numberline {6.4.1}Setup}{55}{subsection.6.4.1}%
+\contentsline {subsection}{\numberline {6.4.2}Each Increment}{55}{subsection.6.4.2}%
+\contentsline {subsection}{\numberline {6.4.3}Halting}{57}{subsection.6.4.3}%
+\contentsline {section}{\numberline {6.5}Optimizer Verification Testing}{58}{section.6.5}%
+\contentsline {chapter}{\chapternumberline {7}The Interface}{61}{chapter.7}%
+\contentsline {section}{\numberline {7.1}The Input Parser}{61}{section.7.1}%
+\contentsline {section}{\numberline {7.2}App Layout}{61}{section.7.2}%
+\contentsline {subsection}{\numberline {7.2.1}Deck Input (Fig.~\ref {fig:deckinput})}{62}{subsection.7.2.1}%
+\contentsline {subsection}{\numberline {7.2.2}Preferences (Fig.~\ref {fig:preferences})}{62}{subsection.7.2.2}%
+\contentsline {subsection}{\numberline {7.2.3}Progress (Fig.~\ref {fig:progress})}{64}{subsection.7.2.3}%
+\contentsline {subsection}{\numberline {7.2.4}Output (Fig.~\ref {fig:output})}{65}{subsection.7.2.4}%
+\contentsline {chapter}{\chapternumberline {8}Post-Development Validation Testing}{67}{chapter.8}%
+\contentsline {section}{\numberline {8.1}Methodology}{67}{section.8.1}%
+\contentsline {subsection}{\numberline {8.1.1}Effort Testing via TLX}{67}{subsection.8.1.1}%
+\contentsline {subsection}{\numberline {8.1.2}Serendipity Testing}{68}{subsection.8.1.2}%
+\contentsline {subsection}{\numberline {8.1.3}Semi-Structured Interview}{69}{subsection.8.1.3}%
+\contentsline {section}{\numberline {8.2}Results}{69}{section.8.2}%
+\contentsline {subsection}{\numberline {8.2.1}TLX Data Analysis}{69}{subsection.8.2.1}%
+\contentsline {subsection}{\numberline {8.2.2}Serendipity Test Analysis}{70}{subsection.8.2.2}%
+\contentsline {subsection}{\numberline {8.2.3}Semi Structured Interview Response Analysis}{71}{subsection.8.2.3}%
+\contentsline {section}{\numberline {8.3}Additional Features}{72}{section.8.3}%
+\contentsline {subsection}{\numberline {8.3.1}Persistant Preference Storage and Links with Existing Databases}{72}{subsection.8.3.1}%
+\contentsline {subsection}{\numberline {8.3.2}Flexible Runtimes and Accuracy}{73}{subsection.8.3.2}%
+\contentsline {subsection}{\numberline {8.3.3}Additional Formats and MTG: Arena Support}{73}{subsection.8.3.3}%
+\contentsline {subsection}{\numberline {8.3.4}Frontend Formatting Improvements}{73}{subsection.8.3.4}%
+\contentsline {chapter}{\chapternumberline {9}Conclusion}{75}{chapter.9}%
+\contentsline {section}{\numberline {9.1}Summary}{75}{section.9.1}%
+\contentsline {section}{\numberline {9.2}Self Assessment}{76}{section.9.2}%
+\contentsline {subsection}{\numberline {9.2.1}Use of Python as Backend}{76}{subsection.9.2.1}%
+\contentsline {subsection}{\numberline {9.2.2}Use of Hill Climbing Algorithm}{76}{subsection.9.2.2}%
+\contentsline {subsection}{\numberline {9.2.3}Mid-Development Validation and Verification Tests}{77}{subsection.9.2.3}%
+\contentsline {section}{\numberline {9.3}Final Thoughts}{77}{section.9.3}%
+\contentsline {appendix}{\chapternumberline {A}Appendix A}{79}{appendix.A}%
+\contentsline {chapter}{Bibliography}{81}{section*.32}%

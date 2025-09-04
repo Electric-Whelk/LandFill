@@ -2419,21 +2419,13 @@
     <bcf:citekey order="56" intorder="1">pickle</bcf:citekey>
     <bcf:citekey order="57" intorder="1">scipy</bcf:citekey>
     <bcf:citekey order="58" intorder="1">koopmans1957assignment</bcf:citekey>
-    <bcf:citekey order="59" intorder="1">silver2004overview</bcf:citekey>
-    <bcf:citekey order="60" intorder="1">silver2004overview</bcf:citekey>
-    <bcf:citekey order="61" intorder="1">salhi2019neighbourhood</bcf:citekey>
-    <bcf:citekey order="62" intorder="1">KarstenCurve</bcf:citekey>
-    <bcf:citekey order="63" intorder="1">BounceLands</bcf:citekey>
-    <bcf:citekey order="64" intorder="1">lee2004trust</bcf:citekey>
-    <bcf:citekey order="65" intorder="1">costa2021further</bcf:citekey>
-    <bcf:citekey order="66" intorder="1">candan2014unified</bcf:citekey>
-    <bcf:citekey order="67" intorder="1">reactbeautifuldnd</bcf:citekey>
-    <bcf:citekey order="68" intorder="1">bustamante2008measurement</bcf:citekey>
-    <bcf:citekey order="69" intorder="1">nasatlxhomepage</bcf:citekey>
-    <bcf:citekey order="70" intorder="1">bustamante2008measurement</bcf:citekey>
-    <bcf:citekey order="71" intorder="1">SerendipityRecSys</bcf:citekey>
-    <bcf:citekey order="72" intorder="1">joblib</bcf:citekey>
-    <bcf:citekey order="73" intorder="1">bjorke2017deckbuilding</bcf:citekey>
+    <bcf:citekey order="59" intorder="1">reactbeautifuldnd</bcf:citekey>
+    <bcf:citekey order="60" intorder="1">bustamante2008measurement</bcf:citekey>
+    <bcf:citekey order="61" intorder="1">nasatlxhomepage</bcf:citekey>
+    <bcf:citekey order="62" intorder="1">bustamante2008measurement</bcf:citekey>
+    <bcf:citekey order="63" intorder="1">SerendipityRecSys</bcf:citekey>
+    <bcf:citekey order="64" intorder="1">joblib</bcf:citekey>
+    <bcf:citekey order="65" intorder="1">bjorke2017deckbuilding</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">

@@ -4,6 +4,26 @@
 ]{uob-thesis}
 
 \usepackage{lipsum}
+\usepackage{makecell}  
+
+\NewDocumentCommand{\myfig}{O{0.50} m m m}{%
+  \begin{figure}
+    \centering
+    \includegraphics[scale=#1]{../card_images/#2}
+    \caption{#3}
+    \label{fig:#4}
+  \end{figure}
+}
+
+\newcommand{\Land}[1]{\text{Land}(#1)}
+\newcommand{\Spell}[1]{\text{Spell}(#1)}
+\newcommand{\Plains}{\text{Basic Plains}}
+\newcommand{\Island}{\text{Basic Island}}
+\newcommand{\Forest}{\text{Basic Forest}}
+\newcommand{\Mountain}{\text{Basic Mountain}}
+\newcommand{\FloodedStrand}{\text{Flooded Strand}}
+
+
 
 \addbibresource{refs.bib}
 
@@ -50,11 +70,8 @@
 \end{dedication}
 
 \begin{acknowledgements}
-It is common practice (although totally optional) to acknowledge any third-party
-advice, contribution or influence you have found useful during your work.
-Examples include support from friends or family, the input of your Supervisor
-and/or Advisor, external organisations or persons who  have supplied resources
-of some kind (e.g., funding, advice or time), and so on.
+LandFill could not have been developed without the expert advice of my tutor John Lapinskas or the support of my partner Rosie Solomon, nor my parents, who provided support and statistical advice. Thanks also to my Magic: The Gathering community, particularly Ben Hammond, who pointed me to some algorithms, and Ollie Gibb, who first taught me to play. 
+
 \end{acknowledgements}
 
 \begin{declaration}
@@ -104,10 +121,37 @@ of some kind (e.g., funding, advice or time), and so on.
 
   \input{1_intro}
 
-\chapter{Methodology}
+\chapter{Problems and Proposed Solutions to MTG Manabase Optimization}
 
-  \input{2_methodology}
+  \input{2_problems_and_proposed_solutions}
 
+\chapter{Pre-Development User Research}
+
+  \input{3_pre_development_user_research}
+
+\chapter{The Database}
+
+  \input{4_the_database}
+
+\chapter{The Simulator}
+
+  \input{5_the_simulator}
+
+\chapter{The Optimizer}
+
+  \input{6_the_optimizer}
+
+\chapter{The Interface}
+
+  \input{7_the_interface}
+
+\chapter{Validation Testing}
+
+  \input{8_validation_testing}
+
+\chapter{Conclusion}
+
+  \input{9_conclusion}
 
 
 %%%%%%%%%%%%%%%%
