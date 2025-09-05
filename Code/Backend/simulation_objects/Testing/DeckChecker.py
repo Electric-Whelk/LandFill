@@ -12,8 +12,8 @@ from database_management.models.Format import Format
 from flask import jsonify, session, request
 from flask_caching import Cache
 from simulation_objects.CardCollections.Deck import Deck
-from simulation_objects.CardCollections.MonteCarlo import MonteCarlo
-from simulation_objects.Simulations import Test
+from simulation_objects.CardCollections.DeckBuilder import DeckBuilder
+from simulation_objects.Simulations import MonteCarlo
 
 with open("XavierSal.json", "r") as file:
     data = json.load(file)
@@ -46,7 +46,7 @@ with app.app_context():
             decklist = f"{data.get("Nonlands")}\n{option}"
             deck = Deck()
             deck.setup(decklist, data["Commander"])
-            trial = Test(deck)
+            trial = MonteCarlo(deck)
             trial.individual_deck_test()
             #outputs[name].append(trial.game_proportions)
             wasted = trial.wasted_mana

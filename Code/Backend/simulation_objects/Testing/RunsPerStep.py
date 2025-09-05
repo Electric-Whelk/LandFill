@@ -2,7 +2,7 @@ import json
 from AppFactory import create_app
 from simulation_objects.Misc.InputParser import InputParser
 from simulation_objects.CardCollections.Deck import Deck
-from simulation_objects.CardCollections.MonteCarlo import MonteCarlo
+from simulation_objects.CardCollections.DeckBuilder import DeckBuilder
 
 from itertools import combinations
 from collections import Counter
@@ -78,7 +78,7 @@ with app.app_context():
         theImp = InputParser()
         decklist = theImp.parse_decklist(data.get("deckList"))
         deck.setup(decklist, data.get("commander"), partner=data.get("partner"))
-        monty = MonteCarlo(deck, verbose=True)
+        monty = DeckBuilder(deck, verbose=True)
         monty.setup()
         monty.fill_heap()
         monty.set_permissions(mandatory=prefs.get("mandatory"),

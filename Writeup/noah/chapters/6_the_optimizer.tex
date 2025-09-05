@@ -1,11 +1,11 @@
 \chapter{The Optimizer}
 \section{Constituent Classes}
-\subsection{MonteCarlo and Trial}
-Recall that these respectively are subclasses of CardCollection and Simulation. Their relationship may be modelled as so: MonteCarlo produces a deck, creates a single Trial object for that deck, uses that Trial's \texttt{trial.run()} method to run many games, and then accesses performance data for those games via the Trial's attributes.
+\subsection{DeckBuilder and MonteCarlo}
+Recall that these respectively are subclasses of CardCollection and Simulation. Their relationship may be modelled as so: DeckBuilder produces a deck, creates a single MonteCarlo object for that deck, uses that MonteCarlo's \texttt{MonteCarlo.run()} method to run many games, and then accesses performance data for those games via the MonteCarlo's attributes.
 
 \subsection{LandPrioritization}
 \label{sec:landprioritization}
-At each increment of the Hill Climbing Algorithm, when a land is removed from the deck, MonteCarlo does not test any candidate replacement land unless all lands that are strictly better than it are already either in the deck or forbidden from consideration by the player. This is for three reasons: 
+At each increment of the Hill Climbing Algorithm, when a land is removed from the deck, DeckBuilder does not test any candidate replacement land unless all lands that are strictly better than it are already either in the deck or forbidden from consideration by the player. This is for three reasons: 
 
 \begin{itemize}
 \item As will be discussed in \secref{sec:steepestascentoutline}, it is not always possible to determine a conclusive performance diference between two decks with very similar card lists. Insofar as some lands can be decisively considered to be better than others, it is worth utilizing this information as a backstop against fluke results. 
@@ -13,7 +13,7 @@ At each increment of the Hill Climbing Algorithm, when a land is removed from th
 \item Since LandFill uses a Hill Climbing algorithm, the performance \(P\) of the deck must be repeatedly determined at each increment. The number of seperate \(P\) scores to be taken at each increment increases with the number of lands that could be added to the deck. This is time consuming. 
 \end{itemize}
 
-MonteCarlo is therefore given a LandPrioritization object, which maps out strict superiority/inferiority relationship. Land \(A\) is considered strictly better than land \(B\) if it is capable of producing all colours that \(B\) does and meets at least one of the below criteria, as long as \(B\) does not meet any of the same criteria \textit{vice versa}:
+DeckBuilder is therefore given a LandPrioritization object, which maps out strict superiority/inferiority relationship. Land \(A\) is considered strictly better than land \(B\) if it is capable of producing all colours that \(B\) does and meets at least one of the below criteria, as long as \(B\) does not meet any of the same criteria \textit{vice versa}:
 
 \begin{itemize}
 \item Produces additional colours that \(B\) does not.
@@ -34,7 +34,7 @@ Strict Betterness is mapped in Fig.~\ref{fig:strictbetterness}. While most of th
 \end{figure}
 
 
-This relationship is encoded into the LandPrioritization object via a dict, where a Land child class is a key mapping to a list of all superior classes. All Land objects belonging to the MonteCarlo that are permitted for consideration by the user are fed into \texttt{LandPrioritization.register\allowbreak\_land()} and stored within the LandPrioritization. After all Land objects are registered, \texttt{LandPrioritization.cascade\allowbreak\_superiors()} assigns each a list of all superior Lands that have also been registered, stored as an attribute of the Land object. This process overlooks any absent lands that the user does not want LandFill to consider: if the user does not want to include Battle Lands, for example, any two-colour lands that always enter tapped and have basic landtypes will recognise an equivalently coloured Shock Land as a superior. 
+This relationship is encoded into the LandPrioritization object via a dict, where a Land child class is a key mapping to a list of all superior classes. All Land objects belonging to the DeckBuilder that are permitted for consideration by the user are fed into \texttt{LandPrioritization.register\allowbreak\_land()} and stored within the LandPrioritization. After all Land objects are registered, \texttt{LandPrioritization.cascade\allowbreak\_superiors()} assigns each a list of all superior Lands that have also been registered, stored as an attribute of the Land object. This process overlooks any absent lands that the user does not want LandFill to consider: if the user does not want to include Battle Lands, for example, any two-colour lands that always enter tapped and have basic landtypes will recognise an equivalently coloured Shock Land as a superior. 
 
 \section{Optimization Algorithm}
 
@@ -42,7 +42,7 @@ This relationship is encoded into the LandPrioritization object via a dict, wher
 \label{sec:steepestascentoutline}
 LandFill improves on the ``Simple'' Hill Climb algorithm set out in \secref{sec:optimizationoverview} by implementing instead a ``Steepest Ascent'' Hill Climb. At every increment it examines \textit{all} inputs in the neighbourhood and chooses the one that representing the highest rate of improvement~\cite{silver2004overview}. Since all lands must be entered into the deck in discrete quantities, this can be calculated easily by modelling all exchanges and selecting the one offering the highest improvement. 
 
-This is, however, time consuming to calculate, as it means that every candidate land must be tested once for each land in the deck it could replace. This adds a search space of \(N \times M\) to each increment, where $N$ is the number non-mandatory lands in the deck and $M$ is the number of permitted lands in the MonteCarlo with all strict superiors in the deck. However, it is possible to divide this heuristically into two steps: 
+This is, however, time consuming to calculate, as it means that every candidate land must be tested once for each land in the deck it could replace. This adds a search space of \(N \times M\) to each increment, where $N$ is the number non-mandatory lands in the deck and $M$ is the number of permitted lands in the DeckBuilder with all strict superiors in the deck. However, it is possible to divide this heuristically into two steps: 
 
 \begin{itemize}
 \item Identify the worst land in the deck.
@@ -52,7 +52,7 @@ This is, however, time consuming to calculate, as it means that every candidate 
 The manner in which LandFill does this is outlined in \secref{sec:eachincrement}. 
 
 \subsection{Other Options}
-Simulated Annealing is a variant of the Neighbourhood Search algorithm that avoids becoming trapped in local maxima by introducing an element of randomness. At any given increment, the function may return a higher score but decline to accept this as a new value, with the probability of this occurrance dependent on a ``temperature'' variable that decreases as the search space is traversed~\cite{silver2004overview}. Since LandFill's success criterion is simply the ability to return an equivalently optimized list of lands that a human deckbuilder could provide in a similar timeframe wtih similar effort, I consider a local maxima to be an acceptable return value. 
+Simulated Annealing is a variant of the Neighbourhood Search algorithm that avoids becoming trapped in local maxima by introducing an element of randomness. At any given increment, the function may return a higher score but decline to accept this as a new value, with the probability of this occurrance dependent on a ``temperature'' variable that decreases as the search space is traversed~\cite{silver2004overview}. Since LandFill's success criterion is simply the ability to return an equivalently optimized list of lands that a human player could provide in a similar timeframe wtih similar effort, I consider a local maxima to be an acceptable return value. 
 
 I did explore one approach that applied the ``temperature'' concept from Simulated Annealing to a Neighborhood Reduction schema. In Neighborhood Reduction, moves that are unlikely to lead to an optimal solution are discarded, saving processing time. The LandPrioritization object is a simple example of this. As will be seen in \secref{sec:propvscum}, a Check Land is functionally identical to a Shock Land when they are the only nonbasic cards in a manabase. Therefore, it may not be necessery to test every candidate Check Land each time one basic land is removed from the deck, as this will, in the abstract, only decrease the viability of Check Lands. Check Lands will only become relevant again at a later stage in optimization, once better nonbasic options have been exhausted. 
 
@@ -64,7 +64,7 @@ To take advantage of this, I trialled an algorithm in which a declining temperat
 \label{sec:choiceofobjectivefunction}
 \subsection{Overview}
 \label{sec:performancemetricsoverview}
-To test different performance metrics, four sample decks containing the same nonland cards in colours BUG were submitted to Trial objects outside the context of the Hill Climbing algorithm:
+To test different performance metrics, four sample decks containing the same nonland cards in colours BUG were submitted to MonteCarlo objects outside the context of the Hill Climbing algorithm:
 
 \begin{itemize}
 \item BasicDeck~---~a deck containing only Basic Lands in the deck's colours.
@@ -115,9 +115,9 @@ Examining the histograms of ExpectedDeck and OverDeck's mana wastage clarifies t
 \label{sec:propvscum}
 An alternative metric to \(P\), that may capture some subtleties to the data, is \(C\), the area under a Cumulative Distribution Function (CDF) of wasted mana per game. In such a metric, a decklist with a lower value of \(P\) would be penalized compared to one with a higher value, but two decks with equivalent values of \(P\) may return different scores depending on their probability of producing games with very high values of \(W\).
 
-I investigated this using two new decks, CheckDeck and ShockDeck, both identical to BasicDeck save for the replacement of a single Basic Forest with, respectively, a UB Check Land and a UB Shock Land (see Fig.~\ref{fig:cycles}). This represents decks after a first Hill Climb increment. Whereas OverDeck is unlikely to ever be assembled by LandFill in its normal course of operations, if one metric was better able to distinguish the slight superiority of ShockDeck (which need never have a land enter tapped) to CheckDeck (which, on occasion, will), and distinguish the slight superiority of both to BasicDeck, that would be a stronger metric to use. I conducted 100 Trials of 1000 games each for all decks, summarizing the same data first with \(P\) and second with \(C\). Box plots of the results are shown in Fig.~\ref{fig:shockvscheck}
+I investigated this using two new decks, CheckDeck and ShockDeck, both identical to BasicDeck save for the replacement of a single Basic Forest with, respectively, a UB Check Land and a UB Shock Land (see Fig.~\ref{fig:cycles}). This represents decks after a first Hill Climb increment. Whereas OverDeck is unlikely to ever be assembled by LandFill in its normal course of operations, if one metric was better able to distinguish the slight superiority of ShockDeck (which need never have a land enter tapped) to CheckDeck (which, on occasion, will), and distinguish the slight superiority of both to BasicDeck, that would be a stronger metric to use. I conducted 100 MonteCarlos of 1000 games each for all decks, summarizing the same data first with \(P\) and second with \(C\). Box plots of the results are shown in Fig.~\ref{fig:shockvscheck}
 
-\myfig{shockvscheck.jpg}{Box Plots representing the same Trial output data as (left to right): proportion of games in which zero mana is wasted, and area under a CMF of mana wasted.}{shockvscheck}
+\myfig{shockvscheck.jpg}{Box Plots representing the same MonteCarlo output data as (left to right): proportion of games in which zero mana is wasted, and area under a CMF of mana wasted.}{shockvscheck}
 
 
 Disappointingly, neither of these methods prove more able to capture subtle performance differences at the increment level; use of \(P\) seems slightly more capable; however, the widely overlapping distributions for both metrics suggest that 1000 simulated games is not enough to distinguish between the two decks. However, with the exception of OverDeck, which is significantly more harshly penalized by \(P\), there is not a meaningful difference between \(P\) and \(C\) in the proximity of the whiskers between decks that have multiple cards different between them, suggesting that the additional information provided by \(C\) does not produce a meaningfully more sensitive assessment.
@@ -127,7 +127,7 @@ Given this, \(P\) presents several design advantages. First, it is faster: given
 
 \section{The Hill Climbing Algorithm}
 \subsection{Setup}
-Once the user has selected preferences, the Deck and MonteCarlo objects are instantiated. Since both are CardCollection objects, GameCards are assigned to each accordingly:
+Once the user has selected preferences, the Deck and DeckBuilder objects are instantiated. Since both are CardCollection objects, GameCards are assigned to each accordingly:
 
 \begin{center}
 \begin{tabularx}{\textwidth}{|X|X|X|} 
@@ -140,9 +140,9 @@ Once the user has selected preferences, the Deck and MonteCarlo objects are inst
  \hline
  Any land cards that the player selected from LandFill's input screen to definitely include & Deck & True \\
  \hline
- All Land cards in a recognised cycle that are not already in the deck & MonteCarlo & False \\
+ All Land cards in a recognised cycle that are not already in the deck & DeckBuilder & False \\
  \hline
- 100 basic land cards of each colour required by the deck & MonteCarlo & False \\ [1ex] 
+ 100 basic land cards of each colour required by the deck & DeckBuilder & False \\ [1ex] 
  \hline
 \end{tabularx}
 \end{center}
@@ -151,26 +151,26 @@ Basic Lands, rather than a random sample of nonbasic lands, are used as the star
 
 \subsection{Each Increment}
 \label{sec:eachincrement}
-With a new manabase added, MonteCarlo creates a new Trial object for the deck. \texttt{trial.run()} simulates a set number $\underline{G}_r$ of games. For each, the boolean value \(W > 0\) is added to \texttt{trial.wasted\allowbreak\_games}, and to \texttt{GameCard.wasted\allowbreak\_games} for each GameCard object that was drawn during the game. Every land to which the simulated player has access, essentially, takes responsibility for the success or failure of the game. The Trial then uses this information to rank all GameCards in the deck by performance, and then resets all values of \texttt{GameCard.wasted\allowbreak\_games} to empty arrays. The lowest ranking GameCard is set as \texttt{Trial.worst\allowbreak\_performing\allowbreak\_card}. 
+With a new manabase added, DeckBuilder creates a new MonteCarlo object for the deck. \texttt{MonteCarlo.run()} simulates a set number $\underline{G}_r$ of games. For each, the boolean value \(W > 0\) is added to \texttt{MonteCarlo.wasted\allowbreak\_games}, and to \texttt{GameCard.wasted\allowbreak\_games} for each GameCard object that was drawn during the game. Every land to which the simulated player has access, essentially, takes responsibility for the success or failure of the game. The MonteCarlo then uses this information to rank all GameCards in the deck by performance, and then resets all values of \texttt{GameCard.wasted\allowbreak\_games} to empty arrays. The lowest ranking GameCard is set as \texttt{MonteCarlo.worst\allowbreak\_performing\allowbreak\_card}. 
 
-With the worst card established, as outlined in \secref{sec:steepestascentoutline}, the next step is to identify the strongest card to replace it. This is more complicated, given the small performance differences between two decks that differ only on one card~---~especially since, as each candidate replacement card must be tested at each increment, it is not practical to run as many simulations as was used in \texttt{trial.run()}.Instaed, for each candidate card, MonteCarlo calls a new method: \texttt{Trial.card\allowbreak\_test(Land)}. This runs as follows for input land \(L\), where \(T\) refers to the number of turns for the simulated game plus the number of cards (7) in an opening hand, and $\underline{G}_c$ is the number of games simulated by the function:
+With the worst card established, as outlined in \secref{sec:steepestascentoutline}, the next step is to identify the strongest card to replace it. This is more complicated, given the small performance differences between two decks that differ only on one card~---~especially since, as each candidate replacement card must be tested at each increment, it is not practical to run as many simulations as was used in \texttt{MonteCarlo.run()}.Instaed, for each candidate card, DeckBuilder calls a new method: \texttt{MonteCarlo.card\allowbreak\_test(Land)}. This runs as follows for input land \(L\), where \(T\) refers to the number of turns for the simulated game plus the number of cards (7) in an opening hand, and $\underline{G}_c$ is the number of games simulated by the function:
 
 \begin{enumerate}
-\item \texttt{Trial.worst\allowbreak\_performing\allowbreak\_card} is removed from the deck and replaced with \(L\).
+\item \texttt{MonteCarlo.worst\allowbreak\_performing\allowbreak\_card} is removed from the deck and replaced with \(L\).
 \item A simulation is run.
 \item If \(L\) or any lands capable of searching the library for \(L\) are in the top \(T\) cards of the deck, the game is run as normal.
 \item If not, \(L\) is randomly added to some position within the top \(T\) cards of the deck.
 \item If a mulligan occurs, steps 3 and 4 are repeated.
 \item The game is run as normal, save that the value of \(W\) is not increased until after \(L\) is drawn.
 \item Steps 2~---~6 are repeated $\underline{G}_c$ times. 
-\item \(L\) is removed from the deck and replaced with \texttt{Trial.worst\allowbreak\_performing\allowbreak\_card}.
+\item \(L\) is removed from the deck and replaced with \texttt{MonteCarlo.worst\allowbreak\_performing\allowbreak\_card}.
 \end{enumerate}
 
 Steps 3 and 4 are seperated because, for reasonable size of \(T\), the chance of drawing \(L\) before any lands capable of searching for it, is very high. Once a land is in the player's hand, it becomes an invalid target for a Fetch Land. The importance of this is best illistrated with the Triome cycle, which are basic-landtyped taplands which tap for three colours. A deck forced to draw a tapland every game incurs a significant penalty which may overcome its need for colours; however, a deck with many Fetch Lands may benefit from those Fetch Lands being given the option of fetching a three-colour land on a turn when extra mana is not needed. 
 
- \texttt{Trial.card\allowbreak\_test(Land)} retuns to MonteCarlo the value of \(P\) for the specified substitution, and MonteCarlo replaces texttt{Trial.worst\allowbreak\_performing\allowbreak\_card} with the land that returns the highest value. 
+ \texttt{MonteCarlo.card\allowbreak\_test(Land)} returns to DeckBuilder the value of \(P\) for the specified substitution, and DeckBuilder replaces texttt{MonteCarlo.worst\allowbreak\_performing\allowbreak\_card} with the land that returns the highest value. 
 
- I assessed possible values for $\underline{G}_r$ and $\underline{G}_c$ based on their ability to produce similar manabases when a MonteCarlo was run ten times using the same initial deck. The similarity of any two manabases \(A\) and \(B\) can be determined via the Multiset Jaccard Index~\cite{costa2021further}. This can be extrapolated to all ten manabases by calculating the indices pairwise and then finding the average. This produced the below data:
+ I assessed possible values for $\underline{G}_r$ and $\underline{G}_c$ based on their ability to produce similar manabases when a DeckBuilder was run ten times using the same initial deck. The similarity of any two manabases \(A\) and \(B\) can be determined via the Multiset Jaccard Index~\cite{costa2021further}. This can be extrapolated to all ten manabases by calculating the indices pairwise and then finding the average. This produced the below data:
 
  \begin{center}
 \begin{tabularx}{\textwidth}{|X|X|X|X|} 

@@ -45,7 +45,7 @@ CardCollection is an abstract class representing any Zone into which a GameCard 
 \item Hand~---~a player's hand drawn at the start of each game, from which cards can be played.
 \item Battlefield~---~a zone into which cards are played from the hand during a game.
 \item Graveyard~---~a zone containing cards in a game that are no longer in play.
-\item MonteCarlo~---~this object tests different decks and runs the Hill Climbing algorithm. It is modelled as a CardCollection in that it may be thought of as a virtual ``player'', who swaps their cards into and out of a deck before each game. 
+\item DeckBuilder~---~this object tests different decks and runs the Hill Climbing algorithm. It is modelled as a CardCollection in that it may be thought of as a virtual ``player'', who swaps their cards into and out of a deck before each game. 
 \end{itemize}
 
 CardCollections contain a list attribute, \texttt{CardCollection.card\allowbreak\_list}, and the specialized \texttt{CardCollection.give(GameCard, CardCollection)}, which removes a GameCard from a CardCollection's card list and adds it to the card list of another, ensuring a card is never in two zones at once.
@@ -56,7 +56,7 @@ The Simulation abstract class covers objects that perform actions with a specifi
 
 \begin{itemize}
 \item Game~---~simulates a game of MTG with its deck.
-\item Trial~---~creates many Game objects using its deck and runs them.
+\item MonteCarlo~---~creates many Game objects using its deck and runs them.
 \end{itemize}
 
 \subsection{``Lump''}
@@ -182,7 +182,7 @@ Plots of land are here equivalent to Land objects, while the factories are equiv
 \texttt{SciPy.linear\allowbreak\_assignment()} then returns a mapping of lands to pips that minimizes this total cost. If the total cost is less than 9999, the Lump is playable. While this did not perform better than the memoization method for a 3-color deck, time penalties for 4-colour and 5-colour decks became negligible. 
 
 \section{Concluding a Game}
-When a game is concluded, all cards owned by the Hand, Battlefield and Graveyard are returned to the Deck. Performance metrics for the game are set as attributes of the Game object, for querying by the Trial and MonteCarlo objects. 
+When a game is concluded, all cards owned by the Hand, Battlefield and Graveyard are returned to the Deck. Performance metrics for the game are set as attributes of the Game object, for querying by the MonteCarlo and DeckBuilder objects. 
 
 \section{Heuristics}
 \label{sec:simulationheuristics}

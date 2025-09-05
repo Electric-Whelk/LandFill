@@ -84,7 +84,7 @@ In MTG parlance, ``Goldfishing'' refers to testing out a deck by taking repeated
 \item Draw an additional card at the beginning of each turn.
 \item Identify which playable land will allow the expenditure of \(M\) mana, where \(M\) is the maximum that may be spent that turn.
 \item Play that land.
-\item Play a combination of spells with total CMC \(C\). 
+\item Play a combination of spells with total CMC \(M\). 
 \item Repeat steps 3-6 for each turn of the simulated game.
 \end{enumerate}
 
@@ -111,6 +111,7 @@ Since Hill Climbing is a ``greedy'' optimization algorithm, it searches for \tex
 In software development, ``Verification'' testing tests code functionality according to designer specifications, while ``Validation'' testing tests whether the code meets user needs~\cite{verificationandvalidation}.  The schedule for each of these is detailed below
 
 \subsection{Verification Testing}
+\label{sec:verificationtesting}
 My schedule for verification testing was couched within an ``Iterative'' development process, whereby each feature was independently designed and tested before being added to the core product~\cite{iterativedevelopment}. The Simulator and Optimizer are two of four component subsystems to LandFill, arranged like so:
 
 \begin{enumerate}
@@ -184,3 +185,8 @@ In places where these requirements are at odds, I prioritized the former: my cho
 The use of Object Relational Mappers (ORMs) is common in web design, usually as a component of a CRUD (Create, Read, Delete, Update) interface taking user data. Although LandFill makes heavy use of Object Relational Mapping to store a database of MTG cards, the user needs to only read the database. For this reason, SQLAlchemy~\cite{sqlalchemy}, an ORM esteemed for rapid performance at the cost of easy data amendment~\cite{WhyNottoUseSqlalchemy}, was the obvious choice. 
 
 During development, I sometimes used the Large Language Model ChatGPT~\cite{chatGPT}. The majority of my usage was to help identify bugs in my code. I also used it to suggest libraries or standardized testing methodologies (i.e.,~the Kano Questionnaire) after providing an outline of my use case; in all these cases, I researched its suggestions thoroughly after recommendation. Later in development, I commissioned it to write sections of code for me based on a pseudocode outline. 
+
+\subsection{LandFill Structure}
+Excluding the Database, accessed by other objects via SQLAlchemy, the components outlined in \secref{sec:verificationtesting} are displayed in Fig. \ref{fig:umllayout}. Details about the role of each constituent class, and the interactions between them, can be found at the start of the relevant sections.
+
+\myfig{classdiagram2.jpg}{Class diagram of major classes in LandFill.}{umllayout}

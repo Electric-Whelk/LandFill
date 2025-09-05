@@ -1,10 +1,10 @@
 from numpy import random
-from simulation_objects.CardCollections.MonteCarlo import MonteCarlo
+from simulation_objects.CardCollections.DeckBuilder import DeckBuilder
 
 
-class MCUsrTest(MonteCarlo):
+class MCUsrTest(DeckBuilder):
     def __init__(self, deck):
-        MonteCarlo.__init__(self, deck)
+        DeckBuilder.__init__(self, deck)
 
     #run functions
     def output_cards(self) -> list[str]:

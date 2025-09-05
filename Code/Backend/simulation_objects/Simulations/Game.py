@@ -245,8 +245,6 @@ class Game(Simulation):
     def conclude_game(self):
         zones = [self.hand, self.battlefield, self.graveyard]
         self.options_per_turn /= self.total_turns
-        #self.total_spent_mana /= self.total_played_lands #NOTE THAT THIS INCLUDES FETCHED LANDS
-        #self.total_spent_mana /= self.castable_cmc_in_hand
         self.leftover_mana = self.total_theoretical_mana - self.total_spent_mana
 
         if self.seeking_target is not None:

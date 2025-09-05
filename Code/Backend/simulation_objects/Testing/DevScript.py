@@ -7,7 +7,7 @@ from flask import jsonify, session, request
 from flask_caching import Cache
 from Extensions import db
 from simulation_objects.CardCollections.Deck import Deck
-from simulation_objects.CardCollections.MonteCarlo import MonteCarlo
+from simulation_objects.CardCollections.DeckBuilder import DeckBuilder
 
 with open("XavNonLandsSubs.json", "r") as file:
     data = json.load(file)
@@ -57,7 +57,7 @@ with app.app_context():
         theImp = imp
         decklist = theImp.parse_decklist(data.get("deckList"))
         deck.setup(decklist, data.get("commander"), partner=data.get("partner"))
-        monty = MonteCarlo(deck, close_examine=close_examine, timer=timer, verbose=True)
+        monty = DeckBuilder(deck, close_examine=close_examine, timer=timer, verbose=True)
         monty.setup()
         monty.fill_heap()
         monty.set_permissions(mandatory = prefs.get("mandatory"),
@@ -74,7 +74,7 @@ with app.app_context():
             print(titles[i])
         deck = Deck()
         deck.setup(data["Nonlands"], data["Format"], data["Quantity"], data["Commander"])
-        monty = MonteCarlo(deck, close_examine=close_examine, timer=timer)
+        monty = DeckBuilder(deck, close_examine=close_examine, timer=timer)
         monty.fill_heap_CONDEMNED(from_testlist=option)
         #monty.dev_run()
         #break

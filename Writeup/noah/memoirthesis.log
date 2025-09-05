@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.9.4)  4 SEP 2025 18:58
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.9.4)  5 SEP 2025 22:34
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -438,9 +438,9 @@ Package: ifpdf 2019/10/25 v3.4 ifpdf legacy package. Use iftex instead.
 Stock height and width: 845.04684pt by 597.50787pt
 Top and edge trims: 0pt and 0pt
 Page height and width: 845.04684pt by 597.50787pt
-Text height and width: 636.60028pt by 448pt
-Spine and edge margins: 59.73816pt and 89.63971pt
-Upper and lower margins: 113.81102pt and 94.63554pt
+Text height and width: 595.80026pt by 369pt
+Spine and edge margins: 91.26999pt and 137.23788pt
+Upper and lower margins: 126.74379pt and 122.50279pt
 Headheight and headsep: 13.6pt and 27.20001pt
 Footskip: 27.20001pt
 Columnsep and columnseprule: 10pt and 0pt
@@ -453,7 +453,24 @@ Sidefoothsep and sidefootwidth: 7pt and 101pt
 Sidefootvsep and sidefootheight: 13.6pt and 594.32022pt
 ******************************************************
 
-(/usr/share/texlive/texmf-dist/tex/latex/gensymb/gensymb.sty
+(/usr/share/texlive/texmf-dist/tex/latex/geometry/geometry.sty
+Package: geometry 2020/01/02 v5.9 Page Geometry
+ (/usr/share/texlive/texmf-dist/tex/generic/iftex/ifvtex.sty
+Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
+)
+\Gm@cnth=\count341
+\Gm@cntv=\count342
+\c@Gm@tempcnt=\count343
+\Gm@bindingoffset=\dimen186
+\Gm@wd@mp=\dimen187
+\Gm@odd@mp=\dimen188
+\Gm@even@mp=\dimen189
+\Gm@layoutwidth=\dimen190
+\Gm@layoutheight=\dimen191
+\Gm@layouthoffset=\dimen192
+\Gm@layoutvoffset=\dimen193
+\Gm@dimlist=\toks30
+) (/usr/share/texlive/texmf-dist/tex/latex/gensymb/gensymb.sty
 Package: gensymb 2022/10/17 v1.0.2 (KJH)
 ) (/usr/share/texlive/texmf-dist/tex/latex/graphics/graphicx.sty
 Package: graphicx 2021/09/16 v1.2d Enhanced LaTeX Graphics (DPC,SPQR)
@@ -468,8 +485,8 @@ Package graphics Info: Driver file: pdftex.def on input line 107.
  (/usr/share/texlive/texmf-dist/tex/latex/graphics-def/pdftex.def
 File: pdftex.def 2022/09/22 v1.2b Graphics/color driver for pdftex
 ))
-\Gin@req@height=\dimen186
-\Gin@req@width=\dimen187
+\Gin@req@height=\dimen194
+\Gin@req@width=\dimen195
 ) (/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsmath.sty
 Package: amsmath 2023/05/13 v2.17o AMS math features
 \@mathmargin=\skip190
@@ -479,18 +496,18 @@ For additional information on amsmath, use the `?' option.
 Package: amstext 2021/08/26 v2.01 AMS text
 ) (/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsbsy.sty
 Package: amsbsy 1999/11/29 v1.2d Bold Symbols
-\pmbraise@=\dimen188
+\pmbraise@=\dimen196
 ) (/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsopn.sty
 Package: amsopn 2022/04/08 v2.04 operator names
 )
-\inf@bad=\count341
+\inf@bad=\count344
 LaTeX Info: Redefining \frac on input line 234.
-\uproot@=\count342
-\leftroot@=\count343
+\uproot@=\count345
+\leftroot@=\count346
 LaTeX Info: Redefining \overline on input line 399.
 LaTeX Info: Redefining \colon on input line 410.
-\classnum@=\count344
-\DOTSCASE@=\count345
+\classnum@=\count347
+\DOTSCASE@=\count348
 LaTeX Info: Redefining \ldots on input line 496.
 LaTeX Info: Redefining \dots on input line 499.
 LaTeX Info: Redefining \cdots on input line 620.
@@ -500,58 +517,41 @@ LaTeX Info: Redefining \big on input line 722.
 LaTeX Info: Redefining \Big on input line 723.
 LaTeX Info: Redefining \bigg on input line 724.
 LaTeX Info: Redefining \Bigg on input line 725.
-\big@size=\dimen189
+\big@size=\dimen197
 LaTeX Font Info:    Redeclaring font encoding OML on input line 743.
 LaTeX Font Info:    Redeclaring font encoding OMS on input line 744.
-\macc@depth=\count346
+\macc@depth=\count349
 LaTeX Info: Redefining \bmod on input line 905.
 LaTeX Info: Redefining \pmod on input line 910.
 LaTeX Info: Redefining \smash on input line 940.
 LaTeX Info: Redefining \relbar on input line 970.
 LaTeX Info: Redefining \Relbar on input line 971.
-\c@MaxMatrixCols=\count347
+\c@MaxMatrixCols=\count350
 \dotsspace@=\muskip16
-\c@parentequation=\count348
-\dspbrk@lvl=\count349
-\tag@help=\toks30
-\row@=\count350
-\column@=\count351
-\maxfields@=\count352
-\andhelp@=\toks31
-\eqnshift@=\dimen190
-\alignsep@=\dimen191
-\tagshift@=\dimen192
-\tagwidth@=\dimen193
-\totwidth@=\dimen194
-\lineht@=\dimen195
-\@envbody=\toks32
+\c@parentequation=\count351
+\dspbrk@lvl=\count352
+\tag@help=\toks31
+\row@=\count353
+\column@=\count354
+\maxfields@=\count355
+\andhelp@=\toks32
+\eqnshift@=\dimen198
+\alignsep@=\dimen199
+\tagshift@=\dimen256
+\tagwidth@=\dimen257
+\totwidth@=\dimen258
+\lineht@=\dimen259
+\@envbody=\toks33
 \multlinegap=\skip191
 \multlinetaggap=\skip192
-\mathdisplay@stack=\toks33
+\mathdisplay@stack=\toks34
 LaTeX Info: Redefining \[ on input line 2953.
 LaTeX Info: Redefining \] on input line 2954.
 ) (/usr/share/texlive/texmf-dist/tex/latex/makecell/makecell.sty
 Package: makecell 2009/08/03 V0.1e Managing of Tab Column Heads and Cells
-\rotheadsize=\dimen196
-\c@nlinenum=\count353
-\TeXr@lab=\toks34
-) (/usr/share/texlive/texmf-dist/tex/latex/geometry/geometry.sty
-Package: geometry 2020/01/02 v5.9 Page Geometry
- (/usr/share/texlive/texmf-dist/tex/generic/iftex/ifvtex.sty
-Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
-)
-\Gm@cnth=\count354
-\Gm@cntv=\count355
-\c@Gm@tempcnt=\count356
-\Gm@bindingoffset=\dimen197
-\Gm@wd@mp=\dimen198
-\Gm@odd@mp=\dimen199
-\Gm@even@mp=\dimen256
-\Gm@layoutwidth=\dimen257
-\Gm@layoutheight=\dimen258
-\Gm@layouthoffset=\dimen259
-\Gm@layoutvoffset=\dimen260
-\Gm@dimlist=\toks35
+\rotheadsize=\dimen260
+\c@nlinenum=\count356
+\TeXr@lab=\toks35
 ) (/usr/share/texlive/texmf-dist/tex/latex/listings/listings.sty
 \lst@mode=\count357
 \lst@gtempboxa=\box59
@@ -1271,33 +1271,67 @@ Package biblatex Warning: 'babel/polyglossia' detected but 'csquotes' missing.
 (./memoirthesis.aux)
 \openout1 = `memoirthesis.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 225.
-LaTeX Font Info:    ... okay on input line 225.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 225.
-LaTeX Font Info:    ... okay on input line 225.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 225.
-LaTeX Font Info:    ... okay on input line 225.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 225.
-LaTeX Font Info:    ... okay on input line 225.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 225.
-LaTeX Font Info:    ... okay on input line 225.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 225.
-LaTeX Font Info:    ... okay on input line 225.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 225.
-LaTeX Font Info:    ... okay on input line 225.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 225.
-LaTeX Font Info:    ... okay on input line 225.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 225.
-LaTeX Font Info:    ... okay on input line 225.
-Package nag Info: pgf.sty is broken: disabling dollar check on input line 225.
-LaTeX Info: Redefining \celsius on input line 225.
-Package gensymb Info: Faking symbols for \degree and \celsius on input line 225.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 226.
+LaTeX Font Info:    ... okay on input line 226.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 226.
+LaTeX Font Info:    ... okay on input line 226.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 226.
+LaTeX Font Info:    ... okay on input line 226.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 226.
+LaTeX Font Info:    ... okay on input line 226.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 226.
+LaTeX Font Info:    ... okay on input line 226.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 226.
+LaTeX Font Info:    ... okay on input line 226.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 226.
+LaTeX Font Info:    ... okay on input line 226.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 226.
+LaTeX Font Info:    ... okay on input line 226.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 226.
+LaTeX Font Info:    ... okay on input line 226.
+Package nag Info: pgf.sty is broken: disabling dollar check on input line 226.
 
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: a4paper
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: twoside 
+* h-part:(L,W,R)=(56.9055pt, 483.69687pt, 56.9055pt)
+* v-part:(T,H,B)=(56.9055pt, 731.23584pt, 56.9055pt)
+* \paperwidth=597.50787pt
+* \paperheight=845.04684pt
+* \textwidth=483.69687pt
+* \textheight=731.23584pt
+* \oddsidemargin=-15.36449pt
+* \evensidemargin=-15.36449pt
+* \topmargin=-56.1645pt
+* \headheight=13.6pt
+* \headsep=27.20001pt
+* \topskip=11.0pt
+* \footskip=27.20001pt
+* \marginparwidth=51.0pt
+* \marginparsep=17.0pt
+* \columnsep=10.0pt
+* \skip\footins=12.0pt plus 4.0pt minus 4.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidetrue
+* \@mparswitchtrue
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+LaTeX Info: Redefining \celsius on input line 226.
+Package gensymb Info: Faking symbols for \degree and \celsius on input line 226.
 
 Package gensymb Warning: Not defining \perthousand.
 
-LaTeX Info: Redefining \ohm on input line 225.
-Package gensymb Info: Using \Omega for \ohm on input line 225.
+LaTeX Info: Redefining \ohm on input line 226.
+Package gensymb Info: Using \Omega for \ohm on input line 226.
 
 Package gensymb Warning: Not defining \micro.
 
@@ -1320,44 +1354,10 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 48
  (/usr/share/texlive/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 ))
-*geometry* driver: auto-detecting
-*geometry* detected driver: pdftex
-*geometry* verbose mode - [ preamble ] result:
-* driver: pdftex
-* paper: a4paper
-* layout: <same size as paper>
-* layoutoffset:(h,v)=(0.0pt,0.0pt)
-* modes: twoside 
-* h-part:(L,W,R)=(71.70166pt, 418.25368pt, 107.55254pt)
-* v-part:(T,H,B)=(101.40665pt, 591.5302pt, 152.11pt)
-* \paperwidth=597.50787pt
-* \paperheight=845.04684pt
-* \textwidth=418.25368pt
-* \textheight=591.5302pt
-* \oddsidemargin=-0.56833pt
-* \evensidemargin=35.28255pt
-* \topmargin=-11.66336pt
-* \headheight=13.6pt
-* \headsep=27.20001pt
-* \topskip=11.0pt
-* \footskip=27.20001pt
-* \marginparwidth=51.0pt
-* \marginparsep=17.0pt
-* \columnsep=10.0pt
-* \skip\footins=12.0pt plus 4.0pt minus 4.0pt
-* \hoffset=0.0pt
-* \voffset=0.0pt
-* \mag=1000
-* \@twocolumnfalse
-* \@twosidetrue
-* \@mparswitchtrue
-* \@reversemarginfalse
-* (1in=72.27pt=25.4mm, 1cm=28.453pt)
-
 \c@lstlisting=\count589
 Package biblatex Info: Trying to load language 'english'...
 Package biblatex Info: ... file 'english.lbx' found.
-(/usr/share/texlive/texmf-dist/tex/latex/biblatex/lbx/english.lbx
+ (/usr/share/texlive/texmf-dist/tex/latex/biblatex/lbx/english.lbx
 File: english.lbx 2023/03/05 v3.19 biblatex localization (PK/MW)
 )
 Package biblatex Info: Trying to load language 'spanish'...
@@ -1373,30 +1373,30 @@ Package biblatex Info: Automatic encoding selection.
 Package biblatex Info: Trying to load bibliographic data...
 Package biblatex Info: ... file 'memoirthesis.bbl' found.
  (./memoirthesis.bbl)
-Package biblatex Info: Reference section=0 on input line 225.
-Package biblatex Info: Reference segment=0 on input line 225.
+Package biblatex Info: Reference section=0 on input line 226.
+Package biblatex Info: Reference segment=0 on input line 226.
 
 
-Package layouts Warning: Layout scale set to 0.5 on input line 225.
+Package layouts Warning: Layout scale set to 0.5 on input line 226.
 
-Package hyperref Info: Link coloring ON on input line 225.
+Package hyperref Info: Link coloring ON on input line 226.
 (./memoirthesis.out) (./memoirthesis.out)
 \@outlinefile=\write7
 \openout7 = `memoirthesis.out'.
 
-LaTeX Info: Redefining \microtypecontext on input line 225.
-Package microtype Info: Applying patch `item' on input line 225.
-Package microtype Info: Applying patch `toc' on input line 225.
-Package microtype Info: Applying patch `eqnum' on input line 225.
-Package microtype Info: Applying patch `footnote' on input line 225.
-Package microtype Info: Applying patch `verbatim' on input line 225.
+LaTeX Info: Redefining \microtypecontext on input line 226.
+Package microtype Info: Applying patch `item' on input line 226.
+Package microtype Info: Applying patch `toc' on input line 226.
+Package microtype Info: Applying patch `eqnum' on input line 226.
+Package microtype Info: Applying patch `footnote' on input line 226.
+Package microtype Info: Applying patch `verbatim' on input line 226.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using default protrusion set `alltext'.
 Package microtype Info: Automatic font expansion enabled (level 2),
 (microtype)             stretch: 20, shrink: 20, step: 1, non-selected.
 Package microtype Info: Using default expansion set `alltext-nott'.
-LaTeX Info: Redefining \showhyphens on input line 225.
+LaTeX Info: Redefining \showhyphens on input line 226.
 Package microtype Info: No adjustment of tracking.
 Package microtype Info: No adjustment of interword spacing.
 Package microtype Info: No adjustment of character kerning.
@@ -1405,12 +1405,12 @@ File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman (
 )
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
-Package nag Info: Command \captionabove not defined, skipping amendment on input line 225.
-Package nag Info: Command \captionbelow not defined, skipping amendment on input line 225.
-Package nag Info: Command \hc@caption not defined, skipping amendment on input line 225.
-Package nag Info: Command \topcaption not defined, skipping amendment on input line 225.
+Package nag Info: Command \captionabove not defined, skipping amendment on input line 226.
+Package nag Info: Command \captionbelow not defined, skipping amendment on input line 226.
+Package nag Info: Command \hc@caption not defined, skipping amendment on input line 226.
+Package nag Info: Command \topcaption not defined, skipping amendment on input line 226.
  (./frontmatter/title.tex
-<logos/bristolcrest_colour.pdf, id=457, 114.4275pt x 137.51375pt>
+<logos/bristolcrest_colour.pdf, id=461, 114.4275pt x 137.51375pt>
 File: logos/bristolcrest_colour.pdf Graphic file (type pdf)
 <use logos/bristolcrest_colour.pdf>
 Package pdftex.def Info: logos/bristolcrest_colour.pdf  used on input line 34.
@@ -1449,7 +1449,7 @@ l.18 \clearpage
 pdfTeX warning (ext4): destination with the same identifier (name{page.ii}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.250 \clearemptydoublepage
+l.251 \clearemptydoublepage
                             [2
 
 
@@ -1458,12 +1458,7 @@ l.250 \clearemptydoublepage
 ]) [4
 
 
-] (./frontmatter/declaration.tex
-Overfull \hbox (28.75958pt too wide) in paragraph at lines 27--29
- \OT1/cmr/m/sc/10.95 (-20) SIGNED: .................................................... DATE: .......................................... 
- []
-
-[5
+] (./frontmatter/declaration.tex [5
 
 ]) [6
 
@@ -1473,33 +1468,36 @@ Overfull \hbox (0.16711pt too wide) detected at line 4
  \OT1/cmr/bx/n/10.95 xiii
  []
 
-[7] [8] [9]) [10] (./memoirthesis.lot
+[7] [8]) [9] [10
+
+] (./memoirthesis.lot
 
 LaTeX Font Warning: Font shape `OT1/cmr/bx/sc' undefined
 (Font)              using `OT1/cmr/bx/n' instead on input line 2.
 
-) [11
-
-] [12
+) [11] [12
 
 ] (./memoirthesis.lof
 Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `cmtt' (encoding: OT1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
- [13]) [14] (./chapters/1_intro.tex [1
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [13]) [14] (./chapters/1_intro.tex
+Underfull \vbox (badness 6592) has occurred while \output is active []
+
+ [1
 
 
 
 ]) [2] (./chapters/2_problems_and_proposed_solutions.tex
-<../card_images/e01-85-nicol-bolas-planeswalker.jpg, id=748, 489.83pt x 682.55pt>
+<../card_images/e01-85-nicol-bolas-planeswalker.jpg, id=750, 489.83pt x 682.55pt>
 File: ../card_images/e01-85-nicol-bolas-planeswalker.jpg Graphic file (type jpg)
 <use ../card_images/e01-85-nicol-bolas-planeswalker.jpg>
 Package pdftex.def Info: ../card_images/e01-85-nicol-bolas-planeswalker.jpg  used on input line 11.
 (pdftex.def)             Requested size: 122.4572pt x 170.63708pt.
-
-Underfull \vbox (badness 1112) has occurred while \output is active []
-
  [3
 
 
@@ -1508,114 +1506,84 @@ Underfull \vbox (badness 1112) has occurred while \output is active []
 Class memoir Warning: The material used in the headers is too large
 (27.2pt) for the given head height (13.6pt), it is recommended to
 either increase the head height or redesign the header
-(in both cases you will find help in the memoir manual). on input line 29.
+(in both cases you will find help in the memoir manual). on input line 40.
 
 
 Overfull \vbox (13.59999pt too high) has occurred while \output is active []
 
  [4 <../card_images/e01-85-nicol-bolas-planeswalker.jpg>]
-<../card_images/TwoCycles.jpg, id=764, 963.6pt x 449.388pt>
+<../card_images/TwoCycles.jpg, id=768, 963.6pt x 449.388pt>
 File: ../card_images/TwoCycles.jpg Graphic file (type jpg)
 <use ../card_images/TwoCycles.jpg>
 Package pdftex.def Info: ../card_images/TwoCycles.jpg  used on input line 41.
 (pdftex.def)             Requested size: 385.43317pt x 179.752pt.
- [5]
-Overfull \hbox (46.52315pt too wide) detected at line 53
-[] \OT1/cmr/m/n/10.95 = []
- []
-
-
+ [5 <../card_images/TwoCycles.jpg>]
 Overfull \vbox (13.59999pt too high) has occurred while \output is active []
 
- [6 <../card_images/TwoCycles.jpg>] [7{/usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-ts1.enc}]
+ [6{/usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-ts1.enc}] [7]
 Overfull \vbox (13.59999pt too high) has occurred while \output is active []
 
  [8] [9]
-Overfull \vbox (13.59999pt too high) has occurred while \output is active []
-
- [10] [11]
-<../card_images/KarstenCurve.jpg, id=850, 963.6pt x 227.34938pt>
+<../card_images/KarstenCurve.jpg, id=844, 963.6pt x 227.34938pt>
 File: ../card_images/KarstenCurve.jpg Graphic file (type jpg)
 <use ../card_images/KarstenCurve.jpg>
-Package pdftex.def Info: ../card_images/KarstenCurve.jpg  used on input line 155.
+Package pdftex.def Info: ../card_images/KarstenCurve.jpg  used on input line 156.
 (pdftex.def)             Requested size: 481.79883pt x 113.67441pt.
 
 Overfull \vbox (13.59999pt too high) has occurred while \output is active []
 
- [12]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [13 <../card_images/KarstenCurve.jpg>]
-<../card_images/MTGArenaScreenshot.jpg, id=868, 858.20625pt x 542.025pt>
+ [10 <../card_images/KarstenCurve.jpg>]
+<../card_images/MTGArenaScreenshot.jpg, id=858, 858.20625pt x 542.025pt>
 File: ../card_images/MTGArenaScreenshot.jpg Graphic file (type jpg)
 <use ../card_images/MTGArenaScreenshot.jpg>
-Package pdftex.def Info: ../card_images/MTGArenaScreenshot.jpg  used on input line 166.
+Package pdftex.def Info: ../card_images/MTGArenaScreenshot.jpg  used on input line 167.
 (pdftex.def)             Requested size: 429.10208pt x 271.01183pt.
-
-Overfull \hbox (10.8484pt too wide) in paragraph at lines 166--166
- [][] 
- []
-
-
-Overfull \vbox (13.59999pt too high) has occurred while \output is active []
-
- [14 <../card_images/MTGArenaScreenshot.jpg>]
-<../card_images/ManaGathering.jpg, id=877, 821.31844pt x 542.025pt>
+<../card_images/ManaGathering.jpg, id=861, 821.31844pt x 542.025pt>
 File: ../card_images/ManaGathering.jpg Graphic file (type jpg)
 <use ../card_images/ManaGathering.jpg>
-Package pdftex.def Info: ../card_images/ManaGathering.jpg  used on input line 170.
+Package pdftex.def Info: ../card_images/ManaGathering.jpg  used on input line 171.
 (pdftex.def)             Requested size: 410.6582pt x 271.01183pt.
-<../card_images/ArchidektScreenshot.jpg, id=880, 963.6pt x 459.21562pt>
+ [11 <../card_images/MTGArenaScreenshot.jpg>]
+<../card_images/ArchidektScreenshot.jpg, id=871, 963.6pt x 459.21562pt>
 File: ../card_images/ArchidektScreenshot.jpg Graphic file (type jpg)
 <use ../card_images/ArchidektScreenshot.jpg>
-Package pdftex.def Info: ../card_images/ArchidektScreenshot.jpg  used on input line 174.
+Package pdftex.def Info: ../card_images/ArchidektScreenshot.jpg  used on input line 175.
 (pdftex.def)             Requested size: 481.79883pt x 229.60724pt.
 
-Overfull \hbox (63.54515pt too wide) in paragraph at lines 174--174
- [][] 
- []
-
-[15 <../card_images/ManaGathering.jpg>]
 Overfull \vbox (13.59999pt too high) has occurred while \output is active []
 
- [16 <../card_images/ArchidektScreenshot.jpg>]) [17] [18
-
-] (./chapters/3_pre_development_user_research.tex [19
-
-]
-<../card_images/MockupFrontend.jpg, id=929, 963.6pt x 529.98pt>
+ [12 <../card_images/ManaGathering.jpg> <../card_images/ArchidektScreenshot.jpg>]
+<../card_images/classdiagram2.jpg, id=892, 776.14969pt x 542.025pt>
+File: ../card_images/classdiagram2.jpg Graphic file (type jpg)
+<use ../card_images/classdiagram2.jpg>
+Package pdftex.def Info: ../card_images/classdiagram2.jpg  used on input line 192.
+(pdftex.def)             Requested size: 388.0739pt x 271.01183pt.
+) [13] [14 <../card_images/classdiagram2.jpg>] (./chapters/3_pre_development_user_research.tex
+<../card_images/MockupFrontend.jpg, id=911, 963.6pt x 529.98pt>
 File: ../card_images/MockupFrontend.jpg Graphic file (type jpg)
 <use ../card_images/MockupFrontend.jpg>
 Package pdftex.def Info: ../card_images/MockupFrontend.jpg  used on input line 23.
 (pdftex.def)             Requested size: 481.79883pt x 264.98933pt.
+ [15
 
-Overfull \hbox (63.54515pt too wide) in paragraph at lines 23--23
- [][] 
- []
 
-[20 <../card_images/MockupFrontend.jpg>]
-<../card_images/KanoSurvey.jpg, id=936, 963.6pt x 289.08pt>
+] [16 <../card_images/MockupFrontend.jpg>]
+<../card_images/KanoSurvey.jpg, id=925, 963.6pt x 289.08pt>
 File: ../card_images/KanoSurvey.jpg Graphic file (type jpg)
 <use ../card_images/KanoSurvey.jpg>
 Package pdftex.def Info: ../card_images/KanoSurvey.jpg  used on input line 47.
 (pdftex.def)             Requested size: 481.79883pt x 144.53964pt.
-
-Overfull \hbox (63.54515pt too wide) in paragraph at lines 47--47
- [][] 
- []
-
-[21] [22 <../card_images/KanoSurvey.jpg>] [23] [24] [25]) [26] (./chapters/4_the_database.tex [27
+ [17 <../card_images/KanoSurvey.jpg>] [18] [19]) [20] (./chapters/4_the_database.tex [21
 
 
 ]
-<../card_images/mtg2.jpg, id=981, 625.33624pt x 411.5375pt>
+<../card_images/mtg2.jpg, id=964, 625.33624pt x 411.5375pt>
 File: ../card_images/mtg2.jpg Graphic file (type jpg)
 <use ../card_images/mtg2.jpg>
 Package pdftex.def Info: ../card_images/mtg2.jpg  used on input line 30.
 (pdftex.def)             Requested size: 312.66736pt x 205.76825pt.
- [28] [29 <../card_images/mtg2.jpg>] [30]) [31] [32
+ [22 <../card_images/mtg2.jpg>]) [23] [24] (./chapters/5_the_simulator.tex [25
 
-] (./chapters/5_the_simulator.tex [33
 
 ]
 LaTeX Font Info:    Trying to load font information for OMS+cmtt on input line 32.
@@ -1626,210 +1594,174 @@ LaTeX Font Warning: Font shape `OMS/cmtt/m/n' undefined
 (Font)              using `OMS/cmsy/m/n' instead
 (Font)              for symbol `textbraceleft' on input line 32.
 
-<../card_images/vergecode.jpg, id=1027, 963.6pt x 447.17062pt>
+<../card_images/vergecode.jpg, id=998, 963.6pt x 447.17062pt>
 File: ../card_images/vergecode.jpg Graphic file (type jpg)
 <use ../card_images/vergecode.jpg>
 Package pdftex.def Info: ../card_images/vergecode.jpg  used on input line 37.
 (pdftex.def)             Requested size: 240.89941pt x 111.79237pt.
-<../card_images/checkcode.jpg, id=1028, 963.6pt x 415.5525pt>
+<../card_images/checkcode.jpg, id=999, 963.6pt x 415.5525pt>
 File: ../card_images/checkcode.jpg Graphic file (type jpg)
 <use ../card_images/checkcode.jpg>
 Package pdftex.def Info: ../card_images/checkcode.jpg  used on input line 38.
 (pdftex.def)             Requested size: 240.89941pt x 103.88786pt.
-[34] [35 <../card_images/vergecode.jpg> <../card_images/checkcode.jpg>] [36] [37]
-Overfull \hbox (14.14468pt too wide) detected at line 111
-[] \OT1/cmr/m/n/10.95 = []
+[26 <../card_images/vergecode.jpg> <../card_images/checkcode.jpg>]
+Overfull \hbox (113.78099pt too wide) in paragraph at lines 51--52
+[]\OT1/cmr/m/n/10.95 (-20) CardCollections con-tain a list at-tribute, \OT1/cmtt/m/n/10.95 CardCollection.card[]list\OT1/cmr/m/n/10.95 (-20) , and the spe-cial-ized \OT1/cmtt/m/n/10.95 CardCollection.give(GameCard,
  []
 
-
-Overfull \hbox (0.50334pt too wide) in paragraph at lines 125--126
-[]\OT1/cmtt/m/n/10.95 filtered[]by[]most[]produced = self.filter[]by[]most[]produced(filtered
+[27] [28]
+Overfull \hbox (5.42409pt too wide) in paragraph at lines 125--126
+[]\OT1/cmtt/m/n/10.95 filtered[]by[]most[]produced = self.filter[]by[]most[]produced(filtered[]as[]taplands) 
  []
 
-[38] [39]
-<../card_images/CanonicallyIdentical.jpg, id=1069, 445.665pt x 428.145pt>
+[29]
+<../card_images/CanonicallyIdentical.jpg, id=1032, 445.665pt x 428.145pt>
 File: ../card_images/CanonicallyIdentical.jpg Graphic file (type jpg)
 <use ../card_images/CanonicallyIdentical.jpg>
 Package pdftex.def Info: ../card_images/CanonicallyIdentical.jpg  used on input line 158.
 (pdftex.def)             Requested size: 111.41597pt x 107.03598pt.
- [40]
+ [30 <../card_images/CanonicallyIdentical.jpg>]
 Underfull \hbox (badness 10000) in paragraph at lines 178--178
-\OT1/cmtt/m/n/10.95 Land.tapped =
+[]|\OT1/cmr/m/n/10.95 (+20) A Land for which
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 178--178
-\OT1/cmtt/m/n/10.95 Land.tapped =
+[]|\OT1/cmr/m/n/10.95 (+20) A Land for which
  []
 
-[41 <../card_images/CanonicallyIdentical.jpg>]
-Overfull \hbox (2.66338pt too wide) in paragraph at lines 198--199
-\OT1/cmr/m/n/10.95 (-20) The or-der-ing of \OT1/cmtt/m/n/10.95 filter[]by[]largest()\OT1/cmr/m/n/10.95 (-20) , \OT1/cmtt/m/n/10.95 filter[]by[]taplands() \OT1/cmr/m/n/10.95 (-20) snf \OT1/cmtt/m/n/10.95 filter[]by[]largest()
+[31] [32] [33]
+Overfull \hbox (0.675pt too wide) in paragraph at lines 252--253
+\OT1/cmtt/m/n/10.95 DualFacedLand.committed = None\OT1/cmr/m/n/10.95 (-20) , one of the Du-al-Faced-Land's Sub-Lands is se-lected via \OT1/cmtt/m/n/10.95 Game.filter
  []
 
-[42]
-Overfull \hbox (36.52292pt too wide) detected at line 205
-[] \OT1/cmr/m/n/10.95 = []
- []
-
-[43] [44] [45]) [46] (./chapters/6_the_optimizer.tex [47
+) [34] (./chapters/6_the_optimizer.tex [35
 
 
 ]
-<~/FinalProject/Writeup/card_images/superiority.jpg, id=1126, 963.6pt x 465.23813pt>
+<~/FinalProject/Writeup/card_images/superiority.jpg, id=1081, 963.6pt x 465.23813pt>
 File: ~/FinalProject/Writeup/card_images/superiority.jpg Graphic file (type jpg)
 <use ~/FinalProject/Writeup/card_images/superiority.jpg>
 Package pdftex.def Info: ~/FinalProject/Writeup/card_images/superiority.jpg  used on input line 31.
 (pdftex.def)             Requested size: 529.98164pt x 255.88176pt.
- [48] [49 </home/electricwhelk/FinalProject/Writeup/card_images/superiority.jpg>]
-Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [50]
-Overfull \hbox (2.8047pt too wide) in paragraph at lines 72--73
-[]\OT1/cmr/m/n/10.95 (-20) OverDeck --- a deck con-tain-ing no ba-sic lands, re-flect-ing hy-po-thet-i-cal over-application
- []
+Underfull \vbox (badness 2591) has occurred while \output is active []
 
-[51]
-<../card_images/WastedOutputs.jpg, id=1154, 634.62094pt x 161.10187pt>
+ [36 </home/electricwhelk/FinalProject/Writeup/card_images/superiority.jpg>] [37]
+<../card_images/WastedOutputs.jpg, id=1099, 634.62094pt x 161.10187pt>
 File: ../card_images/WastedOutputs.jpg Graphic file (type jpg)
 <use ../card_images/WastedOutputs.jpg>
 Package pdftex.def Info: ../card_images/WastedOutputs.jpg  used on input line 98.
 (pdftex.def)             Requested size: 317.3097pt x 80.55074pt.
-<../card_images/Histograms.jpg, id=1156, 544.872pt x 402.084pt>
+ [38]
+<../card_images/Histograms.jpg, id=1105, 544.872pt x 402.084pt>
 File: ../card_images/Histograms.jpg Graphic file (type jpg)
 <use ../card_images/Histograms.jpg>
 Package pdftex.def Info: ../card_images/Histograms.jpg  used on input line 108.
 (pdftex.def)             Requested size: 272.43533pt x 201.0415pt.
- [52 <../card_images/WastedOutputs.jpg>] [53 <../card_images/Histograms.jpg>]
-<../card_images/shockvscheck.jpg, id=1168, 696.42pt x 254.916pt>
+ [39 <../card_images/WastedOutputs.jpg> <../card_images/Histograms.jpg>]
+<../card_images/shockvscheck.jpg, id=1114, 696.42pt x 254.916pt>
 File: ../card_images/shockvscheck.jpg Graphic file (type jpg)
 <use ../card_images/shockvscheck.jpg>
 Package pdftex.def Info: ../card_images/shockvscheck.jpg  used on input line 120.
 (pdftex.def)             Requested size: 348.20915pt x 127.45767pt.
- [54 <../card_images/shockvscheck.jpg>]
-Underfull \hbox (badness 4647) in paragraph at lines 147--147
-[]|\OT1/cmr/m/n/10.95 (+20) All land cards in the
+ [40 <../card_images/shockvscheck.jpg>]
+Overfull \hbox (15.27458pt too wide) in paragraph at lines 154--155
+\OT1/cmr/m/n/10.95 (-20) With a new man-abase added, Deck-Builder cre-ates a new Mon-te-Carlo ob-ject for the deck. \OT1/cmtt/m/n/10.95 MonteCarlo.run()
  []
 
-[55] [56]
-<../card_images/xavsalsampleimprovement.jpg, id=1196, 360.59718pt x 270.25969pt>
+[41] [42]
+<../card_images/xavsalsampleimprovement.jpg, id=1143, 360.59718pt x 270.25969pt>
 File: ../card_images/xavsalsampleimprovement.jpg Graphic file (type jpg)
 <use ../card_images/xavsalsampleimprovement.jpg>
 Package pdftex.def Info: ../card_images/xavsalsampleimprovement.jpg  used on input line 205.
 (pdftex.def)             Requested size: 180.29814pt x 135.1295pt.
- [57]
-<../card_images/savgolvsrollingav.jpg, id=1206, 928.998pt x 361.35pt>
+<../card_images/savgolvsrollingav.jpg, id=1147, 928.998pt x 361.35pt>
 File: ../card_images/savgolvsrollingav.jpg Graphic file (type jpg)
 <use ../card_images/savgolvsrollingav.jpg>
 Package pdftex.def Info: ../card_images/savgolvsrollingav.jpg  used on input line 216.
 (pdftex.def)             Requested size: 464.49786pt x 180.67456pt.
-
-Overfull \hbox (46.24419pt too wide) in paragraph at lines 216--216
- [][] 
- []
-
-[58 <../card_images/xavsalsampleimprovement.jpg>]
-<../card_images/bugwugcurves.jpg, id=1215, 877.971pt x 489.246pt>
+ [43 <../card_images/xavsalsampleimprovement.jpg>]
+<../card_images/bugwugcurves.jpg, id=1157, 877.971pt x 489.246pt>
 File: ../card_images/bugwugcurves.jpg Graphic file (type jpg)
 <use ../card_images/bugwugcurves.jpg>
 Package pdftex.def Info: ../card_images/bugwugcurves.jpg  used on input line 226.
 (pdftex.def)             Requested size: 219.4922pt x 122.31119pt.
-) [59 <../card_images/savgolvsrollingav.jpg> <../card_images/bugwugcurves.jpg>] [60] (./chapters/7_the_interface.tex [61
-
-
-]
-<../card_images/frontendpageone.jpg, id=1235, 907.89188pt x 542.025pt>
+) [44 <../card_images/savgolvsrollingav.jpg> <../card_images/bugwugcurves.jpg>] (./chapters/7_the_interface.tex
+<../card_images/frontendpageone.jpg, id=1169, 907.89188pt x 542.025pt>
 File: ../card_images/frontendpageone.jpg Graphic file (type jpg)
 <use ../card_images/frontendpageone.jpg>
 Package pdftex.def Info: ../card_images/frontendpageone.jpg  used on input line 13.
 (pdftex.def)             Requested size: 317.76692pt x 189.71158pt.
- [62 <../card_images/frontendpageone.jpg>] [63]
-<../card_images/frontendpagetwo.jpg, id=1252, 963.6pt x 474.27188pt>
+
+Underfull \vbox (badness 4713) has occurred while \output is active []
+
+ [45
+
+
+] [46 <../card_images/frontendpageone.jpg>]
+<../card_images/frontendpagetwo.jpg, id=1185, 963.6pt x 474.27188pt>
 File: ../card_images/frontendpagetwo.jpg Graphic file (type jpg)
 <use ../card_images/frontendpagetwo.jpg>
 Package pdftex.def Info: ../card_images/frontendpagetwo.jpg  used on input line 28.
 (pdftex.def)             Requested size: 337.26506pt x 165.99763pt.
-<../card_images/frontendpagetwopfive.jpg, id=1254, 304.88907pt x 216.05719pt>
+<../card_images/frontendpagetwopfive.jpg, id=1187, 304.88907pt x 216.05719pt>
 File: ../card_images/frontendpagetwopfive.jpg Graphic file (type jpg)
 <use ../card_images/frontendpagetwopfive.jpg>
 Package pdftex.def Info: ../card_images/frontendpagetwopfive.jpg  used on input line 36.
 (pdftex.def)             Requested size: 106.71277pt x 75.62114pt.
 
-Underfull \vbox (badness 5316) has occurred while \output is active []
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [64 <../card_images/frontendpagetwo.jpg>]
-<../card_images/frontendpagefour.jpg, id=1260, 963.6pt x 472.76625pt>
+ [47 <../card_images/frontendpagetwo.jpg>]
+<../card_images/frontendpagefour.jpg, id=1193, 963.6pt x 472.76625pt>
 File: ../card_images/frontendpagefour.jpg Graphic file (type jpg)
 <use ../card_images/frontendpagefour.jpg>
 Package pdftex.def Info: ../card_images/frontendpagefour.jpg  used on input line 45.
 (pdftex.def)             Requested size: 337.26506pt x 165.47066pt.
-) [65 <../card_images/frontendpagetwopfive.jpg> <../card_images/frontendpagefour.jpg>] [66
+) [48 <../card_images/frontendpagetwopfive.jpg> <../card_images/frontendpagefour.jpg>] (./chapters/8_validation_testing.tex [49
 
-] (./chapters/8_validation_testing.tex [67
 
 ]
 
-LaTeX Warning: Reference `:personas' on page 68 undefined on input line 25.
+LaTeX Warning: Reference `:personas' on page 50 undefined on input line 25.
 
-[68]
-<../card_images/TLX_scores.jpg, id=1289, 666.99188pt x 542.025pt>
+<../card_images/TLX_scores.jpg, id=1214, 666.99188pt x 542.025pt>
 File: ../card_images/TLX_scores.jpg Graphic file (type jpg)
 <use ../card_images/TLX_scores.jpg>
 Package pdftex.def Info: ../card_images/TLX_scores.jpg  used on input line 50.
 (pdftex.def)             Requested size: 333.49512pt x 271.01183pt.
- [69] [70 <../card_images/TLX_scores.jpg>]
+[50] [51 <../card_images/TLX_scores.jpg>]
 
-LaTeX Warning: Reference `:areasforimprovement' on page 71 undefined on input line 80.
+LaTeX Warning: Reference `:areasforimprovement' on page 52 undefined on input line 80.
 
-[71] [72]
+[52]
 
-LaTeX Warning: Reference `:eachincrement' on page 73 undefined on input line 95.
+LaTeX Warning: Reference `:eachincrement' on page 53 undefined on input line 95.
 
-[73]) [74] (./chapters/9_conclusion.tex [75
-
-
-] [76]) [77] [78
-
-] (./chapters/appendices/app0A.tex) [79
-
-] [80
-
-] [81
+[53]) [54] (./chapters/9_conclusion.tex [55
 
 
-] [82]
-Overfull \hbox (4.64091pt too wide) in paragraph at lines 318--318
-[]\OT1/cmr/m/sc/10.95 (-20) url\OT1/cmr/m/n/10.95 (-20) : [][]$\OT1/cmtt/m/n/10.95 https : / / humansystems . arc . nasa . gov / groups / tlx/$[][] \OT1/cmr/m/n/10.95 (-20) (vis-ited on 09/03/2025). 
+]) [56] [57] [58
+
+] (./chapters/appendices/app0A.tex) [59
+
+] [60
+
+] [61
+
+
+] [62] [63]
+Overfull \hbox (3.93329pt too wide) in paragraph at lines 319--319
+[]\OT1/cmr/m/sc/10.95 (-20) url\OT1/cmr/m/n/10.95 (-20) : [][]$\OT1/cmtt/m/n/10.95 https : / / edhrec . com / articles / superior -[] numbers -[] lets -[] bounce$[][] \OT1/cmr/m/n/10.95 (-20) (vis-ited on 08/19/2025). 
  []
 
-
-Overfull \hbox (32.08658pt too wide) in paragraph at lines 318--318
-[]\OT1/cmr/m/sc/10.95 (-20) url\OT1/cmr/m/n/10.95 (-20) : [][]$\OT1/cmtt/m/n/10.95 https : / / web . archive . org / web / 20200330115445 / https : /www . channelfireball .
- []
-
-
-Overfull \hbox (32.08658pt too wide) in paragraph at lines 318--318
-[]\OT1/cmr/m/sc/10.95 (-20) url\OT1/cmr/m/n/10.95 (-20) : [][]$\OT1/cmtt/m/n/10.95 https : / / web . archive . org / web / 20201109011137 / https : /www . channelfireball .
- []
-
-[83] [84]
-Overfull \hbox (18.99026pt too wide) in paragraph at lines 318--318
-[]\OT1/cmr/m/sc/10.95 (-20) url\OT1/cmr/m/n/10.95 (-20) : [][]$\OT1/cmtt/m/n/10.95 https : / / medium . com / @ndleah / a -[] brief -[] guide -[] to -[] database -[] normalization -[]
- []
-
-
-Overfull \hbox (4.64091pt too wide) in paragraph at lines 318--318
-[]\OT1/cmr/m/sc/10.95 (-20) url\OT1/cmr/m/n/10.95 (-20) : [][]$\OT1/cmtt/m/n/10.95 https : / / docs . python . org / 3 / library / pickle . html$[][] \OT1/cmr/m/n/10.95 (-20) (vis-ited on 09/03/2025). 
- []
-
-[85] [86] [87] [88
-
-]
+[64] [65] [66]
 
 Class memoir Warning: The material used in the headers is too large
 (27.2pt) for the given head height (13.6pt), it is recommended to
 either increase the head height or redesign the header
-(in both cases you will find help in the memoir manual). on input line 323.
+(in both cases you will find help in the memoir manual). on input line 324.
 
 No complaints by nag.
 \tf@toc=\write8
@@ -1854,24 +1786,24 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 LaTeX Warning: There were undefined references.
 
 Package rerunfilecheck Info: File `memoirthesis.out' has not changed.
-(rerunfilecheck)             Checksum: 9F315D7B88564751DF4C6F982A311B9C;19655.
+(rerunfilecheck)             Checksum: A1A1E140DA8A8C06A4AE4AAB7BC1BBAE;19841.
 Package logreq Info: Writing requests to 'memoirthesis.run.xml'.
 \openout1 = `memoirthesis.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 38119 strings out of 476047
- 681024 string characters out of 5792076
- 1943975 words of memory out of 5000000
- 58975 multiletter control sequences out of 15000+600000
- 575534 words of font info for 178 fonts, out of 8000000 for 9000
+ 38106 strings out of 476047
+ 681210 string characters out of 5792076
+ 1946975 words of memory out of 5000000
+ 58985 multiletter control sequences out of 15000+600000
+ 575489 words of font info for 176 fonts, out of 8000000 for 9000
  85 hyphenation exceptions out of 8191
  85i,16n,131p,2208b,3420s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1095.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfti1095.pfb>
-Output written on memoirthesis.pdf (104 pages, 7125936 bytes).
+Output written on memoirthesis.pdf (82 pages, 7300971 bytes).
 PDF statistics:
- 1595 PDF objects out of 1728 (max. 8388607)
- 1412 compressed objects within 15 object streams
- 343 named destinations out of 1000 (max. 500000)
- 44554 words of extra memory for PDF output out of 51595 (max. 10000000)
+ 1496 PDF objects out of 1728 (max. 8388607)
+ 1335 compressed objects within 14 object streams
+ 323 named destinations out of 1000 (max. 500000)
+ 44567 words of extra memory for PDF output out of 51595 (max. 10000000)
 

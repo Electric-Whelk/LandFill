@@ -1,7 +1,7 @@
 import json
 
 from AppFactory import create_app
-from simulation_objects.CardCollections import Deck, MonteCarlo
+from simulation_objects.CardCollections import Deck, DeckBuilder
 from simulation_objects import InputParser
 
 with open("output_files/deck_submissions/sample_input.json", "r") as json_file:
@@ -14,7 +14,7 @@ simulating = False
 with app.app_context():
     player_deck = Deck()
     imp = InputParser()
-    monty = MonteCarlo(player_deck)
+    monty = DeckBuilder(player_deck)
 
 
     decklist = imp.parse_decklist(data.get("deckList"))

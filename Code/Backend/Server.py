@@ -8,7 +8,7 @@ from flask import jsonify, session, request
 from flask_caching import Cache
 from simulation_objects.CardCollections.Deck import Deck
 from simulation_objects.CardCollections.MCUsrTest import MCUsrTest
-from simulation_objects.CardCollections.MonteCarlo import MonteCarlo
+from simulation_objects.CardCollections.DeckBuilder import DeckBuilder
 from simulation_objects import InputParser
 from flask import Flask, send_from_directory
 import os
@@ -22,7 +22,7 @@ app = create_app()
 cache = Cache(app)
 
 player_deck = Deck()
-monty = MonteCarlo(player_deck, verbose=True)
+monty = DeckBuilder(player_deck, verbose=True)
 imp = InputParser()
 PrevPageOneInput = "DEADVALUE"
 PrevPageTwoInput = "DEADVALUE"
