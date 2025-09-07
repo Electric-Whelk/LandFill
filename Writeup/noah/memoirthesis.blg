@@ -1,18 +1,17 @@
 [0] Config.pm:307> INFO - This is Biber 2.19
 [0] Config.pm:310> INFO - Logfile is 'memoirthesis.blg'
-[44] biber:340> INFO - === Sun Sep  7, 2025, 10:22:23
-[58] Biber.pm:419> INFO - Reading 'memoirthesis.bcf'
-[93] Biber.pm:979> INFO - Found 61 citekeys in bib section 0
-[100] Biber.pm:4419> INFO - Processing section 0
-[111] Biber.pm:4610> INFO - Looking for bibtex file 'thesisbiblio.bib' for section 0
-[113] bibtex.pm:1713> INFO - LaTeX decoding ...
-[138] bibtex.pm:1519> INFO - Found BibTeX data source 'thesisbiblio.bib'
-[270] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
-[270] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
-[270] Biber.pm:4239> INFO - Sorting list 'none/global//global/global' of type 'entry' with template 'none' and locale 'en-US'
-[270] Biber.pm:4245> INFO - No sort tailoring available for locale 'en-US'
-[292] bbl.pm:660> INFO - Writing 'memoirthesis.bbl' with encoding 'UTF-8'
-[303] bbl.pm:763> INFO - Output to memoirthesis.bbl
-[303] Biber.pm:131> WARN - Duplicate entry key: 'mtgjson' in file 'thesisbiblio.bib', skipping ...
-[303] Biber.pm:131> WARN - I didn't find a database entry for 'braun2006using' (section 0)
-[304] Biber.pm:133> INFO - WARNINGS: 2
+[64] biber:340> INFO - === Sun Sep  7, 2025, 19:03:42
+[83] Biber.pm:419> INFO - Reading 'memoirthesis.bcf'
+[133] Biber.pm:979> INFO - Found 60 citekeys in bib section 0
+[143] Biber.pm:4419> INFO - Processing section 0
+[154] Biber.pm:4610> INFO - Looking for bibtex file 'thesisbiblio.bib' for section 0
+[158] bibtex.pm:1713> INFO - LaTeX decoding ...
+[190] bibtex.pm:1519> INFO - Found BibTeX data source 'thesisbiblio.bib'
+[369] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[370] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[370] Biber.pm:4239> INFO - Sorting list 'none/global//global/global' of type 'entry' with template 'none' and locale 'en-US'
+[370] Biber.pm:4245> INFO - No sort tailoring available for locale 'en-US'
+[400] bbl.pm:660> INFO - Writing 'memoirthesis.bbl' with encoding 'UTF-8'
+[415] bbl.pm:763> INFO - Output to memoirthesis.bbl
+[416] Biber.pm:131> WARN - Duplicate entry key: 'mtgjson' in file 'thesisbiblio.bib', skipping ...
+[416] Biber.pm:133> INFO - WARNINGS: 1

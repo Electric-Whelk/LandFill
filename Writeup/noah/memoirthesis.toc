@@ -15,22 +15,22 @@
 \contentsline {section}{\numberline {2.3}Development and Testing Methodologies}{8}{section.2.3}%
 \contentsline {subsection}{\numberline {2.3.1}Verification Testing}{8}{subsection.2.3.1}%
 \contentsline {subsection}{\numberline {2.3.2}Validation Testing and User Research}{8}{subsection.2.3.2}%
-\contentsline {section}{\numberline {2.4}Relevance to Existing Material}{9}{section.2.4}%
+\contentsline {section}{\numberline {2.4}Relevance to Existing Material}{8}{section.2.4}%
 \contentsline {subsection}{\numberline {2.4.1}Academic Interest in MTG Automation}{9}{subsection.2.4.1}%
-\contentsline {subsection}{\numberline {2.4.2}Manabase Analysis within the Player Community}{10}{subsection.2.4.2}%
-\contentsline {subsection}{\numberline {2.4.3}Existing Deckbuilding Apps}{11}{subsection.2.4.3}%
-\contentsline {section}{\numberline {2.5}Library/Language Choices}{13}{section.2.5}%
+\contentsline {subsection}{\numberline {2.4.2}Manabase Analysis within the Player Community}{9}{subsection.2.4.2}%
+\contentsline {subsection}{\numberline {2.4.3}Existing Deckbuilding Apps}{10}{subsection.2.4.3}%
+\contentsline {section}{\numberline {2.5}Library/Language Choices}{12}{section.2.5}%
 \contentsline {subsection}{\numberline {2.5.1}LandFill Structure}{13}{subsection.2.5.1}%
 \contentsline {chapter}{\chapternumberline {3}Pre-Development User Research}{15}{chapter.3}%
 \contentsline {section}{\numberline {3.1}Overview}{15}{section.3.1}%
 \contentsline {subsection}{\numberline {3.1.1}Semi-Structured Interview}{15}{subsection.3.1.1}%
 \contentsline {subsection}{\numberline {3.1.2}Think-Aloud Mockup Testing}{15}{subsection.3.1.2}%
-\contentsline {subsection}{\numberline {3.1.3}Kano Questionnaire}{16}{subsection.3.1.3}%
+\contentsline {subsection}{\numberline {3.1.3}Kano Questionnaire}{15}{subsection.3.1.3}%
 \contentsline {section}{\numberline {3.2}Analysis}{16}{section.3.2}%
 \contentsline {subsection}{\numberline {3.2.1}Format Support}{17}{subsection.3.2.1}%
 \contentsline {subsection}{\numberline {3.2.2}Support for 3rd Party Databases}{18}{subsection.3.2.2}%
 \contentsline {subsection}{\numberline {3.2.3}Comprehensive Land Exclusion/Preference Options}{18}{subsection.3.2.3}%
-\contentsline {subsection}{\numberline {3.2.4}Deckbuilder Personas}{19}{subsection.3.2.4}%
+\contentsline {subsection}{\numberline {3.2.4}Deckbuilder Personas}{18}{subsection.3.2.4}%
 \contentsline {subsection}{\numberline {3.2.5}Visualization of Internal Workings}{19}{subsection.3.2.5}%
 \contentsline {subsection}{\numberline {3.2.6}Knapsack Problems and simultaneous optimization}{19}{subsection.3.2.6}%
 \contentsline {subsection}{\numberline {3.2.7}Mulligans}{20}{subsection.3.2.7}%
@@ -53,17 +53,17 @@
 \contentsline {section}{\numberline {5.4}Running a Turn}{28}{section.5.4}%
 \contentsline {subsection}{\numberline {5.4.1}Untap and Draw}{28}{subsection.5.4.1}%
 \contentsline {subsection}{\numberline {5.4.2}Determining Lumps}{28}{subsection.5.4.2}%
-\contentsline {subsection}{\numberline {5.4.3}Playing a Land and a Lump}{29}{subsection.5.4.3}%
+\contentsline {subsection}{\numberline {5.4.3}Playing a Land and a Lump}{28}{subsection.5.4.3}%
 \contentsline {subsection}{\numberline {5.4.4}Assessing Lump Playability}{29}{subsection.5.4.4}%
 \contentsline {section}{\numberline {5.5}Concluding a Game}{31}{section.5.5}%
 \contentsline {section}{\numberline {5.6}Heuristics}{31}{section.5.6}%
 \contentsline {subsection}{\numberline {5.6.1}Multiple-Faced Cards and Alternate Casting Costs}{31}{subsection.5.6.1}%
-\contentsline {subsection}{\numberline {5.6.2}Spells with X in their Mana Cost}{32}{subsection.5.6.2}%
+\contentsline {subsection}{\numberline {5.6.2}Spells with X in their Mana Cost}{31}{subsection.5.6.2}%
 \contentsline {subsection}{\numberline {5.6.3}Strategies for Future Turns}{32}{subsection.5.6.3}%
 \contentsline {subsection}{\numberline {5.6.4}Ramp and Draw Spells}{32}{subsection.5.6.4}%
 \contentsline {subsection}{\numberline {5.6.5}Bond Lands}{32}{subsection.5.6.5}%
-\contentsline {section}{\numberline {5.7}More Complex Lands}{33}{section.5.7}%
-\contentsline {subsection}{\numberline {5.7.1}Fetch Lands}{33}{subsection.5.7.1}%
+\contentsline {section}{\numberline {5.7}More Complex Lands}{32}{section.5.7}%
+\contentsline {subsection}{\numberline {5.7.1}Fetch Lands}{32}{subsection.5.7.1}%
 \contentsline {subsection}{\numberline {5.7.2}Filter Lands}{33}{subsection.5.7.2}%
 \contentsline {subsection}{\numberline {5.7.3}Dual-Faced Lands}{34}{subsection.5.7.3}%
 \contentsline {section}{\numberline {5.8}Simulator Verification Testing}{34}{section.5.8}%
@@ -74,28 +74,28 @@
 \contentsline {section}{\numberline {6.2}Optimization Algorithm}{37}{section.6.2}%
 \contentsline {subsection}{\numberline {6.2.1}Outline of Steepest Ascent Hill Climbing Algorithm}{37}{subsection.6.2.1}%
 \contentsline {subsection}{\numberline {6.2.2}Other Options}{37}{subsection.6.2.2}%
-\contentsline {section}{\numberline {6.3}Choice of Performance Metrics}{38}{section.6.3}%
+\contentsline {section}{\numberline {6.3}Choice of Objective Function}{38}{section.6.3}%
 \contentsline {subsection}{\numberline {6.3.1}Overview}{38}{subsection.6.3.1}%
 \contentsline {subsection}{\numberline {6.3.2}Use of ``Wasted Mana''}{38}{subsection.6.3.2}%
-\contentsline {subsection}{\numberline {6.3.3}Initial Analysis}{39}{subsection.6.3.3}%
+\contentsline {subsection}{\numberline {6.3.3}Initial Analysis}{38}{subsection.6.3.3}%
 \contentsline {subsection}{\numberline {6.3.4}Proportion Wasted vs Cumulative Distribution}{40}{subsection.6.3.4}%
 \contentsline {section}{\numberline {6.4}The Hill Climbing Algorithm}{41}{section.6.4}%
 \contentsline {subsection}{\numberline {6.4.1}Setup}{41}{subsection.6.4.1}%
 \contentsline {subsection}{\numberline {6.4.2}Each Increment}{41}{subsection.6.4.2}%
-\contentsline {subsection}{\numberline {6.4.3}Halting}{43}{subsection.6.4.3}%
+\contentsline {subsection}{\numberline {6.4.3}Halting}{42}{subsection.6.4.3}%
 \contentsline {section}{\numberline {6.5}Optimizer Verification Testing}{43}{section.6.5}%
 \contentsline {chapter}{\chapternumberline {7}The Interface}{45}{chapter.7}%
 \contentsline {section}{\numberline {7.1}The Input Parser}{45}{section.7.1}%
 \contentsline {section}{\numberline {7.2}App Layout}{45}{section.7.2}%
 \contentsline {subsection}{\numberline {7.2.1}Deck Input (Fig.~\ref {fig:deckinput})}{45}{subsection.7.2.1}%
-\contentsline {subsection}{\numberline {7.2.2}Preferences (Fig.~\ref {fig:preferences})}{46}{subsection.7.2.2}%
+\contentsline {subsection}{\numberline {7.2.2}Preferences (Fig.~\ref {fig:preferences})}{45}{subsection.7.2.2}%
 \contentsline {subsection}{\numberline {7.2.3}Progress (Fig.~\ref {fig:progress})}{47}{subsection.7.2.3}%
-\contentsline {subsection}{\numberline {7.2.4}Output (Fig.~\ref {fig:output})}{48}{subsection.7.2.4}%
+\contentsline {subsection}{\numberline {7.2.4}Output (Fig.~\ref {fig:output})}{47}{subsection.7.2.4}%
 \contentsline {chapter}{\chapternumberline {8}Post-Development Validation Testing}{49}{chapter.8}%
 \contentsline {section}{\numberline {8.1}Methodology}{49}{section.8.1}%
 \contentsline {subsection}{\numberline {8.1.1}Effort Testing via TLX}{49}{subsection.8.1.1}%
 \contentsline {subsection}{\numberline {8.1.2}Serendipity Testing}{50}{subsection.8.1.2}%
-\contentsline {subsection}{\numberline {8.1.3}Semi-Structured Interview}{51}{subsection.8.1.3}%
+\contentsline {subsection}{\numberline {8.1.3}Semi-Structured Interview}{50}{subsection.8.1.3}%
 \contentsline {section}{\numberline {8.2}Results}{51}{section.8.2}%
 \contentsline {subsection}{\numberline {8.2.1}TLX Data Analysis}{51}{subsection.8.2.1}%
 \contentsline {subsection}{\numberline {8.2.2}Serendipity Test Analysis}{52}{subsection.8.2.2}%
@@ -114,4 +114,4 @@
 \contentsline {section}{\numberline {9.3}Final Thoughts}{56}{section.9.3}%
 \contentsline {appendix}{\chapternumberline {A}Code Extracts}{59}{appendix.A}%
 \contentsline {appendix}{\chapternumberline {B}Consent Forms}{65}{appendix.B}%
-\contentsline {chapter}{Bibliography}{73}{section*.36}%
+\contentsline {chapter}{Bibliography}{73}{section*.38}%

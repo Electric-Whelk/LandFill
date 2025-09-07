@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.9.3)  4 SEP 2025 10:16
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.9.4)  7 SEP 2025 12:47
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -220,13 +220,13 @@ Package typearea Info: These are the values describing the layout:
 (typearea)              \evensidemargin = 17.3562pt
 (typearea)              \oddsidemargin  = 17.3562pt
 (typearea)             \paperheight     = 845.04694pt
-(typearea)              \textheight     = 549.55873pt
+(typearea)              \textheight     = 541.40024pt
 (typearea)              \topmargin      = 12.2347pt
-(typearea)              \headheight     = 20.39995pt
-(typearea)              \headsep        = 24.47993pt
+(typearea)              \headheight     = 25.5pt
+(typearea)              \headsep        = 30.6pt
 (typearea)              \topskip        = 11.0pt
-(typearea)              \footskip       = 57.11986pt
-(typearea)              \baselineskip   = 16.31996pt
+(typearea)              \footskip       = 71.40001pt
+(typearea)              \baselineskip   = 20.40001pt
 (typearea)              on input line 60.
 Package typearea Info: These are the values describing the layout:
 (typearea)             DIV  = 10
@@ -237,13 +237,13 @@ Package typearea Info: These are the values describing the layout:
 (typearea)              \evensidemargin = 17.3562pt
 (typearea)              \oddsidemargin  = 17.3562pt
 (typearea)             \paperheight     = 845.04694pt
-(typearea)              \textheight     = 549.55873pt
+(typearea)              \textheight     = 541.40024pt
 (typearea)              \topmargin      = 12.2347pt
-(typearea)              \headheight     = 20.39995pt
-(typearea)              \headsep        = 24.47993pt
+(typearea)              \headheight     = 25.5pt
+(typearea)              \headsep        = 30.6pt
 (typearea)              \topskip        = 11.0pt
-(typearea)              \footskip       = 57.11986pt
-(typearea)              \baselineskip   = 16.31996pt
+(typearea)              \footskip       = 71.40001pt
+(typearea)              \baselineskip   = 20.40001pt
 (typearea)              on input line 68.
  (/usr/share/texlive/texmf-dist/tex/latex/datetime2/datetime2.sty
 Package: datetime2 2021/03/21 v1.5.7 (NLCT) date and time formats
@@ -708,7 +708,7 @@ File: logreq.def 2010/08/04 v1.0 logreq spec v1.0
 \bibhang=\skip98
 \blx@bcfin=\read2
 \blx@bcfout=\write3
-\blx@langwohyphens=\language9
+\blx@langwohyphens=\language12
 \c@mincomprange=\count366
 \c@maxcomprange=\count367
 \c@mincompwidth=\count368
@@ -904,40 +904,21 @@ Package: blx-case-expl3 2023/03/05 v3.19 expl3 case changing code for biblatex
 \@faculty=\toks44
 \@date=\toks45
 \@wordcount=\toks46
-) (/usr/share/texlive/texmf-dist/tex/latex/geometry/geometry.sty
-Package: geometry 2020/01/02 v5.9 Page Geometry
- (/usr/share/texlive/texmf-dist/tex/generic/iftex/ifvtex.sty
-Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
-)
-\Gm@cnth=\count448
-\Gm@cntv=\count449
-\c@Gm@tempcnt=\count450
-\Gm@bindingoffset=\dimen170
-\Gm@wd@mp=\dimen171
-\Gm@odd@mp=\dimen172
-\Gm@even@mp=\dimen173
-\Gm@layoutwidth=\dimen174
-\Gm@layoutheight=\dimen175
-\Gm@layouthoffset=\dimen176
-\Gm@layoutvoffset=\dimen177
-\Gm@dimlist=\toks47
-) (/usr/share/texlive/texmf-dist/tex/latex/setspace/setspace.sty
-Package: setspace 2022/12/04 v6.7b set line spacing
 ) (/usr/share/texlive/texmf-dist/tex/latex/lipsum/lipsum.sty (/usr/share/texlive/texmf-dist/tex/latex/l3packages/l3keys2e/l3keys2e.sty
 Package: l3keys2e 2023-10-10 LaTeX2e option processing using LaTeX3 keys
 )
 Package: lipsum 2021-09-20 v2.7 150 paragraphs of Lorem Ipsum dummy text
-\g__lipsum_par_int=\count451
-\l__lipsum_a_int=\count452
-\l__lipsum_b_int=\count453
+\g__lipsum_par_int=\count448
+\l__lipsum_a_int=\count449
+\l__lipsum_b_int=\count450
  (/usr/share/texlive/texmf-dist/tex/latex/lipsum/lipsum.ltd.tex)) (/usr/share/texlive/texmf-dist/tex/latex/makecell/makecell.sty
 Package: makecell 2009/08/03 V0.1e Managing of Tab Column Heads and Cells
-\rotheadsize=\dimen178
-\c@nlinenum=\count454
-\TeXr@lab=\toks48
+\rotheadsize=\dimen170
+\c@nlinenum=\count451
+\TeXr@lab=\toks47
 )
-\@quotelevel=\count455
-\@quotereset=\count456
+\@quotelevel=\count452
+\@quotereset=\count453
 
 
 LaTeX Warning: Unused global option(s):
@@ -946,47 +927,47 @@ LaTeX Warning: Unused global option(s):
 (./thesis.aux)
 \openout1 = `thesis.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 56.
-LaTeX Font Info:    ... okay on input line 56.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 56.
-LaTeX Font Info:    ... okay on input line 56.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 56.
-LaTeX Font Info:    ... okay on input line 56.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 56.
-LaTeX Font Info:    ... okay on input line 56.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 56.
-LaTeX Font Info:    ... okay on input line 56.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 56.
-LaTeX Font Info:    ... okay on input line 56.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 56.
-LaTeX Font Info:    ... okay on input line 56.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 56.
-LaTeX Font Info:    ... okay on input line 56.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 56.
-LaTeX Font Info:    ... okay on input line 56.
-Package scrbase Info: activating english \partname on input line 56.
-Package scrbase Info: activating english \chaptername on input line 56.
-Package scrbase Info: activating english \appendixname on input line 56.
-Package scrbase Info: activating english \figurename on input line 56.
-Package scrbase Info: activating english \tablename on input line 56.
-Package scrbase Info: activating english \contentsname on input line 56.
-Package scrbase Info: activating english \listfigurename on input line 56.
-Package scrbase Info: activating english \listtablename on input line 56.
-Package scrbase Info: activating english \bibname on input line 56.
-Package scrbase Info: activating english \indexname on input line 56.
-LaTeX Info: Redefining \microtypecontext on input line 56.
-Package microtype Info: Applying patch `item' on input line 56.
-Package microtype Info: Applying patch `toc' on input line 56.
-Package microtype Info: Applying patch `eqnum' on input line 56.
-Package microtype Info: Applying patch `footnote' on input line 56.
-Package microtype Info: Applying patch `verbatim' on input line 56.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+Package scrbase Info: activating english \partname on input line 51.
+Package scrbase Info: activating english \chaptername on input line 51.
+Package scrbase Info: activating english \appendixname on input line 51.
+Package scrbase Info: activating english \figurename on input line 51.
+Package scrbase Info: activating english \tablename on input line 51.
+Package scrbase Info: activating english \contentsname on input line 51.
+Package scrbase Info: activating english \listfigurename on input line 51.
+Package scrbase Info: activating english \listtablename on input line 51.
+Package scrbase Info: activating english \bibname on input line 51.
+Package scrbase Info: activating english \indexname on input line 51.
+LaTeX Info: Redefining \microtypecontext on input line 51.
+Package microtype Info: Applying patch `item' on input line 51.
+Package microtype Info: Applying patch `toc' on input line 51.
+Package microtype Info: Applying patch `eqnum' on input line 51.
+Package microtype Info: Applying patch `footnote' on input line 51.
+Package microtype Info: Applying patch `verbatim' on input line 51.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using default protrusion set `alltext'.
 Package microtype Info: Automatic font expansion enabled (level 2),
 (microtype)             stretch: 20, shrink: 20, step: 1, non-selected.
 Package microtype Info: Using default expansion set `alltext-nott'.
-LaTeX Info: Redefining \showhyphens on input line 56.
+LaTeX Info: Redefining \showhyphens on input line 51.
 Package microtype Info: No adjustment of tracking.
 Package microtype Info: No adjustment of interword spacing.
 Package microtype Info: No adjustment of character kerning.
@@ -994,17 +975,17 @@ Package microtype Info: No adjustment of character kerning.
 File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman (RS)
 ) (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count457
-\scratchdimen=\dimen179
+\scratchcounter=\count454
+\scratchdimen=\dimen171
 \scratchbox=\box61
-\nofMPsegments=\count458
-\nofMParguments=\count459
-\everyMPshowfont=\toks49
-\MPscratchCnt=\count460
-\MPscratchDim=\dimen180
-\MPnumerator=\count461
-\makeMPintoPDFobject=\count462
-\everyMPtoPDFconversion=\toks50
+\nofMPsegments=\count455
+\nofMParguments=\count456
+\everyMPshowfont=\toks48
+\MPscratchCnt=\count457
+\MPscratchDim=\dimen172
+\MPnumerator=\count458
+\makeMPintoPDFobject=\count459
+\everyMPtoPDFconversion=\toks49
 ) (/usr/share/texlive/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
@@ -1013,7 +994,7 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 )) (/usr/share/texlive/texmf-dist/tex/latex/fmtcount/fc-english.def
 File: fc-english.def 2016/01/12
 )
-Package hyperref Info: Link coloring ON on input line 56.
+Package hyperref Info: Link coloring ON on input line 51.
  (./thesis.out) (./thesis.out)
 \@outlinefile=\write4
 \openout4 = `thesis.out'.
@@ -1025,12 +1006,12 @@ Class scrbook Info: loading recommended package `bookmark'.
 (scrbook)           `bookmarkpackage=false' before \begin{document} and
 (scrbook)           you can avoid this message adding:
 (scrbook)             \usepackage{bookmark}
-(scrbook)           before \begin{document} on input line 56.
+(scrbook)           before \begin{document} on input line 51.
  (/usr/share/texlive/texmf-dist/tex/latex/bookmark/bookmark.sty
 Package: bookmark 2023-12-10 v1.31 PDF bookmarks (HO)
  (/usr/share/texlive/texmf-dist/tex/latex/bookmark/bkm-pdftex.def
 File: bkm-pdftex.def 2023-12-10 v1.31 bookmark driver for pdfTeX and luaTeX (HO)
-\BKM@id=\count463
+\BKM@id=\count460
 ))
 Package biblatex Info: Trying to load language 'american'...
 Package biblatex Info: ... file 'american.lbx' found.
@@ -1062,131 +1043,97 @@ Package biblatex Info: Automatic encoding selection.
 Package biblatex Info: Trying to load bibliographic data...
 Package biblatex Info: ... file 'thesis.bbl' found.
  (./thesis.bbl)
-Package biblatex Info: Reference section=0 on input line 56.
-Package biblatex Info: Reference segment=0 on input line 56.
+Package biblatex Info: Reference section=0 on input line 51.
+Package biblatex Info: Reference segment=0 on input line 51.
+Package hyperref Info: Option `pageanchor' set `false' on input line 59.
 
-*geometry* driver: auto-detecting
-*geometry* detected driver: pdftex
-*geometry* verbose mode - [ preamble ] result:
-* driver: pdftex
-* paper: a4paper
-* layout: <same size as paper>
-* layoutoffset:(h,v)=(0.0pt,0.0pt)
-* modes: twoside asymmetric 
-* h-part:(L,W,R)=(56.9055pt, 483.69687pt, 56.9055pt)
-* v-part:(T,H,B)=(56.9055pt, 731.23584pt, 56.9055pt)
-* \paperwidth=597.50787pt
-* \paperheight=845.04684pt
-* \textwidth=483.69687pt
-* \textheight=731.23584pt
-* \oddsidemargin=-15.36449pt
-* \evensidemargin=-15.36449pt
-* \topmargin=-60.24437pt
-* \headheight=20.39995pt
-* \headsep=24.47993pt
-* \topskip=11.0pt
-* \footskip=57.11986pt
-* \marginparwidth=59.7508pt
-* \marginparsep=12.8401pt
-* \columnsep=10.0pt
-* \skip\footins=10.0pt plus 4.0pt minus 2.0pt
-* \hoffset=0.0pt
-* \voffset=0.0pt
-* \mag=1000
-* \@twocolumnfalse
-* \@twosidetrue
-* \@mparswitchfalse
-* \@reversemarginfalse
-* (1in=72.27pt=25.4mm, 1cm=28.453pt)
-
-Package hyperref Info: Option `pageanchor' set `false' on input line 64.
 
 Package typearea Warning: \typearea used at group level 7.
 (typearea)                Using \typearea inside any group, e.g.
 (typearea)                environments, math mode, boxes, etc. may result in
 (typearea)                many type setting problems.
 (typearea)                You should move the command \typearea
-(typearea)                outside all groups on input line 66.
+(typearea)                outside all groups on input line 61.
 
 Package typearea Info: These are the values describing the layout:
 (typearea)             DIV  = 10
 (typearea)             BCOR = 0.0pt
-(typearea)             \paperwidth      = 597.50787pt
-(typearea)              \textwidth      = 418.25554pt
+(typearea)             \paperwidth      = 597.50793pt
+(typearea)              \textwidth      = 418.25555pt
 (typearea)              DIV departure   = -6%
-(typearea)              \evensidemargin = 17.35617pt
-(typearea)              \oddsidemargin  = 17.35617pt
-(typearea)             \paperheight     = 845.04684pt
-(typearea)              \textheight     = 549.55873pt
+(typearea)              \evensidemargin = 17.3562pt
+(typearea)              \oddsidemargin  = 17.3562pt
+(typearea)             \paperheight     = 845.04694pt
+(typearea)              \textheight     = 541.40024pt
 (typearea)              \topmargin      = 12.2347pt
-(typearea)              \headheight     = 20.39995pt
-(typearea)              \headsep        = 24.47993pt
+(typearea)              \headheight     = 25.5pt
+(typearea)              \headsep        = 30.6pt
 (typearea)              \topskip        = 11.0pt
-(typearea)              \footskip       = 57.11986pt
-(typearea)              \baselineskip   = 16.31996pt
-(typearea)              on input line 66.
+(typearea)              \footskip       = 71.40001pt
+(typearea)              \baselineskip   = 20.40001pt
+(typearea)              on input line 61.
 Package typearea Info: Using dirty hack to recalculate internal output
-(typearea)             dimensions of LaTeX on input line 66.
-LaTeX Font Info:    Trying to load font information for OML+mlmm on input line 66.
+(typearea)             dimensions of LaTeX on input line 61.
+LaTeX Font Info:    Trying to load font information for OML+mlmm on input line 61.
 (/usr/share/texlive/texmf-dist/tex/latex/mlmodern/omlmlmm.fd
 File: omlmlmm.fd 2021/01/11 v1.0 Font defs for mlmodern
 )
-LaTeX Font Info:    Trying to load font information for OMS+mlmsy on input line 66.
+LaTeX Font Info:    Trying to load font information for OMS+mlmsy on input line 61.
  (/usr/share/texlive/texmf-dist/tex/latex/mlmodern/omsmlmsy.fd
 File: omsmlmsy.fd 2021/01/11 v1.0 Font defs for mlmodern
 )
-LaTeX Font Info:    Trying to load font information for OMX+mlmex on input line 66.
+LaTeX Font Info:    Trying to load font information for OMX+mlmex on input line 61.
  (/usr/share/texlive/texmf-dist/tex/latex/mlmodern/omxmlmex.fd
 File: omxmlmex.fd 2021/01/11 v1.0 Font defs for mlmodern
 )
 LaTeX Font Info:    External font `mlmex10' loaded for size
-(Font)              <14.4> on input line 66.
+(Font)              <14.4> on input line 61.
 LaTeX Font Info:    External font `mlmex10' loaded for size
-(Font)              <10> on input line 66.
+(Font)              <10> on input line 61.
 LaTeX Font Info:    External font `mlmex10' loaded for size
-(Font)              <7> on input line 66.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 66.
+(Font)              <7> on input line 61.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 61.
  (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 ) (/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 66.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 61.
  (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) (/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+wasy on input line 66.
+LaTeX Font Info:    Trying to load font information for U+wasy on input line 61.
  (/usr/share/texlive/texmf-dist/tex/latex/wasysym/uwasy.fd
 File: uwasy.fd 2020/01/19 v2.4 Wasy-2 symbol font definitions
 )
-LaTeX Font Info:    Trying to load font information for U+stmry on input line 66.
+LaTeX Font Info:    Trying to load font information for U+stmry on input line 61.
  (/usr/share/texlive/texmf-dist/tex/latex/stmaryrd/Ustmry.fd)
 <UoB_RGB_24.jpg, id=4, 742.9356pt x 215.1237pt>
 File: UoB_RGB_24.jpg Graphic file (type jpg)
 <use UoB_RGB_24.jpg>
-Package pdftex.def Info: UoB_RGB_24.jpg  used on input line 66.
-(pdftex.def)             Requested size: 241.84843pt x 70.02925pt.
+Package pdftex.def Info: UoB_RGB_24.jpg  used on input line 61.
+(pdftex.def)             Requested size: 209.12778pt x 60.55263pt.
 LaTeX Font Info:    External font `mlmex10' loaded for size
-(Font)              <10.95> on input line 66.
+(Font)              <10.95> on input line 61.
 LaTeX Font Info:    External font `mlmex10' loaded for size
-(Font)              <8> on input line 66.
+(Font)              <8> on input line 61.
 LaTeX Font Info:    External font `mlmex10' loaded for size
-(Font)              <6> on input line 66.
+(Font)              <6> on input line 61.
 
 
 Package scrlayer-scrpage Warning: \headheight to low.
-(scrlayer-scrpage)                At least 16.31995pt needed,
+(scrlayer-scrpage)                At least 20.4pt needed,
 (scrlayer-scrpage)                but only 0.0pt found.
 (scrlayer-scrpage)                I'll enlarge \headheight, for further
 (scrlayer-scrpage)                processing, but you should do this yourself,
-(scrlayer-scrpage)                e.g., setting geometry's option
-(scrlayer-scrpage)                `head=16.31995pt'.
-(scrlayer-scrpage)                I'll also decrease \topmargin on input line 66.
+(scrlayer-scrpage)                e.g., setting typearea's option
+(scrlayer-scrpage)                `headheight=20.4pt'.
+(scrlayer-scrpage)                I'll also decrease \topmargin on input line 61.
 
 
-Overfull \vbox (16.31995pt too high) has occurred while \output is active []
+Overfull \vbox (20.4pt too high) has occurred while \output is active []
 
  [1
 
@@ -1203,27 +1150,27 @@ Package typearea Warning: \typearea used at group level 2.
 (typearea)                environments, math mode, boxes, etc. may result in
 (typearea)                many type setting problems.
 (typearea)                You should move the command \typearea
-(typearea)                outside all groups on input line 70.
+(typearea)                outside all groups on input line 65.
 
 Package typearea Info: These are the values describing the layout:
 (typearea)             DIV  = 10
 (typearea)             BCOR = 0.0pt
-(typearea)             \paperwidth      = 597.50787pt
-(typearea)              \textwidth      = 418.25554pt
+(typearea)             \paperwidth      = 597.50793pt
+(typearea)              \textwidth      = 418.25555pt
 (typearea)              DIV departure   = -6%
-(typearea)              \evensidemargin = 17.35617pt
-(typearea)              \oddsidemargin  = 17.35617pt
-(typearea)             \paperheight     = 845.04684pt
-(typearea)              \textheight     = 549.55873pt
+(typearea)              \evensidemargin = 17.3562pt
+(typearea)              \oddsidemargin  = 17.3562pt
+(typearea)             \paperheight     = 845.04694pt
+(typearea)              \textheight     = 541.40024pt
 (typearea)              \topmargin      = 12.2347pt
-(typearea)              \headheight     = 20.39995pt
-(typearea)              \headsep        = 24.47993pt
+(typearea)              \headheight     = 25.5pt
+(typearea)              \headsep        = 30.6pt
 (typearea)              \topskip        = 11.0pt
-(typearea)              \footskip       = 57.11986pt
-(typearea)              \baselineskip   = 16.31996pt
-(typearea)              on input line 70.
+(typearea)              \footskip       = 71.40001pt
+(typearea)              \baselineskip   = 20.40001pt
+(typearea)              on input line 65.
 Package typearea Info: Using dirty hack to recalculate internal output
-(typearea)             dimensions of LaTeX on input line 70.
+(typearea)             dimensions of LaTeX on input line 65.
 (./abstract.tex
 LaTeX Font Info:    Trying to load font information for TS1+mlmr on input line 27.
  (/usr/share/texlive/texmf-dist/tex/latex/mlmodern/ts1mlmr.fd
@@ -1241,38 +1188,54 @@ File: ts1mlmr.fd 2021/01/11 v1.0 Font defs for mlmodern
 <sig.png, id=38, 502.87875pt x 101.37875pt>
 File: sig.png Graphic file (type png)
 <use sig.png>
-Package pdftex.def Info: sig.png  used on input line 95.
+Package pdftex.def Info: sig.png  used on input line 90.
 (pdftex.def)             Requested size: 113.81102pt x 22.9438pt.
  [9 <./sig.png>] [10
 
 
 ]
-Package hyperref Info: Option `pageanchor' set `true' on input line 97.
-Package tocbasic Info: character protrusion at toc deactivated on input line 111.
+Package hyperref Info: Option `pageanchor' set `true' on input line 92.
+Package tocbasic Info: character protrusion at toc deactivated on input line 106.
  (./thesis.toc [1
 
 
 
 
-] [2])
+] [2] [3]
+Underfull \vbox (badness 2573) has occurred while \output is active []
+
+ [4]
+Overfull \hbox (1.91618pt too wide) detected at line 113
+ \T1/mlmr/bx/n/10.95 105
+ []
+
+)
 \tf@toc=\write5
 \openout5 = `thesis.toc'.
-
- [3] [4
-
-
-]
-Package tocbasic Info: character protrusion at lot deactivated on input line 112.
- (./thesis.lot)
-\tf@lot=\write6
-\openout6 = `thesis.lot'.
 
  [5] [6
 
 
 ]
-Package tocbasic Info: character protrusion at lof deactivated on input line 113.
+Package tocbasic Info: character protrusion at lot deactivated on input line 107.
+ (./thesis.lot
+Overfull \hbox (1.91618pt too wide) detected at line 10
+ \T1/mlmr/bx/n/10.95 105
+ []
+
+)
+\tf@lot=\write6
+\openout6 = `thesis.lot'.
+
+ [7] [8
+
+
+]
+Package tocbasic Info: character protrusion at lof deactivated on input line 108.
  (./thesis.lof
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [9]
 LaTeX Font Info:    Trying to load font information for T1+mlmtt on input line 15.
  (/usr/share/texlive/texmf-dist/tex/latex/mlmodern/t1mlmtt.fd
 File: t1mlmtt.fd 2021/01/11 v1.0 Font defs for mlmodern
@@ -1281,122 +1244,175 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `mlmtt' (encoding: T1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
- [7])
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [10]
+Overfull \hbox (1.91618pt too wide) detected at line 34
+ \T1/mlmr/bx/n/10.95 105
+ []
+
+)
 \tf@lof=\write7
 \openout7 = `thesis.lof'.
 
- [8]
+ [11] [12
+
+
+]
 chapter 1.
-Package hyperref Info: bookmark level for unknown chapteratlist defaults to 0 on input line 125.
-(./1_intro.tex) [1
+Package hyperref Info: bookmark level for unknown chapteratlist defaults to 0 on input line 120.
+(./1_intro.tex [1
 
 
+]) [2] [3] [4
 
 
-] [2]
+]
 chapter 2.
-(./2_problems_and_proposed_solutions.tex
-<../card_images/e01-85-nicol-bolas-planeswalker.jpg, id=424, 489.83pt x 682.55pt>
+(./2_problems_and_proposed_solutions.tex [5]
+<../card_images/e01-85-nicol-bolas-planeswalker.jpg, id=460, 489.83pt x 682.55pt>
 File: ../card_images/e01-85-nicol-bolas-planeswalker.jpg Graphic file (type jpg)
 <use ../card_images/e01-85-nicol-bolas-planeswalker.jpg>
 Package pdftex.def Info: ../card_images/e01-85-nicol-bolas-planeswalker.jpg  used on input line 11.
 (pdftex.def)             Requested size: 122.4572pt x 170.63708pt.
- [3
 
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
-] [4{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathex.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathit.enc} <../card_images/e01-85-nicol-bolas-planeswalker.jpg>]
-<../card_images/TwoCycles.jpg, id=440, 963.6pt x 449.388pt>
+ [6 <../card_images/e01-85-nicol-bolas-planeswalker.jpg>] [7{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathex.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathit.enc}]
+<../card_images/TwoCycles.jpg, id=474, 963.6pt x 449.388pt>
 File: ../card_images/TwoCycles.jpg Graphic file (type jpg)
 <use ../card_images/TwoCycles.jpg>
 Package pdftex.def Info: ../card_images/TwoCycles.jpg  used on input line 36.
 (pdftex.def)             Requested size: 385.43317pt x 179.752pt.
- [5 <../card_images/TwoCycles.jpg>] [6] [7] [8] [9]
-<../card_images/KarstenCurve.jpg, id=516, 963.6pt x 227.34938pt>
+ [8] [9 <../card_images/TwoCycles.jpg>]
+Overfull \hbox (46.73451pt too wide) detected at line 48
+[] \OT1/mlmr/m/n/10.95 = []
+ []
+
+[10] [11] [12] [13] [14]
+Underfull \vbox (badness 1708) has occurred while \output is active []
+
+ [15] [16] [17] [18]
+<../card_images/KarstenCurve.jpg, id=578, 963.6pt x 227.34938pt>
 File: ../card_images/KarstenCurve.jpg Graphic file (type jpg)
 <use ../card_images/KarstenCurve.jpg>
 Package pdftex.def Info: ../card_images/KarstenCurve.jpg  used on input line 169.
 (pdftex.def)             Requested size: 240.89941pt x 56.8372pt.
- [10{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}]
-<../card_images/MTGArenaScreenshot.jpg, id=531, 858.20625pt x 542.025pt>
+
+Underfull \vbox (badness 4429) has occurred while \output is active []
+
+ [19{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathsy.enc} <../card_images/KarstenCurve.jpg>]
+<../card_images/MTGArenaScreenshot.jpg, id=592, 858.20625pt x 542.025pt>
 File: ../card_images/MTGArenaScreenshot.jpg Graphic file (type jpg)
 <use ../card_images/MTGArenaScreenshot.jpg>
 Package pdftex.def Info: ../card_images/MTGArenaScreenshot.jpg  used on input line 180.
 (pdftex.def)             Requested size: 429.10208pt x 271.01183pt.
-<../card_images/ManaGathering.jpg, id=534, 821.31844pt x 542.025pt>
+
+Overfull \hbox (10.84653pt too wide) in paragraph at lines 180--180
+ [][] 
+ []
+
+[20] [21 <../card_images/MTGArenaScreenshot.jpg>]
+<../card_images/ManaGathering.jpg, id=607, 821.31844pt x 542.025pt>
 File: ../card_images/ManaGathering.jpg Graphic file (type jpg)
 <use ../card_images/ManaGathering.jpg>
 Package pdftex.def Info: ../card_images/ManaGathering.jpg  used on input line 184.
 (pdftex.def)             Requested size: 410.6582pt x 271.01183pt.
- [11 <../card_images/KarstenCurve.jpg>] [12 <../card_images/MTGArenaScreenshot.jpg> <../card_images/ManaGathering.jpg>]
-<../card_images/ArchidektScreenshot.jpg, id=550, 963.6pt x 459.21562pt>
+ [22 <../card_images/ManaGathering.jpg>]
+<../card_images/ArchidektScreenshot.jpg, id=616, 963.6pt x 459.21562pt>
 File: ../card_images/ArchidektScreenshot.jpg Graphic file (type jpg)
 <use ../card_images/ArchidektScreenshot.jpg>
 Package pdftex.def Info: ../card_images/ArchidektScreenshot.jpg  used on input line 188.
 (pdftex.def)             Requested size: 481.79883pt x 229.60724pt.
- [13 <../card_images/ArchidektScreenshot.jpg>]) [14]
+
+Overfull \hbox (63.54327pt too wide) in paragraph at lines 188--188
+ [][] 
+ []
+
+[23 <../card_images/ArchidektScreenshot.jpg>] [24]) [25] [26
+
+
+]
 chapter 3.
-(./3_pre_development_user_research.tex
-<../card_images/MockupFrontend.jpg, id=588, 963.6pt x 529.98pt>
+(./3_pre_development_user_research.tex [27]
+<../card_images/MockupFrontend.jpg, id=669, 963.6pt x 529.98pt>
 File: ../card_images/MockupFrontend.jpg Graphic file (type jpg)
 <use ../card_images/MockupFrontend.jpg>
 Package pdftex.def Info: ../card_images/MockupFrontend.jpg  used on input line 21.
 (pdftex.def)             Requested size: 481.79883pt x 264.98933pt.
- [15
 
+Overfull \hbox (63.54327pt too wide) in paragraph at lines 21--21
+ [][] 
+ []
 
-] [16 <../card_images/MockupFrontend.jpg>]
-<../card_images/KanoSurvey.jpg, id=600, 963.6pt x 289.08pt>
+[28] [29 <../card_images/MockupFrontend.jpg>]
+<../card_images/KanoSurvey.jpg, id=680, 963.6pt x 289.08pt>
 File: ../card_images/KanoSurvey.jpg Graphic file (type jpg)
 <use ../card_images/KanoSurvey.jpg>
 Package pdftex.def Info: ../card_images/KanoSurvey.jpg  used on input line 47.
 (pdftex.def)             Requested size: 481.79883pt x 144.53964pt.
- [17 <../card_images/KanoSurvey.jpg>] [18] [19]) [20]
+
+Overfull \hbox (63.54327pt too wide) in paragraph at lines 47--47
+ [][] 
+ []
+
+[30] [31 <../card_images/KanoSurvey.jpg>] [32] [33] [34] [35]) [36]
 chapter 4.
-(./4_the_database.tex [21
+(./4_the_database.tex [37
 
 
 ]
-<../card_images/mtg2.jpg, id=644, 625.33624pt x 411.5375pt>
+Underfull \vbox (badness 3417) has occurred while \output is active []
+
+ [38]
+<../card_images/mtg2.jpg, id=741, 625.33624pt x 411.5375pt>
 File: ../card_images/mtg2.jpg Graphic file (type jpg)
 <use ../card_images/mtg2.jpg>
 Package pdftex.def Info: ../card_images/mtg2.jpg  used on input line 30.
 (pdftex.def)             Requested size: 312.66736pt x 205.76825pt.
- [22 <../card_images/mtg2.jpg>] [23]) [24]
+
+Underfull \vbox (badness 1603) has occurred while \output is active []
+
+ [39 <../card_images/mtg2.jpg>] [40] [41]) [42]
 chapter 5.
-(./5_the_simulator.tex [25
+(./5_the_simulator.tex
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [43
 
 
-]
-<../card_images/vergecode.jpg, id=684, 963.6pt x 447.17062pt>
+] [44]
+<../card_images/vergecode.jpg, id=789, 963.6pt x 447.17062pt>
 File: ../card_images/vergecode.jpg Graphic file (type jpg)
 <use ../card_images/vergecode.jpg>
 Package pdftex.def Info: ../card_images/vergecode.jpg  used on input line 36.
 (pdftex.def)             Requested size: 240.89941pt x 111.79237pt.
-<../card_images/checkcode.jpg, id=685, 963.6pt x 415.5525pt>
+<../card_images/checkcode.jpg, id=790, 963.6pt x 415.5525pt>
 File: ../card_images/checkcode.jpg Graphic file (type jpg)
 <use ../card_images/checkcode.jpg>
 Package pdftex.def Info: ../card_images/checkcode.jpg  used on input line 37.
 (pdftex.def)             Requested size: 240.89941pt x 103.88786pt.
- [26 <../card_images/vergecode.jpg> <../card_images/checkcode.jpg>]
-Overfull \hbox (109.8267pt too wide) in paragraph at lines 50--51
-[]\T1/mlmr/m/n/10.95 (-20) CardCollections con-tain a list at-tribute, \T1/mlmtt/m/n/10.95 CardCollection.card_list\T1/mlmr/m/n/10.95 (-20) , and the spe-cial-ized \T1/mlmtt/m/n/10.95 CardCollection.give(GameCard,
+ [45 <../card_images/vergecode.jpg>] [46 <../card_images/checkcode.jpg>] [47] [48]
+Overfull \hbox (14.35674pt too wide) detected at line 110
+[] \OT1/mlmr/m/n/10.95 = []
  []
 
-[27] [28]
-Overfull \hbox (18.30472pt too wide) in paragraph at lines 124--125
-[]\T1/mlmtt/m/n/10.95 filtered_by_most_produced = self.filter_by_most_produced(filtered_as_taplands) 
+[49]
+Overfull \hbox (10.16225pt too wide) in paragraph at lines 124--125
+[]\T1/mlmtt/m/n/10.95 filtered_by_most_produced = self.filter_by_most_produced(filtered
  []
 
-[29]
-<../card_images/CanonicallyIdentical.jpg, id=722, 445.665pt x 428.145pt>
+[50] [51] [52]
+<../card_images/CanonicallyIdentical.jpg, id=844, 445.665pt x 428.145pt>
 File: ../card_images/CanonicallyIdentical.jpg Graphic file (type jpg)
 <use ../card_images/CanonicallyIdentical.jpg>
 Package pdftex.def Info: ../card_images/CanonicallyIdentical.jpg  used on input line 157.
 (pdftex.def)             Requested size: 111.41597pt x 107.03598pt.
 
-Underfull \vbox (badness 1616) has occurred while \output is active []
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [30]
+ [53 <../card_images/CanonicallyIdentical.jpg>]
 Underfull \hbox (badness 10000) in paragraph at lines 174--174
 []|\T1/mlmr/m/n/10.95 (+20) A Land for which
  []
@@ -1407,51 +1423,53 @@ Underfull \hbox (badness 10000) in paragraph at lines 176--176
  []
 
 
-Overfull \hbox (60.50296pt too wide) in paragraph at lines 168--179
+Overfull \hbox (125.94427pt too wide) in paragraph at lines 168--179
  [] 
  []
 
+[54]
+Underfull \vbox (badness 3108) has occurred while \output is active []
 
-Underfull \vbox (badness 2253) has occurred while \output is active []
-
- [31 <../card_images/CanonicallyIdentical.jpg>] [32] [33]
-Overfull \hbox (1.03705pt too wide) in paragraph at lines 251--252
-\T1/mlmtt/m/n/10.95 DualFacedLand.committed = None\T1/mlmr/m/n/10.95 (-20) , one of the Du-al-Faced-Land's Sub-Lands is se-lected via \T1/mlmtt/m/n/10.95 Game.filter
+ [55]
+Overfull \hbox (12.595pt too wide) in paragraph at lines 197--198
+\T1/mlmr/m/n/10.95 (-20) The or-der-ing of \T1/mlmtt/m/n/10.95 filter_by_largest()\T1/mlmr/m/n/10.95 (-20) , \T1/mlmtt/m/n/10.95 filter_by_taplands() \T1/mlmr/m/n/10.95 (-20) snf \T1/mlmtt/m/n/10.95 filter_by_largest()
  []
 
-) [34] [35] [36
+
+Overfull \hbox (36.73361pt too wide) detected at line 204
+[] \OT1/mlmr/m/n/10.95 = []
+ []
+
+[56] [57] [58] [59]) [60]
+chapter 6.
+(./6_the_optimizer.tex [61
 
 
 ]
-chapter 6.
-(./6_the_optimizer.tex [37]
-<~/FinalProject/Writeup/card_images/superiority.jpg, id=782, 963.6pt x 465.23813pt>
+<~/FinalProject/Writeup/card_images/superiority.jpg, id=909, 963.6pt x 465.23813pt>
 File: ~/FinalProject/Writeup/card_images/superiority.jpg Graphic file (type jpg)
 <use ~/FinalProject/Writeup/card_images/superiority.jpg>
 Package pdftex.def Info: ~/FinalProject/Writeup/card_images/superiority.jpg  used on input line 30.
 (pdftex.def)             Requested size: 529.98164pt x 255.88176pt.
- [38 </home/electricwhelk/FinalProject/Writeup/card_images/superiority.jpg>]
-Underfull \vbox (badness 3019) has occurred while \output is active []
-
- [39]
-<../card_images/WastedOutputs.jpg, id=807, 634.62094pt x 161.10187pt>
+ [62] [63 </home/electricwhelk/FinalProject/Writeup/card_images/superiority.jpg>] [64] [65] [66] [67]
+<../card_images/WastedOutputs.jpg, id=951, 634.62094pt x 161.10187pt>
 File: ../card_images/WastedOutputs.jpg Graphic file (type jpg)
 <use ../card_images/WastedOutputs.jpg>
 Package pdftex.def Info: ../card_images/WastedOutputs.jpg  used on input line 99.
 (pdftex.def)             Requested size: 317.3097pt x 80.55074pt.
- [40]
-<../card_images/Histograms.jpg, id=815, 544.872pt x 402.084pt>
+ [68 <../card_images/WastedOutputs.jpg>]
+<../card_images/Histograms.jpg, id=958, 544.872pt x 402.084pt>
 File: ../card_images/Histograms.jpg Graphic file (type jpg)
 <use ../card_images/Histograms.jpg>
 Package pdftex.def Info: ../card_images/Histograms.jpg  used on input line 110.
 (pdftex.def)             Requested size: 272.43533pt x 201.0415pt.
- [41 <../card_images/WastedOutputs.jpg> <../card_images/Histograms.jpg>]
-<../card_images/shockvscheck.jpg, id=823, 696.42pt x 254.916pt>
+ [69 <../card_images/Histograms.jpg>]
+<../card_images/shockvscheck.jpg, id=967, 696.42pt x 254.916pt>
 File: ../card_images/shockvscheck.jpg Graphic file (type jpg)
 <use ../card_images/shockvscheck.jpg>
 Package pdftex.def Info: ../card_images/shockvscheck.jpg  used on input line 122.
 (pdftex.def)             Requested size: 348.20915pt x 127.45767pt.
- [42 <../card_images/shockvscheck.jpg>]
+ [70] [71 <../card_images/shockvscheck.jpg>]
 Overfull \hbox (0.71738pt too wide) in paragraph at lines 151--151
 []|\T1/mlmr/m/n/10.95 (-20) MonteCarlo| 
  []
@@ -1461,118 +1479,125 @@ Overfull \hbox (0.71738pt too wide) in paragraph at lines 153--153
 []|\T1/mlmr/m/n/10.95 (-20) MonteCarlo| 
  []
 
-[43] [44]
-<../card_images/xavsalsampleimprovement.jpg, id=854, 360.59718pt x 270.25969pt>
+
+Overfull \hbox (1.79433pt too wide) in paragraph at lines 141--156
+ [] 
+ []
+
+[72] [73]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [74]
+<../card_images/xavsalsampleimprovement.jpg, id=1005, 360.59718pt x 270.25969pt>
 File: ../card_images/xavsalsampleimprovement.jpg Graphic file (type jpg)
 <use ../card_images/xavsalsampleimprovement.jpg>
 Package pdftex.def Info: ../card_images/xavsalsampleimprovement.jpg  used on input line 213.
 (pdftex.def)             Requested size: 180.29814pt x 135.1295pt.
-<../card_images/savgolvsrollingav.jpg, id=859, 928.998pt x 361.35pt>
+ [75] [76 <../card_images/xavsalsampleimprovement.jpg>]
+<../card_images/savgolvsrollingav.jpg, id=1020, 928.998pt x 361.35pt>
 File: ../card_images/savgolvsrollingav.jpg Graphic file (type jpg)
 <use ../card_images/savgolvsrollingav.jpg>
 Package pdftex.def Info: ../card_images/savgolvsrollingav.jpg  used on input line 224.
 (pdftex.def)             Requested size: 464.49786pt x 180.67456pt.
 
-Underfull \vbox (badness 3590) has occurred while \output is active []
+Overfull \hbox (46.24231pt too wide) in paragraph at lines 224--224
+ [][] 
+ []
 
- [45 <../card_images/xavsalsampleimprovement.jpg>]
-<../card_images/bugwugcurves.jpg, id=869, 877.971pt x 489.246pt>
+[77 <../card_images/savgolvsrollingav.jpg>]
+<../card_images/bugwugcurves.jpg, id=1029, 877.971pt x 489.246pt>
 File: ../card_images/bugwugcurves.jpg Graphic file (type jpg)
 <use ../card_images/bugwugcurves.jpg>
 Package pdftex.def Info: ../card_images/bugwugcurves.jpg  used on input line 234.
 (pdftex.def)             Requested size: 219.4922pt x 122.31119pt.
-) [46 <../card_images/savgolvsrollingav.jpg> <../card_images/bugwugcurves.jpg>] [47] [48
+) [78 <../card_images/bugwugcurves.jpg>] [79] [80
 
 
 ]
 chapter 7.
 (./7_the_interface.tex
-<../card_images/frontendpageone.jpg, id=889, 907.89188pt x 542.025pt>
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [81]
+<../card_images/frontendpageone.jpg, id=1054, 907.89188pt x 542.025pt>
 File: ../card_images/frontendpageone.jpg Graphic file (type jpg)
 <use ../card_images/frontendpageone.jpg>
 Package pdftex.def Info: ../card_images/frontendpageone.jpg  used on input line 12.
 (pdftex.def)             Requested size: 317.76692pt x 189.71158pt.
- [49] [50 <../card_images/frontendpageone.jpg>]
-<../card_images/frontendpagetwo.jpg, id=906, 963.6pt x 474.27188pt>
+
+Underfull \vbox (badness 1112) has occurred while \output is active []
+
+ [82 <../card_images/frontendpageone.jpg>]
+Underfull \vbox (badness 3849) has occurred while \output is active []
+
+ [83] [84]
+<../card_images/frontendpagetwo.jpg, id=1075, 963.6pt x 474.27188pt>
 File: ../card_images/frontendpagetwo.jpg Graphic file (type jpg)
 <use ../card_images/frontendpagetwo.jpg>
 Package pdftex.def Info: ../card_images/frontendpagetwo.jpg  used on input line 27.
 (pdftex.def)             Requested size: 337.26506pt x 165.99763pt.
-<../card_images/frontendpagetwopfive.jpg, id=908, 304.88907pt x 216.05719pt>
+<../card_images/frontendpagetwopfive.jpg, id=1077, 304.88907pt x 216.05719pt>
 File: ../card_images/frontendpagetwopfive.jpg Graphic file (type jpg)
 <use ../card_images/frontendpagetwopfive.jpg>
 Package pdftex.def Info: ../card_images/frontendpagetwopfive.jpg  used on input line 35.
 (pdftex.def)             Requested size: 106.71277pt x 75.62114pt.
-
-Underfull \vbox (badness 4279) has occurred while \output is active []
-
- [51 <../card_images/frontendpagetwo.jpg> <../card_images/frontendpagetwopfive.jpg>]
-<../card_images/frontendpagefour.jpg, id=915, 963.6pt x 472.76625pt>
+ [85 <../card_images/frontendpagetwo.jpg>]
+<../card_images/frontendpagefour.jpg, id=1083, 963.6pt x 472.76625pt>
 File: ../card_images/frontendpagefour.jpg Graphic file (type jpg)
 <use ../card_images/frontendpagefour.jpg>
 Package pdftex.def Info: ../card_images/frontendpagefour.jpg  used on input line 44.
 (pdftex.def)             Requested size: 337.26506pt x 165.47066pt.
-) [52 <../card_images/frontendpagefour.jpg>]
-chapter 8.
-(./8_validation_testing.tex [53
+) [86 <../card_images/frontendpagetwopfive.jpg>] [87 <../card_images/frontendpagefour.jpg>] [88
 
 
 ]
-<../card_images/TLX_scores.jpg, id=941, 666.99188pt x 542.025pt>
+chapter 8.
+(./8_validation_testing.tex [89] [90] [91]
+<../card_images/TLX_scores.jpg, id=1127, 666.99188pt x 542.025pt>
 File: ../card_images/TLX_scores.jpg Graphic file (type jpg)
 <use ../card_images/TLX_scores.jpg>
 Package pdftex.def Info: ../card_images/TLX_scores.jpg  used on input line 48.
 (pdftex.def)             Requested size: 333.49512pt x 271.01183pt.
- [54] [55 <../card_images/TLX_scores.jpg>] [56] [57]) [58]
+ [92] [93 <../card_images/TLX_scores.jpg>] [94] [95] [96]
+Underfull \vbox (badness 3375) has occurred while \output is active []
+
+ [97]) [98]
 chapter 9.
-(./9_conclusion.tex [59
+(./9_conclusion.tex [99
 
 
-] [60]) [61] [62
+] [100] [101] [102]) [103] [104
 
 
 ]
 chapter without number
-
-Overfull \hbox (5.98758pt too wide) in paragraph at lines 168--168
-[][]\T1/mlmr/m/n/10.95 (-20) Luciano da F Costa. 2021. ``Fur-ther gen-er-al-iza-tions of the Jac-card in-dex.'' \T1/mlmr/m/it/10.95 (-20) arXiv preprint arXiv:2110.09619\T1/mlmr/m/n/10.95 (-20) . 
- []
-
-[63
+[105
 
 
-] [64] [65] (./thesis.aux)
+] [106] [107] [108] [109] [110] (./thesis.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2020/03/25>
  ***********
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
 Package rerunfilecheck Info: File `thesis.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
-
-Package biblatex Warning: Please rerun LaTeX.
-(biblatex)                Page breaks have changed.
-
 Package logreq Info: Writing requests to 'thesis.run.xml'.
 \openout1 = `thesis.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 36728 strings out of 476106
- 729778 string characters out of 5793934
- 1973975 words of memory out of 5000000
- 57691 multiletter control sequences out of 15000+600000
- 635269 words of font info for 203 fonts, out of 8000000 for 9000
- 59 hyphenation exceptions out of 8191
+ 36267 strings out of 476047
+ 722030 string characters out of 5792076
+ 1961975 words of memory out of 5000000
+ 57186 multiletter control sequences out of 15000+600000
+ 635886 words of font info for 208 fonts, out of 8000000 for 9000
+ 85 hyphenation exceptions out of 8191
  122i,20n,134p,10982b,1785s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/mlmodern/mlmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/mlmodern/mlmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/mlmodern/mlmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/mlmodern/mlmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/mlmodern/mlmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/mlmodern/mlmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/mlmodern/mlmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/mlmodern/mlmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/mlmodern/mlmri10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/mlmodern/mlmri12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/mlmodern/mlmro10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/mlmodern/mlmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/mlmodern/mlmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/mlmodern/mlmtt10.pfb>
-Output written on thesis.pdf (83 pages, 7419193 bytes).
+Output written on thesis.pdf (132 pages, 7445387 bytes).
 PDF statistics:
- 1559 PDF objects out of 1728 (max. 8388607)
- 1400 compressed objects within 14 object streams
- 310 named destinations out of 1000 (max. 500000)
+ 1784 PDF objects out of 2073 (max. 8388607)
+ 1574 compressed objects within 16 object streams
+ 359 named destinations out of 1000 (max. 500000)
  42507 words of extra memory for PDF output out of 42996 (max. 10000000)
 

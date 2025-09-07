@@ -1,35 +1,35 @@
 \contentsline {chapteratlist}{\numberline {1}Introduction}{1}{chapter.1}%
-\contentsline {chapteratlist}{\numberline {2}Problems and Proposed Solutions to MTG Manabase Optimization}{3}{chapter.2}%
-\contentsline {figure}{\numberline {2.1}{\ignorespaces A spell card}}{4}{figure.2.1}%
-\contentsline {figure}{\numberline {2.2}{\ignorespaces UW and RG lands of different cycles. Left to right: ``Battle'', ``Shock'', ``Check'', ``Fetch'', ``Filter'' and ``Slow'' Lands. Notice the ``hybrid'' mana cost of the filter land's second ability, meaning that requires a mana of either of its colours to activate, and the diamond marker in the output of its first ability, meaning that said ability only produces colourless mana}}{5}{figure.2.2}%
-\contentsline {figure}{\numberline {2.3}{\ignorespaces Frank Karsten's recommendations for how many lands a deck should include capable of producing colour C; he recommends adopting the highest Y-axis score corresponding to a card whose mana cost appears in your deck \blx@tocontentsinit {0}\parencite {KarstenCurve}}}{11}{figure.2.3}%
-\contentsline {figure}{\numberline {2.4}{\ignorespaces A screenshot of a deck under partial construction in Arena, with the decklist on the right-hand side column. Basic Plains and Basic Islands are automatically added as white and blue spells are.}}{12}{figure.2.4}%
-\contentsline {figure}{\numberline {2.5}{\ignorespaces A zoomed-out screenshot of an excerpt from the ManaGathering page for a WUB deck. Note the WU, UB and BW lands arranged by cycle.}}{12}{figure.2.5}%
-\contentsline {figure}{\numberline {2.6}{\ignorespaces A screenshot of community created land packages on Archidekt, categorized by, among other things, price and color. These can be imported into a decklist.}}{13}{figure.2.6}%
-\contentsline {chapteratlist}{\numberline {3}Pre-Development User Research}{15}{chapter.3}%
-\contentsline {figure}{\numberline {3.1}{\ignorespaces Draft front-end used for mockup testing.}}{16}{figure.3.1}%
-\contentsline {figure}{\numberline {3.2}{\ignorespaces A question in a generic Kano questionnaire}}{17}{figure.3.2}%
-\contentsline {chapteratlist}{\numberline {4}The Database}{21}{chapter.4}%
-\contentsline {figure}{\numberline {4.1}{\ignorespaces Layout of mtg.db}}{22}{figure.4.1}%
-\contentsline {chapteratlist}{\numberline {5}The Simulator}{25}{chapter.5}%
-\contentsline {figure}{\numberline {5.1}{\ignorespaces Examle of a land belonging to the Verge cycle and the implementation of \texttt {land.live\allowbreak \_prod(game)} in that cycle}}{26}{figure.5.1}%
-\contentsline {figure}{\numberline {5.2}{\ignorespaces Examle of a land belonging to the Check cycle and the implementation of \texttt {land.enters\allowbreak \_tapped(game)} in that cycle}}{26}{figure.5.2}%
-\contentsline {figure}{\numberline {5.3}{\ignorespaces Two potential arrangements of lands that can be canonicalized identically}}{31}{figure.5.3}%
-\contentsline {chapteratlist}{\numberline {6}The Optimizer}{37}{chapter.6}%
-\contentsline {figure}{\numberline {6.1}{\ignorespaces Digraph of strict betterness relationhips between all cycles currently handled by LandFill, where each arrow points to the superior land. Note that some labels (i.e.,~Three Colour Untyped Taplands) refer not to single cycles but to groups of mechanically equivalent cycles which differ in ways that do not pertain to mana generation.}}{38}{figure.6.1}%
-\contentsline {figure}{\numberline {6.2}{\ignorespaces Outputs in terms of wasted mana for each deck}}{41}{figure.6.2}%
-\contentsline {figure}{\numberline {6.3}{\ignorespaces Histograms of the mana wasted by each deck: clockwise from top left: BasicDeck, PartialDeck, OverDeck, ExpectedDeck}}{41}{figure.6.3}%
-\contentsline {figure}{\numberline {6.4}{\ignorespaces ox Plots representing the same Trial output data as (left to right): proportion of games in which zero mana is wasted, and area under a CMF of mana wasted.}}{42}{figure.6.4}%
-\contentsline {figure}{\numberline {6.5}{\ignorespaces Rate of improvement in percentage of wasteless games for a BUG deck, where the X axis represents Hill Climb increments and the Y axis shows percentage of wateless games.}}{45}{figure.6.5}%
-\contentsline {figure}{\numberline {6.6}{\ignorespaces Outputs of the rolling average and the Savitsky-Golay derivative halting functions when applied to the data shown in Fig. \ref {fig:rateofimprovement}; in both cases, the rolling average used a window size of 3, while the Savitsky-Golay filter window was set respectively at 3 (left) and 11 (right)}}{46}{figure.6.6}%
-\contentsline {figure}{\numberline {6.7}{\ignorespaces Mana curves as visualized using the TappedOut card database for a WUG and BUG deck respectively.}}{46}{figure.6.7}%
-\contentsline {chapteratlist}{\numberline {7}The Interface}{49}{chapter.7}%
-\contentsline {figure}{\numberline {7.1}{\ignorespaces Deck Input page.}}{50}{figure.7.1}%
-\contentsline {figure}{\numberline {7.2}{\ignorespaces Preferences page, zoomed out to show all content; the rankings panels would normally be offscreen. The side-panel remains stationary as the user scrolls.}}{51}{figure.7.2}%
-\contentsline {figure}{\numberline {7.3}{\ignorespaces Progress page}}{51}{figure.7.3}%
-\contentsline {figure}{\numberline {7.4}{\ignorespaces Output Page.}}{52}{figure.7.4}%
-\contentsline {chapteratlist}{\numberline {8}Validation Testing}{53}{chapter.8}%
-\contentsline {figure}{\numberline {8.1}{\ignorespaces Scores and timings from the two TLX analyses, and the differences between these values.}}{55}{figure.8.1}%
-\contentsline {chapteratlist}{\numberline {9}Conclusion}{59}{chapter.9}%
-\contentsline {chapteratlist}{\nonumberline Bibliography}{63}{chapter*.4}%
+\contentsline {chapteratlist}{\numberline {2}Problems and Proposed Solutions to MTG Manabase Optimization}{5}{chapter.2}%
+\contentsline {figure}{\numberline {2.1}{\ignorespaces A spell card}}{6}{figure.2.1}%
+\contentsline {figure}{\numberline {2.2}{\ignorespaces UW and RG lands of different cycles. Left to right: ``Battle'', ``Shock'', ``Check'', ``Fetch'', ``Filter'' and ``Slow'' Lands. Notice the ``hybrid'' mana cost of the filter land's second ability, meaning that requires a mana of either of its colours to activate, and the diamond marker in the output of its first ability, meaning that said ability only produces colourless mana}}{9}{figure.2.2}%
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Frank Karsten's recommendations for how many lands a deck should include capable of producing colour C; he recommends adopting the highest Y-axis score corresponding to a card whose mana cost appears in your deck \blx@tocontentsinit {0}\parencite {KarstenCurve}}}{19}{figure.2.3}%
+\contentsline {figure}{\numberline {2.4}{\ignorespaces A screenshot of a deck under partial construction in Arena, with the decklist on the right-hand side column. Basic Plains and Basic Islands are automatically added as white and blue spells are.}}{21}{figure.2.4}%
+\contentsline {figure}{\numberline {2.5}{\ignorespaces A zoomed-out screenshot of an excerpt from the ManaGathering page for a WUB deck. Note the WU, UB and BW lands arranged by cycle.}}{22}{figure.2.5}%
+\contentsline {figure}{\numberline {2.6}{\ignorespaces A screenshot of community created land packages on Archidekt, categorized by, among other things, price and color. These can be imported into a decklist.}}{23}{figure.2.6}%
+\contentsline {chapteratlist}{\numberline {3}Pre-Development User Research}{27}{chapter.3}%
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Draft front-end used for mockup testing.}}{29}{figure.3.1}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces A question in a generic Kano questionnaire}}{31}{figure.3.2}%
+\contentsline {chapteratlist}{\numberline {4}The Database}{37}{chapter.4}%
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Layout of mtg.db}}{39}{figure.4.1}%
+\contentsline {chapteratlist}{\numberline {5}The Simulator}{43}{chapter.5}%
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Examle of a land belonging to the Verge cycle and the implementation of \texttt {land.live\allowbreak \_prod(game)} in that cycle}}{45}{figure.5.1}%
+\contentsline {figure}{\numberline {5.2}{\ignorespaces Examle of a land belonging to the Check cycle and the implementation of \texttt {land.enters\allowbreak \_tapped(game)} in that cycle}}{46}{figure.5.2}%
+\contentsline {figure}{\numberline {5.3}{\ignorespaces Two potential arrangements of lands that can be canonicalized identically}}{53}{figure.5.3}%
+\contentsline {chapteratlist}{\numberline {6}The Optimizer}{61}{chapter.6}%
+\contentsline {figure}{\numberline {6.1}{\ignorespaces Digraph of strict betterness relationhips between all cycles currently handled by LandFill, where each arrow points to the superior land. Note that some labels (i.e.,~Three Colour Untyped Taplands) refer not to single cycles but to groups of mechanically equivalent cycles which differ in ways that do not pertain to mana generation.}}{63}{figure.6.1}%
+\contentsline {figure}{\numberline {6.2}{\ignorespaces Outputs in terms of wasted mana for each deck}}{68}{figure.6.2}%
+\contentsline {figure}{\numberline {6.3}{\ignorespaces Histograms of the mana wasted by each deck: clockwise from top left: BasicDeck, PartialDeck, OverDeck, ExpectedDeck}}{69}{figure.6.3}%
+\contentsline {figure}{\numberline {6.4}{\ignorespaces ox Plots representing the same Trial output data as (left to right): proportion of games in which zero mana is wasted, and area under a CMF of mana wasted.}}{71}{figure.6.4}%
+\contentsline {figure}{\numberline {6.5}{\ignorespaces Rate of improvement in percentage of wasteless games for a BUG deck, where the X axis represents Hill Climb increments and the Y axis shows percentage of wateless games.}}{76}{figure.6.5}%
+\contentsline {figure}{\numberline {6.6}{\ignorespaces Outputs of the rolling average and the Savitsky-Golay derivative halting functions when applied to the data shown in Fig. \ref {fig:rateofimprovement}; in both cases, the rolling average used a window size of 3, while the Savitsky-Golay filter window was set respectively at 3 (left) and 11 (right)}}{77}{figure.6.6}%
+\contentsline {figure}{\numberline {6.7}{\ignorespaces Mana curves as visualized using the TappedOut card database for a WUG and BUG deck respectively.}}{78}{figure.6.7}%
+\contentsline {chapteratlist}{\numberline {7}The Interface}{81}{chapter.7}%
+\contentsline {figure}{\numberline {7.1}{\ignorespaces Deck Input page.}}{82}{figure.7.1}%
+\contentsline {figure}{\numberline {7.2}{\ignorespaces Preferences page, zoomed out to show all content; the rankings panels would normally be offscreen. The side-panel remains stationary as the user scrolls.}}{85}{figure.7.2}%
+\contentsline {figure}{\numberline {7.3}{\ignorespaces Progress page}}{86}{figure.7.3}%
+\contentsline {figure}{\numberline {7.4}{\ignorespaces Output Page.}}{87}{figure.7.4}%
+\contentsline {chapteratlist}{\numberline {8}Validation Testing}{89}{chapter.8}%
+\contentsline {figure}{\numberline {8.1}{\ignorespaces Scores and timings from the two TLX analyses, and the differences between these values.}}{93}{figure.8.1}%
+\contentsline {chapteratlist}{\numberline {9}Conclusion}{99}{chapter.9}%
+\contentsline {chapteratlist}{\nonumberline Bibliography}{105}{chapter*.4}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

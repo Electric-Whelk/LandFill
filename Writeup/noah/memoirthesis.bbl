@@ -229,8 +229,8 @@
       \strng{authorbibnamehash}{c6df3fb3fe23cfe76a11eb13d1beac7a}
       \strng{authornamehash}{c6df3fb3fe23cfe76a11eb13d1beac7a}
       \strng{authorfullhash}{c6df3fb3fe23cfe76a11eb13d1beac7a}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{sortinit}{9}
+      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{Journal of the American statistical association}
@@ -593,8 +593,8 @@
       \endverb
     \endentry
     \entry{mtgarena}{online}{}
-      \field{sortinit}{2}
-      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
       \field{labeltitlesource}{title}
       \field{title}{Magic: The Gathering Arena}
       \field{urlday}{3}
@@ -753,8 +753,8 @@
       \endverb
     \endentry
     \entry{sqlalchemy}{online}{}
-      \field{sortinit}{3}
-      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
       \field{labeltitlesource}{title}
       \field{title}{SQLAlchemy}
       \field{urlday}{3}
@@ -878,6 +878,40 @@
       \field{pages}{55\bibrangedash 57}
       \range{pages}{3}
     \endentry
+    \entry{braun2006using}{article}{}
+      \name{author}{2}{}{%
+        {{hash=ea90dfebef3293c5af2151719ce2385e}{%
+           family={Braun},
+           familyi={B\bibinitperiod},
+           given={Virginia},
+           giveni={V\bibinitperiod}}}%
+        {{hash=f0513d29a647c5f1beea56b0aed1bd40}{%
+           family={Clarke},
+           familyi={C\bibinitperiod},
+           given={Victoria},
+           giveni={V\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Taylor \& Francis}%
+      }
+      \strng{namehash}{5d3eb06fe3d6dd55dd140dc783327eb9}
+      \strng{fullhash}{5d3eb06fe3d6dd55dd140dc783327eb9}
+      \strng{bibnamehash}{5d3eb06fe3d6dd55dd140dc783327eb9}
+      \strng{authorbibnamehash}{5d3eb06fe3d6dd55dd140dc783327eb9}
+      \strng{authornamehash}{5d3eb06fe3d6dd55dd140dc783327eb9}
+      \strng{authorfullhash}{5d3eb06fe3d6dd55dd140dc783327eb9}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Qualitative research in psychology}
+      \field{number}{2}
+      \field{title}{Using thematic analysis in psychology}
+      \field{volume}{3}
+      \field{year}{2006}
+      \field{pages}{77\bibrangedash 101}
+      \range{pages}{25}
+    \endentry
     \entry{martello1990knapsack}{book}{}
       \name{author}{2}{}{%
         {{hash=355dcd3e47338d7e940120cc6c363cb7}{%
@@ -971,8 +1005,8 @@
       \endverb
     \endentry
     \entry{flasksqlalchemy}{online}{}
-      \field{sortinit}{4}
-      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
       \field{labeltitlesource}{title}
       \field{title}{FlaskSQLAlchemy}
       \field{urlday}{3}
@@ -1077,37 +1111,6 @@
       \endverb
       \verb{url}
       \verb https://www.youtube.com/watch?v=Pr91Crzl7DI
-      \endverb
-    \endentry
-    \entry{commandermulligans}{online}{}
-      \name{author}{1}{}{%
-        {{hash=485a451c719fed6c8d2c8818c5681ba5}{%
-           family={Coles},
-           familyi={C\bibinitperiod},
-           given={Jason},
-           giveni={J\bibinitperiod}}}%
-      }
-      \strng{namehash}{485a451c719fed6c8d2c8818c5681ba5}
-      \strng{fullhash}{485a451c719fed6c8d2c8818c5681ba5}
-      \strng{bibnamehash}{485a451c719fed6c8d2c8818c5681ba5}
-      \strng{authorbibnamehash}{485a451c719fed6c8d2c8818c5681ba5}
-      \strng{authornamehash}{485a451c719fed6c8d2c8818c5681ba5}
-      \strng{authorfullhash}{485a451c719fed6c8d2c8818c5681ba5}
-      \field{sortinit}{5}
-      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{title}{Do You Get A Free Mulligan In Commander?}
-      \field{urlday}{1}
-      \field{urlmonth}{9}
-      \field{urlyear}{2025}
-      \field{year}{2021}
-      \field{urldateera}{ce}
-      \verb{urlraw}
-      \verb https://mtgrocks.com/do-you-get-a-free-mulligan-in-commander/
-      \endverb
-      \verb{url}
-      \verb https://mtgrocks.com/do-you-get-a-free-mulligan-in-commander/
       \endverb
     \endentry
     \entry{itertools}{online}{}
@@ -1564,7 +1567,6 @@
       \field{year}{2017}
     \endentry
   \enddatalist
-  \missing{braun2006using}
 \endrefsection
 \endinput
 

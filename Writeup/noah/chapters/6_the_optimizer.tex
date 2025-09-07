@@ -13,18 +13,18 @@ At each increment of the Hill Climbing Algorithm, when a land is removed from th
 \item Since LandFill uses a Hill Climbing algorithm, the performance \(P\) of the deck must be repeatedly determined at each increment. The number of seperate \(P\) scores to be taken at each increment increases with the number of lands that could be added to the deck. This is time consuming. 
 \end{itemize}
 
-DeckBuilder is therefore given a LandPrioritization object, which maps out strict superiority/inferiority relationship. Land \(A\) is considered strictly better than land \(B\) if it is capable of producing all colours that \(B\) does and meets at least one of the below criteria, as long as \(B\) does not meet any of the same criteria \textit{vice versa}:
+DeckBuilder is therefore given a LandPrioritization object, which maps out strict superiority/inferiority relationships. Land \(A\) is considered strictly better than land \(B\) if it is capable of producing all colours that \(B\) does and meets at least one of the below criteria, as long as \(B\) does not meet any of the same criteria \textit{vice versa}:
 
 \begin{itemize}
 \item Produces additional colours that \(B\) does not.
 \item Never enters tapped, while \(B\) sometimes does.
 \item Sometimes enters untapped, while \(B\) never does.
 \item Requires a life point investment that \(B\) does not.
-\item Has basic landtypes, while \(B\) does not.
+\item Has Basic Landtypes, while \(B\) does not.
 \item Always produces its colours, while \(B\) only produces some of them under certain conditions.
 \end{itemize}
 
-Strict Betterness is mapped in Fig.~\ref{fig:strictbetterness}. While most of these nodes represent distint cycles, some represent mechancially identical categories, i.e.,~Two Colour Typed Taplands refer to any cycle of lands that produce two colours of mana, always enter the battlefield tapped, and have basic landtypes. Command Tower is also not a cycle but an individual land unique to the Commander Format that always enters untapped and produces any colour. Fetch Lands and Filter Lands, given their mechanical distinction from other lands, have no strict superiors or inferiors.  
+Strict betterness is mapped in Fig.~\ref{fig:strictbetterness}. While most of these nodes represent distinct cycles, some represent mechancially identical categories, i.e.,~Two Colour Typed Taplands refer to any cycle of taplands with two Basic Landtypes. Command Tower is also not a cycle but an individual land unique to the Commander Format that always enters untapped and produces any colour. Pain Lands produce C for free or one of two coloured mana for a single life point. Fetch Lands and Filter Lands, given their mechanical distinction from other lands, have no strict superiors or inferiors.  
 
  \begin{figure}
     \centering
@@ -34,44 +34,35 @@ Strict Betterness is mapped in Fig.~\ref{fig:strictbetterness}. While most of th
 \end{figure}
 
 
-This relationship is encoded into the LandPrioritization object via a dict, where a Land child class is a key mapping to a list of all superior classes. All Land objects belonging to the DeckBuilder that are permitted for consideration by the user are fed into \texttt{LandPrioritization.register\allowbreak\_land()} and stored within the LandPrioritization. After all Land objects are registered, \texttt{LandPrioritization.cascade\allowbreak\_superiors()} assigns each a list of all superior Lands that have also been registered, stored as an attribute of the Land object. This process overlooks any absent lands that the user does not want LandFill to consider: if the user does not want to include Battle Lands, for example, any two-colour lands that always enter tapped and have basic landtypes will recognise an equivalently coloured Shock Land as a superior. 
+This relationship is encoded into the LandPrioritization object via a dict, where a Land child class is a key mapping to a list of all superior classes. All Land objects belonging to the DeckBuilder that are permitted for consideration by the user are fed into \texttt{LandPrioritization.register\allowbreak\_land()} and stored within the LandPrioritization. After all Land objects are registered, \texttt{LandPrioritization.cascade\allowbreak\_superiors()} assigns each a list of all superior Lands that have also been registered, stored as an attribute of the Land object. This process overlooks any absent lands that the user does not want LandFill to consider: if the user does not want to include Battle Lands, for example, any two-colour taplands with Basic Landtypes will recognise an equivalently coloured Shock Land as a superior. 
 
-For equivalent categories of lands - i.e., typed taplands - I implemented a stripped down version of the weighting system discussed in \secref{sec:landexclusionandpreference}. Users are given an option on the frontend to prioritize these lands above the other, so that, if the optimizer does suggest lands from these categories, their preferred cycles are prioritized. 
+For equivalent categories of lands~---~i.e.,~two-colour typed taplands~---~I implemented a stripped down version of the weighting system discussed in \secref{sec:landexclusionandpreferences}. Users are given an option on the Interface to prioritize cycles within these categories over othrs within the same category.
 
 \section{Optimization Algorithm}
 
 \subsection{Outline of Steepest Ascent Hill Climbing Algorithm}
 \label{sec:steepestascentoutline}
-LandFill improves on the ``Simple'' Hill Climb algorithm set out in \secref{sec:optimizationoverview} by implementing instead a ``Steepest Ascent'' Hill Climb. At every increment it examines \textit{all} inputs in the neighbourhood and chooses the one that representing the highest rate of improvement~\cite{silver2004overview}. Since all lands must be entered into the deck in discrete quantities, this can be calculated easily by modelling all exchanges and selecting the one offering the highest improvement. 
+LandFill improves on the ``Simple'' Hill Climb algorithm set out in \secref{sec:optimizationoverview} by implementing instead a ``Steepest Ascent'' Hill Climb. At every increment it examines \textit{all} inputs in the neighbourhood and chooses the one representing the highest rate of improvement~\cite{silver2004overview}. Since all lands must be entered into the deck in discrete quantities, this can be calculated easily by modelling all exchanges and selecting the one that leads to the highest performance. 
 
-This is, however, time consuming to calculate, as it means that every candidate land must be tested once for each land in the deck it could replace. This adds a search space of \(N \times M\) to each increment, where $N$ is the number non-mandatory lands in the deck and $M$ is the number of permitted lands in the DeckBuilder with all strict superiors in the deck. However, it is possible to divide this heuristically into two steps: 
-
-\begin{itemize}
-\item Identify the worst land in the deck.
-\item Identify the best land to replace it with. 
-\end{itemize}
-
-The manner in which LandFill does this is outlined in \secref{sec:eachincrement}. 
+This is, however, time consuming to calculate, as it means that every candidate land must be tested once for each land in the deck it could replace. This adds a search space of \(N \times M\) to each increment, where $N$ is the number non-mandatory lands in the deck and $M$ is the number of permitted lands in the DeckBuilder with all strict superiors in the deck. However, it is possible to divide this heuristically into two steps. First, identify the worst land in the deck. Second, identify the best land to replace it with. The manner in which LandFill does this is outlined in \secref{sec:eachincrement}. 
 
 \subsection{Other Options}
-Simulated Annealing is a variant of the Neighbourhood Search algorithm that avoids becoming trapped in local maxima by introducing an element of randomness. At any given increment, the function may return a higher score but decline to accept this as a new value, with the probability of this occurrance dependent on a ``temperature'' variable that decreases as the search space is traversed~\cite{silver2004overview}. Since LandFill's success criterion is simply the ability to return an equivalently optimized list of lands that a human player could provide in a similar timeframe wtih similar effort, I consider a local maxima to be an acceptable return value. 
+Simulated Annealing is a variant of the Neighbourhood Search algorithm that avoids becoming trapped in local maxima by introducing an element of randomness. At any given increment, the function may return a higher score but decline to accept this as a new value, with the probability of this occurrance dependent on a ``temperature'' variable that decreases as the search space is traversed~\cite{silver2004overview}. Since LandFill's success criterion is simply the creation of equivalently optimized list of lands to that a human player could create with similar effort, I consider a local maxima to be an acceptable return value. 
 
-I did explore one approach that applied the ``temperature'' concept from Simulated Annealing to a Neighborhood Reduction schema. In Neighborhood Reduction, moves that are unlikely to lead to an optimal solution are discarded, saving processing time. The LandPrioritization object is a simple example of this. As will be seen in \secref{sec:propvscum}, a Check Land is functionally identical to a Shock Land when they are the only nonbasic cards in a manabase. Therefore, it may not be necessery to test every candidate Check Land each time one basic land is removed from the deck, as this will, in the abstract, only decrease the viability of Check Lands. Check Lands will only become relevant again at a later stage in optimization, once better nonbasic options have been exhausted. 
+I did explore one approach that applied the ``temperature'' concept from Simulated Annealing to a Neighborhood Reduction schema. In Neighborhood Reduction, moves that are unlikely to lead to an optimal solution are discarded, saving processing time. The LandPrioritization object is a simple example of this. As will be seen in \secref{sec:propvscum}, a Check Land is functionally identical to a Shock Land when they are the only nonbasic cards in a manabase. Therefore, it may not be necessery to test every candidate Check Land each time one Basic Land is removed from the deck, as this will only decrease the viability of Check Lands. Check Lands will only become relevant again at a later stage in optimization, once better nonbasic options have been exhausted. 
 
 To take advantage of this, I trialled an algorithm in which a declining temperature \(T\) governed the number of lands swapped out of the deck at each increment: initial steps swapped out the worst \(T\) lands in the deck for the best performing \(T\) lands tested individually. As the value of \(T\) decreased, each swap became smaller, and thus each land was tested against a more accurate representation of the decklist in the form to which it would be introduced. This meant, essentially, that while initial iterations largely tested lands on general quality, later iterations took more time to test lands on their synergy with the existing manabase. While this did offer runtime improvements, it was ultimately not chosen, given that Neighborhood Reduction methods carry some inherent risk of suboptimality~\cite{salhi2019neighbourhood}, and the same runtime improvement could ultimately be achieved more simply, and with greater user consent, by simply advising users to automatically mark high performing cycles such as Shock Lands and Fetch Lands for mandatory inclusion unless they specifically did not want them. 
 
-
-
-\section{Choice of Performance Metrics}
+\section{Choice of Objective Function}
 \label{sec:choiceofobjectivefunction}
 \subsection{Overview}
 \label{sec:performancemetricsoverview}
-To test different performance metrics, four sample decks containing the same nonland cards in colours BUG were submitted to MonteCarlo objects outside the context of the Hill Climbing algorithm:
+The objective function of the optimizer is some representation of the performance of the deck. To explore options, I ran the MonteCarlo object on four sample decks containing the same nonland cards in colours BUG:
 
 \begin{itemize}
 \item BasicDeck~---~a deck containing only Basic Lands in the deck's colours.
 \item PartialDeck~---~a deck containing Basic Lands, Shock Lands and Fetch Lands, representing a deck part way through the optimization process.
-\item OverDeck~---~a deck containing no basic lands, reflecting hypothetical over-application of the optimization principles.
+\item OverDeck~---~a deck containing no Basic Lands, reflecting hypothetical over-application of the optimization principles.
 \item ExpectedDeck~---~a deck whose manabase was chosen by me, reflecting what I as a user of LandFill might expect an optimized deck to look like. 
 \end{itemize}
 
@@ -91,7 +82,7 @@ To control for these factors, at the conclusion of each turn, the Simulator iden
 \item\(C(c)\), the CMC of the Lump that was cast this turn.
 \end{itemize}
 
- The sum of all values of \(C(l)~---~C(c)\) in a game is \(W\), the total wasted mana per game. This penalizes lands which enter the battlefield tapped, as they permit larger value of \(C(l)\) without increasing the maximum value of \(C(c)\), as well as game states in which there is an insufficient range of colours on the battlefield, without penalizing the curve of the player's deck relative to the number of lands they selected.
+ The sum of all values of \(C(l) \dots C(c)\) in a game is \(W\), the total wasted mana per game. This penalizes lands which enter the battlefield tapped, as they permit larger value of \(C(l)\) without increasing the maximum value of \(C(c)\), as well as game states in which there is an insufficient range of colours on the battlefield, but always assumes enough lands have been drawn.
 
 \subsection{Initial Analysis}
 \label{sec:initialanalysis}
@@ -102,22 +93,22 @@ To control for these factors, at the conclusion of each turn, the Simulator iden
 Data from a trial of four decks is presented in Fig.~\ref{fig:wastedoutputs}. Note that:
 
 \begin{itemize}
-\item Modal values of \(W\) are consistently zero, while BasicDeck's median \(W\) value of 1 is the highest of any deck, indicating that even at a comparatively low level of optimization, any performance considerations that are not simply the probability of wasting no mana in a game are only relevant in a minority of games. For all decks, the second most common value of \(W\) after 0 is 1. 
-\item  While the decline in mean values of \(W\) between PartialDeck and ExpectedDeck is comparable in size to the mean decline between BasicDeck and PartialDeck, kurtosis increases dramatically at higher levels of optimization. Since ExpectedDeck does not have a higher range than PartialDeck, this means that, past a certain degree of optimization, performance improves by replacing small values of \(W\) with 0, rather than by decreasing the worst-case value of \(w\)
+\item Modal values of \(W\) are consistently zero, while BasicDeck's median \(W\) value of 1 is the highest of any deck, indicating that even at low levels of optimization, any performance considerations that are not simply the probability of wasting no mana in a game are only relevant in a minority of games. For all decks, the second most common value of \(W\) after 0 is 1. 
+\item  While the decline in mean values of \(W\) between PartialDeck and ExpectedDeck is comparable in size to the mean decline between BasicDeck and PartialDeck, kurtosis increases dramatically at higher levels of optimization. Since ExpectedDeck does not have a higher range than PartialDeck, this means that, past a certain degree of optimization, performance improves by replacing small values of \(W\) with 0, rather than by decreasing the worst-case value of \(W\).
 \item  Using mean and range, OverDeck could be considered a more viable deck than ExpectedDeck, having only a slightly higher mean \(W\) but a much lower range (wasting at most 10 mana per game, as opposed to ExpectedDeck's 18)~---~is is a lower performing but safer option.
 \end{itemize}
 
 \myfig{Histograms.jpg}{Histograms of the mana wasted by each deck: clockwise from top left: BasicDeck, PartialDeck, OverDeck, ExpectedDeck}{wastedhistograms}
 
 
-Examining the histograms of ExpectedDeck and OverDeck's mana wastage clarifies this (see Fig.~\ref{fig:wastedhistograms}). Note that between PartialDeck and OverDeck, the proportion of games where \(W = 0\) declines, increasing again for ExpectedDeck. This indicates that while the mean wasted mana between ExpectedDeck and OverDeck may not favour ExpectedDeck by a wide enough margin to offset the reduced risk of extreme mana wastage, OverDeck's reliability does come at the cost of a non-negligable reduction in the likelihood of a game wasting no mana at all. Given that, as mentioned, zero mana is wasted in a plurality of games even at a low level of optimization, an amelioration of suboptimal results at the cost of optimal results is not considered a worthwhile exchange. LandFill therefore assesses a manabase based on the probability, henceforth \(P\), of it not wasting any mana at all in a game. 
+Examining the histograms of ExpectedDeck and OverDeck's mana wastage clarifies this (see Fig.~\ref{fig:wastedhistograms}). Note that between PartialDeck and OverDeck, the proportion of games where \(W = 0\) declines, increasing again for ExpectedDeck. This indicates that while the mean wasted mana between ExpectedDeck and OverDeck may not favour ExpectedDeck by a wide enough margin to offset the reduced risk of extreme mana wastage, OverDeck's reliability does come at the cost of a non-negligable reduction in the likelihood of a game wasting no mana at all. Given that, as mentioned, zero mana is wasted in a plurality of games even at a low level of optimization, an amelioration of suboptimal results at the cost of optimal results is not a worthwhile exchange. The objective function for the Hill Climbing Algorithm is therefore the probability, henceforth \(P\), of it not wasting any mana at all in a game. 
 
 
 \subsection{Proportion Wasted vs Cumulative Distribution}
 \label{sec:propvscum}
 An alternative metric to \(P\), that may capture some subtleties to the data, is \(C\), the area under a Cumulative Distribution Function (CDF) of wasted mana per game. In such a metric, a decklist with a lower value of \(P\) would be penalized compared to one with a higher value, but two decks with equivalent values of \(P\) may return different scores depending on their probability of producing games with very high values of \(W\).
 
-I investigated this using two new decks, CheckDeck and ShockDeck, both identical to BasicDeck save for the replacement of a single Basic Forest with, respectively, a UB Check Land and a UB Shock Land (see Fig.~\ref{fig:cycles}). This represents decks after a first Hill Climb increment. Whereas OverDeck is unlikely to ever be assembled by LandFill in its normal course of operations, if one metric was better able to distinguish the slight superiority of ShockDeck (which need never have a land enter tapped) to CheckDeck (which, on occasion, will), and distinguish the slight superiority of both to BasicDeck, that would be a stronger metric to use. I conducted 100 MonteCarlos of 1000 games each for all decks, summarizing the same data first with \(P\) and second with \(C\). Box plots of the results are shown in Fig.~\ref{fig:shockvscheck}
+I investigated this using two new decks, CheckDeck and ShockDeck, both identical to BasicDeck save for the replacement of a single Basic Forest with, respectively, a UB Check Land and a UB Shock Land (see Fig.~\ref{fig:cycles}). This represents decks after a first Hill Climb increment. If one metric was better able to distinguish the slight superiority of ShockDeck (which need never have a land enter tapped) to CheckDeck (which, on occasion, will), and distinguish the slight superiority of both to BasicDeck, that would be a stronger metric to use. I conducted 100 MonteCarlos of 1000 games each for all decks, summarizing the same data first with \(P\) and second with \(C\). Box plots of the results are shown in Fig.~\ref{fig:shockvscheck}.
 
 \myfig{shockvscheck.jpg}{Box Plots representing the same MonteCarlo output data as (left to right): proportion of games in which zero mana is wasted, and area under a CMF of mana wasted.}{shockvscheck}
 
@@ -129,8 +120,9 @@ Given this, \(P\) presents several design advantages. First, it is faster: given
 
 \section{The Hill Climbing Algorithm}
 \subsection{Setup}
-Once the user has selected preferences, the Deck and DeckBuilder objects are instantiated. Since both are CardCollection objects, GameCards are assigned to each accordingly:
+Once the user has selected preferences, the Deck and DeckBuilder objects are instantiated. Since both are CardCollection objects, GameCards are assigned to each as per Table 6.1.
 
+\begin{table}
 \begin{center}
 \begin{tabularx}{\textwidth}{|X|X|X|} 
  \hline
@@ -144,23 +136,25 @@ Once the user has selected preferences, the Deck and DeckBuilder objects are ins
  \hline
  All Land cards in a recognised cycle that are not already in the deck & DeckBuilder & False \\
  \hline
- 100 basic land cards of each colour required by the deck & DeckBuilder & False \\ [1ex] 
+ 100 Basic Land cards of each colour required by the deck & DeckBuilder & False \\ [1ex] 
  \hline
 \end{tabularx}
+\caption{Assignment of cards to different objects in the optimizer.}
 \end{center}
+\end{table}
 
-Basic Lands, rather than a random sample of nonbasic lands, are used as the starting input thanks to the principle of diminishing returns set out in \secref{sec:balancinglands}.
+Basic Lands, rather than a random sample of nonBasic Lands, are used as the starting input thanks to the principle of diminishing returns set out in \secref{sec:balancinglands}.
 
 \subsection{Each Increment}
 \label{sec:eachincrement}
 With a new manabase added, DeckBuilder creates a new MonteCarlo object for the deck. \texttt{MonteCarlo.run()} simulates a set number $\underline{G}_r$ of games. For each, the boolean value \(W > 0\) is added to \texttt{MonteCarlo.wasted\allowbreak\_games}, and to \texttt{GameCard.wasted\allowbreak\_games} for each GameCard object that was drawn during the game. Every land to which the simulated player has access, essentially, takes responsibility for the success or failure of the game. The MonteCarlo then uses this information to rank all GameCards in the deck by performance, and then resets all values of \texttt{GameCard.wasted\allowbreak\_games} to empty arrays. The lowest ranking GameCard is set as \texttt{MonteCarlo.worst\allowbreak\_performing\allowbreak\_card}. 
 
-With the worst card established, as outlined in \secref{sec:steepestascentoutline}, the next step is to identify the strongest card to replace it. This is more complicated, given the small performance differences between two decks that differ only on one card~---~especially since, as each candidate replacement card must be tested at each increment, it is not practical to run as many simulations as was used in \texttt{MonteCarlo.run()}.Instaed, for each candidate card, DeckBuilder calls a new method: \texttt{MonteCarlo.card\allowbreak\_test(Land)}. This runs as follows for input land \(L\), where \(T\) refers to the number of turns for the simulated game plus the number of cards (7) in an opening hand, and $\underline{G}_c$ is the number of games simulated by the function:
+With the worst card established, as outlined in \secref{sec:steepestascentoutline}, the next step is to identify the strongest card to replace it. This is more complicated, given the small performance differences between two decks that differ only on one card~---~especially since, as each candidate replacement card must be tested at each increment, it is not practical to run as many simulations as was used in \texttt{MonteCarlo.run()}. Instead, for each candidate land, DeckBuilder calls a new method: \texttt{MonteCarlo.card\allowbreak\_test(Land)}. This runs as follows for input land \(L\), where \(T\) refers to the number of turns for the simulated game plus the number of cards (7) in an opening hand, and $\underline{G}_c$ is the number of games simulated by the function:
 
 \begin{enumerate}
 \item \texttt{MonteCarlo.worst\allowbreak\_performing\allowbreak\_card} is removed from the deck and replaced with \(L\).
 \item A simulation is run.
-\item If \(L\) or any lands capable of searching the library for \(L\) are in the top \(T\) cards of the deck, the game is run as normal.
+\item If \(L\) or any Fetch Lands capable of searching the library for \(L\) are in the top \(T\) cards of the deck, the game is run as normal.
 \item If not, \(L\) is randomly added to some position within the top \(T\) cards of the deck.
 \item If a mulligan occurs, steps 3 and 4 are repeated.
 \item The game is run as normal, save that the value of \(W\) is not increased until after \(L\) is drawn.
@@ -168,12 +162,13 @@ With the worst card established, as outlined in \secref{sec:steepestascentoutlin
 \item \(L\) is removed from the deck and replaced with \texttt{MonteCarlo.worst\allowbreak\_performing\allowbreak\_card}.
 \end{enumerate}
 
-Steps 3 and 4 are seperated because, for reasonable size of \(T\), the chance of drawing \(L\) before any lands capable of searching for it, is very high. Once a land is in the player's hand, it becomes an invalid target for a Fetch Land. The importance of this is best illistrated with the Triome cycle, which are basic-landtyped taplands which tap for three colours. A deck forced to draw a tapland every game incurs a significant penalty which may overcome its need for colours; however, a deck with many Fetch Lands may benefit from those Fetch Lands being given the option of fetching a three-colour land on a turn when extra mana is not needed. 
+Steps 3 and 4 are seperated because the chance of drawing \(L\) before any lands capable of searching for it, is very high. Once a land is in the player's hand, it becomes an invalid target for a Fetch Land. The importance of this is best illistrated with the Triome cycle, which are basic-landtyped taplands which tap for three colours. A deck forced to draw a tapland every game incurs a significant penalty which may overcome its need for colours; however, a deck with many Fetch Lands may benefit from those Fetch Lands being given the option of fetching a three-colour land on a turn when extra mana is not needed. 
 
- \texttt{MonteCarlo.card\allowbreak\_test(Land)} returns to DeckBuilder the value of \(P\) for the specified substitution, and DeckBuilder replaces texttt{MonteCarlo.worst\allowbreak\_performing\allowbreak\_card} with the land that returns the highest value. 
+ \texttt{MonteCarlo.card\allowbreak\_test(Land)} returns to DeckBuilder the value of \(P\) for the specified substitution, and DeckBuilder replaces \texttt{MonteCarlo.worst\allowbreak\_performing\allowbreak\_card} with the land that returns the highest value. 
 
  I assessed possible values for $\underline{G}_r$ and $\underline{G}_c$ based on their ability to produce similar manabases when a DeckBuilder was run ten times using the same initial deck. The similarity of any two manabases \(A\) and \(B\) can be determined via the Multiset Jaccard Index~\cite{costa2021further}. This can be extrapolated to all ten manabases by calculating the indices pairwise and then finding the average. This produced the below data:
 
+ \begin{table}[ht]
  \begin{center}
 \begin{tabularx}{\textwidth}{|X|X|X|X|} 
  \hline
@@ -194,9 +189,11 @@ Steps 3 and 4 are seperated because, for reasonable size of \(T\), the chance of
  10000 & 2000 & 0.815 & 21m 32 seconds\\ [1ex] 
  \hline
 \end{tabularx}
+\caption{Comparisons of Jaccard Index and runtime for different numbers of simulated games.}
 \end{center}
+\end{table}
 
-While the Jaccard Index broadly increases with higher values of $\underline{G}_r$ and $\underline{G}_c$, small alterations in these values do not produce striking differences; even the above data includes clear outliers, and is unlikely to be reliable. A substantial improvement requires a tenfold increase in the number of simulated games, which incurs a sizeable runtime penalty (it should also be noted here that this this test was done with a three-colour deck; in a five-colour deck, with many more candidate land to be tested at each increment, the runtime penalty would be even greater). For the initial version, I used a value of 1000 $\underline{G}_r$ and 200 for $\underline{G}_c$. 
+While the Jaccard Index broadly increases with higher values of $\underline{G}_r$ and $\underline{G}_c$, small alterations in these values do not produce striking differences; even the above data includes clear outliers, and is unlikely to be reliable. A substantial improvement requires a tenfold increase in the number of simulated games, which incurs a sizeable runtime penalty (it should also be noted here that this this test was done with a three-colour deck; in a five-colour deck, with many more candidate lands to be tested at each increment, the runtime penalty would be even greater). For the initial version, I used a value of 1000 $\underline{G}_r$ and 200 for $\underline{G}_c$. 
 
 
 
@@ -209,7 +206,7 @@ Fig.~\ref{fig:rateofimprovement} shows the rate of improvement of a deck at each
 This means that rather then halting when a maxima is reached, the halting criterion must trigger when the rate of improvement drops below a certain threshold. For the data in Fig.~\ref{fig:rateofimprovement}, this would be around the 33rd-40th increment. This requires smoothing of the data, to avoid triggering the halting criterion during the descent after a local maxima. I trialled two filtering methods:
 
 \begin{itemize}
-\item Smoothing the line with a Savitsky-Golay filter to remove the data noise causing the local maxima, and then halting when the derivative of the resulting line reduced below zero. A Savitsky-Golay filter removes data noise by projecting a least-squares polynomial fit to sample data across a given window, and determinig a new smoothed value from that polynomial~\cite{candan2014unified}.
+\item Smoothing the line with a Savitsky-Golay filter to remove the data noise causing the local maxima, and then halting when the derivative of the resulting line fell below zero. A Savitsky-Golay filter removes data noise by projecting a least-squares polynomial fit to sample data across a given window, and determining a new smoothed value from that polynomial~\cite{candan2014unified}.
 \item Calculating the mean result across a given window length from the most recent score generated, and comparing it with the mean result from the window of the same length before that. The system would halt when the mean of the prior window subtracted from the mean of the current window fell below zero. 
 \end{itemize}
 
