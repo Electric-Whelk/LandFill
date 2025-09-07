@@ -21,7 +21,7 @@ from simulation_objects.Timer import functimer_once
 
 
 class MonteCarlo(Simulation):
-    def __init__(self, deck, turns=7, runs=None, ct_runs=100, close_examine=False, timer=False):
+    def __init__(self, deck, turns=10, runs=None, ct_runs=100, close_examine=False, timer=False):
         Simulation.__init__(self, deck)
         self._wasteless_turns = 0
         self._wasteless_games = 0
@@ -120,7 +120,7 @@ class MonteCarlo(Simulation):
         return self._runs
 
     #run!
-    def run(self):
+    def run_v1(self):
         #print("Running tests!")
         starttime = time.time()
 
@@ -200,12 +200,12 @@ class MonteCarlo(Simulation):
         #self.print_deck_details(dev_value)
         #self.print_list(ranked, dev_value)
 
-    def hill_climb_test(self):
+    def run(self):
         self.deck.reset_card_score()
         self.run_tests()
         self.assess_deck_hc()
         self.assess_lands_hc()
-        ranked = [x for x in self.deck.lands_list()]
+
 
     def individual_deck_test(self):
         self.deck.reset_card_score()
@@ -218,36 +218,18 @@ class MonteCarlo(Simulation):
 
 
     def assess_lands_hc(self):
-        for card in self.deck.lands_list(): #inelegant solution here to the way your proportion of games() and self.proportions interact
-            x = card.proportion_of_games()
+        for card in self.deck.lands_list():
+            p = card.proportion_of_games()
 
         worst = None
         worst_score = 0
-        #for color in self.deck.color_id:
-            #self.normalize_basics(landtype_map[color])
 
-
-
-        sklorted = sorted(self.deck.lands_list(), key=lambda x: x.proportions, reverse=False)
+        after_sorting = sorted(self.deck.lands_list(), key=lambda x: x.proportions, reverse=False)
         print("Running test")
-        #forestcount = len([x for x in self.deck.lands_list() if x.name == "Forest"])
-        #islandcount = len([x for x in self.deck.lands_list() if x.name == "Island"])
-        #swampcount = len([x for x in self.deck.lands_list() if x.name == "Swamp"])
-        #print(f"Low performers ({forestcount} forests, {islandcount} islands, {swampcount} swamps)")
+
         for i in range(len(self.deck.lands_list())):
             rank = len(self.deck.lands_list()) - i
-            print(f"\t {rank}: {sklorted[i]} -> {sklorted[i].proportions} -> {numpy.median(sklorted[i].options)}")
-
-        """nb_sighted = False
-        basiccount = 0
-        nbcount = 0
-        for land in sklorted:
-            if not isinstance(land, BasicLand):
-                nbcount += 1
-            if nbcount > 0 and isinstance(land, BasicLand):
-                basiccount += 1
-        with open("output_files/ahead_of_worst_nb", "a") as f:
-            f.write(f"{nbcount}:{basiccount}\n")"""
+            print(f"\t {rank}: {after_sorting[i]} -> {after_sorting[i].proportions} -> {numpy.median(after_sorting[i].options)}")
 
         candidates = self.get_worst_card_candidates(self.deck.card_list)
         for card in candidates:
@@ -290,26 +272,7 @@ class MonteCarlo(Simulation):
         return self.wastelessness(g)
 
 
-    def run_card_test(self, card_in):
-        self.deck.reset_card_score()
-        card_in.options = []
-        card_in.turns_without_commander = []
-        #wasted_per_game = [] #TEST VARIABLE
-        wasteless_turns = 0
-        for _ in range(0, self.ct_runs):
-            #g = Game(self.deck, self.cache, turns=self.turns)
-            #g.run(card_to_test = card_in)
-            wasteless_turns += self.single_card_test(card_in)
-            #wasted_per_game.append(g.leftover_mana) #TEST VARIABLE
 
-        #wasteless_turns += Parallel(n_jobs=-1)(delayed(self.single_card_test)(card_in) for _ in range(self.runs))
-
-        for card in self.deck.card_list:
-            if isinstance(card, Land):
-                card.reset_grade()
-
-        #return numpy.mean(wasted_per_game) * -1
-        return wasteless_turns / self.ct_runs
 
 
     def print_deck_details(self, criterion):
@@ -370,24 +333,11 @@ class MonteCarlo(Simulation):
 
 
     def run_tests(self, quit=True):
-        for i in range(0, self._runs):#SCAFFOLD - currently at 6 seconds per 10,000 games
-            #if i % 10 == 0:
-                #print(f"{i}...")
-
-            #gamestart = time.time()
+        for i in range(0, self._runs):
             g = Game(self.deck, turns=self.turns, verbose=self._close_examine)
-            #print(f"Game instantiation took {time.time() - gamestart} seconds")
-            #pickle.dumps(g)
-            runstart = time.time()
             g.run(quit=quit)
-           # print(f"Game {time.time() - runstart} seconds")
             self.get_game_info(g)
 
-
-        #games = Parallel(n_jobs=-1, backend="threading")(delayed(run_tests_exterior)(deepcopy(self.deck), turns=self.turns, verbose=self._close_examine) for _ in range(self._runs))
-        #print(f"Completed games!")
-        #for g in games:
-            #self.get_game_info(g)
 
 
     def get_game_info(self, game):

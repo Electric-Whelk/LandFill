@@ -1,10 +1,12 @@
 \chapter{The Interface}
 \section{The Input Parser}
+\label{sec:inputparser}
 In my initial user-research, subjects desired that LandFill support ``round trips''. this means that LandFill can receive a list of cards in the formats output by known online card databases, and output cards in the same format. For this purpose, I created the InputParser class, of which one is created at the start of each session. Test users identified four databases: TappedOut, Moxfield, Archidekt and Deckbox. Since Tappedout and Moxfield both allow for lists to be copied from the deck homepage rather than from the formatted export panel, and Moxfield and Deckbox take inputted cards in the same format, this means that the InputParser has been designed to distinguish between six possible input formats, and return three possible output formats. 
 
 Since Tappedout and Archidekt both support categorization of cards (i.e.,~draw, ramp, win strategy, enemy card removal) with custom lables, the Input Parser stores all cards in a Dict object corresponding to each category, using a default key if none are specified by the user. On completion of the Monte Carlo process, the InputParser a total of six string objects: for each database format (Deckbox and Moxfield being identical), it returns the total decklist including lands (structured into categories if permitted by the database and provided by the user), and the list of provided lands. 
 
 \section{App Layout}
+\label{sec:applayout}
 In the intial mockup drafted in \secref{sec:initialusertests}, LandFill consisted of a single homepage. Users in the think-aloud evaluation generally did not understand the difference between the button that confirmed their nonland inputs and the button which commenced optimization. On redrafting, I split the design into four pages, outlined below and displayed in Figs. \ref{fig:deckinput}, \ref{fig:preferences}, \ref{fig:progress} and \ref{fig:output}
 
 \subsection{Deck Input (Fig.~\ref{fig:deckinput})}

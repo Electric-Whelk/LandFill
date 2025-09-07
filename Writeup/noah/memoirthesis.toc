@@ -26,13 +26,14 @@
 \contentsline {subsection}{\numberline {3.1.1}Semi-Structured Interview}{15}{subsection.3.1.1}%
 \contentsline {subsection}{\numberline {3.1.2}Think-Aloud Mockup Testing}{15}{subsection.3.1.2}%
 \contentsline {subsection}{\numberline {3.1.3}Kano Questionnaire}{16}{subsection.3.1.3}%
-\contentsline {section}{\numberline {3.2}Emerging Themes}{17}{section.3.2}%
-\contentsline {subsection}{\numberline {3.2.1}Commander/Casual Preference}{17}{subsection.3.2.1}%
-\contentsline {subsection}{\numberline {3.2.2}Lack of Strategic Thinking but Strong Preferences}{18}{subsection.3.2.2}%
-\contentsline {subsection}{\numberline {3.2.3}Deckbuilder Personas}{18}{subsection.3.2.3}%
-\contentsline {subsection}{\numberline {3.2.4}Flexible Input Parsing}{19}{subsection.3.2.4}%
-\contentsline {subsection}{\numberline {3.2.5}Mulligans}{19}{subsection.3.2.5}%
-\contentsline {subsection}{\numberline {3.2.6}Life Loss, Cost, and the Knapsack Problem}{19}{subsection.3.2.6}%
+\contentsline {section}{\numberline {3.2}Analysis}{16}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Format Support}{17}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}Support for 3rd Party Databases}{18}{subsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.2.3}Comprehensive Land Exclusion/Preference Options}{18}{subsection.3.2.3}%
+\contentsline {subsection}{\numberline {3.2.4}Deckbuilder Personas}{19}{subsection.3.2.4}%
+\contentsline {subsection}{\numberline {3.2.5}Visualization of Internal Workings}{19}{subsection.3.2.5}%
+\contentsline {subsection}{\numberline {3.2.6}Knapsack Problems and simultaneous optimization}{19}{subsection.3.2.6}%
+\contentsline {subsection}{\numberline {3.2.7}Mulligans}{20}{subsection.3.2.7}%
 \contentsline {chapter}{\chapternumberline {4}The Database}{21}{chapter.4}%
 \contentsline {section}{\numberline {4.1}Database Requirements}{21}{section.4.1}%
 \contentsline {section}{\numberline {4.2}Choice of Online Database~---~ScryFall/Scrython}{21}{section.4.2}%
@@ -94,15 +95,15 @@
 \contentsline {section}{\numberline {8.1}Methodology}{49}{section.8.1}%
 \contentsline {subsection}{\numberline {8.1.1}Effort Testing via TLX}{49}{subsection.8.1.1}%
 \contentsline {subsection}{\numberline {8.1.2}Serendipity Testing}{50}{subsection.8.1.2}%
-\contentsline {subsection}{\numberline {8.1.3}Semi-Structured Interview}{50}{subsection.8.1.3}%
+\contentsline {subsection}{\numberline {8.1.3}Semi-Structured Interview}{51}{subsection.8.1.3}%
 \contentsline {section}{\numberline {8.2}Results}{51}{section.8.2}%
 \contentsline {subsection}{\numberline {8.2.1}TLX Data Analysis}{51}{subsection.8.2.1}%
-\contentsline {subsection}{\numberline {8.2.2}Serendipity Test Analysis}{51}{subsection.8.2.2}%
+\contentsline {subsection}{\numberline {8.2.2}Serendipity Test Analysis}{52}{subsection.8.2.2}%
 \contentsline {subsection}{\numberline {8.2.3}Semi Structured Interview Response Analysis}{52}{subsection.8.2.3}%
 \contentsline {section}{\numberline {8.3}Additional Features}{53}{section.8.3}%
 \contentsline {subsection}{\numberline {8.3.1}Persistant Preference Storage and Links with Existing Databases}{53}{subsection.8.3.1}%
 \contentsline {subsection}{\numberline {8.3.2}Flexible Runtimes and Accuracy}{53}{subsection.8.3.2}%
-\contentsline {subsection}{\numberline {8.3.3}Additional Formats and MTG: Arena Support}{53}{subsection.8.3.3}%
+\contentsline {subsection}{\numberline {8.3.3}Additional Formats and MTG: Arena Support}{54}{subsection.8.3.3}%
 \contentsline {subsection}{\numberline {8.3.4}Frontend Formatting Improvements}{54}{subsection.8.3.4}%
 \contentsline {chapter}{\chapternumberline {9}Conclusion}{55}{chapter.9}%
 \contentsline {section}{\numberline {9.1}Summary}{55}{section.9.1}%
@@ -111,5 +112,6 @@
 \contentsline {subsection}{\numberline {9.2.2}Use of Hill Climbing Algorithm}{56}{subsection.9.2.2}%
 \contentsline {subsection}{\numberline {9.2.3}Mid-Development Validation and Verification Tests}{56}{subsection.9.2.3}%
 \contentsline {section}{\numberline {9.3}Final Thoughts}{56}{section.9.3}%
-\contentsline {appendix}{\chapternumberline {A}Appendix A}{59}{appendix.A}%
-\contentsline {chapter}{Bibliography}{61}{section*.33}%
+\contentsline {appendix}{\chapternumberline {A}Code Extracts}{59}{appendix.A}%
+\contentsline {appendix}{\chapternumberline {B}Consent Forms}{65}{appendix.B}%
+\contentsline {chapter}{Bibliography}{73}{section*.36}%

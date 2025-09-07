@@ -33,59 +33,23 @@ const Page2 = () => {
         allowOffColorFetches, setAllowOffColorFetches
     } = useDeck();
 
-    /*useEffect(() =>
-    {
-        if (location.state?.data) {
-            const newData = location.state.data
-            setCycles(newData.heap || []);
-            setCurrency(newData.currency || "GBP")
-            for(const cycle of newData.heap){
-                for(const card of cycle.cards){
-                    console.log(card)
-                }
-            }
-        }
-    }, [location.state, setCycles, setCurrency]);
-    /*const data = location.state?.data;
-    const cycles = data?.heap || [];
-    const currency = data?.currency || "GBP";*/
+
 
     useEffect(() => {
         if (location.state?.data && cycles.length === 0) {
             const newData = location.state.data;
             setCycles(newData.heap || []);
             setCurrency(newData.currency || "GBP");
-            // (optional) reset other states if coming directly from Page1
+
         }
     }, [location.state, cycles, setCycles, setCurrency]);
 
 
     // Filters & toggles
     const [loading, setLoading] = useState(false);
-    /*const [minBasics, setMinBasics] = useState(0);
-    const [minIndividualBasics, setMinIndividualBasics] = useState(0);
-    const [allowOffColorFetches, setAllowOffColorFetches] = useState(true);*/
+
     const [viewedCycle, setViewedCycle] = useState(null);
-    /*const [filters, setFilters] = useState({
-        tappedNonfetch: false,
-        tappedFetchable: false,
-        maxPrice: ''
-    });*/
 
-    // Core arrays
-    /*const [excludeArrays, setExcludeArrays] = useState({
-        belowMaxPrice: [],
-        uncheckedByPlayer: [],
-        offColorFetch: [],
-        cycleMovedToExclude: [],
-        addedBecauseNotTappedButFetchable: [],
-        addedBecauseNotTappedAndNotFetchable: []
-    });
-
-    const [positiveArrays, setPositiveArrays] = useState({
-        include: [],
-        consider: []
-    });*/
 
     useEffect(() => {
 
@@ -168,19 +132,14 @@ const Page2 = () => {
 
 
 
-
-    /** ----------------------------
-     * UTILITY: membership checks
-     ---------------------------- **/
+//membership checks
     const cardInExcludeArray = (card, key) =>
         excludeArrays[key].some(c => c.name === card.name);
 
     const cardInAnyExcludeArray = (card) =>
         Object.keys(excludeArrays).some(key => cardInExcludeArray(card, key));
 
-    /** ----------------------------
-     * UTILITY: update excludeArrays
-     ---------------------------- **/
+//handling excludearrays
     const addCardToExcludeArray = (card, key) => {
         setExcludeArrays(prev => {
             const newArr = prev[key].some(c => c.name === card.name)
@@ -205,9 +164,7 @@ const Page2 = () => {
     };
 
 
-    /** ----------------------------
-     * UTILITY: update positiveArrays
-     ---------------------------- **/
+//handling positivearrays
     const moveCardToPositive = (card, targetKey) => {
         setPositiveArrays(prev => {
             const newState = { ...prev };
@@ -225,9 +182,7 @@ const Page2 = () => {
         cycle.cards.forEach(card => moveCardToPositive(card, targetKey));
     };
 
-    /** ----------------------------
-     * AUTO-MOVE CYCLES TO EXCLUDE
-     ---------------------------- **/
+//excluding cycles
     useEffect(() => {
         setColumns(prevCols => {
             const newCols = { include: [], consider: [], exclude: [] };
@@ -263,21 +218,17 @@ const Page2 = () => {
     }
 
     function handlePlayerMoveCycleOutOfExclude(cycle) {
-        // Step 1: Run exceptions logic
         const { blocked, messages } = checkCycleMoveExceptions(cycle);
         if (blocked) {
             showErrorMessages(messages);
             return;
         }
 
-        // Step 2: Remove cards from cycleMovedToExclude
         removeCardsFromArray(cycle.cards, 'cycleMovedToExclude');
 
-        // Step 3: Remove from tapped arrays
         removeCardsFromArray(cycle.cards, 'addedBecauseNotTappedButFetchable');
         removeCardsFromArray(cycle.cards, 'addedBecauseNotTappedAndNotFetchable');
 
-        // Step 4: Untick relevant filter checkboxes (code-driven)
         setFilters(prev => ({
             ...prev,
             addedBecauseNotTappedButFetchable: false,
@@ -338,9 +289,7 @@ const Page2 = () => {
 
 
 
-    /** ----------------------------
-     * INIT: load positiveArrays from columns
-     ---------------------------- **/
+//determining positivearrays
     useEffect(() => {
         setPositiveArrays({
             include: columns.include.flatMap(c => c.cards),
@@ -348,9 +297,7 @@ const Page2 = () => {
         });
     }, []); // run once
 
-    /** ----------------------------
-     * FILTER APPLICATION
-     ---------------------------- **/
+//filtering
 
     const handleSidePanelTick = (e, card) => {
         const isChecked = e.target.checked;
@@ -454,9 +401,7 @@ const Page2 = () => {
 
 
 
-    /** ----------------------------
-     * DRAG HANDLERS
-     ---------------------------- **/
+//drag handlers
     const onDragEnd = result => {
         if (!result.destination) return;
         const { source, destination } = result;
@@ -503,18 +448,14 @@ const Page2 = () => {
 
     };
 
-    /** ----------------------------
-     * FILTER FORM HANDLERS
-     ---------------------------- **/
+//filter handlers
     const handleFilterChange = e => {
         const { name, value, type, checked } = e.target;
         const val = type === 'checkbox' ? checked : value;
         setFilters(prev => ({ ...prev, [name]: val }));
     };
 
-    /** ----------------------------
-     * FAQ Answers
-     ---------------------------- **/
+//faq handlers
     const optimizationExplanation = "Goldfishing! LandFill fills your deck with basics and plays a bunch of virtual games with them, where it tries to spend as much mana as possible. It swaps out the worst performing land for a different land, then does the same thing over and over until the deck can cast your spells as reliably as possible."
 
     const timeEstimate = "About 1 minute per colour of mana in your deck. The more lands that you tell it you definitely want or don't want, the quicker it'll go! "
@@ -523,9 +464,7 @@ const Page2 = () => {
 
     const rankLands = "Since LandFill can only judge lands by how good they are at colour fixing, it can't tell you whether you'd do better with a Surveil Land or a Cycling Land. You can rank your preferences in the below column."
 
-    /** ----------------------------
-     * COMPONENTS
-     ---------------------------- **/
+//components
     const FAQ = ({ label, content }) => {
         const [open, setOpen] = useState(false);
         return (

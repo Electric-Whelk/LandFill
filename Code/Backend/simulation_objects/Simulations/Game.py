@@ -540,11 +540,6 @@ class Game(Simulation):
 
     def set_land_permit(self, land, played_lands):
         land.setpermits([x for x in self.lumps if x.set_playability(played_lands, self)])
-        """for lump in self.lumps:
-            if lump.set_playability(played_lands, self):
-                #print(f"Setting {lump} from {self.lumps}")
-                land.fine_tune_permits(lump)
-                break"""
 
 
     def play_spell_no_land(self):

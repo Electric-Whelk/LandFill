@@ -2,16 +2,12 @@ import random
 from copy import deepcopy
 import time
 
-from joblib import Parallel, delayed
-from line_profiler import profile
-
 from .ColorPie import piepips
 from simulation_objects.GameCards.Spell import Spell
 from simulation_objects.GameCards.BasicLand import BasicLand
 from simulation_objects.Misc.WodgeSocket import WodgeSocket
 from .Moot import Moot
 
-import numpy as np
 import scipy.optimize
 
 from ..GameCards.PermaUntapped.FilterLand import FilterLand
@@ -259,23 +255,20 @@ class Lump:
 
         def _recurse(filters_left, current_lands):
             if not filters_left:
-                # No more filters to resolve; yield this land setup
                 yield current_lands
                 return
 
             current_filter = filters_left[0]
             remaining_filters = filters_left[1:]
 
-            # Try all possible activating lands
+
             activated = False
             for i, land in enumerate(current_lands):
                 if land.produces_at_least_one(current_filter.required, game):
-                    # Replace this land with the filter's sublands
                     new_lands = current_lands[:i] + current_lands[i + 1:] + current_filter.sublands
                     yield from _recurse(remaining_filters, new_lands)
                     activated = True
 
-            # If no land can activate this filter, add it as-is (colorless-only producer)
             if not activated:
                 yield from _recurse(remaining_filters, current_lands + [current_filter])
 

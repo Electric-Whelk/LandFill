@@ -314,5 +314,5 @@ def build_output(player_deck, imp):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run_v1()
 

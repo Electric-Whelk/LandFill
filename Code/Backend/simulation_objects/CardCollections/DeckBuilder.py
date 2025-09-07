@@ -6,11 +6,8 @@ import matplotlib.pyplot as plt
 import numpy
 import numpy as np
 from currency_converter import CurrencyConverter
-from line_profiler import profile
 from numpy import median
-from numpy.ma.core import set_fill_value
 from scipy.signal import savgol_filter
-from sqlalchemy import false
 
 from database_management.models.Card import Card
 from Extensions import db
@@ -30,7 +27,6 @@ from simulation_objects.GameCards.TappedCycles.Triome import Triome
 from simulation_objects.Misc.ColorPie import colortype_map, landtype_map
 from simulation_objects.Misc.LandPrioritization import stdprioritization, LandPrioritization
 from simulation_objects.Simulations.MonteCarlo import MonteCarlo
-from simulation_objects.Misc.LandPermutationCache import LandPermutationCache
 from simulation_objects.Timer import functimer_perturn, functimer_once
 
 
@@ -58,34 +54,13 @@ class DeckBuilder(CardCollection):
         
         self.halt = False
 
-        #will figure out when to set the below
-        """
-        self._prioritization= {
-            "Command Tower": 1,
-            "Filter Lands": 1,
-            "Triomes": 1,
-            "Shock Lands": 1,
-            "Basic Lands": 1,
-            "OG Dual Lands": 1,
-            "Fetch Lands": 1,
-            "Tri-Color Taplands": 2,
-            "Bond Lands": 2,
-            "Verge Lands": 2,
-            "Pain Lands": 2,
-            "Horizon Lands": 2,
-            "Check Lands": 3,
-            "Reveal Lands": 3,
-            "Battle Lands": 2,
-            "Fast Lands": 3,
-            "Slow Lands": 3,
-            "Guildgates": 4
-        }"""
+
 
 
         #requirements - set at the start of each run
         self._budget = float(inf)
         self._mppc = None #max price per card
-        self._currency = "GBP" #is there a more elegant way to set default?
+        self._currency = "GBP"
         self._threshold = float(inf)
         self._minbasics = 0
 
@@ -471,7 +446,7 @@ class DeckBuilder(CardCollection):
         step_output = MonteCarlo(self.deck)
         print(f"Excluded: {[x.name for x in self.card_list if not x.permitted]}")
         print(f"Mandatory: {[x.name for x in self.card_list if x.mandatory]}")
-        step_output.hill_climb_test()
+        step_output.run()
         self.vprint(f"Starting score: {step_output.game_proportions}")
         scores = []
         scores.insert(0, step_output.game_proportions)
@@ -586,12 +561,9 @@ class DeckBuilder(CardCollection):
         best_recent = numpy.mean(recent_window)
         best_prior = numpy.mean(prior_window)
 
-        #with open("Rukarumel_Performance", "a") as file:
-            #file.write(f"recent: {recent_window} prior: {prior_window}\n")
 
         improvement = best_recent - best_prior
 
-        # Debug print to visualize what’s going on
         print(f"Best recent: {best_recent:.3f}, Best prior: {best_prior:.3f}, Improvement: {improvement:.4f}")
 
         return improvement < improvement_threshold
@@ -669,7 +641,6 @@ class DeckBuilder(CardCollection):
     #@functimer_once
     @functimer_once
     def hill_climb_increment(self, prior_test):
-        print("")
         worst_card = prior_test.worst_performing_card
         self.last_worst = worst_card.name
         prev_score = prior_test.game_proportions
@@ -710,24 +681,17 @@ class DeckBuilder(CardCollection):
 
         champ = self.break_tie(tiebreaker_candidates)
         self.last_best = champ.name
-        #champ = self.break_tie_median(tiebreaker_candidates)
 
-        #if champ.card_test_score < prev_score:
-            #print(f"Halting at prior test score {prior_test.game_proportions}")
-            #self.halt = True
 
         if not self.halt:
             self.give(self.deck, champ)
             self.reset_scores(cards_to_test)
-            t.hill_climb_test()
+            t.run()
             self.vprint(f"Swapped {worst_card} for {champ} ({t.game_proportions}) ({len(self.deck.card_list)})")
-            #with open("another rukarumeeel", "a") as file:
-                #print("Writing to file!")
-                #file.write(f"{t.game_proportions}\n")
+
 
             if worst_card.name == champ.name:
                 t.like_for_like = True
-        #print(f"total of {(time.time() - self.start_time)/60} minutes elapsed")
         return t
 
     def meets_minbasic_criteria(self, card):
@@ -1112,24 +1076,20 @@ class DeckBuilder(CardCollection):
     #PROGRESS UPDATE REFACTOR
 
     def run_stream(self, of_each_basic=0, min_basics="0"):
-        # setup deck just like your run()
-        yield "Setting up deck..."
 
-        #yield f"Deck initialized with {len(lands_in_deck)} lands."
+        yield "Setting up deck..."
         yield f"Deck contains {len([x for x in self.card_list if isinstance(x, Land) and x.mandatory])} lands"
         self.add_mandatory_lands()
         self.deck.add_initial_lands("equal_basics")
         yield f"Basic lands added to deck..."
         self.deck.set_each(of_each_basic)
         self.minbasics = int(min_basics)
-
-        # now do the hill climb, yielding progress
         yield from self.hill_climb_stream()
 
     def hill_climb_stream(self):
         self.halt = False
         step_output = MonteCarlo(self.deck)
-        step_output.hill_climb_test()
+        step_output.run()
         self.last_worst = step_output.worst_performing_card.name
         yield f"Starting score: {step_output.game_proportions}"
         scores = [step_output.game_proportions]

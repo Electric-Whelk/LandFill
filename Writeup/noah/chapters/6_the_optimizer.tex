@@ -36,6 +36,8 @@ Strict Betterness is mapped in Fig.~\ref{fig:strictbetterness}. While most of th
 
 This relationship is encoded into the LandPrioritization object via a dict, where a Land child class is a key mapping to a list of all superior classes. All Land objects belonging to the DeckBuilder that are permitted for consideration by the user are fed into \texttt{LandPrioritization.register\allowbreak\_land()} and stored within the LandPrioritization. After all Land objects are registered, \texttt{LandPrioritization.cascade\allowbreak\_superiors()} assigns each a list of all superior Lands that have also been registered, stored as an attribute of the Land object. This process overlooks any absent lands that the user does not want LandFill to consider: if the user does not want to include Battle Lands, for example, any two-colour lands that always enter tapped and have basic landtypes will recognise an equivalently coloured Shock Land as a superior. 
 
+For equivalent categories of lands - i.e., typed taplands - I implemented a stripped down version of the weighting system discussed in \secref{sec:landexclusionandpreference}. Users are given an option on the frontend to prioritize these lands above the other, so that, if the optimizer does suggest lands from these categories, their preferred cycles are prioritized. 
+
 \section{Optimization Algorithm}
 
 \subsection{Outline of Steepest Ascent Hill Climbing Algorithm}
@@ -74,7 +76,7 @@ To test different performance metrics, four sample decks containing the same non
 \end{itemize}
 
 \subsection{Use of ``Wasted Mana''}
-While our initial heuristic was that a good manabase should allow the most mana to be spent, there are problems with simply assessing a deck based on total expenditure. In his analyses, referenced in \secref{sec:relevancetoexistingscholarship}, Karsten proposed three underlying assumptions~\cite{KarstenCurve} for assessing the castability of a spell of mana cost \(M\): 
+While our initial heuristic was that a good manabase should allow the most mana to be spent, there are problems with simply assessing a deck based on total expenditure. In his analyses, referenced in \secref{sec:relevancetoexistingscholarship}, Karsten proposed three underlying assumptions~\cite{KarstenSources} for assessing the castability of a spell of mana cost \(M\): 
 
 \begin{itemize}
 \item We want to cast the spell on turn \(M\).
