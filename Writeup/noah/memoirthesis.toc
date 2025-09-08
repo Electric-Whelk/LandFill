@@ -1,7 +1,7 @@
 \babel@toc {english}{}\relax 
 \par \nobreak \mbox {}\hfill {\bfseries Page}\par \nobreak 
-\contentsline {chapter}{List of Tables}{xi}{section*.5}%
-\contentsline {chapter}{List of Figures}{xiii}{section*.6}%
+\contentsline {chapter}{List of Tables}{ix}{section*.5}%
+\contentsline {chapter}{List of Figures}{xi}{section*.6}%
 \contentsline {chapter}{\chapternumberline {1}Introduction}{1}{chapter.1}%
 \contentsline {section}{\numberline {1.1}Overview}{1}{section.1.1}%
 \contentsline {section}{\numberline {1.2}Thesis Layout}{2}{section.1.2}%
@@ -33,13 +33,13 @@
 \contentsline {subsection}{\numberline {3.2.4}Deckbuilder Personas}{18}{subsection.3.2.4}%
 \contentsline {subsection}{\numberline {3.2.5}Visualization of Internal Workings}{19}{subsection.3.2.5}%
 \contentsline {subsection}{\numberline {3.2.6}Knapsack Problems and simultaneous optimization}{19}{subsection.3.2.6}%
-\contentsline {subsection}{\numberline {3.2.7}Mulligans}{20}{subsection.3.2.7}%
+\contentsline {subsection}{\numberline {3.2.7}Mulligans}{19}{subsection.3.2.7}%
 \contentsline {chapter}{\chapternumberline {4}The Database}{21}{chapter.4}%
 \contentsline {section}{\numberline {4.1}Database Requirements}{21}{section.4.1}%
 \contentsline {section}{\numberline {4.2}Choice of Online Database~---~ScryFall/Scrython}{21}{section.4.2}%
-\contentsline {section}{\numberline {4.3}Database Layout}{22}{section.4.3}%
+\contentsline {section}{\numberline {4.3}Database Layout}{21}{section.4.3}%
 \contentsline {section}{\numberline {4.4}Database Management}{22}{section.4.4}%
-\contentsline {section}{\numberline {4.5}Representing Multiple-Faced Cards}{23}{section.4.5}%
+\contentsline {section}{\numberline {4.5}Representing Multiple-Faced Cards}{22}{section.4.5}%
 \contentsline {section}{\numberline {4.6}Cycles}{23}{section.4.6}%
 \contentsline {section}{\numberline {4.7}Database Verification Testing}{23}{section.4.7}%
 \contentsline {chapter}{\chapternumberline {5}The Simulator}{25}{chapter.5}%
@@ -59,14 +59,14 @@
 \contentsline {section}{\numberline {5.6}Heuristics}{31}{section.5.6}%
 \contentsline {subsection}{\numberline {5.6.1}Multiple-Faced Cards and Alternate Casting Costs}{31}{subsection.5.6.1}%
 \contentsline {subsection}{\numberline {5.6.2}Spells with X in their Mana Cost}{31}{subsection.5.6.2}%
-\contentsline {subsection}{\numberline {5.6.3}Strategies for Future Turns}{32}{subsection.5.6.3}%
+\contentsline {subsection}{\numberline {5.6.3}Strategies for Future Turns}{31}{subsection.5.6.3}%
 \contentsline {subsection}{\numberline {5.6.4}Ramp and Draw Spells}{32}{subsection.5.6.4}%
 \contentsline {subsection}{\numberline {5.6.5}Bond Lands}{32}{subsection.5.6.5}%
 \contentsline {section}{\numberline {5.7}More Complex Lands}{32}{section.5.7}%
 \contentsline {subsection}{\numberline {5.7.1}Fetch Lands}{32}{subsection.5.7.1}%
 \contentsline {subsection}{\numberline {5.7.2}Filter Lands}{33}{subsection.5.7.2}%
-\contentsline {subsection}{\numberline {5.7.3}Dual-Faced Lands}{34}{subsection.5.7.3}%
-\contentsline {section}{\numberline {5.8}Simulator Verification Testing}{34}{section.5.8}%
+\contentsline {subsection}{\numberline {5.7.3}Dual-Faced Lands}{33}{subsection.5.7.3}%
+\contentsline {section}{\numberline {5.8}Simulator Verification Testing}{33}{section.5.8}%
 \contentsline {chapter}{\chapternumberline {6}The Optimizer}{35}{chapter.6}%
 \contentsline {section}{\numberline {6.1}Constituent Classes}{35}{section.6.1}%
 \contentsline {subsection}{\numberline {6.1.1}DeckBuilder and MonteCarlo}{35}{subsection.6.1.1}%
@@ -78,7 +78,7 @@
 \contentsline {subsection}{\numberline {6.3.1}Overview}{38}{subsection.6.3.1}%
 \contentsline {subsection}{\numberline {6.3.2}Use of ``Wasted Mana''}{38}{subsection.6.3.2}%
 \contentsline {subsection}{\numberline {6.3.3}Initial Analysis}{38}{subsection.6.3.3}%
-\contentsline {subsection}{\numberline {6.3.4}Proportion Wasted vs Cumulative Distribution}{40}{subsection.6.3.4}%
+\contentsline {subsection}{\numberline {6.3.4}Proportion Wasted vs Cumulative Distribution}{39}{subsection.6.3.4}%
 \contentsline {section}{\numberline {6.4}The Hill Climbing Algorithm}{41}{section.6.4}%
 \contentsline {subsection}{\numberline {6.4.1}Setup}{41}{subsection.6.4.1}%
 \contentsline {subsection}{\numberline {6.4.2}Each Increment}{41}{subsection.6.4.2}%
@@ -101,7 +101,7 @@
 \contentsline {subsection}{\numberline {8.2.2}Serendipity Test Analysis}{52}{subsection.8.2.2}%
 \contentsline {subsection}{\numberline {8.2.3}Semi Structured Interview Response Analysis}{52}{subsection.8.2.3}%
 \contentsline {section}{\numberline {8.3}Additional Features}{53}{section.8.3}%
-\contentsline {subsection}{\numberline {8.3.1}Persistant Preference Storage and Links with Existing Databases}{53}{subsection.8.3.1}%
+\contentsline {subsection}{\numberline {8.3.1}Persistent Preference Storage and Links with Existing Databases}{53}{subsection.8.3.1}%
 \contentsline {subsection}{\numberline {8.3.2}Flexible Runtimes and Accuracy}{53}{subsection.8.3.2}%
 \contentsline {subsection}{\numberline {8.3.3}Additional Formats and MTG: Arena Support}{54}{subsection.8.3.3}%
 \contentsline {subsection}{\numberline {8.3.4}Frontend Formatting Improvements}{54}{subsection.8.3.4}%
@@ -112,6 +112,4 @@
 \contentsline {subsection}{\numberline {9.2.2}Use of Hill Climbing Algorithm}{56}{subsection.9.2.2}%
 \contentsline {subsection}{\numberline {9.2.3}Mid-Development Validation and Verification Tests}{56}{subsection.9.2.3}%
 \contentsline {section}{\numberline {9.3}Final Thoughts}{56}{section.9.3}%
-\contentsline {appendix}{\chapternumberline {A}Code Extracts}{59}{appendix.A}%
-\contentsline {appendix}{\chapternumberline {B}Consent Forms}{65}{appendix.B}%
-\contentsline {chapter}{Bibliography}{73}{section*.38}%
+\contentsline {chapter}{Bibliography}{59}{section*.36}%

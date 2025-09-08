@@ -1,26 +1,25 @@
 \chapter{The Simulator}
 \section{The Commander Format}
 \label{sec:thecommanderformat}
-In the Commander format, deckbuilders choose a creature to be the ``commander'' of the deck. Rather than being included in the deck, the commander is placed in the ``command zone'', from which they can be repeatedly cast. Some cards are marked to allow a ``partner'', a secondary commander also placed in the command zone. Commander decks generally include cards that work synergystically with the commander in gameplay. All Commander decks have exactly 100 cards, including the commander.  
+In the Commander format, deckbuilders choose a spell to be the ``commander'' of the deck. Rather than being included in the deck, the commander is placed in the ``command zone'', from which they can be repeatedly played. Some decks allow a ``partner'', a secondary commander also placed in the command zone. Commander decks generally include cards that work synergistically with the commander in gameplay. All Commander decks have exactly 100 cards, including the commander, and permit only one copy of each card, except Basic Lands.   
 
 Analysis by the Command Zone podcast suggests that the average Commander game runs for 10 turns per player~\cite{CommanderMythBusters}. Unlike other formats, Commander is typically played with more than two players per game. Commander games offer players one ``free'' mulligan; any further mulligans require them to sacrifice a card from their hand. 
 
 \section{Classes}
 \subsection{GameCard and subclasses} 
 \label{sec:gamecards}
-During simulation, a land must exhibit the unique behaviour of its cycle. LandFill, in order to execute the method overriding required here, requires a class hierarchy beginning with a general card object, of which spells and lands are behaviourally distinct child classes. Each cycle is then a child class of land. 
+In order to execute the method overriding necessary to model distinct card behavior in the game, LandFill requires a class hierarchy beginning with a general card object, of which spells and lands are behaviourally distinct child classes. Each cycle is then a child class of land. 
 
-SQLAlchemy does support Single Table Inheritance, in which subclasses with distinct methods are stored in the ancestor class's shared table; it is also possible to temporarily store game state information via cached properties without updating the database. However, in practice, it proved simpler to create a new abstract class, GameCard, of which Spell and Land are subclasses. The initiation method of each GameCard takes a Card object as an argument, and extracts relevant data from it. This removes any risk of persisting data in between games. It also allows me to create SubLands, a descendant class of Land that, rather than deriving any of its attributes from information stored in the Database, can be assigned manually to produce any colour of mana when it is instantiated. This allows me to model objects that behave like Lands in simulation but do not represent real land cards, and assign them as properties of other Land objects, which is useful when modelling more complex lands. This will be detailed in \secref{sec:complexlands}.
+SQLAlchemy does support Single Table Inheritance, in which subclasses with distinct methods are stored in the ancestor class's shared table; it is also possible to temporarily store game state information via cached properties without updating the database. However, it proved easier to create a new abstract class, GameCard, of which Spell and Land are subclasses. The initiation method of each GameCard takes a Card object as an argument, and extracts relevant data from it. This removes any risk of persisting data in between games. It also allows me to create SubLands, a descendant class of Land that, rather than deriving any of its attributes from information stored in the Database, can be assigned any colours of mana at instantiation. This allows me to model objects that behave like Lands in simulation but do not represent real land cards, and assign them as properties of other Land objects, which is useful when modelling more complex lands. This will be detailed in \secref{sec:complexlands}.
 
 The simulation makes heavy use of two methods belonging to the Land subclass, both of which take a Game (see \secref{sec:simandsub}) as an argument:
 
 \begin{itemize}
-\item\texttt{land.live\allowbreak\_prod(game)}~---~given the current game state, returns the colours of mana a land can produce, expressed as a list of strings (i.e.,~["U", "W"] for a UW land.) 
-\item\texttt{land.enters\allowbreak\_untapped(game)}~---~returns True if the land would enter untapped given the current game state, and False if not.
-
+\item\texttt{land.live\allowbreak\_prod(game)}~---~given the current game state, returns the colours of mana a Land can produce, expressed as a list of strings (i.e.,~["U", "W"] for a UW land.) 
+\item\texttt{land.enters\allowbreak\_untapped(game)}~---~returns True if the Land would enter untapped given the current game state, and False if not.
 \end{itemize}
 
-For examples of how these are overridden to reflect mechanically distinct cycles, see Fig.~\ref{fig:vergecode} and Fig.~\ref{fig:checkcode}. When a Card is returned from the ORM, the relevant GameCard subclass for it is determined via a match statement taking its attribute \texttt{Card.cycle} as an argument. 
+For examples of how these are overridden between cycles, see Fig.~\ref{fig:vergecode} and Fig.~\ref{fig:checkcode}. When a Card is returned from the ORM, the relevant GameCard subclass for it is determined based on \texttt{Card.cycle}.
 
 A Spell object stores its mana cost as a list of objects corresponding to the differing costs of its faces. Each cost is a dict object relating a pip to a quantity. A Spell with one face that costs WUU2 would have \texttt{Spell.cost = [\{"W":1, "U":2, "B": 0, "R": 0, "G": 0, "C": 0, "Gen": 2\}]}. \texttt{GameCard.mandatory} and \texttt{GameCard.permitted} are boolean attributes denoting cards which the user has ordered be included, and cards that may be recommended by the optimizer, respectively.
 
@@ -34,7 +33,7 @@ A Spell object stores its mana cost as a list of objects corresponding to the di
 CardCollection is an abstract class representing any zone into which a GameCard can be moved such that it is never in multiple CardCollections. CardCollection subclasses are as follows:
 
 \begin{itemize}
-\item Deck.
+\item Deck~---~nonland cards and mandatory lands input by the player, and the current suggested manabase.
 \item Hand~---~a player's hand drawn at the start of each game, from which cards can be played.
 \item Battlefield~---~a zone into which cards are played from the hand during a game.
 \item Graveyard~---~a zone containing cards in a game that are no longer in play.
@@ -69,30 +68,30 @@ Consider the below game state:
   \end{bmatrix}
 \]
 
-Although any individual spell in the player’s hand is castable, including the largest spell, the current selection of lands is suboptimal, as if the player had access to three Green mana, they could cast two spells this turn. Rather than assessing the castability of spells, LandFill assesses the castability of ``lumps''. A Lump is an aggregation of Spell objects, which unlike in a CardCollection are not remved from any other lists when assigned. On a given turn, a Game will have both a Hand and a series of Lumps, which represent different permutations of cards in that hand. \texttt{Lump.cost} is formatted similarly to \texttt{Spell.cost}, and returns the combined cost of all the Spells making it up. A Lump only stores one face of a spell; the face to be included is specified at the Lump's instantiation. \texttt{Lump.cmc} returns the sum of the CMC of all its constituent cards. 
+Although any individual spell in the player’s hand is castable, including the largest spell, the current selection of lands is suboptimal. If the player had access to three Green mana, they could cast two spells this turn. Rather than assessing the playability of spells, LandFill assesses ``lumps''. A Lump is an aggregation of Spell objects, which, unlike in a CardCollection, are not removed from any other lists when assigned. On a given turn, a Game will have both a Hand and a series of Lumps, which represent different permutations of cards in that hand. \texttt{Lump.cost} and \texttt{Lump.cmc} return combined values of the constituent Spell objects.  A Lump only stores one face of a spell; the face to be included is specified at the Lump's instantiation.
 
 \section{Initiating a Game}
 At the start of each game, the deck is shuffled. The first seven cards from the Deck are moved to the Hand.
 
-As covered in \secref{sec:mulliganheuristic}, it is not practical to implement realistic mulligan behaviour. LandFill therefore mulligans at most one time (the ``Free'' mulligan) if their initial hand contains fewer than three lands. To avoid having to model the command zone, the commander and partner are added to the Hand after mulligans. 
+As covered in \secref{sec:mulliganheuristic}, it is not practical to implement realistic mulligan behaviour. LandFill therefore mulligans at most once (the ``Free'' mulligan) if their initial hand contains fewer than three lands. To avoid having to model the command zone, the commander and partner are added to the Hand after mulligans. 
 
 \section{Running a Turn}
-The below process is repeated ten times per game. Many decisions made in running an individual turn refer to the number \(L\), which is the number of lands on the battlefield at the start of the turn. The most mana accessible on any given turn, then, is \(L+1\), contingent on having a land in hand that will enter the battlefield untapped. 
+The below process is repeated ten times per game. Many decisions made in running an individual turn refer to the number \(L\) of Lands in the Battlefield at the start of the turn. The most mana accessible on any given turn, then, is \(L+1\), contingent on having a Land in the Hand that will enter the Battlefield untapped. 
 
 \subsection{Untap and Draw}
 Every Land object has a Boolean value, \texttt{Land.tapped}. At the start of every turn, all lands in the Battlefield object are set to \texttt{Land.tapped = False}. 
 
 \subsection{Determining Lumps}
-LandFill here makes use of the \texttt{combinations} function belonging to Python's \texttt{itertools} module~\cite{itertools}. This allows it to determine all possible spell combinations in the Hand. Each of these combinations are added to a Lump, to check whether they can be played with the current lands.
+LandFill here makes use of the \texttt{combinations} function belonging to Python's \texttt{itertools} module~\cite{itertools} to determine all possible spell combinations in the Hand. Each of these combinations become a Lump. 
 
-As this has to be done every turn to accommodate newly drawn cards, I immediately identified it as a potential runtime bottleneck. A non-mulliganned initial opening hand containing 2 lands and 6 spells (after the draw during the first turn) produces \(2^6-1 = 63\) combinations. While the only relevant combinations are those with combined CMC \(< L + 1\), this cannot be determined without checking individual combinations as per the Knapsack Problem (see \secref{sec:knapsack}). The simulator therefore uses the following heuristics:
+As this has to be done every turn to accommodate newly drawn cards, it is a runtime bottleneck. A non-mulliganned initial opening hand containing 2 lands and 6 spells (after the draw during the first turn) produces \(2^6-1 = 63\) combinations. While the only relevant combinations are those with combined CMC \(< L + 1\), this cannot be determined without checking individual combinations as per the Knapsack Problem (see \secref{sec:knapsack}). The simulator therefore uses the following heuristics:
 
 \begin{itemize}
 \item There is no need to search for any combinations of more than L+1 spells, as (notwithstanding spells of CMC zero, which are irrelevant for manabase optimization), there is no way to play more than this number of spells in a single turn using only lands. 
 \item Any spells of \(CMC > L+1\) are ineligible, as they would not be castable in the first place.
 \end{itemize}
 
-Code profiling, carried out throughout development via the \texttt{line\allowbreak\_profiler} library~\cite{lineprofiler}, shows that, with these heuristics in place, playing lumps takes up around 1/3rd  of the runtime of \texttt{game.run\allowbreak\_turn()}, making it an area for further improvement. Notably, it is \textit{not} viable here to resort to Lazy Evaluation, which in this context would mean ceasing generation of new combinations after a playable lump has been identified. Consider the following opening hand (\(L = 0\)):
+Code profiling, carried out throughout development via the \texttt{line\allowbreak\_profiler} library~\cite{lineprofiler}, shows that, with these heuristics, playing Lumps takes up around 1/3rd  of the runtime of \texttt{game.run\allowbreak\_turn()}, making it an area for further improvement. It is \textit{not} viable here to resort to lazy evaluation, which in this context would mean ceasing generation of new combinations after a playable Lump has been identified \cite{cornelllazy}. Consider the following opening hand (\(L = 0\)):
 
 \[
 \text{Hand} =
@@ -101,10 +100,10 @@ Code profiling, carried out throughout development via the \texttt{line\allowbre
   \end{bmatrix}
 \]
 
-Were Lumps to be generated and tested lazily, the Simulator would identify the spell costing U as playable, and play the Basic Island as the land for the turn. This would be a suboptimal play, however, as playing the Basic Forest would allow the same mana expenditure while also allowing the playing of a spell on turn 2 (if the Swamp were then played). 
+Were Lumps to be generated and tested lazily, the Simulator would identify the spell costing U as playable, and play the Basic Island as the land for the turn. This would be a suboptimal play, however, as playing the Basic Forest would allow the same mana expenditure while also allowing the playing of a spell on turn 2 (if the Basic Swamp were then played). 
 
 \subsection{Playing a Land and a Lump}
-If the Hand object contains no Lands, the playability of each Lump is determined, and largest playable Lump is ``played''~---~its constituent Spell objects are moved to the Battlefield. Determining the playability of a Lump is a complex process outlined in \secref{sec:lumpplayability}.
+If the Hand object contains no Lands, the playability of each Lump is checked, and largest playable Lump is ``played''~---~its constituent Spell objects are moved to the Battlefield. Determining the playability of a Lump is outlined in \secref{sec:lumpplayability}.
 
 If the Hand contains at least one Land, the Lumps are ranked by the value of \texttt{Lump.cmc}, in descending order. The Simulator then sequentially plays each Land, determines the first (largest) lump that can be played when it is on the Battlefield, assigns it to the Land as a temporary variable, and then returns it to the Hand. The list of land objects (\texttt{lands}) is then progressively refined by the below functions:
 
@@ -119,18 +118,18 @@ If the Hand contains at least one Land, the Lumps are ranked by the value of \te
 
 Where:
 \begin{itemize}
-\item\texttt{filter\allowbreak\_by\allowbreak\_largest()} returns a list of lands capable of playing a Lump of CMC \(M\), where \(M\) is the highest CMC of any Lump.
-\item\texttt{filter\allowbreak\_by\allowbreak\_taplands()} returns its input if none of the inputted lands would enter tapped this turn, and otherwise returns the ones that will. Placing this after \texttt{filter\allowbreak\_by\allowbreak\_largest()} ensures that the deck aims to play lands that enter tapped on a turn when that makes no difference to the amount of mana cast, thus preventing them from interfering at more meaningful moments later on.
-\item\texttt{filter\allowbreak\_by\allowbreak\_most\allowbreak\_produced()} assesses the non-generic combined pips of every spell in the hand, and returns the land or lands which remove the largest number of these pips which are not already produced by a land on the battlefield. For example, if a hand’s spells have the combined pips R B U G G, and the battlefield contains a single Basic Swamp, then Ketria Triome (producing RUG) would have a score of 1, while Zagoth Triome (producing BUG) would have a score of 2. Lands with the lowest score are returned, and out of these lands, lands which produce the greatest variety of mana are prioritized (i.e.,~for a hand requiring G and U, a BUG land would be prioritized over a GU land)
+\item\texttt{filter\allowbreak\_by\allowbreak\_largest()} returns a list of lands capable of playing a Lump of CMC \(M\), where \(M\) is the highest CMC of any playable Lump.
+\item\texttt{filter\allowbreak\_by\allowbreak\_taplands()} returns its own input if none of the inputted lands would enter tapped this turn, and otherwise returns the ones that will. Placing this after \texttt{filter\allowbreak\_by\allowbreak\_largest()} forces the Simulator to play lands that enter tapped on a turn when that makes no difference to the amount of mana cast, thus preventing them from interfering at more meaningful moments later on.
+\item\texttt{filter\allowbreak\_by\allowbreak\_most\allowbreak\_produced()} assesses the non-generic combined pips of every Spell in the Hand, and returns the Land(s) that leave the lowest number of these pips unproduceable by Lands on the battlefield. For example, if a hand’s spells have the combined pips R B U G G, and the battlefield contains a single Basic Swamp, a land producing RUG would score 1, while a land producing BUG would score 2. Lands with the lowest score are returned, and out of these lands, lands which produce the greatest variety of mana are prioritized (i.e.,~for a hand requiring G and U, a BUG land would be prioritized over a GU land)
 \end{itemize}
 
-A land is played from the returned lands at random, and a lump is played with a CMC as close to \(L + 1\) as possible. When the Lump is played, each land used in its casting is set to to \texttt{land.tapped = True}. If relevant, as in the case of Fetch Lands (see \secref{sec:fetchlands}), the Land is informed what color of mana it will be producing, as per the mapping returned by the Linear Assignment Function outlined in the following section. 
+The first returned Land is played, followed by a Lump with a CMC as close to \(L + 1\) as possible. When the Lump is played, each land used in its casting is set to \texttt{land.tapped = True}. If relevant, as in the case of Fetch Lands (see \secref{sec:fetchlands}), the Land is informed what color of mana it will be producing, as per the mapping returned by the Linear Assignment Function outlined in the following section. 
 
 \subsection{Assessing Lump Playability}
 \label{sec:lumpplayability}
-The question of whether a given Lump can be played with a given set of lands is non-trivial. This is partly to do with the inbuilt complexity of some lands; complex designs such as Filter Lands, Check Lands and Dual-Faced Lands are discussed in \secref{sec:complexlands}. However, the very fact that some lands produce many colors of mana while others produce few or one means that a mapping between land and pip must be established such that multicolor lands are not ``wasted'' on pips whch are already well served by lands offering fewer colours. I tried this in several ways during development.
+The question of whether a given Lump can be played with a given set of lands is non-trivial. Since some lands produce many colors of mana while others produce few or one means that a mapping between land and pip must be established such that multicolor lands are not ``wasted'' on pips whch are already well served by lands offering fewer colours. I tried this in several ways during development.
 
-My initial approaches involved generating a list of all combinations of mana that the Lands in the Battlefield object could produce. If an entry on this list included all pips in \texttt{Lump.cost}, then that Lump is playable. The runtime bottleneck that this produces should be quickly obvious, especially as there are no comparable heuristics to those used when determining Lumps. Consider the below battlefield:
+My initial approaches involved generating a list of all combinations of mana that the Lands in the Battlefield object could produce. If an entry on this list included all pips in \texttt{Lump.cost}, then that Lump is playable. The runtime bottleneck here should be quickly obvious, especially as there are no comparable heuristics to those used when determining Lumps. Consider the below battlefield:
 \[
 \text{Battlefield} =
 \begin{bmatrix}
@@ -142,13 +141,11 @@ My initial approaches involved generating a list of all combinations of mana tha
 
 In this case, there are \(3 \times 3 \times 2 \times 2 \times 2 \times 2 \times 2 \times 1 \times 1 = 288\) combinations, which must be re-calculated on every played land. While lazy evaluation is an option here, it does not save much time, as any half-completed lazy calculations must be needlessly re-commenced if another lump is played before a new land is played. 
 
- To save recalculating combinations each turn, my initial solution was to store the list of combinations as an attribute of the Battlefield. Whenever a new Land, capable of producing \(N\) different colours was played, its first colour would be added to all existing combinations. The Battlefield would then generate \(N-1\) shallow copies of each combination, adding a different colour produced by the new Land to each. Even without new combination generation, however, simply iterating through the existing combinations to update them proved far too slow. 
- 
- A more promising solution was to establish a function capable of generating all combinations of colored mana from a an input set of lands, and memoize the output of this function. In memoization, the output of a function from a given set of arguments is stored in a cache, and a new output is calculated only if those arguments are not already cached~\cite{whatismemoization}. In Python, this cache can be persisted across sessions via the Pickle library~\cite{pickle}. Because any two untapped lands that produce (for example) UB are functionally identical in this context, the number of combinations to memoize appears small, as each land can be canonicalized only as the colours it produces. Moreover, basic lands do not need to be canonicalized, and simply reattached to each permutation afterwards.
+ To save recalculating combinations each turn, I tried storing the list of combinations as an attribute of the Battlefield. Whenever a new Land, capable of producing \(N\) different colours was played, its first colour would be added to all existing combinations. The Battlefield would then generate \(N-1\) shallow copies of each combination, adding a different colour produced by the new Land to each. However, simply iterating through the existing combinations to update them proved far too slow. 
 
-This functioned acceptably for a 3-colour deck. Memoization via Pickle produced a .pkl file of around 1000 megabytes. However, when I trialled a 5-color deck, this expanded by a factor of five (and may have continued to expand). The cache in memory, meanwhile, became so lengthy that a single cache miss took multiple seconds, and even a comparatively small number of cache misses increased the runtime, at this stage in development, from running 1000 games in about five seconds to running that same number over forty minutes. 
+ Memoizing the colour combinations for a set of lands - i.e.,~caching the possible combinations of a given set of lands once determined~\cite{whatismemoization} - was initially more promising. In Python, this cache can be persisted across sessions via the Pickle library~\cite{pickle}. Because any two untapped lands that produce (for example) UB are functionally identical in this context, the number of combinations to memoize appears small, as each land can be canonicalized only as the colours it produces. Basic Lands need not be canonicalized at all, only reattached to each permutation afterwards. While this functioned acceptably for a 3-colour deck, trialling a 5-colour deck expanded the size of the .pkl file by a factor of five, and even a few cache misses increased runtime from around five seconds per thousand games to almost forty minutes.
 
-Ultimately, I settled on modelling the question as a Linear Assignment Problem using SciPy’s \texttt{linear\allowbreak\_assignment()} function~\cite{scipy}. Koopmans and Beckman~\cite{koopmans1957assignment} set out the Linear Assignment problem in the following layman's terms: paraphrasing, if a set of factories are to be built on a set of plots of land, and the suitabilities of a given plot to a factory's production processes means that each factory will return a specific profit at a specific plot, how can plots be assigned to factories to maximize the overall profit? In this context, it is helpful to invert the example. If a factory incurs a specific \textit{cost} at a specific plot, how can plots be assigned to minimize costs?
+Ultimately, I modelled the question as a Linear Assignment Problem using SciPy’s \texttt{linear\allowbreak\_assignment()} function~\cite{scipy}. Koopmans and Beckman~\cite{koopmans1957assignment} set out the Linear Assignment problem as follows: paraphrasing, if a set of factories are to be built on a set of plots of land, and each factory will return a specific profit at a specific plot, how can plots be assigned to factories to maximize the overall profit? In this context, it is helpful to invert the example. If a factory incurs a specific \textit{cost} at a specific plot, how can plots be assigned to minimize costs?
 
 Plots of land are here equivalent to Land objects, while the factories are equivalent to the pips of a Lump's cost. \texttt{Lump.cost} is here reformatted into a list of strings corresponding to the number of each pip (treating the ``Gen'' key in \texttt{Lump.cost} as a pip). The list is then given any number of strings that read ``None'', to ensure that the length of the list is equal to \(L\) (ensuring, with reference to the above example, that the Linear Assignment solution holds even if there are fewer factories than plots). Any lump with a total CMC greater than \(L\) is removed from consideration. ``Costs'' are then set for each Land, using \texttt{Land.live\allowbreak\_prod}, like so:
 
@@ -178,16 +175,16 @@ When a game is concluded, all GameCards owned by the Hand, Battlefield and Grave
 
 \section{Heuristics}
 \label{sec:simulationheuristics}
-For the initial development covered in this writeup, the below heuristics have been adopted; all offer an opportunity for future improvement of the product.
+For initial development I adopted the below heuristics. All offer an opportunity for future improvement of the product.
 
 \subsection{Multiple-Faced Cards and Alternate Casting Costs}
-Spells are only cast via the mana cost of their first playable face, and not via any alternate mana costs. As mentioned, many spells are in fact two spells, either of which may be played; many more cards have alternate casting costs listed in their textboxes, where casting them for a different cost changes the behaviour of the card on cast. Ideally, LandFill would treat these both as seperate spells when assinging combinations in the hand, and denote a card as cast if either of its options are played. However, in addition to the difficulty of parsing the textboxes of cards with multiple costs, representing some cards in the hand as two cards which cannot both be played in the same Lump adds an extra layer of complexity to Lump creation, and has not been implemented at this stage.
+Spells are only cast via the mana cost of their first playable face, and not via any alternate mana costs, which some spells have (typically leading to different behaviour on cast). Ideally, LandFill would treat these both as separate spells when assigning combinations in the hand, and denote a card as cast if either of its options are played. However, in addition to the difficulty of parsing the textboxes of cards with multiple costs, representing some cards in the hand as two cards which cannot both be played in the same Lump adds an extra layer of complexity to Lump creation, and has not been implemented at this stage.
 
 \subsection{Spells with X in their Mana Cost}
-A spell with mana cost GX may be cast for one Green mana plus any amount of generic mana, usually acruing more value to the player for a higher value of X. This is complicated to include in Lump combinations; moreso in the case of cards with multiple values of X (a card costing XX being includable in any Lump that leaves an even quantity of leftover mana). Therefore, X is always assumed to be 1 generic mana. 
+A spell with mana cost GX may be cast for one Green mana plus any amount of generic mana, usually accruing more value to the player for a higher value of X. This is complicated to include in Lump combinations; more so in the case of cards with multiple values of X (a card costing XX being includable in any Lump that leaves an even quantity of leftover mana). Therefore, X is always assumed to be 1 generic mana. 
 
 \subsection{Strategies for Future Turns}
-The ordering of \texttt{filter\allowbreak\_by\allowbreak\_largest()}, \texttt{filter\allowbreak\_by\allowbreak\_taplands()} and \texttt{filter\allowbreak\_by\allowbreak\_most\allowbreak\_produced()} encourages the Simulator to play a land that enters tapped on a turn when this does not affect mana expenditure. This allow for some forethought, relevant to situations such as the sample comparison between the Battle and Slow lands in \secref{sec:balancinglands}. However, there are some more niche situations in which this order of priorities does not apply. Consider the below hand with \(L=0\):
+The ordering of \texttt{filter\allowbreak\_by\allowbreak\_largest()}, \texttt{filter\allowbreak\_by\allowbreak\_taplands()} and \texttt{filter\allowbreak\_by\allowbreak\_most\allowbreak\_produced()} encourages the Simulator to play a land that enters tapped on a turn when this does not affect mana expenditure, as per the strategic planning requirements set out in \secref{sec:simulationoverview}. However, this fails to account for some circumstances. Consider the below hand where \(L=0\):
 
 \[
 \text{Hand} =
@@ -196,10 +193,10 @@ The ordering of \texttt{filter\allowbreak\_by\allowbreak\_largest()}, \texttt{fi
   \end{bmatrix}
 \]
 
-Since the BW land removes more colours of mana from the hand, it would be played by the simulator. However, the spell requiring BW had a CMC of 8 and will not be played for some time; playing the Basic Island, however, would allow playing the UU spell on the following turn. Since it is necessary for the Simulator to assess the castability of Lumps rather than Spells, planning for future turns is difficult, and indeed situations like this may only be coverable via the progressive addition of heuristics. A future refactor may replace the hand object with a ``queue'' of spell combinations of progressively higher mana costs, adding each newly drawn card to this queue. 
+Since the BW land removes more colours of mana from the hand, it would be played by the Simulator. However, the Spell requiring BW had a CMC of 8 and will not be played for some time; playing the Basic Island, however, would allow playing the UU spell on the following turn. A future refactor may replace the Hand object with a ``queue'' of spell combinations of progressively higher mana costs, enqueueing each newly drawn card.
 
 \subsection{Ramp and Draw Spells}
-Many spells draw additional cards, while some provide additional mana. Doing so would potentially be a very fruitful area of development. However, in addition to the difficulties of coding ramp and draw spells, introduction of these factors bring complex strategic considerations~---~it may, for example, be advisable in some situations to spend less than \(L+1\) mana on a ramp spell to allow for greater overall expenditure later.
+Many spells draw additional cards, while some provide additional mana. Modelling these would be a fruitful area of development. However, in addition to the difficulties of coding ramp and draw spells, introduction of these factors bring complex strategic considerations~---~it may, for example, be advisable in some situations to spend less than \(L+1\) mana on a ramp spell to allow for greater overall expenditure later.
 
 \subsection{Bond Lands}
 Bond Lands are a cycle of dual lands without basic landtypes. They enter tapped unless a player has two or more opponents, making them extremely strong in Commander. Bond Lands, in the Simulator, always enter untapped. 
@@ -210,16 +207,16 @@ Some land cycles required significantly more complex simulation logic, outlined 
 
 \subsection{Fetch Lands}
 \label{sec:fetchlands}
-During assessment of Lump playability, a Fetch Land (instantiated as a FetchLand object) is considered to produce mana of colour \(M\) mana if:
+During assessment of Lump playability, a Fetch Land (instantiated as a FetchLand object) is considered to produce mana of colour \(M\) if:
 
 \begin{itemize}
 \item The deck currently contains a land for which it can search that can produce \(M\).
 \item That land would return \texttt{land.enters\allowbreak\_untapped(game) = True} for the current game state.
 \end{itemize}
 
-The search itself happens when the FetchLand is tapped for mana. The FetchLand calls the \texttt{game.filter\allowbreak\_by\allowbreak\_most\allowbreak\_produced()} method from the current Game object to narrow down the lands it is capable of fetching, adding an extra argument to specify that it the method must also account for pips in the Hand currently unaccounted for by Lands in the \textit{Hand}, rather than just on the Battlefield. This encourages the FetchLand to make new colours of mana available. After this, the FetchLand is moved to the Graveyard. If tapped for ``None'' mana, a FetchLand will search for a land that will enter tapped, if one is available in the deck.
+The search itself happens when the FetchLand is tapped for mana. The FetchLand calls the \texttt{game.filter\allowbreak\_by\allowbreak\_most\allowbreak\_produced()} method from the current Game object to narrow down the lands it is capable of fetching, adding an extra argument to specify that it the method must also account for pips in the Hand currently unaccounted for by Lands in the \textit{Hand}, rather than just on the Battlefield. This encourages the FetchLand to make new colours of mana available. After this, the FetchLand is moved to the Graveyard. If tapped for ``None'' mana, a FetchLand will search for a Land that will enter tapped if available. 
 
-While production of W, U, B, R, or G by a FetchLand has the standard cost of 2 during Linear Assignment, production of ``Gen'' is weighted at cost 1, and ``None'' has cost 0. This means that \texttt{SciPy.linear\allowbreak\_assignment()} uses the FetchLand to pay for a ``Gen'' or ``None'' pip if possible. This prevents the FetchLand from being forced to search for a colour it does not need to in order to pay a generic cost, and allows it to, as much as possible, find the best land for the current hand rather than just for the spell.
+While production of W, U, B, R, or G by a FetchLand has the standard cost of 2 during Linear Assignment, production of ``Gen'' is weighted at cost 1, and ``None'' has cost 0. This means that \texttt{SciPy.linear\allowbreak\_assignment()} uses the FetchLand to pay for a ``Gen'' or ``None'' pip if possible. The FetchLand, thus, is made to find the best land for the current Hand unless the Lump requires a specific colour. 
 
 To ensure that any FetchLands search for Lands even on a turn when no Lump is played~---~allowing them to remove from the deck Lands that will enter tapped, as per the scenario in \secref{sec:balancinglands}~---~an additional ``Null Lump'', containing no Spells, is created each turn, forcing the Fetch Land to always provide at least one ``None''. 
 
@@ -228,20 +225,18 @@ A Filter Land (instantiated as a FilterLand) produces C and has two SubLands (se
 
 \begin{enumerate}
 \item If a Lump is castable on a battlefield containing FilterLands while tapping those FilterLands for C, it is cast as normal.
-\item If not, FilterLands are placed into a new list, $\underline{L}_f$. A permutation of this list is lazily generated via \texttt{itertools.permutations()}, from first Filter Land \(F(1)\) to \(n\)'th Filter Land \(F(n)\). 
-\item A new list, $\underline{L}_nf$, containing all non-Filter Lands is generated, including the subset of lands capable of paying \(F(1)\)'s cost, \(P(1) ... P(n)\). \(P(1)\) is removed from $\underline{L}_nf$, and the SubLands of \(F(1)\) are added in its place. 
-\item Repeat steps 2 and 3, starting with $\underline{L}_nf$ each time, until all FilterLands have been either replaced with their SubLands, or tap for colourless if there is no land capable of paying for them, with \(F(n)\) being the final one so replaced.
-\item If the Lump is castable with the resulting list of lands and sublands, cast it. 
-\item If it is not, return the land \(P(1)\) that had been removed at the recursion depth when the sublands of \(F(n)\) had been added, and remove \(P(2)\). Assess the castability of the Lump again, casting it if possible.
-\item If no lands \(P(1)\)-\(P(n)\) in the list at the recursion depth of \(F(n)\) allow for the lump to be played, return to step six for the list at the recursion depth of \(F(n-1)\). 
-\item If the recursion depth of \(F(1)\) is reached, return to step 2 generate a new permutation with new values of \(F(1)\) and \(F(n)\)
-\item If all permutations of $\underline{L}_f$ have been tried, the Lump is not castable.
+\item If not, FilterLands are placed into a new list, $\underline{L}_f$. \texttt{itertools.permutations()} lazily evaluates a permutation of this list from first Filter Land \(F(1)\) to \(n\)'th Filter Land \(F(n)\). 
+\item Generate a new list, $\underline{L}_1l$, containing all non-Filter Lands, including the subset of Lands capable of paying \(F(1)\)'s cost, \(P(1) ... P(n)\). \(P(1)\) is removed from $\underline{L}_1l$, and the SubLands of \(F(1)\) are added in its place. 
+\item Repeat step 2 for \(F(2)\), this time starting with $\underline{L}_1l$ to create $\underline{L}_2l$. Repeat until the SubLands of \(F(n)\) are included in $\underline{L}_nl$. If any list contains no Lands which can pay for the selected FilterLand, include it as a colourless source. 
+\item If the Lump is castable with the resulting list of Lands and SubLands, cast it. 
+\item If it is not, return the Land \(P(1)\) that had been removed from $\underline{L}_nl$ and remove \(P(2)\). Assess the playability of the Lump again, casting it if possible.
+\item If no lands \(P(1)\)-\(P(n)\) in $\underline{L}_nl$ allow for the lump to be played, return to step 6 for $\underline{L}_n-1l$
+\item If $\underline{L}_1l$ is reached, return to step 2 generate a new permutation with new values of \(F(1)\) and \(F(n)\)
+\item If all permutations of $\underline{L}_f$ have been tried, the Lump is not playable.
 \end{enumerate}
 
-Although this requires testing a large number of permutations if a Lump is not castable, the rarity of having a large number of FilterLands simultaneously in play means that this does not incur a noticable runtime penalty.  
-
 \subsection{Dual-Faced Lands}
-A Dual-Faced Land has two faces, each of which are playable, and each of which tap for exactly one colour of mana. All Dual-Faced Lands enter the battlefield untapped. The DualFacedLand objects is assigned two SubLands, each capable of producing one of its colours, and an attribute, \texttt{DualFacedLand.committed}, initialized to \texttt{None}. When tapped for ``Gen'' or ``None'', if \texttt{DualFacedLand.committed = None}, one of the DualFacedLand's SubLands is selected via \texttt{Game.filter\allowbreak\_by\allowbreak\_most\allowbreak\_produced()} in a similar manner to FetchLands. \texttt{DualFacedLand.committed} is set to that SubLand. When tapped for coloured mana, \texttt{DualFacedLand.committed} is set to the SubLand capable of producing that colour. If \texttt{land.committed != None}, the land is tapped as though it itself were the SubLand returned by that attribute. The Battlefield object sets \texttt{DualFacedLand.committed} to \texttt{None} when it returns it to another zone. Like FetchLands, a DualFacedLand has a lower weighting to force \texttt{SciPy.linear\allowbreak\_assignment()} to map it to ``Gen'' or ``None'' mana if possible when a Lump is played.
+A Dual-Faced Land has two faces, each of which are playable, and each of which tap for exactly one colour of mana. All Dual-Faced Lands enter the battlefield untapped. The DualFacedLand object is assigned two SubLands, each capable of producing one of its colours, and an attribute, \texttt{DualFacedLand.committed}, initialized to \texttt{None}. When tapped for ``Gen'' or ``None'', if \texttt{DualFacedLand.committed = None}, one of the DualFacedLand's SubLands is selected via \texttt{Game.filter\allowbreak\_by\allowbreak\_most\allowbreak\_produced()}, as with FetchLands. \texttt{DualFacedLand.committed} is set to that SubLand. When tapped for coloured mana, \texttt{DualFacedLand.committed} is set to the SubLand capable of producing that colour. If \texttt{land.committed != None}, the land is tapped as though it itself were the SubLand returned by that attribute. The Battlefield object sets \texttt{DualFacedLand.committed} to \texttt{None} when it returns it to another zone. Like FetchLands, an uncommitted DualFacedLand has a lower weighting to force \texttt{SciPy.linear\allowbreak\_assignment()} to map it to ``Gen'' or ``None'' mana if possible when a Lump is played.
 
 \section{Simulator Verification Testing}
 Testing of the Simulator was done via optional \texttt{samplehand = []} and \texttt{sampletopdeck = []} arguments passed to \texttt{Game.run()}. Both are arrays of card names as strings, which, if included, are extracted from the Deck and placed either in the Hand or at the front of the Deck object after it is shuffled. This allowed me to watch the Simulator play sample hands and ensure behaviour was as expected.

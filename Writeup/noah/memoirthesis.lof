@@ -6,7 +6,7 @@
 \contentsline {figure}{\numberline {2.2}{\ignorespaces UW and RG lands of different cycles. Left to right: ``Battle'', ``Shock'', ``Check'', ``Fetch'', ``Filter'' and ``Slow'' Lands. Notice the ``hybrid'' mana cost of the filter land's second ability, meaning that requires a mana of either of its colours to activate, and the diamond marker in the output of its first ability, meaning that said ability only produces colourless mana}}{5}{figure.caption.8}%
 \contentsline {figure}{\numberline {2.3}{\ignorespaces Frank Karsten's recommendations for how many lands a deck should include capable of producing colour C; he recommends adopting the highest Y-axis score corresponding to a card whose mana cost appears in your deck~\blx@tocontentsinit {0}\cite {KarstenSources}}}{10}{figure.caption.9}%
 \contentsline {figure}{\numberline {2.4}{\ignorespaces A screenshot of a deck under partial construction in Arena, with the decklist on the right-hand side column. Basic Plains and Basic Islands are automatically added as white and blue spells are.}}{11}{figure.caption.10}%
-\contentsline {figure}{\numberline {2.5}{\ignorespaces A zoomed-out screenshot of an excerpt from the ManaGathering page for a WUB deck. Note the WU, UB and BW lands arranged by cycle.}}{11}{figure.caption.11}%
+\contentsline {figure}{\numberline {2.5}{\ignorespaces A screenshot of an excerpt from the ManaGathering page for a WUB deck. Note the WU, UB and BW lands arranged by cycle.}}{11}{figure.caption.11}%
 \contentsline {figure}{\numberline {2.6}{\ignorespaces A screenshot of community created land packages on Archidekt, categorized by, among other things, price and color. These can be imported into a decklist.}}{12}{figure.caption.12}%
 \contentsline {figure}{\numberline {2.7}{\ignorespaces Class diagram of major classes in LandFill.}}{13}{figure.caption.13}%
 \addvspace {10pt}
@@ -33,6 +33,4 @@
 \contentsline {figure}{\numberline {7.4}{\ignorespaces Output Page.}}{48}{figure.caption.33}%
 \addvspace {10pt}
 \contentsline {figure}{\numberline {8.1}{\ignorespaces Scores and timings from the two TLX analyses, and the differences between these values.}}{51}{figure.caption.34}%
-\addvspace {10pt}
-\addvspace {10pt}
 \addvspace {10pt}

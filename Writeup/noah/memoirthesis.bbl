@@ -456,8 +456,8 @@
       \strng{authorbibnamehash}{aaf53cda6064ad311c27f5c6b6791b90}
       \strng{authornamehash}{071c88a38b7db87cd3695dedea231f86}
       \strng{authorfullhash}{aaf53cda6064ad311c27f5c6b6791b90}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{booktitle}{The International FLAIRS Conference Proceedings}
@@ -543,8 +543,8 @@
       \strng{authornamehash}{3ee38648b05bd921c676eda1fd479916}
       \strng{authorfullhash}{3ee38648b05bd921c676eda1fd479916}
       \field{extraname}{3}
-      \field{sortinit}{2}
-      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{Should You Play Tapped Duals in 2-Color Limited Decks?}
@@ -721,8 +721,8 @@
       \endverb
     \endentry
     \entry{fastapi}{online}{}
-      \field{sortinit}{3}
-      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
       \field{labeltitlesource}{title}
       \field{title}{FastAPI}
       \field{urlday}{3}
@@ -878,6 +878,37 @@
       \field{pages}{55\bibrangedash 57}
       \range{pages}{3}
     \endentry
+    \entry{KanoQuestionnaire}{online}{}
+      \name{author}{1}{}{%
+        {{hash=b8a5f8866746e165977dcca8bf45dedc}{%
+           family={Borkowicz},
+           familyi={B\bibinitperiod},
+           given={Piotr},
+           giveni={P\bibinitperiod}}}%
+      }
+      \strng{namehash}{b8a5f8866746e165977dcca8bf45dedc}
+      \strng{fullhash}{b8a5f8866746e165977dcca8bf45dedc}
+      \strng{bibnamehash}{b8a5f8866746e165977dcca8bf45dedc}
+      \strng{authorbibnamehash}{b8a5f8866746e165977dcca8bf45dedc}
+      \strng{authornamehash}{b8a5f8866746e165977dcca8bf45dedc}
+      \strng{authorfullhash}{b8a5f8866746e165977dcca8bf45dedc}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Kano Model Analysis: Step-by-Step Guide & Survey Template}
+      \field{urlday}{13}
+      \field{urlmonth}{8}
+      \field{urlyear}{2025}
+      \field{year}{2024}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://survalyzer.com/kano-model-analysis/
+      \endverb
+      \verb{url}
+      \verb https://survalyzer.com/kano-model-analysis/
+      \endverb
+    \endentry
     \entry{braun2006using}{article}{}
       \name{author}{2}{}{%
         {{hash=ea90dfebef3293c5af2151719ce2385e}{%
@@ -934,8 +965,8 @@
       \strng{authorbibnamehash}{66ac28f2cc959050b6bd97bfdf6abe39}
       \strng{authornamehash}{66ac28f2cc959050b6bd97bfdf6abe39}
       \strng{authorfullhash}{66ac28f2cc959050b6bd97bfdf6abe39}
-      \field{sortinit}{4}
-      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{Knapsack problems: algorithms and computer implementations}
@@ -955,8 +986,8 @@
       \strng{authorbibnamehash}{7fb80df1fe31d0f6a65bdc8d07f42816}
       \strng{authornamehash}{7fb80df1fe31d0f6a65bdc8d07f42816}
       \strng{authorfullhash}{7fb80df1fe31d0f6a65bdc8d07f42816}
-      \field{sortinit}{4}
-      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{An Introduction To MTGJSON}
@@ -973,8 +1004,8 @@
       \endverb
     \endentry
     \entry{scryfall}{online}{}
-      \field{sortinit}{4}
-      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
       \field{labeltitlesource}{title}
       \field{title}{Scryfall}
       \field{urlday}{3}
@@ -1130,8 +1161,8 @@
       \endverb
     \endentry
     \entry{lineprofiler}{online}{}
-      \field{sortinit}{5}
-      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
       \field{labeltitlesource}{title}
       \field{title}{line-profiler 5.0.0}
       \field{urlday}{3}
@@ -1143,6 +1174,22 @@
       \endverb
       \verb{url}
       \verb https://pypi.org/project/line-profiler/
+      \endverb
+    \endentry
+    \entry{cornelllazy}{online}{}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labeltitlesource}{title}
+      \field{title}{Lazy Evaluation}
+      \field{urlday}{8}
+      \field{urlmonth}{9}
+      \field{urlyear}{2025}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://cvw.cac.cornell.edu/python-performance/faster-python/lazy-evaluation
+      \endverb
+      \verb{url}
+      \verb https://cvw.cac.cornell.edu/python-performance/faster-python/lazy-evaluation
       \endverb
     \endentry
     \entry{whatismemoization}{online}{}
@@ -1159,8 +1206,8 @@
       \strng{authorbibnamehash}{13bfb238d3a86a5fbca16555498b3294}
       \strng{authornamehash}{13bfb238d3a86a5fbca16555498b3294}
       \strng{authorfullhash}{13bfb238d3a86a5fbca16555498b3294}
-      \field{sortinit}{5}
-      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{What is Memoization? How and When to Memoize in JavaScript and React}
@@ -1177,8 +1224,8 @@
       \endverb
     \endentry
     \entry{pickle}{online}{}
-      \field{sortinit}{5}
-      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
       \field{labeltitlesource}{title}
       \field{title}{pickle - Python object serialization}
       \field{urlday}{3}
@@ -1294,8 +1341,8 @@
       \strng{authorbibnamehash}{0aa71a70f375e45213737b0ebd67bb59}
       \strng{authornamehash}{0aa71a70f375e45213737b0ebd67bb59}
       \strng{authorfullhash}{0aa71a70f375e45213737b0ebd67bb59}
-      \field{sortinit}{6}
-      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{Human factors}
@@ -1320,8 +1367,8 @@
       \strng{authorbibnamehash}{e89340638caa6b434959b4f4d60f5831}
       \strng{authornamehash}{e89340638caa6b434959b4f4d60f5831}
       \strng{authorfullhash}{e89340638caa6b434959b4f4d60f5831}
-      \field{sortinit}{6}
-      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{arXiv preprint arXiv:2110.09619}
@@ -1350,8 +1397,8 @@
       \strng{authorbibnamehash}{b8b7749e61069296a0e7b8e683447b79}
       \strng{authornamehash}{b8b7749e61069296a0e7b8e683447b79}
       \strng{authorfullhash}{b8b7749e61069296a0e7b8e683447b79}
-      \field{sortinit}{6}
-      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{Signal Processing}
@@ -1362,8 +1409,8 @@
       \range{pages}{9}
     \endentry
     \entry{reactbeautifuldnd}{online}{}
-      \field{sortinit}{6}
-      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
       \field{labeltitlesource}{title}
       \field{title}{react-beautiful-dnd}
       \field{urlday}{3}
@@ -1521,8 +1568,8 @@
       \endverb
     \endentry
     \entry{joblib}{online}{}
-      \field{sortinit}{7}
-      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{sortinit}{8}
+      \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
       \field{labeltitlesource}{title}
       \field{title}{Joblib: running Python functions as pipeline jobs}
       \field{urlday}{3}
@@ -1558,8 +1605,8 @@
       \strng{authorbibnamehash}{66f641adb827476e0d93d546d0bc81d0}
       \strng{authornamehash}{66f641adb827476e0d93d546d0bc81d0}
       \strng{authorfullhash}{66f641adb827476e0d93d546d0bc81d0}
-      \field{sortinit}{7}
-      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{sortinit}{8}
+      \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{Deckbuilding in magic: The gathering using a genetic algorithm}
