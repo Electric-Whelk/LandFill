@@ -10,7 +10,7 @@ At each increment of the Hill Climbing Algorithm, when a land is removed from th
 \begin{itemize}
 \item As will be discussed in \secref{sec:steepestascentoutline}, it is not always possible to determine a conclusive performance diference between two decks with very similar card lists. Insofar as some lands can be decisively considered to be better than others, it is worth utilizing this information as a backstop against fluke results. 
 \item As noted in \secref{sec:knapsack}, some lands are balanced via a life point penalty. This does not, however, impact their performance within the Simulator in any way. A land, therefore, should not be tested against a land which is only worse than it because of a life point penalty. 
-\item Since LandFill uses a Hill Climbing algorithm, the performance \(P\) of the deck must be repeatedly determined at each increment. The number of seperate \(P\) scores to be taken at each increment increases with the number of lands that could be added to the deck. This is time consuming. 
+\item Since LandFill uses a Hill Climbing algorithm, the performance \(P\) of the deck must be repeatedly determined at each increment. The number of separate \(P\) scores to be taken at each increment increases with the number of lands that could be added to the deck. This is time consuming. 
 \end{itemize}
 
 DeckBuilder is therefore given a LandPrioritization object, which maps out strict superiority/inferiority relationships. Land \(A\) is considered strictly better than land \(B\) if it is capable of producing all colours that \(B\) does and meets at least one of the below criteria, as long as \(B\) does not meet any of the same criteria \textit{vice versa}:
@@ -24,7 +24,7 @@ DeckBuilder is therefore given a LandPrioritization object, which maps out stric
 \item Always produces its colours, while \(B\) only produces some of them under certain conditions.
 \end{itemize}
 
-Strict betterness is mapped in Fig.~\ref{fig:strictbetterness}. While most of these nodes represent distinct cycles, some represent mechancially identical categories, i.e.,~Two Colour Typed Taplands refer to any cycle of taplands with two Basic Landtypes. Command Tower is also not a cycle but an individual land unique to the Commander Format that always enters untapped and produces any colour. Pain Lands produce C for free or one of two coloured mana for a single life point. Fetch Lands and Filter Lands, given their mechanical distinction from other lands, have no strict superiors or inferiors.  
+Strict betterness is mapped in Fig.~\ref{fig:strictbetterness}. While most of these nodes represent distinct cycles, some represent mechanically identical categories, i.e.,~Two Colour Typed Taplands refer to any cycle of taplands with two Basic Landtypes. Command Tower is also not a cycle but an individual land unique to the Commander Format that always enters untapped and produces any colour. Pain Lands produce C for free or one of two coloured mana for a single life point. Fetch Lands and Filter Lands, given their mechanical distinction from other lands, have no strict superiors or inferiors.  
 
  \begin{figure}
     \centering

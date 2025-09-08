@@ -229,8 +229,8 @@
       \strng{authorbibnamehash}{c6df3fb3fe23cfe76a11eb13d1beac7a}
       \strng{authornamehash}{c6df3fb3fe23cfe76a11eb13d1beac7a}
       \strng{authorfullhash}{c6df3fb3fe23cfe76a11eb13d1beac7a}
-      \field{sortinit}{9}
-      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{Journal of the American statistical association}
@@ -575,8 +575,8 @@
       \strng{authornamehash}{3ee38648b05bd921c676eda1fd479916}
       \strng{authorfullhash}{3ee38648b05bd921c676eda1fd479916}
       \field{extraname}{4}
-      \field{sortinit}{2}
-      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{Mana Bases in Ixalan Standard}
@@ -737,8 +737,8 @@
       \endverb
     \endentry
     \entry{react}{online}{}
-      \field{sortinit}{3}
-      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
       \field{labeltitlesource}{title}
       \field{title}{React: The library for web and native user interfaces}
       \field{urlday}{3}
@@ -989,8 +989,8 @@
       \endverb
     \endentry
     \entry{scrython}{online}{}
-      \field{sortinit}{4}
-      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
       \field{labeltitlesource}{title}
       \field{title}{Scrython}
       \field{urlday}{3}
@@ -1193,8 +1193,8 @@
       \endverb
     \endentry
     \entry{scipy}{online}{}
-      \field{sortinit}{5}
-      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
       \field{labeltitlesource}{title}
       \field{title}{SciPy: Fundamental algorithms for scientific computing in Python}
       \field{urlday}{3}
@@ -1399,8 +1399,8 @@
       \strng{authorbibnamehash}{c1b06a53709e08ec5a8de313f94eab4e}
       \strng{authornamehash}{c1b06a53709e08ec5a8de313f94eab4e}
       \strng{authorfullhash}{c1b06a53709e08ec5a8de313f94eab4e}
-      \field{sortinit}{6}
-      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{booktitle}{Proceedings of the human factors and ergonomics society annual meeting}
