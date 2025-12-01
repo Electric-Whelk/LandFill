@@ -135,13 +135,6 @@ class MonteCarlo(Simulation):
             g = Game(self.deck, turns=self.turns, verbose=self._close_examine)
             g.run()
 
-            """pg = Game(g.copydeck, self.cache, verbose=self._close_examine, prototype_comparison={
-                "leftover_mana": g.leftover_mana,
-                "log": g.log,
-                "hand": g.copyhand
-            })
-            pg.run()"""
-
 
             #options_per_turn += (g.options_per_turn/self.runs)
             mana_per_game_array.append(g.total_spent_mana)

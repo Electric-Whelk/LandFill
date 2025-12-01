@@ -14,7 +14,7 @@ Each colour is produced by a ``Basic Land'': Plains (W), Island (U), Swamp (B), 
 
 Any card with a basic landtype taps for the corresponding colour of mana by default. However, not every card that taps for that colour of mana has that subtype. Tropical Island, for example, taps for both G and U, as does Hinterland Harbor, which is neither a Forest nor an Island. 
 
-Although a small minority of lands produce more than one mana per tap, this is rare. Through this writeup, a land which land which ``produces BUG'', taps for Black, Blue \textit{or} Green. Reflecting this, I will use the below standard to represent game state. In the example given, a player's hand contains a spell that requires R \textit{and} U \textit{and} G, a land that produces R \textit{or} U per tap, a Basic Mountain and a Basic Island, while the battlefield contains a land that produces U \textit{or} G per tap.
+Although a small minority of lands produce more than one mana per tap, this is rare. Through this thesis, a land which ``produces BUG'', taps for Black, Blue \textit{or} Green. Reflecting this, I will use the below standard to represent game state. In the example given, a player's hand contains a spell that requires R \textit{and} U \textit{and} G, a land that produces R \textit{or} U per tap, a Basic Mountain and a Basic Island, while the battlefield contains a land that produces U \textit{or} G per tap.
 \[
 \text{Battlefield} =
   \begin{bmatrix}
@@ -66,7 +66,7 @@ Optimization, therefore, may be thought of as a simultaneous two-part process:
 
 This makes manabase generation a combinatorial optimization problem. If a deck requires a manabase of \(M\) land cards, and operates with a performance \(P_f\) for any given manabase (assigning a single performance metric for a deck is complicated; see \secref{sec:choiceofobjectivefunction}), the question is: what combination of \(M\) cards from the set of all lands that produce one or more of the deck's colours maximizes the value of \(P_f\)? 
 
-There are therefore two problems to solve. The first is to find a method for determining \(P_f\) from a particular deck. The second is inherent to most Combinatorial Optimization problems: since there are more solutions than can be feasibly investigated, it is necessary to find a method of optimization that will traverse only a relevant subsection of the total search space. 
+There are therefore two problems to solve. The first is to find a method for determining \(P_f\) from a particular deck. The second is inherent to most combinatorial optimization problems: since there are more solutions than can be feasibly investigated, it is necessary to find a method of optimization that will traverse only a relevant subsection of the total search space. 
 
 \section{Simulation and Optimization}
 LandFill approaches this problem using two processes: one which simulates MTG games and assesses the performance of a given manabase, and one which provides the internal one with a series of increasingly optimized decks to test. These will be referred to as the ``Simulator'' and the ``Optimizer''.

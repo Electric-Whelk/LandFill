@@ -543,6 +543,7 @@ class DeckBuilder(CardCollection):
             flat_num = sum(abs(d) < threshold for d in window)
             flat_frac = flat_num / window_length
 
+
             # Debug print if needed
             # print(f"i={i}, flat_frac={flat_frac:.2f}, window={window}")
 
@@ -661,7 +662,7 @@ class DeckBuilder(CardCollection):
         tested_cards = []
         for trial_card in cards_to_test:
             self.give(self.deck, trial_card)
-            trial_card.card_test_score = t.run_card_test(trial_card)
+            trial_card.card_test_score = t.single_card_test(trial_card)
             self.deck.give(self, trial_card)
             if champ is None or trial_card.card_test_score > champ.card_test_score:
                 champ = trial_card

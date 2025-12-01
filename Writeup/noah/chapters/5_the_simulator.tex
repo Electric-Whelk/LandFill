@@ -68,7 +68,7 @@ Consider the below game state:
   \end{bmatrix}
 \]
 
-Although any individual spell in the player’s hand is castable, including the largest spell, the current selection of lands is suboptimal. If the player had access to three Green mana, they could cast two spells this turn. Rather than assessing the playability of spells, LandFill assesses ``lumps''. A Lump is an aggregation of Spell objects, which, unlike in a CardCollection, are not removed from any other lists when assigned. On a given turn, a Game will have both a Hand and a series of Lumps, which represent different permutations of cards in that hand. \texttt{Lump.cost} and \texttt{Lump.cmc} return combined values of the constituent Spell objects.  A Lump only stores one face of a spell; the face to be included is specified at the Lump's instantiation.
+Although any individual spell in the player’s hand is playable, including the largest spell, the current selection of lands is suboptimal. If the player had access to three Green mana, they could cast two spells this turn. Rather than assessing the playability of spells, LandFill assesses ``lumps''. A Lump is an aggregation of Spell objects, which, unlike in a CardCollection, are not removed from any other lists when assigned. On a given turn, a Game will have both a Hand and a series of Lumps, which represent different permutations of cards in that hand. \texttt{Lump.cost} and \texttt{Lump.cmc} return combined values of the constituent Spell objects.  A Lump only stores one face of a spell; the face to be included is specified at the Lump's instantiation.
 
 \section{Initiating a Game}
 At the start of each game, the deck is shuffled. The first seven cards from the Deck are moved to the Hand.
@@ -88,7 +88,7 @@ As this has to be done every turn to accommodate newly drawn cards, it is a runt
 
 \begin{itemize}
 \item There is no need to search for any combinations of more than L+1 spells, as (notwithstanding spells of CMC zero, which are irrelevant for manabase optimization), there is no way to play more than this number of spells in a single turn using only lands. 
-\item Any spells of \(CMC > L+1\) are ineligible, as they would not be castable in the first place.
+\item Any spells of \(CMC > L+1\) are ineligible, as they would not be playable in the first place.
 \end{itemize}
 
 Code profiling, carried out throughout development via the \texttt{line\allowbreak\_profiler} library~\cite{lineprofiler}, shows that, with these heuristics, playing Lumps takes up around 1/3rd  of the runtime of \texttt{game.run\allowbreak\_turn()}, making it an area for further improvement. It is \textit{not} viable here to resort to lazy evaluation, which in this context would mean ceasing generation of new combinations after a playable Lump has been identified \cite{cornelllazy}. Consider the following opening hand (\(L = 0\)):
@@ -127,7 +127,7 @@ The first returned Land is played, followed by a Lump with a CMC as close to \(L
 
 \subsection{Assessing Lump Playability}
 \label{sec:lumpplayability}
-The question of whether a given Lump can be played with a given set of lands is non-trivial. Since some lands produce many colors of mana while others produce few or one means that a mapping between land and pip must be established such that multicolor lands are not ``wasted'' on pips whch are already well served by lands offering fewer colours. I tried this in several ways during development.
+The question of whether a given Lump can be played with a given set of lands is non-trivial. Since some lands produce many colors of mana while others produce few or one means that a mapping between land and pip must be established such that multicolor lands are not ``wasted'' on pips which are already well served by lands offering fewer colours. I tried this in several ways during development.
 
 My initial approaches involved generating a list of all combinations of mana that the Lands in the Battlefield object could produce. If an entry on this list included all pips in \texttt{Lump.cost}, then that Lump is playable. The runtime bottleneck here should be quickly obvious, especially as there are no comparable heuristics to those used when determining Lumps. Consider the below battlefield:
 \[
@@ -224,19 +224,19 @@ To ensure that any FetchLands search for Lands even on a turn when no Lump is pl
 A Filter Land (instantiated as a FilterLand) produces C and has two SubLands (see \secref{sec:gamecards}), each of which may produce either of the Filter Land's colours. In order to account for a situation in which multiple FilterLands may pay for the abilities of others, the following recursive algorithm is used:
 
 \begin{enumerate}
-\item If a Lump is castable on a battlefield containing FilterLands while tapping those FilterLands for C, it is cast as normal.
+\item If a Lump is playable on a battlefield containing FilterLands while tapping those FilterLands for C, it is cast as normal.
 \item If not, FilterLands are placed into a new list, $\underline{L}_f$. \texttt{itertools.permutations()} lazily evaluates a permutation of this list from first Filter Land \(F(1)\) to \(n\)'th Filter Land \(F(n)\). 
-\item Generate a new list, $\underline{L}_1l$, containing all non-Filter Lands, including the subset of Lands capable of paying \(F(1)\)'s cost, \(P(1) ... P(n)\). \(P(1)\) is removed from $\underline{L}_1l$, and the SubLands of \(F(1)\) are added in its place. 
+\item Generate a new list, $\underline{L}_1l$, containing all non-Filter Lands, including the subset of Lands capable of paying \(F(1)\)'s cost, \(P_{1}(1) ... P_{1}(m)\). \(P{1}(1)\) is removed from $\underline{L}_1l$, and the SubLands of \(F(1)\) are added in its place. 
 \item Repeat step 2 for \(F(2)\), this time starting with $\underline{L}_1l$ to create $\underline{L}_2l$. Repeat until the SubLands of \(F(n)\) are included in $\underline{L}_nl$. If any list contains no Lands which can pay for the selected FilterLand, include it as a colourless source. 
-\item If the Lump is castable with the resulting list of Lands and SubLands, cast it. 
-\item If it is not, return the Land \(P(1)\) that had been removed from $\underline{L}_nl$ and remove \(P(2)\). Assess the playability of the Lump again, casting it if possible.
-\item If no lands \(P(1)\)-\(P(n)\) in $\underline{L}_nl$ allow for the lump to be played, return to step 6 for $\underline{L}_n-1l$
+\item If the Lump is playable with the resulting list of Lands and SubLands, cast it. 
+\item If it is not, return the Land \(P_{n}(1)\) that had been removed from $\underline{L}_nl$ and remove \(P_{n}(2)\). Assess the playability of the Lump again, casting it if possible.
+\item If no lands \(P_{n}(1)\)-\(P{_n}(m)\) in $\underline{L}_nl$ allow for the lump to be played, return to step 6 for $\underline{L}_{n-1}l$, and so forth for $\underline{L}_{n-2}l$\dots, checking all lists between it and $\underline{L}_nl$ each time.
 \item If $\underline{L}_1l$ is reached, return to step 2 generate a new permutation with new values of \(F(1)\) and \(F(n)\)
 \item If all permutations of $\underline{L}_f$ have been tried, the Lump is not playable.
 \end{enumerate}
 
 \subsection{Dual-Faced Lands}
-A Dual-Faced Land has two faces, each of which are playable, and each of which tap for exactly one colour of mana. All Dual-Faced Lands enter the battlefield untapped. The DualFacedLand object is assigned two SubLands, each capable of producing one of its colours, and an attribute, \texttt{DualFacedLand.committed}, initialized to \texttt{None}. When tapped for ``Gen'' or ``None'', if \texttt{DualFacedLand.committed = None}, one of the DualFacedLand's SubLands is selected via \texttt{Game.filter\allowbreak\_by\allowbreak\_most\allowbreak\_produced()}, as with FetchLands. \texttt{DualFacedLand.committed} is set to that SubLand. When tapped for coloured mana, \texttt{DualFacedLand.committed} is set to the SubLand capable of producing that colour. If \texttt{land.committed != None}, the land is tapped as though it itself were the SubLand returned by that attribute. The Battlefield object sets \texttt{DualFacedLand.committed} to \texttt{None} when it returns it to another zone. Like FetchLands, an uncommitted DualFacedLand has a lower weighting to force \texttt{SciPy.linear\allowbreak\_assignment()} to map it to ``Gen'' or ``None'' mana if possible when a Lump is played.
+A Dual-Faced Land has two faces, each of which are playable, and each of which tap for exactly one colour of mana. All Dual-Faced Lands enter the battlefield untapped. The DualFacedLand object is assigned two SubLands, each capable of producing one of its colours, and an attribute, \texttt{DualFacedLand.committed}, initialized to \texttt{None}. When tapped for ``Gen'' or ``None'', if \texttt{DualFacedLand.committed = None}, one of the DualFacedLand's SubLands is selected via \texttt{Game.filter\allowbreak\_by\allowbreak\_most\allowbreak\_produced()}, as with FetchLands. \texttt{DualFacedLand.committed} is set to that SubLand. When tapped for coloured mana, \texttt{DualFacedLand.\allowbreak committed} is set to the SubLand capable of producing that colour. If \texttt{land.committed != None}, the land is tapped as though it itself were the SubLand returned by that attribute. The Battlefield object sets \texttt{DualFacedLand.committed} to \texttt{None} when it returns it to another zone. Like FetchLands, an uncommitted DualFacedLand has a lower weighting to force \texttt{SciPy.linear\allowbreak\_assignment()} to map it to ``Gen'' or ``None'' mana if possible when a Lump is played.
 
 \section{Simulator Verification Testing}
 Testing of the Simulator was done via optional \texttt{samplehand = []} and \texttt{sampletopdeck = []} arguments passed to \texttt{Game.run()}. Both are arrays of card names as strings, which, if included, are extracted from the Deck and placed either in the Hand or at the front of the Deck object after it is shuffled. This allowed me to watch the Simulator play sample hands and ensure behaviour was as expected.

@@ -19,7 +19,7 @@
 \contentsline {figure}{\numberline {5.1}{\ignorespaces Example of a land belonging to the Verge cycle and the implementation of \texttt {land.live\allowbreak \_prod(game)} in that cycle}}{26}{figure.caption.18}%
 \contentsline {figure}{\numberline {5.2}{\ignorespaces Example of a land belonging to the Check cycle and the implementation of \texttt {land.enters\allowbreak \_tapped(game)} in that cycle}}{26}{figure.caption.19}%
 \addvspace {10pt}
-\contentsline {figure}{\numberline {6.1}{\ignorespaces Digraph of strict betterness relationhips between all cycles currently handled by LandFill, where each arrow points to the superior land. Note that some labels (i.e.,~Three Colour Untyped Taplands) refer not to single cycles but to groups of mechanically equivalent cycles which differ in ways that do not pertain to mana generation.}}{36}{figure.caption.21}%
+\contentsline {figure}{\numberline {6.1}{\ignorespaces Digraph of strict betterness relationships between all cycles currently handled by LandFill, where each arrow points to the superior land. Note that some labels (i.e.,~Three Colour Untyped Taplands) refer not to single cycles but to groups of mechanically equivalent cycles which differ in ways that do not pertain to mana generation.}}{36}{figure.caption.21}%
 \contentsline {figure}{\numberline {6.2}{\ignorespaces Outputs in terms of wasted mana for each deck}}{39}{figure.caption.22}%
 \contentsline {figure}{\numberline {6.3}{\ignorespaces Histograms of the mana wasted by each deck: clockwise from top left: BasicDeck, PartialDeck, OverDeck, ExpectedDeck}}{39}{figure.caption.23}%
 \contentsline {figure}{\numberline {6.4}{\ignorespaces Box Plots representing the same MonteCarlo output data as (left to right): proportion of games in which zero mana is wasted, and area under a CMF of mana wasted.}}{40}{figure.caption.24}%
@@ -33,4 +33,6 @@
 \contentsline {figure}{\numberline {7.4}{\ignorespaces Output Page.}}{48}{figure.caption.33}%
 \addvspace {10pt}
 \contentsline {figure}{\numberline {8.1}{\ignorespaces Scores and timings from the two TLX analyses, and the differences between these values.}}{51}{figure.caption.34}%
+\addvspace {10pt}
+\addvspace {10pt}
 \addvspace {10pt}
