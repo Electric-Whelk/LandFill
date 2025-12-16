@@ -20,7 +20,6 @@ const RANK_IDS = {
 const Page2 = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    //const { cycles, setCycles, currency, setCurrency } = useDeck()
 
     const {
         cycles, setCycles,
@@ -52,7 +51,6 @@ const Page2 = () => {
 
 
     useEffect(() => {
-
     }, [positiveArrays.include])
 
     useEffect(() => {

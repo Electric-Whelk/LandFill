@@ -9,13 +9,6 @@ const Page3Dev = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-
-    //REMEMBER TO READD THE STUFF THAT ALLOWS RANKING BY PERFORMANCE
-    /*const [outputLands, setOutputLands] = useState(() => {
-        cardsData.sort((a, b) => b.performance - a.performance);
-        return (cardsData);
-    });*/
-
     const [tmpLands, setTmpLands] = useState(() => {
 
         const data = location.state?.data

@@ -248,7 +248,8 @@ class Game(Simulation):
         self.leftover_mana = self.total_theoretical_mana - self.total_spent_mana
 
         if self.seeking_target is not None:
-            self.seeking_target.turns_without_commander.append(self.turns_without_commander)
+            #self.seeking_target.turns_without_commander.append(self.turns_without_commander)
+            self.seeking_target.turns_without_commander += self.turns_without_commander
             self.seeking_target.options.append(self.options_each_land_drop)
 
         #if not self.found_target:
