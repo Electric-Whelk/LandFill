@@ -1,0 +1,1 @@
+LandFill is a deckbuilder support app for the Magic: The Gathering TCG, developed as part of my MSc Thesis in Computer Science at the University of Bristol (and now under continuing development as a passion project). It uses Monte Carlo Search and Steepest Ascent Hill Climbing Algorithms to generate an optimized list of lands for a given deck in the Commander format. 
