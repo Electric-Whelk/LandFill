@@ -1,6 +1,0 @@
-Bad pains:
-Caldera Lake | [] | This land enters tapped. {T}: Add {C}. {T}: Add {U} or {R}. This land deals 1 damage to you.
-Pine Barrens | [] | This land enters tapped. {T}: Add {C}. {T}: Add {B} or {G}. This land deals 1 damage to you.
-Salt Flats | [] | This land enters tapped. {T}: Add {C}. {T}: Add {W} or {B}. This land deals 1 damage to you.
-Scabland | [] | This land enters tapped. {T}: Add {C}. {T}: Add {R} or {W}. This land deals 1 damage to you.
-Skyshroud Forest | [] | This land enters tapped. {T}: Add {C}. {T}: Add {G} or {U}. This land deals 1 damage to you.
